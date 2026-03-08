@@ -20,63 +20,65 @@
 
             <!-- 当前选中的题目卡片 -->
             <transition name="el-fade-in" mode="out-in">
-                <el-card v-if="currentExercise" :key="currentExercise.id" style="min-height: 250px;">
-                    <div style="margin-bottom: 15px;">
-                        <el-tag effect="dark" :type="currentExercise.type.includes('translate') ? 'warning' : 'primary'">
-                            {{ currentExercise.type }}
-                        </el-tag>
-                    </div>
-                    
-                    <h3 style="margin-bottom: 20px; line-height: 1.5;">
-                        {{ currentExercise.question || currentExercise.chinese_prompt }}
-                    </h3>
+                <div :key="currentExercise?.id || 'empty_state'">
+                    <el-card v-if="currentExercise" style="min-height: 250px;">
+                        <div style="margin-bottom: 15px;">
+                            <el-tag effect="dark" :type="currentExercise.type.includes('translate') ? 'warning' : 'primary'">
+                                {{ currentExercise.type }}
+                            </el-tag>
+                        </div>
+                        
+                        <h3 style="margin-bottom: 20px; line-height: 1.5;">
+                            {{ currentExercise.question || currentExercise.chinese_prompt }}
+                        </h3>
 
-                    <!-- 词汇提示 (Hover 浮现模糊版) -->
-                    <div v-if="currentExercise.vocab_hints" style="margin-bottom: 20px;">
-                        <p style="font-size: 0.8rem; color: #888;">Hover 查看单词提示 👇</p>
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                            <div v-for="(hint, idx) in currentExercise.vocab_hints" :key="idx" class="blur-hint-card">
-                                <span class="cn">{{ hint.cn }}</span>
-                                <span class="revealer">
-                                    <span class="kana">{{ hint.kana }}</span>
-                                    <span class="kanji">{{ hint.word }}</span>
-                                </span>
+                        <!-- 词汇提示 (Hover 浮现模糊版) -->
+                        <div v-if="currentExercise.vocab_hints" style="margin-bottom: 20px;">
+                            <p style="font-size: 0.8rem; color: #888;">Hover 查看单词提示 👇</p>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <div v-for="(hint, idx) in currentExercise.vocab_hints" :key="idx" class="blur-hint-card">
+                                    <span class="cn">{{ hint.cn }}</span>
+                                    <span class="revealer">
+                                        <span class="kana">{{ hint.kana }}</span>
+                                        <span class="kanji">{{ hint.word }}</span>
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 用户输入区域 -->
-                    <div v-if="currentExercise.type === 'q_fill'" style="display: flex; gap: 10px;">
-                         <el-radio-group v-model="tStore.userAnswers[currentExercise.id]">
-                            <el-radio-button v-for="opt in currentExercise.options" :key="opt" :label="opt" />
-                         </el-radio-group>
-                    </div>
-                    <div v-else>
-                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                             <p style="font-size: 0.8rem; color: #888; margin: 0;">
-                              🚀 在此输入即可自动转假名。(片假名请大写锁定输入)
-                             </p>
-                             <el-tooltip placement="top-end">
-                                <template #content>
-                                    <b>💡 罗马音输入速决小贴士：</b><br/>
-                                    1. <b>【促音】</b>双打下一个假名的辅音字母 (如 tte = って)<br/>
-                                    2. <b>【拨音】</b>连按两次 n (如 nn = ん)<br/>
-                                    3. <b>【小假名】</b>在元音前加 x 或 l (如 xya / lya = ゃ)<br/>
-                                    4. <b>【长音】</b>使用短横线 - (如 bi-ru = ビール)
-                                </template>
-                                <el-tag size="small" type="info" style="cursor: help;">⌨️ 罗马音速查表</el-tag>
-                             </el-tooltip>
-                         </div>
-                         <el-input 
-                            v-model="tStore.userAnswers[currentExercise.id]"
-                            :ref="(el) => bindWanaKana(el, currentExercise.id)"
-                            @blur="forceKanaConversion(currentExercise.id)"
-                            placeholder="Type in romaji..."
-                            size="large"
-                            clearable
-                         />
-                    </div>
-                </el-card>
+                        <!-- 用户输入区域 -->
+                        <div v-if="currentExercise.type === 'q_fill'" style="display: flex; gap: 10px;">
+                             <el-radio-group v-model="tStore.userAnswers[currentExercise.id]">
+                                <el-radio-button v-for="opt in currentExercise.options" :key="opt" :label="opt" />
+                             </el-radio-group>
+                        </div>
+                        <div v-else>
+                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                 <p style="font-size: 0.8rem; color: #888; margin: 0;">
+                                  🚀 在此输入即可自动转假名。(片假名请大写锁定输入)
+                                 </p>
+                                 <el-tooltip placement="top-end">
+                                    <template #content>
+                                        <b>💡 罗马音输入速决小贴士：</b><br/>
+                                        1. <b>【促音】</b>双打下一个假名的辅音字母 (如 tte = って)<br/>
+                                        2. <b>【拨音】</b>连按两次 n (如 nn = ん)<br/>
+                                        3. <b>【小假名】</b>在元音前加 x 或 l (如 xya / lya = ゃ)<br/>
+                                        4. <b>【长音】</b>使用短横线 - (如 bi-ru = ビール)
+                                    </template>
+                                    <el-tag size="small" type="info" style="cursor: help;">⌨️ 罗马音速查表</el-tag>
+                                 </el-tooltip>
+                             </div>
+                             <el-input 
+                                v-model="tStore.userAnswers[currentExercise.id]"
+                                :ref="(el) => bindWanaKana(el, currentExercise.id)"
+                                @blur="forceKanaConversion(currentExercise.id)"
+                                placeholder="Type in romaji..."
+                                size="large"
+                                clearable
+                             />
+                        </div>
+                    </el-card>
+                </div>
             </transition>
 
             <!-- 底部 上一题/下一题 导航 -->
@@ -256,29 +258,38 @@ const saveMistake = (res) => {
 }
 
 const startSession = async () => {
-    // 处理缓存复用逻辑
-    if (tStore.exercises.length > 0 && !tStore.isGenerating) {
-        // 1. 如果上次处于报错状态，则清除缓存重新生成
-        if (tStore.generationError) {
-            tStore.clearSession()
-        } 
-        // 2. 如果上次已经处于 results (批改完成) 状态，用户又点进来了，说明要刷一套新的，清除缓存重新生成
-        else if (tStore.currentPhase === 'results') {
-            tStore.clearSession()
-        }
-        // 3. 否则复用由于路由切换（比如切去大纲再切回来）暂时保留的纯净答题现场Cache
-        else {
-            return; 
-        }
-    }
-
-    if (!route.query.sessionConfig) {
+    const queryConfigStr = route.query.sessionConfig;
+    const queryTimestamp = route.query.t;
+    
+    if (!queryConfigStr) {
         tStore.generationError = "缺失配置参数，请从主面板进。"
         return;
     }
 
-    const config = JSON.parse(route.query.sessionConfig)
-    tStore.initSession(config)
+    // 处理缓存复用逻辑
+    if (tStore.exercises.length > 0 && !tStore.isGenerating) {
+        if (tStore.generationError) {
+            tStore.clearSession()
+        } 
+        else if (tStore.currentPhase === 'results') {
+            tStore.clearSession()
+        }
+        else if (tStore.sessionTimestamp == queryTimestamp) {
+            // 时间戳一致，说明是要恢复当前的答卷记录（通过后退切回来、或点击“继续答题”）
+            return; 
+        }
+        else if (!queryTimestamp && tStore.currentConfig) {
+            // 没有带来时间戳，且已经有数据，大概率是直接刷新或者旧路由遗留，安全地恢复
+            return;
+        }
+        else {
+            // 带了新的时间戳，代表用户通过面板点击了“发起新的训练请求”
+            tStore.clearSession()
+        }
+    }
+
+    const config = JSON.parse(queryConfigStr)
+    tStore.initSession(config, queryTimestamp)
     tStore.isGenerating = true
     savedMistakeIds.value.clear() // Reset mistake buttons for new session
 
@@ -308,14 +319,6 @@ const startSession = async () => {
 
 onMounted(() => {
     startSession()
-})
-
-watch(() => route.query.sessionConfig, (newVal, oldVal) => {
-    if (newVal && newVal !== oldVal) {
-        // 当 URL 上的配置发生变化（说明用户从控制台发起了新一轮请求，但组件被复用时）
-        tStore.clearSession()
-        startSession()
-    }
 })
 
 const submitForEvaluation = async () => {

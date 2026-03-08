@@ -18,10 +18,12 @@ export const useTrainingStore = defineStore('training', () => {
     
     // 当前聚焦的题号 (代替粗暴的 currentIndex)
     const activeQuestionId = ref(null)
+    const sessionTimestamp = ref(null)
 
     // Action: 初始化空状态
-    const initSession = (config) => {
+    const initSession = (config, timestamp) => {
         currentConfig.value = config
+        sessionTimestamp.value = timestamp
         exercises.value = []
         evaluations.value = []
         userAnswers.value = {}
@@ -52,6 +54,7 @@ export const useTrainingStore = defineStore('training', () => {
         generationError.value = ''
         currentPhase.value = 'answering'
         activeQuestionId.value = null
+        sessionTimestamp.value = null
     }
 
     return {
@@ -59,6 +62,7 @@ export const useTrainingStore = defineStore('training', () => {
         isEvaluating,
         generationError,
         currentConfig,
+        sessionTimestamp,
         currentPhase,
         exercises,
         evaluations,

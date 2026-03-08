@@ -1,5 +1,16 @@
 <template>
   <div>
+    <el-alert 
+        v-if="tStore.exercises.length > 0 && tStore.currentPhase === 'answering'" 
+        type="warning" 
+        show-icon 
+        style="margin-bottom: 20px;">
+        <template #title>
+            您有一个未完成的集训正在进行中！
+            <el-button size="small" type="primary" style="margin-left: 15px;" @click="onResume">继续集训</el-button>
+        </template>
+    </el-alert>
+
     <el-card shadow="hover" style="margin-bottom: 20px;">
       <template #header>
         <div style="font-size: 1.2rem; font-weight: bold; color: #409EFF;">
@@ -93,9 +104,11 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMainStore } from '@/store/mainStore'
+import { useTrainingStore } from '@/store/trainingStore'
 import syllabusDict from '@/data/syllabus.json'
 
 const store = useMainStore()
+const tStore = useTrainingStore()
 const router = useRouter()
 const syllabus = ref(syllabusDict)
 
@@ -129,7 +142,18 @@ const onStart = () => {
     router.push({
         path: '/training',
         query: {
-            sessionConfig: JSON.stringify(config.value)
+            sessionConfig: JSON.stringify(config.value),
+            t: Date.now()
+        }
+    })
+}
+
+const onResume = () => {
+    router.push({
+        path: '/training',
+        query: {
+            sessionConfig: JSON.stringify(tStore.currentConfig),
+            t: tStore.sessionTimestamp
         }
     })
 }

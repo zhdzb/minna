@@ -48,11 +48,7 @@
         <!-- 主内容区 -->
         <el-main style="padding: 0; background: transparent;">
           <el-main class="app-main">
-            <router-view v-slot="{ Component }">
-              <keep-alive>
-                <component :is="Component" />
-              </keep-alive>
-            </router-view>
+            <router-view />
           </el-main>
         </el-main>
         
