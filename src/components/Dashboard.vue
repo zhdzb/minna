@@ -51,14 +51,14 @@
 
             <el-form-item label="题型完成雷达：">
                <div style="display: flex; gap: 10px;">
-                   <el-tag :type="isTypeCompleted('q_fill') ? 'success' : 'info'" effect="dark">
-                      {{ isTypeCompleted('q_fill') ? '✅ 语感填空 已达成' : '⏳ 语感填空 待通关' }}
+                   <el-tag :type="getTypeCompletion('q_fill') ? 'success' : 'info'" effect="dark">
+                      {{ getTypeCompletion('q_fill') ? `✅ 语感填空 (${getTypeCompletion('q_fill')})` : '⏳ 语感填空 待通关' }}
                    </el-tag>
-                   <el-tag :type="isTypeCompleted('q_translate') ? 'success' : 'info'" effect="dark">
-                      {{ isTypeCompleted('q_translate') ? '✅ 翻译造句 已达成' : '⏳ 翻译造句 待通关' }}
+                   <el-tag :type="getTypeCompletion('q_translate') ? 'success' : 'info'" effect="dark">
+                      {{ getTypeCompletion('q_translate') ? `✅ 翻译造句 (${getTypeCompletion('q_translate')})` : '⏳ 翻译造句 待通关' }}
                    </el-tag>
-                   <el-tag :type="isTypeCompleted('q_conversation') ? 'success' : 'info'" effect="dark">
-                      {{ isTypeCompleted('q_conversation') ? '✅ 职场情景 已达成' : '⏳ 职场情景 待通关' }}
+                   <el-tag :type="getTypeCompletion('q_conversation') ? 'success' : 'info'" effect="dark">
+                      {{ getTypeCompletion('q_conversation') ? `✅ 职场情景 (${getTypeCompletion('q_conversation')})` : '⏳ 职场情景 待通关' }}
                    </el-tag>
                </div>
             </el-form-item>
@@ -107,10 +107,16 @@ const config = ref({
     questionType: 'ALL'
 })
 
-const isTypeCompleted = (type) => {
+const getTypeCompletion = (type) => {
     const lessonId = config.value.targetLesson
-    const completedTypes = store.progress.completed_types_by_lesson[lessonId] || []
-    return completedTypes.includes(type)
+    const completedData = store.progress.completed_types_by_lesson[lessonId]
+    if (!completedData) return false;
+    
+    if (Array.isArray(completedData)) {
+        return completedData.includes(type) ? '基础巩固' : false;
+    }
+    
+    return completedData[type] || false;
 }
 
 const appendTag = (tag) => {
