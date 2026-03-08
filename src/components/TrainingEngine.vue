@@ -52,12 +52,25 @@
                          </el-radio-group>
                     </div>
                     <div v-else>
-                         <p style="font-size: 0.8rem; color: #888; margin-bottom: 5px;">
-                          🚀 在此输入即可自动转假名。(片假名请大写锁定输入)
-                         </p>
+                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                             <p style="font-size: 0.8rem; color: #888; margin: 0;">
+                              🚀 在此输入即可自动转假名。(片假名请大写锁定输入)
+                             </p>
+                             <el-tooltip placement="top-end">
+                                <template #content>
+                                    <b>💡 罗马音输入速决小贴士：</b><br/>
+                                    1. <b>【促音】</b>双打下一个假名的辅音字母 (如 tte = って)<br/>
+                                    2. <b>【拨音】</b>连按两次 n (如 nn = ん)<br/>
+                                    3. <b>【小假名】</b>在元音前加 x 或 l (如 xya / lya = ゃ)<br/>
+                                    4. <b>【长音】</b>使用短横线 - (如 bi-ru = ビール)
+                                </template>
+                                <el-tag size="small" type="info" style="cursor: help;">⌨️ 罗马音速查表</el-tag>
+                             </el-tooltip>
+                         </div>
                          <el-input 
                             v-model="tStore.userAnswers[currentExercise.id]"
                             :ref="(el) => bindWanaKana(el, currentExercise.id)"
+                            @blur="forceKanaConversion(currentExercise.id)"
                             placeholder="Type in romaji..."
                             size="large"
                             clearable
@@ -65,6 +78,27 @@
                     </div>
                 </el-card>
             </transition>
+
+            <!-- 底部 上一题/下一题 导航 -->
+            <div style="margin-top: 20px; display: flex; justify-content: space-between;">
+                <el-button 
+                    type="primary" 
+                    plain 
+                    icon="el-icon-arrow-left" 
+                    :disabled="currentQuestionIndex === 0"
+                    @click="goToNextQuestion(-1)"
+                >
+                    上一题
+                </el-button>
+                <el-button 
+                    type="primary" 
+                    plain 
+                    :disabled="currentQuestionIndex === tStore.exercises.length - 1"
+                    @click="goToNextQuestion(1)"
+                >
+                    下一题 <i class="el-icon-arrow-right el-icon--right"></i>
+                </el-button>
+            </div>
          </div>
 
          <!-- 批改结果阶段 -->
@@ -163,6 +197,26 @@ const currentExercise = computed(() => {
     return tStore.exercises.find(ex => ex.id === tStore.activeQuestionId)
 })
 
+const currentQuestionIndex = computed(() => {
+    return tStore.exercises.findIndex(ex => ex.id === tStore.activeQuestionId)
+})
+
+const goToNextQuestion = (step) => {
+    const newIndex = currentQuestionIndex.value + step;
+    if (newIndex >= 0 && newIndex < tStore.exercises.length) {
+        // 切换前，强制刷入一次假名，防止用户没有失焦直接点按钮导致字母残留
+        forceKanaConversion(tStore.activeQuestionId);
+        tStore.activeQuestionId = tStore.exercises[newIndex].id;
+    }
+}
+
+const forceKanaConversion = (id) => {
+    if (tStore.userAnswers[id] && window.wanakana) {
+        // 强制把还未转换的孤立辅音 (如 n) 转化为假名
+        tStore.userAnswers[id] = window.wanakana.toKana(tStore.userAnswers[id], { IMEMode: true })
+    }
+}
+
 const boundInputs = new Set()
 const bindWanaKana = (el, id) => {
     // el for el-input returns the component, the internal input is el.$el.querySelector('input')
@@ -256,13 +310,24 @@ const submitForEvaluation = async () => {
             }
         })
         
-        // 发放成就判定：当为具体专项且正确率大于 50% 时，赋予通过印记
+        // 发放成就判定：当正确率大于 50% 时，赋予通过印记
         const passRate = correctCount / tStore.exercises.length;
-        if (tStore.config?.questionType && tStore.config?.questionType !== 'ALL' && passRate >= 0.5) {
-            store.markTypeCompleted(targetLessonId, tStore.config.questionType)
+        if (passRate >= 0.5) {
+            const lessonData = syllabusDict.lessons.find(l => l.id === targetLessonId)
+            
+            if (tStore.config?.questionType === 'ALL') {
+                // 如果是混合实战 ALL 型过关，直接点亮该课所有启用的题型专属印记！
+                if (lessonData && lessonData.enabled_types) {
+                    lessonData.enabled_types.forEach(type => {
+                        store.markTypeCompleted(targetLessonId, type);
+                    });
+                }
+            } else if (tStore.config?.questionType) {
+                // 普通专项过关
+                store.markTypeCompleted(targetLessonId, tStore.config.questionType)
+            }
             
             // 检查大满贯晋升
-            const lessonData = syllabusDict.lessons.find(l => l.id === targetLessonId)
             if (lessonData && lessonData.enabled_types) {
                 const isAdvanced = store.checkAndAdvanceLesson(targetLessonId, lessonData.enabled_types)
                 if (isAdvanced) {

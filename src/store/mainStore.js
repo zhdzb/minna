@@ -51,29 +51,45 @@ export const useMainStore = defineStore('main', {
       this.saveState()
     },
 
-    // 完成某一课的某一种题型
-    markTypeCompleted(lessonId, typeId) {
+    // 完成某一课的某一种题型，并物理挂载最高通关难度
+    markTypeCompleted(lessonId, typeId, difficulty = '基础巩固') {
       if (!this.progress.completed_types_by_lesson[lessonId]) {
-        this.progress.completed_types_by_lesson[lessonId] = []
+        this.progress.completed_types_by_lesson[lessonId] = {}
       }
-      const types = this.progress.completed_types_by_lesson[lessonId]
-      if (!types.includes(typeId)) {
-        types.push(typeId)
+      
+      let typedata = this.progress.completed_types_by_lesson[lessonId];
+      
+      // 平滑向下兼容：将早期旧版的 Array 格式进度，静默升级为 JSON Object 结构
+      if (Array.isArray(typedata)) {
+        const migrated = {};
+        typedata.forEach(t => { migrated[t] = '基础巩固' });
+        this.progress.completed_types_by_lesson[lessonId] = migrated;
+        typedata = migrated;
       }
-      this.saveState()
-    },
-
-    // 升级课时 (当该课所有支持的题型全通关后)
-    advanceLesson() {
-      this.progress.current_lesson++
+      
+      // 难度阶梯权重判定：高难度会覆盖低难度记录，低难度拒绝覆盖高难度
+      const difficultyLevels = { '基础巩固': 1, '职场进阶': 2, 'JLPT真题级': 3 };
+      const currentLevel = difficultyLevels[difficulty] || 1;
+      const existingLevel = difficultyLevels[typedata[typeId]] || 0;
+      
+      if (currentLevel > existingLevel) {
+          typedata[typeId] = difficulty;
+      }
+      
       this.saveState()
     },
 
     // 检查并自动推进主线进度
     checkAndAdvanceLesson(targetLessonId, enabledTypes) {
       if (targetLessonId === this.progress.current_lesson) {
-        const completed = this.progress.completed_types_by_lesson[targetLessonId] || []
-        const isAllCleared = enabledTypes.every(type => completed.includes(type))
+        let typedata = this.progress.completed_types_by_lesson[targetLessonId] || {}
+        if (Array.isArray(typedata)) {
+            const migrated = {};
+            typedata.forEach(t => { migrated[t] = '基础巩固' });
+            typedata = migrated;
+        }
+        
+        const isAllCleared = enabledTypes.every(type => Object.keys(typedata).includes(type))
         if (isAllCleared) {
           this.advanceLesson()
           return true
