@@ -101,7 +101,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMainStore } from '@/store/mainStore'
 import { useTrainingStore } from '@/store/trainingStore'
@@ -118,6 +118,10 @@ const config = ref({
     difficulty: '基础巩固',
     customPrompt: '',
     questionType: 'ALL'
+})
+
+watch(() => store.progress.current_lesson, (newVal) => {
+    config.value.targetLesson = newVal;
 })
 
 const getTypeCompletion = (type) => {

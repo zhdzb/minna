@@ -97,6 +97,13 @@ export const useMainStore = defineStore('main', {
       }
       return false
     },
+
+    // 推进主线进度
+    advanceLesson() {
+      // 简单递增，但可以增加验证判断是否超过总课数上限
+      this.progress.current_lesson += 1
+      this.saveState()
+    },
     
     // 全库导入或覆盖恢复 (Git Sync 导入时用)
     overwriteState(newState) {

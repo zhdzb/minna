@@ -365,8 +365,8 @@ const submitForEvaluation = async () => {
             
             if (tStore.config?.questionType === 'ALL') {
                 // 如果是混合实战 ALL 型过关，直接点亮该课所有启用的题型专属印记！
-                if (lessonData && lessonData.enabled_types) {
-                    lessonData.enabled_types.forEach(type => {
+                if (lessonData && lessonData.enabled_question_types) {
+                    lessonData.enabled_question_types.forEach(type => {
                         store.markTypeCompleted(targetLessonId, type);
                     });
                 }
@@ -376,8 +376,8 @@ const submitForEvaluation = async () => {
             }
             
             // 检查大满贯晋升
-            if (lessonData && lessonData.enabled_types) {
-                const isAdvanced = store.checkAndAdvanceLesson(targetLessonId, lessonData.enabled_types)
+            if (lessonData && lessonData.enabled_question_types) {
+                const isAdvanced = store.checkAndAdvanceLesson(targetLessonId, lessonData.enabled_question_types)
                 if (isAdvanced) {
                    setTimeout(() => {
                        alert(`🎉 恭喜！您已通关第 ${targetLessonId} 课的所有考核！主线进度已自动飞升至第 ${store.progress.current_lesson} 课！`)
