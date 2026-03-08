@@ -58,6 +58,19 @@ export const useMainStore = defineStore('main', {
       this.progress.current_lesson++
       this.saveState()
     },
+
+    // 检查并自动推进主线进度
+    checkAndAdvanceLesson(targetLessonId, enabledTypes) {
+      if (targetLessonId === this.progress.current_lesson) {
+        const completed = this.progress.completed_types_by_lesson[targetLessonId] || []
+        const isAllCleared = enabledTypes.every(type => completed.includes(type))
+        if (isAllCleared) {
+          this.advanceLesson()
+          return true
+        }
+      }
+      return false
+    },
     
     // 全库导入或覆盖恢复 (Git Sync 导入时用)
     overwriteState(newState) {

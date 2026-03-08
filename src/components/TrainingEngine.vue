@@ -260,6 +260,17 @@ const submitForEvaluation = async () => {
         const passRate = correctCount / tStore.exercises.length;
         if (tStore.config?.questionType && tStore.config?.questionType !== 'ALL' && passRate >= 0.5) {
             store.markTypeCompleted(targetLessonId, tStore.config.questionType)
+            
+            // 检查大满贯晋升
+            const lessonData = syllabusDict.lessons.find(l => l.id === targetLessonId)
+            if (lessonData && lessonData.enabled_types) {
+                const isAdvanced = store.checkAndAdvanceLesson(targetLessonId, lessonData.enabled_types)
+                if (isAdvanced) {
+                   setTimeout(() => {
+                       alert(`🎉 恭喜！您已通关第 ${targetLessonId} 课的所有考核！主线进度已自动飞升至第 ${store.progress.current_lesson} 课！`)
+                   }, 500)
+                }
+            }
         }
 
         tStore.setEvaluations(finalResults)
