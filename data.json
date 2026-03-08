@@ -75,6 +75,56 @@
       "grammar_point": "q_conversation",
       "user_wrong_input": "どぞよろしくおねがいいします",
       "correct_answer": "こちらこそ、どうぞよろしくお願いいたします。"
+    },
+    {
+      "id": "1772978494176",
+      "timestamp": "2026-03-08T14:01:34.176Z",
+      "original_question": "那把伞是佐藤先生的吗？(指着稍远处的伞)",
+      "lesson": 1,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "あのかさわさとさんですか",
+      "correct_answer": "あの傘は 佐藤さんのですか。",
+      "explanation": "“佐藤先生的”需要使用助词「の」，即「佐藤さんの」。另外，表示主语的助词是「は」（读作 wa），而不是「わ」。"
+    },
+    {
+      "id": "1772978537278",
+      "timestamp": "2026-03-08T14:02:17.278Z",
+      "original_question": "A: これは 山田さんの資料ですか。 (指着一份文件)\nB: いいえ、(___)。それは 私の資料です。",
+      "lesson": 1,
+      "grammar_point": "q_conversation",
+      "user_wrong_input": "やまださんじゃありません",
+      "correct_answer": "いいえ、山田さんのじゃありません。",
+      "explanation": "回答“不是山田先生的（资料）”时，需要加上表示所属的助词「の」，即「山田さんのじゃありません」。您的回答「山田さんじゃありません」意为“不是山田先生本人”。"
+    },
+    {
+      "id": "1772980598194",
+      "timestamp": "2026-03-08T14:36:38.194Z",
+      "original_question": "您的公司是哪家？ (礼貌询问)",
+      "lesson": 1,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "あなたのかしゃはなにですか",
+      "correct_answer": "あなたの会社は どちら ですか。",
+      "explanation": "你的答案有两处错误：1. “かしゃ”应为“かいしゃ”（kaisha）。2. 询问“哪家公司”时，应使用礼貌的疑问词“どちら”（哪边/哪位），而不是“何”（什么）。"
+    },
+    {
+      "id": "1772980735314",
+      "timestamp": "2026-03-08T14:38:55.314Z",
+      "original_question": "这双鞋多少钱？",
+      "lesson": 1,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "ここくつはいくらですか",
+      "correct_answer": "この靴は いくら ですか。",
+      "explanation": "“这双鞋”应该用“この靴”（kono kutsu），而不是“ここ靴”（koko kutsu）。“ここ”表示“这里”，而“この”表示“这个/这双”，用来修饰名词。"
+    },
+    {
+      "id": "1772980745621",
+      "timestamp": "2026-03-08T14:39:05.621Z",
+      "original_question": "田中先生在会议室。",
+      "lesson": 1,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "たなかさんはかいぎしつ",
+      "correct_answer": "田中さんは 会議室にいます。",
+      "explanation": "你的答案缺少了表示存在的谓语。对于人或动物的“在”，通常使用“います”。完整的句子应该是“田中先生在会议室”。"
     }
   ],
   "collections": []
