@@ -7,8 +7,14 @@
         </div>
       </template>
       <div style="display: flex; align-items: center; justify-content: space-between;">
-          <p style="font-size: 1.1rem;">
-             您的当前进度锚点：<el-tag type="success" size="large">第 {{ store.progress.current_lesson }} 课</el-tag>
+          <p style="font-size: 1.1rem; display: flex; align-items: center; gap: 10px;">
+             目标集训课时：
+             <el-select v-model="config.targetLesson" style="width: 150px;" size="large">
+                <el-option v-for="l in syllabus.lessons" :key="l.id" :label="l.title" :value="l.id" />
+             </el-select>
+             <span style="font-size: 0.85rem; color: #888; margin-left: 5px;">
+                (当前推荐锚点: 第 {{ store.progress.current_lesson }} 课)
+             </span>
           </p>
           <el-button type="primary" plain @click="$router.push('/syllabus')">去大纲调整知识图云</el-button>
       </div>
@@ -34,7 +40,6 @@
                     <el-radio-button label="JLPT真题级" />
                 </el-radio-group>
             </el-form-item>
-
             <el-form-item label="专项题型挑选：">
                 <el-select v-model="config.questionType" placeholder="请选择题型" style="width: 300px;">
                     <el-option label="🎲 混合实战考核 (All)" value="ALL" />
@@ -42,6 +47,20 @@
                     <el-option label="🗣️ 专项：日汉翻译造句突破" value="q_translate" />
                     <el-option label="🏢 专项：职场情景对话补全" value="q_conversation" />
                 </el-select>
+            </el-form-item>
+
+            <el-form-item label="题型完成雷达：">
+               <div style="display: flex; gap: 10px;">
+                   <el-tag :type="isTypeCompleted('q_fill') ? 'success' : 'info'" effect="dark">
+                      {{ isTypeCompleted('q_fill') ? '✅ 语感填空 已达成' : '⏳ 语感填空 待通关' }}
+                   </el-tag>
+                   <el-tag :type="isTypeCompleted('q_translate') ? 'success' : 'info'" effect="dark">
+                      {{ isTypeCompleted('q_translate') ? '✅ 翻译造句 已达成' : '⏳ 翻译造句 待通关' }}
+                   </el-tag>
+                   <el-tag :type="isTypeCompleted('q_conversation') ? 'success' : 'info'" effect="dark">
+                      {{ isTypeCompleted('q_conversation') ? '✅ 职场情景 已达成' : '⏳ 职场情景 待通关' }}
+                   </el-tag>
+               </div>
             </el-form-item>
 
             <el-form-item label="定制化要求 (Prompt)：">
@@ -74,16 +93,25 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMainStore } from '@/store/mainStore'
+import syllabusDict from '@/data/syllabus.json'
 
 const store = useMainStore()
 const router = useRouter()
+const syllabus = ref(syllabusDict)
 
 const config = ref({
+    targetLesson: store.progress.current_lesson,
     questionCount: 5,
     difficulty: '基础巩固',
     customPrompt: '',
     questionType: 'ALL'
 })
+
+const isTypeCompleted = (type) => {
+    const lessonId = config.value.targetLesson
+    const completedTypes = store.progress.completed_types_by_lesson[lessonId] || []
+    return completedTypes.includes(type)
+}
 
 const appendTag = (tag) => {
     if (config.value.customPrompt.includes(tag)) return;

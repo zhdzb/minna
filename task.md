@@ -97,3 +97,11 @@
   - [x] 21.3 提供 ACG 暗黑主题下的**自定义壁纸 (Custom BG URL)** 配置口，通过 Pinia 下发到根节点
 - [x] 22. **系统大纲扩容 阶段二 (Syllabus Expansion)** (EXECUTION)
   - [x] 22.1 在 `syllabus.json` 中继续将大纲数据填充至第 20 课，并补充大量易混淆隐性知识点
+
+---
+
+## Phase 6: 高阶进度追踪与自由练习
+- [x] 23. **精细化学习进度管理 (Granular Tracking)** (EXECUTION)
+  - [x] 23.1 重构 Dashboard 允许不限于锚点的“目标集训课时”任意切换与出题
+  - [x] 23.2 添加 **题型完成雷达 (Completion Radar)**，实时渲染每一课各题型的通关状态
+  - [x] 23.3 在 `TrainingEngine.vue` 批改打分时，若某专项题型当次挑战正确率 >= 50%，自动下发永久通关印记并持久化入 `LocalStorage`
