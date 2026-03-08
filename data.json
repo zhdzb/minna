@@ -43,6 +43,38 @@
       "grammar_point": "q_conversation",
       "user_wrong_input": "いしやありませn ",
       "correct_answer": "いいえ、医者ではありません。"
+    },
+    {
+      "id": "1772972551293",
+      "timestamp": "2026-03-08T12:22:31.293Z",
+      "lesson": 1,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "じゃ",
+      "correct_answer": "私は営業部の社員ではありません。"
+    },
+    {
+      "id": "1772972551297",
+      "timestamp": "2026-03-08T12:22:31.297Z",
+      "lesson": 1,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "きむらさんはそうむぶのぷちょですか",
+      "correct_answer": "木村さんは総務部の部長ですか。"
+    },
+    {
+      "id": "1772972551298",
+      "timestamp": "2026-03-08T12:22:31.298Z",
+      "lesson": 1,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "いいえ、わたぃはマネジャではありません、かかりです",
+      "correct_answer": "いいえ、私はマネージャーではありません。私は係です。"
+    },
+    {
+      "id": "1772972551298",
+      "timestamp": "2026-03-08T12:22:31.298Z",
+      "lesson": 1,
+      "grammar_point": "q_conversation",
+      "user_wrong_input": "どぞよろしくおねがいいします",
+      "correct_answer": "こちらこそ、どうぞよろしくお願いいたします。"
     }
   ],
   "collections": []

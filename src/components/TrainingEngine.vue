@@ -137,8 +137,17 @@
                         </template>
                     </el-alert>
 
-                    <div v-if="!res.is_correct" style="margin-top: 15px; text-align: right;">
-                        <el-button type="danger" plain size="small" @click="extraPractice(res)">
+                    <div v-if="!res.is_correct" style="margin-top: 15px; text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
+                        <el-button 
+                            type="warning" 
+                            plain 
+                            size="small" 
+                            :disabled="savedMistakeIds.has(res.id)"
+                            @click="saveMistake(res)"
+                        >
+                            {{ savedMistakeIds.has(res.id) ? '✅ 已加入错题本' : '📓 加入错题本' }}
+                        </el-button>
+                        <el-button type="danger" plain size="small" @click="extraPractice(res)" v-if="false">
                             🔥 针对此弱项加练一组 (WIP)
                         </el-button>
                     </div>
@@ -181,7 +190,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useMainStore } from '@/store/mainStore'
 import { useTrainingStore } from '@/store/trainingStore'
@@ -229,7 +238,24 @@ const bindWanaKana = (el, id) => {
     }
 }
 
-onMounted(async () => {
+const savedMistakeIds = ref(new Set())
+
+const saveMistake = (res) => {
+    if (savedMistakeIds.value.has(res.id)) return;
+    
+    const targetLessonId = tStore.config?.targetLesson || store.progress.current_lesson
+    store.addMistake({
+        original_question: res.original_question,
+        lesson: targetLessonId,
+        grammar_point: res.type,
+        user_wrong_input: res.user_answer,
+        correct_answer: res.correct_answer,
+        explanation: res.explanation
+    })
+    savedMistakeIds.value.add(res.id)
+}
+
+const startSession = async () => {
     // 处理缓存复用逻辑
     if (tStore.exercises.length > 0 && !tStore.isGenerating) {
         // 1. 如果上次处于报错状态，则清除缓存重新生成
@@ -254,6 +280,7 @@ onMounted(async () => {
     const config = JSON.parse(route.query.sessionConfig)
     tStore.initSession(config)
     tStore.isGenerating = true
+    savedMistakeIds.value.clear() // Reset mistake buttons for new session
 
     const targetLessonId = config.targetLesson || store.progress.current_lesson
 
@@ -277,6 +304,18 @@ onMounted(async () => {
     }
     
     tStore.isGenerating = false
+}
+
+onMounted(() => {
+    startSession()
+})
+
+watch(() => route.query.sessionConfig, (newVal, oldVal) => {
+    if (newVal && newVal !== oldVal) {
+        // 当 URL 上的配置发生变化（说明用户从控制台发起了新一轮请求，但组件被复用时）
+        tStore.clearSession()
+        startSession()
+    }
 })
 
 const submitForEvaluation = async () => {
@@ -300,12 +339,8 @@ const submitForEvaluation = async () => {
             const grade = res.find(r => r.id === ex.id) || { is_correct: false, explanation: '批改超时' }
             
             if (!grade.is_correct) {
-                store.addMistake({
-                    lesson: targetLessonId,
-                    grammar_point: ex.type,
-                    user_wrong_input: tStore.userAnswers[ex.id],
-                    correct_answer: grade.correct_answer
-                })
+                // 不再自动存入错题本，等待用户手动点击
+                // 仅为了业务逻辑统计（如有）打个标记，但在数据结构上分离
             } else {
                 correctCount++;
             }
