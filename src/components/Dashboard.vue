@@ -62,15 +62,38 @@
 
             <el-form-item label="题型完成雷达：">
                <div style="display: flex; gap: 10px;">
-                   <el-tag :type="getTypeCompletion('q_fill') ? 'success' : 'info'" effect="dark">
-                      {{ getTypeCompletion('q_fill') ? `✅ 语感填空 (${getTypeCompletion('q_fill')})` : '⏳ 语感填空 待通关' }}
-                   </el-tag>
-                   <el-tag :type="getTypeCompletion('q_translate') ? 'success' : 'info'" effect="dark">
-                      {{ getTypeCompletion('q_translate') ? `✅ 翻译造句 (${getTypeCompletion('q_translate')})` : '⏳ 翻译造句 待通关' }}
-                   </el-tag>
-                   <el-tag :type="getTypeCompletion('q_conversation') ? 'success' : 'info'" effect="dark">
-                      {{ getTypeCompletion('q_conversation') ? `✅ 职场情景 (${getTypeCompletion('q_conversation')})` : '⏳ 职场情景 待通关' }}
-                   </el-tag>
+                   <el-tooltip content="点击即可手动点亮/熄灭此项印记" placement="top">
+                       <el-tag 
+                           :type="getTypeCompletion('q_fill') ? 'success' : 'info'" 
+                           effect="dark" 
+                           style="cursor: pointer; transition: all 0.2s;"
+                           @click="store.toggleTypeCompletion(config.targetLesson, 'q_fill')"
+                       >
+                          {{ getTypeCompletion('q_fill') ? `✅ 语感填空 (${getTypeCompletion('q_fill')})` : '⏳ 语感填空 (点击空降通关)' }}
+                       </el-tag>
+                   </el-tooltip>
+                   
+                   <el-tooltip content="点击即可手动点亮/熄灭此项印记" placement="top">
+                       <el-tag 
+                           :type="getTypeCompletion('q_translate') ? 'success' : 'info'" 
+                           effect="dark"
+                           style="cursor: pointer; transition: all 0.2s;"
+                           @click="store.toggleTypeCompletion(config.targetLesson, 'q_translate')"
+                       >
+                          {{ getTypeCompletion('q_translate') ? `✅ 翻译造句 (${getTypeCompletion('q_translate')})` : '⏳ 翻译造句 (点击空降通关)' }}
+                       </el-tag>
+                   </el-tooltip>
+                   
+                   <el-tooltip content="点击即可手动点亮/熄灭此项印记" placement="top">
+                       <el-tag 
+                           :type="getTypeCompletion('q_conversation') ? 'success' : 'info'" 
+                           effect="dark"
+                           style="cursor: pointer; transition: all 0.2s;"
+                           @click="store.toggleTypeCompletion(config.targetLesson, 'q_conversation')"
+                       >
+                          {{ getTypeCompletion('q_conversation') ? `✅ 职场情景 (${getTypeCompletion('q_conversation')})` : '⏳ 职场情景 (点击空降通关)' }}
+                       </el-tag>
+                   </el-tooltip>
                </div>
             </el-form-item>
 

@@ -79,6 +79,31 @@ export const useMainStore = defineStore('main', {
       this.saveState()
     },
 
+    // 允许用户在仪表盘手动干预/切换某课某个小类的通关状态
+    toggleTypeCompletion(lessonId, typeId) {
+      if (!this.progress.completed_types_by_lesson[lessonId]) {
+        this.progress.completed_types_by_lesson[lessonId] = {}
+      }
+      
+      let typedata = this.progress.completed_types_by_lesson[lessonId];
+      if (Array.isArray(typedata)) {
+        const migrated = {};
+        typedata.forEach(t => { migrated[t] = '基础巩固' });
+        this.progress.completed_types_by_lesson[lessonId] = migrated;
+        typedata = migrated;
+      }
+      
+      if (typedata[typeId]) {
+          // 已存在则移除（取消点亮）
+          delete typedata[typeId];
+      } else {
+          // 不存在则点亮，默认授予“免试特批”标记
+          typedata[typeId] = '特批免试';
+      }
+      
+      this.saveState();
+    },
+
     // 检查并自动推进主线进度
     checkAndAdvanceLesson(targetLessonId, enabledTypes) {
       if (targetLessonId === this.progress.current_lesson) {
