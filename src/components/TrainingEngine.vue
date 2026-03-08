@@ -15,7 +15,7 @@
          <!-- 答题阶段 -->
          <div v-if="tStore.currentPhase === 'answering'">
             <div style="font-size: 1.2rem; margin-bottom: 20px; color: #409EFF;">
-               <i class="el-icon-edit-outline"></i> 正在挑战: {{ tStore.currentConfig?.difficulty }} ( 第 {{ store.progress.current_lesson }} 课 )
+               <i class="el-icon-edit-outline"></i> 正在挑战: {{ tStore.config?.difficulty }} ( 第 {{ tStore.config?.targetLesson || store.progress.current_lesson }} 课 )
             </div>
 
             <!-- 当前选中的题目卡片 -->
@@ -191,8 +191,10 @@ onMounted(async () => {
     tStore.initSession(config)
     tStore.isGenerating = true
 
+    const targetLessonId = config.targetLesson || store.progress.current_lesson
+
     // 组装大纲
-    const lessonData = syllabusDict.lessons.find(l => l.id === store.progress.current_lesson)
+    const lessonData = syllabusDict.lessons.find(l => l.id === targetLessonId)
     const context = {
         lesson: lessonData.title,
         grammar_points: lessonData.grammar_points,
@@ -226,18 +228,22 @@ const submitForEvaluation = async () => {
 
     try {
         const skill = new EvaluateSentenceSkill(window.CONFIG.GEMINI_API_KEY)
-        const res = await skill.evaluate(store.progress.current_lesson, batchArray)
+        const targetLessonId = tStore.config?.targetLesson || store.progress.current_lesson
+        const res = await skill.evaluate(targetLessonId, batchArray)
         
+        let correctCount = 0;
         const finalResults = tStore.exercises.map(ex => {
             const grade = res.find(r => r.id === ex.id) || { is_correct: false, explanation: '批改超时' }
             
             if (!grade.is_correct) {
                 store.addMistake({
-                    lesson: store.progress.current_lesson,
+                    lesson: targetLessonId,
                     grammar_point: ex.type,
                     user_wrong_input: tStore.userAnswers[ex.id],
                     correct_answer: grade.correct_answer
                 })
+            } else {
+                correctCount++;
             }
             
             return {
@@ -250,6 +256,12 @@ const submitForEvaluation = async () => {
             }
         })
         
+        // 发放成就判定：当为具体专项且正确率大于 50% 时，赋予通过印记
+        const passRate = correctCount / tStore.exercises.length;
+        if (tStore.config?.questionType && tStore.config?.questionType !== 'ALL' && passRate >= 0.5) {
+            store.markTypeCompleted(targetLessonId, tStore.config.questionType)
+        }
+
         tStore.setEvaluations(finalResults)
     } catch (e) {
         alert("批改时发生错误: " + e.message)
