@@ -230,10 +230,20 @@ const bindWanaKana = (el, id) => {
 }
 
 onMounted(async () => {
-    // 只有在没有生成中的任务，且没有已有题库时，才发起新的请求
-    // 这阻断了：跳出路由再回来导致重复请求的尴尬
+    // 处理缓存复用逻辑
     if (tStore.exercises.length > 0 && !tStore.isGenerating) {
-        return; // 复用已有的 Cache！
+        // 1. 如果上次处于报错状态，则清除缓存重新生成
+        if (tStore.generationError) {
+            tStore.clearSession()
+        } 
+        // 2. 如果上次已经处于 results (批改完成) 状态，用户又点进来了，说明要刷一套新的，清除缓存重新生成
+        else if (tStore.currentPhase === 'results') {
+            tStore.clearSession()
+        }
+        // 3. 否则复用由于路由切换（比如切去大纲再切回来）暂时保留的纯净答题现场Cache
+        else {
+            return; 
+        }
     }
 
     if (!route.query.sessionConfig) {

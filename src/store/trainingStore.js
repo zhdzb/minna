@@ -44,6 +44,16 @@ export const useTrainingStore = defineStore('training', () => {
         currentPhase.value = 'results'
     }
 
+    // Action: 强制清空当前场次的缓存数据，强制触发重新获取
+    const clearSession = () => {
+        exercises.value = []
+        evaluations.value = []
+        userAnswers.value = {}
+        generationError.value = ''
+        currentPhase.value = 'answering'
+        activeQuestionId.value = null
+    }
+
     return {
         isGenerating,
         isEvaluating,
@@ -56,6 +66,7 @@ export const useTrainingStore = defineStore('training', () => {
         activeQuestionId,
         initSession,
         setExercises,
-        setEvaluations
+        setEvaluations,
+        clearSession
     }
 })
