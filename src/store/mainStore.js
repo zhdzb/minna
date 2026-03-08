@@ -26,9 +26,19 @@ export const useMainStore = defineStore('main', {
   },
   
   actions: {
-    // 保存至 LocalStorage 供随时导出为 data.json
+    // 保存至 LocalStorage 供随时读取，同时静默同步给本地物理文件 data.json (需在开发环境下通过 Vite 插件支持)
     saveState() {
-      localStorage.setItem('minna_no_nihongo_data', JSON.stringify(this.$state))
+      const stateStr = JSON.stringify(this.$state, null, 2)
+      localStorage.setItem('minna_no_nihongo_data', stateStr)
+      
+      // 静默发给本地 Vite 服务器写入本地磁盘，允许 git 自动追踪！
+      fetch('/api/save-progress', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: stateStr
+      }).catch(err => {
+          console.warn("自动磁盘同步失败 (或许处于纯静态生产部署中): ", err)
+      })
     },
 
     // 记录错题
