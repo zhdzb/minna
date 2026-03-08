@@ -1,0 +1,28 @@
+{
+  "pools": [
+    {
+      "id": "q_fill",
+      "label": "📝 基础语感填空",
+      "description": "提供句子和几个混淆选项，考察基础助词及变形配合。",
+      "level": 1
+    },
+    {
+      "id": "q_translate",
+      "label": "🗣️ 日汉双向翻译突破",
+      "description": "给出中文或日文，要求写出对应的外文。带假名词汇发音卡片掩码。",
+      "level": 2
+    },
+    {
+      "id": "q_conversation",
+      "label": "🏢 职场情景补全",
+      "description": "模拟 A 和 B 的对话，通常带有敬体和隐性语感考察。",
+      "level": 3
+    },
+    {
+      "id": "q_listening_mock",
+      "label": "🎧 JLPT 听解模拟 (开发中)",
+      "description": "使用 Web Speech API 朗读句子，要求听写或选出接续的句子。",
+      "level": 4
+    }
+  ]
+}
