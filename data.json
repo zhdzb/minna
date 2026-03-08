@@ -1,0 +1,49 @@
+{
+  "progress": {
+    "current_lesson": 1,
+    "completed_types_by_lesson": {}
+  },
+  "mistakes_book": [
+    {
+      "id": "1772968156870",
+      "timestamp": "2026-03-08T11:09:16.870Z",
+      "lesson": 1,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "の、は",
+      "correct_answer": "わたしの 本です。"
+    },
+    {
+      "id": "1772968156876",
+      "timestamp": "2026-03-08T11:09:16.876Z",
+      "lesson": 1,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "わたしわがくせありませn ",
+      "correct_answer": "私は 学生ではありません。"
+    },
+    {
+      "id": "1772968156877",
+      "timestamp": "2026-03-08T11:09:16.877Z",
+      "lesson": 1,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "やまたさんわにほじんでsuga",
+      "correct_answer": "田中さんは 日本人ですか。"
+    },
+    {
+      "id": "1772968156877",
+      "timestamp": "2026-03-08T11:09:16.877Z",
+      "lesson": 1,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "ここはわたしのほんでsu",
+      "correct_answer": "これは わたしの本です。"
+    },
+    {
+      "id": "1772968156878",
+      "timestamp": "2026-03-08T11:09:16.878Z",
+      "lesson": 1,
+      "grammar_point": "q_conversation",
+      "user_wrong_input": "いしやありませn ",
+      "correct_answer": "いいえ、医者ではありません。"
+    }
+  ],
+  "collections": []
+}
