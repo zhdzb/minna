@@ -4,9 +4,9 @@
       <template #header>
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div style="font-size: 1.2rem; font-weight: bold; color: #F56C6C;">
-            📓 错题本 (复习与消除体系)
+            📓 错题与收藏 (复习与消除体系)
           </div>
-          <el-button type="danger" plain @click="clearAll" :disabled="tableData.length === 0">清空错题本</el-button>
+          <el-button type="danger" plain @click="clearAll" :disabled="tableData.length === 0">清空全部</el-button>
         </div>
       </template>
 
@@ -36,6 +36,13 @@
              <el-tag size="small">第 {{ scope.row.lesson }} 课</el-tag>
            </template>
         </el-table-column>
+        <el-table-column label="标签" width="100">
+           <template #default="scope">
+             <el-tag size="small" :type="scope.row.mark_type === 'favorite' ? 'success' : 'danger'">
+               {{ scope.row.mark_type === 'favorite' ? '收藏' : '错题' }}
+             </el-tag>
+           </template>
+        </el-table-column>
         <el-table-column prop="grammar_point" label="题型追踪" width="150" sortable />
         <el-table-column label="你的作答 (易错点)" min-width="150">
            <template #default="scope">
@@ -47,7 +54,7 @@
              <div style="display: flex; align-items: center; gap: 8px;">
                <span style="color: #67C23A;">{{ scope.row.correct_answer }}</span>
                <el-button 
-                  v-if="scope.row.type !== 'q_fill'"
+                  v-if="scope.row.grammar_point !== 'q_fill'"
                   size="small"
                   circle
                   icon="el-icon-headset"
@@ -99,7 +106,7 @@ const removeMistake = (id) => {
    const index = store.mistakes_book.findIndex(m => m.id === id);
    if (index !== -1) {
        store.mistakes_book.splice(index, 1);
-       store.saveStateToLocal(); // persist immediately
+       store.saveState();
        ElMessage({ type: 'success', message: '已从错题库中擦除！' })
    }
 }
@@ -115,7 +122,7 @@ const clearAll = () => {
         }
     ).then(() => {
         store.mistakes_book = [];
-        store.saveStateToLocal();
+        store.saveState();
         ElMessage({ type: 'success', message: '错题本已斩草除根！' })
     }).catch(() => {});
 }

@@ -14,8 +14,11 @@
          
          <!-- 答题阶段 -->
          <div v-if="tStore.currentPhase === 'answering'">
-            <div style="font-size: 1.2rem; margin-bottom: 20px; color: #409EFF;">
-               <i class="el-icon-edit-outline"></i> 正在挑战: {{ tStore.config?.difficulty }} ( 第 {{ tStore.config?.targetLesson || store.progress.current_lesson }} 课 )
+            <div style="font-size: 1.2rem; margin-bottom: 8px; color: #409EFF;">
+               <i class="el-icon-edit-outline"></i> 正在挑战: {{ tStore.currentConfig?.difficulty }} ( 第 {{ tStore.currentConfig?.targetLesson || store.progress.current_lesson }} 课 )
+            </div>
+            <div style="font-size: 0.9rem; color: #888; margin-bottom: 20px;">
+               已作答 {{ answeredCount }} / {{ totalCount }} 题
             </div>
 
             <!-- 当前选中的题目卡片 -->
@@ -139,15 +142,25 @@
                         </template>
                     </el-alert>
 
-                    <div v-if="!res.is_correct" style="margin-top: 15px; text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
+                    <div style="margin-top: 15px; text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
                         <el-button 
                             type="warning" 
                             plain 
                             size="small" 
-                            :disabled="savedMistakeIds.has(res.id)"
-                            @click="saveMistake(res)"
+                            :disabled="savedReviewIds.has(`${res.id}:mistake`)"
+                            @click="saveReviewItem(res, 'mistake')"
+                            v-if="!res.is_correct"
                         >
-                            {{ savedMistakeIds.has(res.id) ? '✅ 已加入错题本' : '📓 加入错题本' }}
+                            {{ savedReviewIds.has(`${res.id}:mistake`) ? '✅ 已加入错题本' : '📓 加入错题本' }}
+                        </el-button>
+                        <el-button 
+                            type="success" 
+                            plain 
+                            size="small" 
+                            :disabled="savedReviewIds.has(`${res.id}:favorite`)"
+                            @click="saveReviewItem(res, 'favorite')"
+                        >
+                            {{ savedReviewIds.has(`${res.id}:favorite`) ? '✅ 已收藏' : '⭐ 收藏本题' }}
                         </el-button>
                         <el-button type="danger" plain size="small" @click="extraPractice(res)" v-if="false">
                             🔥 针对此弱项加练一组 (WIP)
@@ -240,21 +253,22 @@ const bindWanaKana = (el, id) => {
     }
 }
 
-const savedMistakeIds = ref(new Set())
+const savedReviewIds = ref(new Set())
 
-const saveMistake = (res) => {
-    if (savedMistakeIds.value.has(res.id)) return;
+const saveReviewItem = (res, markType) => {
+    const key = `${res.id}:${markType}`
+    if (savedReviewIds.value.has(key)) return;
     
-    const targetLessonId = tStore.config?.targetLesson || store.progress.current_lesson
-    store.addMistake({
+    const targetLessonId = tStore.currentConfig?.targetLesson || store.progress.current_lesson
+    store.addReviewItem({
         original_question: res.original_question,
         lesson: targetLessonId,
         grammar_point: res.type,
         user_wrong_input: res.user_answer,
         correct_answer: res.correct_answer,
         explanation: res.explanation
-    })
-    savedMistakeIds.value.add(res.id)
+    }, markType)
+    savedReviewIds.value.add(key)
 }
 
 const startSession = async () => {
@@ -291,7 +305,7 @@ const startSession = async () => {
     const config = JSON.parse(queryConfigStr)
     tStore.initSession(config, queryTimestamp)
     tStore.isGenerating = true
-    savedMistakeIds.value.clear() // Reset mistake buttons for new session
+    savedReviewIds.value.clear()
 
     const targetLessonId = config.targetLesson || store.progress.current_lesson
 
@@ -325,7 +339,8 @@ const submitForEvaluation = async () => {
     tStore.isEvaluating = true
     tStore.currentPhase = 'results' // switch to pre-loading ui
     
-    const batchArray = tStore.exercises.map(ex => ({
+    const nonFillExercises = tStore.exercises.filter(ex => ex.type !== 'q_fill')
+    const batchArray = nonFillExercises.map(ex => ({
         id: ex.id,
         original_prompt: ex.question || ex.chinese_prompt,
         user_answer: tStore.userAnswers[ex.id] || '',
@@ -333,20 +348,32 @@ const submitForEvaluation = async () => {
     }))
 
     try {
-        const skill = new EvaluateSentenceSkill(window.CONFIG.GEMINI_API_KEY)
-        const targetLessonId = tStore.config?.targetLesson || store.progress.current_lesson
-        const res = await skill.evaluate(targetLessonId, batchArray)
+        const targetLessonId = tStore.currentConfig?.targetLesson || store.progress.current_lesson
+        let res = []
+        if (batchArray.length > 0) {
+            const skill = new EvaluateSentenceSkill(window.CONFIG.GEMINI_API_KEY)
+            res = await skill.evaluate(targetLessonId, batchArray)
+        }
         
         let correctCount = 0;
         const finalResults = tStore.exercises.map(ex => {
-            const grade = res.find(r => r.id === ex.id) || { is_correct: false, explanation: '批改超时' }
-            
-            if (!grade.is_correct) {
-                // 不再自动存入错题本，等待用户手动点击
-                // 仅为了业务逻辑统计（如有）打个标记，但在数据结构上分离
-            } else {
-                correctCount++;
+            if (ex.type === 'q_fill') {
+                const userAnswer = tStore.userAnswers[ex.id] || ''
+                const correctAnswer = ex.answer || ''
+                const isCorrect = !!correctAnswer && userAnswer === correctAnswer
+                if (isCorrect) correctCount++
+                return {
+                    ...ex,
+                    original_question: ex.question || ex.chinese_prompt,
+                    user_answer: userAnswer,
+                    is_correct: isCorrect,
+                    correct_answer: correctAnswer,
+                    explanation: isCorrect ? '回答正确。' : '答案不正确。'
+                }
             }
+
+            const grade = res.find(r => r.id === ex.id) || { is_correct: false, explanation: '批改超时' }
+            if (grade.is_correct) correctCount++
             
             return {
                 ...ex,
@@ -358,21 +385,30 @@ const submitForEvaluation = async () => {
             }
         })
         
-        // 发放成就判定：当正确率大于 50% 时，赋予通过印记
-        const passRate = correctCount / tStore.exercises.length;
-        if (passRate >= 0.5) {
+        const totalCount = tStore.exercises.length
+        const passRate = totalCount > 0 ? correctCount / totalCount : 0
+        store.recordLessonStats(targetLessonId, {
+            question_count: totalCount,
+            correct_count: correctCount,
+            correct_rate: passRate,
+            difficulty: tStore.currentConfig?.difficulty || '',
+            question_type: tStore.currentConfig?.questionType || ''
+        })
+
+        const passThreshold = store.progress.pass_threshold || 0.5
+        if (passRate >= passThreshold) {
             const lessonData = syllabusDict.lessons.find(l => l.id === targetLessonId)
             
-            if (tStore.config?.questionType === 'ALL') {
+            if (tStore.currentConfig?.questionType === 'ALL') {
                 // 如果是混合实战 ALL 型过关，直接点亮该课所有启用的题型专属印记！
                 if (lessonData && lessonData.enabled_question_types) {
                     lessonData.enabled_question_types.forEach(type => {
-                        store.markTypeCompleted(targetLessonId, type);
+                        store.markTypeCompleted(targetLessonId, type, tStore.currentConfig?.difficulty);
                     });
                 }
-            } else if (tStore.config?.questionType) {
+            } else if (tStore.currentConfig?.questionType) {
                 // 普通专项过关
-                store.markTypeCompleted(targetLessonId, tStore.config.questionType)
+                store.markTypeCompleted(targetLessonId, tStore.currentConfig.questionType, tStore.currentConfig?.difficulty)
             }
             
             // 检查大满贯晋升
@@ -408,6 +444,14 @@ const playAudio = (text) => {
         alert("非常抱歉，您的浏览器不支持 Web Speech 语音引擎。");
     }
 }
+
+const totalCount = computed(() => tStore.exercises.length)
+const answeredCount = computed(() => {
+    return tStore.exercises.filter(ex => {
+        const val = tStore.userAnswers[ex.id]
+        return val !== undefined && val !== null && String(val).trim() !== ''
+    }).length
+})
 </script>
 
 <style scoped>

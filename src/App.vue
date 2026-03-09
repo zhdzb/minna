@@ -113,7 +113,7 @@ const applyCustomBg = () => {
     }
 }
 
-onMounted(() => {
+onMounted(async () => {
     window.addEventListener('keydown', handleKeyDown)
     window.addEventListener('bg-url-changed', applyCustomBg)
     
@@ -126,6 +126,8 @@ onMounted(() => {
     } else {
         toggleTheme(true) // 默认开启
     }
+
+    await store.hydrateFromDisk()
 })
 
 onUnmounted(() => {

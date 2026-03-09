@@ -1,7 +1,9 @@
 {
   "progress": {
     "current_lesson": 1,
-    "completed_types_by_lesson": {}
+    "completed_types_by_lesson": {},
+    "pass_threshold": 0.5,
+    "lesson_stats": {}
   },
   "mistakes_book": [
     {

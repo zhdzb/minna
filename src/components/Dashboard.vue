@@ -31,6 +31,33 @@
       </div>
     </el-card>
 
+    <el-card shadow="hover" style="margin-bottom: 20px;">
+      <template #header>
+        <div style="font-weight: bold;">📈 课内进度可视化</div>
+      </template>
+      <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+        <div style="min-width: 180px; text-align: center;">
+          <el-progress type="circle" :percentage="lessonCompletionPercent" :stroke-width="10" />
+          <div style="margin-top: 10px; color: #666;">第 {{ config.targetLesson }} 课题型完成度</div>
+        </div>
+        <div style="flex: 1; min-width: 260px;">
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+            <el-tag 
+              v-for="type in enabledTypes"
+              :key="type"
+              :type="getTypeCompletion(type) ? 'success' : 'info'"
+              effect="dark"
+            >
+              {{ typeLabels[type] || type }}
+            </el-tag>
+          </div>
+          <div style="font-size: 0.9rem; color: #888;">
+            上次练习：{{ lastSessionText }}
+          </div>
+        </div>
+      </div>
+    </el-card>
+
     <!-- Phase 3: Element Plus Form -->
     <el-card shadow="hover" style="margin-top: 20px;">
         <template #header>
@@ -58,6 +85,13 @@
                     <el-option label="🗣️ 专项：日汉翻译造句突破" value="q_translate" />
                     <el-option label="🏢 专项：职场情景对话补全" value="q_conversation" />
                 </el-select>
+            </el-form-item>
+
+            <el-form-item label="通关正确率门槛：">
+                <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
+                    <el-slider v-model="passThreshold" :min="0.3" :max="1" :step="0.05" style="flex: 1;" />
+                    <el-tag type="warning">{{ Math.round(passThreshold * 100) }}%</el-tag>
+                </div>
             </el-form-item>
 
             <el-form-item label="题型完成雷达：">
@@ -124,7 +158,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMainStore } from '@/store/mainStore'
 import { useTrainingStore } from '@/store/trainingStore'
@@ -158,6 +192,40 @@ const getTypeCompletion = (type) => {
     
     return completedData[type] || false;
 }
+
+const passThreshold = computed({
+    get() {
+        return store.progress.pass_threshold || 0.5
+    },
+    set(val) {
+        store.setPassThreshold(val)
+    }
+})
+
+const enabledTypes = computed(() => {
+    const lesson = syllabus.value.lessons.find(l => l.id === config.value.targetLesson)
+    return lesson?.enabled_question_types || []
+})
+
+const typeLabels = {
+    q_fill: '语感填空',
+    q_translate: '翻译造句',
+    q_conversation: '职场情景'
+}
+
+const lessonCompletionPercent = computed(() => {
+    const total = enabledTypes.value.length
+    if (!total) return 0
+    const completed = enabledTypes.value.filter(t => !!getTypeCompletion(t)).length
+    return Math.round((completed / total) * 100)
+})
+
+const lastSessionText = computed(() => {
+    const stats = store.progress.lesson_stats?.[config.value.targetLesson]
+    if (!stats || !stats.last_session_at) return '暂无记录'
+    const rate = Math.round((stats.last_correct_rate || 0) * 100)
+    return `${rate}% 正确率 / ${stats.last_correct_count || 0} 正确 / ${stats.last_question_count || 0} 题`
+})
 
 const appendTag = (tag) => {
     if (config.value.customPrompt.includes(tag)) return;
