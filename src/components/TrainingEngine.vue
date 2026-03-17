@@ -355,6 +355,10 @@ const submitForEvaluation = async () => {
             res = await skill.evaluate(targetLessonId, batchArray)
         }
         
+        const gradeMap = Array.isArray(res)
+            ? new Map(res.map(item => [String(item.id), item]))
+            : new Map()
+
         let correctCount = 0;
         const finalResults = tStore.exercises.map(ex => {
             if (ex.type === 'q_fill') {
@@ -372,7 +376,7 @@ const submitForEvaluation = async () => {
                 }
             }
 
-            const grade = res.find(r => r.id === ex.id) || { is_correct: false, explanation: '批改超时' }
+            const grade = gradeMap.get(String(ex.id)) || { is_correct: false, explanation: '批改超时' }
             if (grade.is_correct) correctCount++
             
             return {

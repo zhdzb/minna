@@ -1,9 +1,93 @@
 {
   "progress": {
-    "current_lesson": 1,
-    "completed_types_by_lesson": {},
+    "current_lesson": 6,
+    "completed_types_by_lesson": {
+      "1": {
+        "q_fill": "基础巩固",
+        "q_translate": "基础巩固",
+        "q_conversation": "基础巩固"
+      },
+      "2": {
+        "q_fill": "基础巩固",
+        "q_translate": "基础巩固",
+        "q_conversation": "基础巩固"
+      },
+      "3": {
+        "q_fill": "基础巩固",
+        "q_translate": "基础巩固",
+        "q_conversation": "基础巩固"
+      },
+      "4": {
+        "q_fill": "基础巩固",
+        "q_translate": "基础巩固",
+        "q_conversation": "基础巩固"
+      },
+      "5": {
+        "q_fill": "基础巩固",
+        "q_translate": "基础巩固",
+        "q_conversation": "基础巩固"
+      },
+      "14": {
+        "q_fill": "基础巩固"
+      }
+    },
     "pass_threshold": 0.5,
-    "lesson_stats": {}
+    "lesson_stats": {
+      "1": {
+        "lesson_id": 1,
+        "last_session_at": "2026-03-10T14:57:48.396Z",
+        "last_question_count": 10,
+        "last_correct_count": 6,
+        "last_correct_rate": 0.6,
+        "last_difficulty": "基础巩固",
+        "last_question_type": "ALL"
+      },
+      "2": {
+        "lesson_id": 2,
+        "last_session_at": "2026-03-10T15:37:13.128Z",
+        "last_question_count": 8,
+        "last_correct_count": 4,
+        "last_correct_rate": 0.5,
+        "last_difficulty": "基础巩固",
+        "last_question_type": "ALL"
+      },
+      "3": {
+        "lesson_id": 3,
+        "last_session_at": "2026-03-10T17:16:22.849Z",
+        "last_question_count": 10,
+        "last_correct_count": 6,
+        "last_correct_rate": 0.6,
+        "last_difficulty": "基础巩固",
+        "last_question_type": "ALL"
+      },
+      "4": {
+        "lesson_id": 4,
+        "last_session_at": "2026-03-11T16:34:36.642Z",
+        "last_question_count": 15,
+        "last_correct_count": 9,
+        "last_correct_rate": 0.6,
+        "last_difficulty": "基础巩固",
+        "last_question_type": "ALL"
+      },
+      "5": {
+        "lesson_id": 5,
+        "last_session_at": "2026-03-15T15:06:32.590Z",
+        "last_question_count": 15,
+        "last_correct_count": 10,
+        "last_correct_rate": 0.6666666666666666,
+        "last_difficulty": "基础巩固",
+        "last_question_type": "ALL"
+      },
+      "14": {
+        "lesson_id": 14,
+        "last_session_at": "2026-03-09T16:43:12.352Z",
+        "last_question_count": 12,
+        "last_correct_count": 10,
+        "last_correct_rate": 0.8333333333333334,
+        "last_difficulty": "基础巩固",
+        "last_question_type": "q_fill"
+      }
+    }
   },
   "mistakes_book": [
     {
@@ -77,7 +161,313 @@
       "grammar_point": "q_conversation",
       "user_wrong_input": "どぞよろしくおねがいいします",
       "correct_answer": "こちらこそ、どうぞよろしくお願いいたします。"
+    },
+    {
+      "id": "1772978494176",
+      "timestamp": "2026-03-08T14:01:34.176Z",
+      "original_question": "那把伞是佐藤先生的吗？(指着稍远处的伞)",
+      "lesson": 1,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "あのかさわさとさんですか",
+      "correct_answer": "あの傘は 佐藤さんのですか。",
+      "explanation": "“佐藤先生的”需要使用助词「の」，即「佐藤さんの」。另外，表示主语的助词是「は」（读作 wa），而不是「わ」。"
+    },
+    {
+      "id": "1772978537278",
+      "timestamp": "2026-03-08T14:02:17.278Z",
+      "original_question": "A: これは 山田さんの資料ですか。 (指着一份文件)\nB: いいえ、(___)。それは 私の資料です。",
+      "lesson": 1,
+      "grammar_point": "q_conversation",
+      "user_wrong_input": "やまださんじゃありません",
+      "correct_answer": "いいえ、山田さんのじゃありません。",
+      "explanation": "回答“不是山田先生的（资料）”时，需要加上表示所属的助词「の」，即「山田さんのじゃありません」。您的回答「山田さんじゃありません」意为“不是山田先生本人”。"
+    },
+    {
+      "id": "1772980598194",
+      "timestamp": "2026-03-08T14:36:38.194Z",
+      "original_question": "您的公司是哪家？ (礼貌询问)",
+      "lesson": 1,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "あなたのかしゃはなにですか",
+      "correct_answer": "あなたの会社は どちら ですか。",
+      "explanation": "你的答案有两处错误：1. “かしゃ”应为“かいしゃ”（kaisha）。2. 询问“哪家公司”时，应使用礼貌的疑问词“どちら”（哪边/哪位），而不是“何”（什么）。"
+    },
+    {
+      "id": "1772980735314",
+      "timestamp": "2026-03-08T14:38:55.314Z",
+      "original_question": "这双鞋多少钱？",
+      "lesson": 1,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "ここくつはいくらですか",
+      "correct_answer": "この靴は いくら ですか。",
+      "explanation": "“这双鞋”应该用“この靴”（kono kutsu），而不是“ここ靴”（koko kutsu）。“ここ”表示“这里”，而“この”表示“这个/这双”，用来修饰名词。"
+    },
+    {
+      "id": "1772980745621",
+      "timestamp": "2026-03-08T14:39:05.621Z",
+      "original_question": "田中先生在会议室。",
+      "lesson": 1,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "たなかさんはかいぎしつ",
+      "correct_answer": "田中さんは 会議室にいます。",
+      "explanation": "你的答案缺少了表示存在的谓语。对于人或动物的“在”，通常使用“います”。完整的句子应该是“田中先生在会议室”。"
+    },
+    {
+      "id": "1773073163467",
+      "timestamp": "2026-03-09T16:19:23.467Z",
+      "mark_type": "favorite",
+      "original_question": "ここに名前（___）書いてください。(请在这里写名字。)",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "を",
+      "correct_answer": "を",
+      "explanation": "回答正确。"
+    },
+    {
+      "id": "1773073171659",
+      "timestamp": "2026-03-09T16:19:31.659Z",
+      "mark_type": "favorite",
+      "original_question": "私（___）この本を貸してください。(请把这本书借给我。)",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "に",
+      "correct_answer": "に",
+      "explanation": "回答正确。"
+    },
+    {
+      "id": "1773073266864",
+      "timestamp": "2026-03-09T16:21:06.864Z",
+      "mark_type": "favorite",
+      "original_question": "駅（___）行く道を教えてください。(请告诉我到车站的路。)",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "へ",
+      "correct_answer": "へ",
+      "explanation": "回答正确。"
+    },
+    {
+      "id": "1773073270143",
+      "timestamp": "2026-03-09T16:21:10.143Z",
+      "mark_type": "favorite",
+      "original_question": "鉛筆（___）書いてください。(请用铅笔写。)",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "で",
+      "correct_answer": "で",
+      "explanation": "回答正确。"
+    },
+    {
+      "id": "1773073332806",
+      "timestamp": "2026-03-09T16:22:12.806Z",
+      "mark_type": "favorite",
+      "original_question": "私は東京（___）住んでいます。(我住在东京。)",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "へ",
+      "correct_answer": "に",
+      "explanation": "答案不正确。"
+    },
+    {
+      "id": "1773073333798",
+      "timestamp": "2026-03-09T16:22:13.798Z",
+      "mark_type": "favorite",
+      "original_question": "彼は食堂（___）ご飯を食べています。(他正在食堂吃饭。)",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "で",
+      "correct_answer": "で",
+      "explanation": "回答正确。"
+    },
+    {
+      "id": "1773073364198",
+      "timestamp": "2026-03-09T16:22:44.198Z",
+      "mark_type": "favorite",
+      "original_question": "先生（___）電話をかけましょうか。(我来给老师打电话吧。)",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "に",
+      "correct_answer": "に",
+      "explanation": "回答正确。"
+    },
+    {
+      "id": "1773073383740",
+      "timestamp": "2026-03-09T16:23:03.740Z",
+      "mark_type": "favorite",
+      "original_question": "塩（___）取ってください。(请把盐递给我。)",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "が",
+      "correct_answer": "を",
+      "explanation": "答案不正确。"
+    },
+    {
+      "id": "1773073384883",
+      "timestamp": "2026-03-09T16:23:04.883Z",
+      "mark_type": "favorite",
+      "original_question": "山田さん（___）結婚しています。(山田先生结婚了。)",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "が",
+      "correct_answer": "は",
+      "explanation": "答案不正确。"
+    },
+    {
+      "id": "1773073400249",
+      "timestamp": "2026-03-09T16:23:20.249Z",
+      "mark_type": "favorite",
+      "original_question": "彼は大阪（___）勤めています。(他在大阪工作。)",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "へ",
+      "correct_answer": "に",
+      "explanation": "答案不正确。"
+    },
+    {
+      "id": "1773073435982",
+      "timestamp": "2026-03-09T16:23:55.982Z",
+      "mark_type": "favorite",
+      "original_question": "市役所（___）行く道を教えてください。(请告诉我到市政府的路。)",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "へ",
+      "correct_answer": "へ",
+      "explanation": "回答正确。"
+    },
+    {
+      "id": "1773074636608",
+      "timestamp": "2026-03-09T16:43:56.608Z",
+      "mark_type": "favorite",
+      "original_question": "窓(まど)が 開(あ)いていますね。私(わたし)が 窓(まど) (___) 閉(し)めましょうか。（窗户开着呢。我来关窗户吧？）",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "を",
+      "correct_answer": "を",
+      "explanation": "回答正确。"
+    },
+    {
+      "id": "1773163084739",
+      "timestamp": "2026-03-10T17:18:04.739Z",
+      "mark_type": "mistake",
+      "original_question": "这是哪个国家的酒？",
+      "lesson": 3,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "ここはどちらくにのけさですか",
+      "correct_answer": "これはどこのお酒ですか。",
+      "explanation": "“ここ” 指“这里”，表示“这个”时应使用 “これ” (kore)。“どちらくに” 表达不自然，应为 “どこの国” (doko no kuni) 或 “どちらの国” (dochira no kuni)。“けさ” 应为 “お酒” (osake)。"
+    },
+    {
+      "id": "1773163128268",
+      "timestamp": "2026-03-10T17:18:48.268Z",
+      "mark_type": "favorite",
+      "original_question": "这个手表多少钱？",
+      "lesson": 3,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "これとけいはいくらですか",
+      "correct_answer": "この時計はいくらですか。",
+      "explanation": "“これ” 是指示代词，不能直接修饰名词 “時計”。应使用 “この” (kono) 来修饰名词，构成 “この時計” (kono tokei)。"
+    },
+    {
+      "id": "1773163131591",
+      "timestamp": "2026-03-10T17:18:51.591Z",
+      "mark_type": "favorite",
+      "original_question": "这是哪个国家的酒？",
+      "lesson": 3,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "ここはどちらくにのけさですか",
+      "correct_answer": "これはどこのお酒ですか。",
+      "explanation": "“ここ” 指“这里”，表示“这个”时应使用 “これ” (kore)。“どちらくに” 表达不自然，应为 “どこの国” (doko no kuni) 或 “どちらの国” (dochira no kuni)。“けさ” 应为 “お酒” (osake)。"
+    },
+    {
+      "id": "1773246907198",
+      "timestamp": "2026-03-11T16:35:07.198Z",
+      "mark_type": "favorite",
+      "original_question": "私は今日 (___) 働きません。 (我今天不工作。)",
+      "lesson": 4,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "を",
+      "correct_answer": "",
+      "explanation": "答案不正确。"
+    },
+    {
+      "id": "1773246959723",
+      "timestamp": "2026-03-11T16:35:59.723Z",
+      "mark_type": "favorite",
+      "original_question": "我晚上11点睡觉。",
+      "lesson": 4,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "わたしはじょ いち に sぇえp ます",
+      "correct_answer": "私は午後11時に寝ます。",
+      "explanation": "「11点」的正确读法是「じゅういちじ」，而不是「じょいちに」。另外，「睡觉」的动词是「寝ます（ねます）」，而不是「sぇえpます」。"
+    },
+    {
+      "id": "1773252511327",
+      "timestamp": "2026-03-11T18:08:31.327Z",
+      "mark_type": "favorite",
+      "original_question": "私は どこ (___) 行きません。(我哪儿也不去。)",
+      "lesson": 5,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "でも",
+      "correct_answer": "へも",
+      "explanation": "答案不正确。"
+    },
+    {
+      "id": "1773252654947",
+      "timestamp": "2026-03-11T18:10:54.947Z",
+      "mark_type": "favorite",
+      "original_question": "周末我哪儿也不去。",
+      "lesson": 5,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "しゅうまつわたしはなんどもいきません",
+      "correct_answer": "週末 わたしは どこへも 行きません。",
+      "explanation": "「哪儿也不去」的表达是「どこへも行きません」或「どこにも行きません」。「何も（なにも）」通常用于表示“什么也不做/没有”等，不用于地点。<br><br><b>💡 职场加点料:</b> 週末はどこにも出かけません。"
+    },
+    {
+      "id": "1773252666925",
+      "timestamp": "2026-03-11T18:11:06.925Z",
+      "mark_type": "favorite",
+      "original_question": "山田先生什么时候回国？",
+      "lesson": 5,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "やまださんはなんじはくにえかえりますか",
+      "correct_answer": "山田さんは いつ 国へ 帰りますか。",
+      "explanation": "「什么时候」应该用「いつ」，而不是「何時（なんじ）」。另外，「回国」的表达是「国へ帰ります」或「国に帰ります」，您写的「はくにえ」有误。<br><br><b>💡 职场加点料:</b> 山田さんはいつ帰国されますか。"
+    },
+    {
+      "id": "1773587342347",
+      "timestamp": "2026-03-15T15:09:02.347Z",
+      "mark_type": "favorite",
+      "original_question": "你什么时候去日本？",
+      "lesson": 5,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "あ な た は だ れ に ほん え い き ま す？",
+      "correct_answer": "あなたはいつ日本へ行きますか。",
+      "explanation": "“什么时候”的日语是「いつ」，而不是「だれ」（谁）。"
+    },
+    {
+      "id": "1773591799942",
+      "timestamp": "2026-03-15T16:23:19.942Z",
+      "mark_type": "favorite",
+      "original_question": "上周末我哪里也没去。",
+      "lesson": 5,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "せ ん しゅうまつ わたしはなにもいきませんでした",
+      "correct_answer": "先週末、私はどこへも行きませんでした。",
+      "explanation": "“哪里也没去”的正确表达是「どこへも行きませんでした」或「どこにも行きませんでした」。「何も行きませんでした」的用法不正确。"
+    },
+    {
+      "id": "1773591929415",
+      "timestamp": "2026-03-15T16:25:29.415Z",
+      "mark_type": "favorite",
+      "original_question": "A: 田中さん、いつ大阪へ行きますか。\nB: (下周一坐飞机去。)",
+      "lesson": 5,
+      "grammar_point": "q_conversation",
+      "user_wrong_input": "らいしゅうげつようびひこうきでいきます",
+      "correct_answer": "来週の月曜日に飛行機で行きます。",
+      "explanation": "表达基本正确。更自然和准确的说法是在「来週月曜日」后加上时间助词「に」。<br><br><b>💡 职场加点料:</b> 来週月曜、飛行機で行きます。"
     }
   ],
+  "meta": {
+    "updated_at": "2026-03-15T16:25:29.415Z"
+  },
   "collections": []
 }
