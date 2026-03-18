@@ -5,8 +5,7 @@
 export default class GenerateGrammarExerciseSkill {
     constructor(apiKey) {
         this.apiKey = apiKey;
-        this.baseUrl = "https://openrouter.ai/api/v1/chat/completions";
-        this.model = "stepfun/step-3.5-flash:free";
+        this.baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
     }
 
     _buildSystemPrompt(context) {
@@ -85,30 +84,30 @@ JSON 示例：
         const sysPrompt = this._buildSystemPrompt(context);
         
         try {
-            const response = await fetch(this.baseUrl, {
+            const response = await fetch(`${this.baseUrl}?key=${this.apiKey}`, {
                 method: 'POST',
-                headers: { 
-                    'Authorization': `Bearer ${this.apiKey}`,
-                    'Content-Type': 'application/json',
-                    'X-Title': 'Minna no Nihongo Tutor'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    model: this.model,
-                    messages: [
-                        { role: "system", content: sysPrompt },
-                        { role: "user", content: "请基于系统指令，直接输出纯净JSON结构的题目数据。确保输出不被截断。" }
-                    ],
-                    temperature: 0.7
+                    contents: [{
+                        parts: [{ text: "请基于系统指令，直接输出纯净JSON结构的题目数据。确保输出不被截断。" }]
+                    }],
+                    systemInstruction: {
+                        parts: [{ text: sysPrompt }]
+                    },
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 8192,
+                        responseMimeType: "application/json"
+                    }
                 })
             });
 
             if (!response.ok) {
-                const errData = await response.json();
-                throw new Error(errData.error?.message || "API Request Failed");
+                throw new Error("API Request Failed");
             }
 
             const data = await response.json();
-            const textResponse = data.choices[0].message.content;
+            const textResponse = data.candidates[0].content.parts[0].text;
             
             // 洗掉可能出现的 markdown
             let cleanJsonStr = textResponse.replace(/```json/g, '').replace(/```/g, '').trim();

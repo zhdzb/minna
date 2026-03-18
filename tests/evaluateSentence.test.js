@@ -10,9 +10,11 @@ describe('EvaluateSentenceSkill Phase 3 tests', () => {
 
     it('should parse batch evaluation results array correctly mapped to Phase 3 formats', async () => {
         const mockApiResponse = {
-            choices: [{
-                message: {
-                    content: '```json\n[{"id": "q1", "is_correct": true, "correct_answer": "あした 京都へ 行きます。", "explanation": "非常好，毫无错误", "natural_expression": "..."}]\n```'
+            candidates: [{
+                content: {
+                    parts: [{
+                        text: '```json\n[{"id": "q1", "is_correct": true, "correct_answer": "あした 京都へ 行きます。", "explanation": "非常好，毫无错误", "natural_expression": "..."}]\n```'
+                    }]
                 }
             }]
         }

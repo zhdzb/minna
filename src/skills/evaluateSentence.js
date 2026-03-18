@@ -5,8 +5,7 @@
 export default class EvaluateSentenceSkill {
     constructor(apiKey) {
         this.apiKey = apiKey;
-        this.baseUrl = "https://openrouter.ai/api/v1/chat/completions";
-        this.model = "nvidia/nemotron-3-super-120b-a12b:free";
+        this.baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
     }
 
     _buildSystemPrompt(currentLesson, batchArray) {
@@ -46,30 +45,29 @@ ${taskString}`;
         const sysPrompt = this._buildSystemPrompt(currentLesson, batchArray);
 
         try {
-            const response = await fetch(this.baseUrl, {
+            const response = await fetch(`${this.baseUrl}?key=${this.apiKey}`, {
                 method: 'POST',
-                headers: { 
-                    'Authorization': `Bearer ${this.apiKey}`,
-                    'Content-Type': 'application/json',
-                    'X-Title': 'Minna no Nihongo Tutor'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    model: this.model,
-                    messages: [
-                        { role: "system", content: sysPrompt },
-                        { role: "user", content: "请批改上述考题" }
-                    ],
-                    temperature: 0.2
+                    contents: [{
+                        parts: [{ text: "请批改上述考题" }]
+                    }],
+                    systemInstruction: {
+                        parts: [{ text: sysPrompt }]
+                    },
+                    generationConfig: {
+                        temperature: 0.2, // 批改需要严谨低温
+                        responseMimeType: "application/json"
+                    }
                 })
             });
 
             if (!response.ok) {
-                const errData = await response.json();
-                throw new Error(errData.error?.message || "API Request Failed during evaluation");
+                throw new Error("API Request Failed during evaluation");
             }
 
             const data = await response.json();
-            const textResponse = data.choices[0].message.content;
+            const textResponse = data.candidates[0].content.parts[0].text;
             
             let cleanJsonStr = textResponse.replace(/```json/g, '').replace(/```/g, '').trim();
             return JSON.parse(cleanJsonStr);
