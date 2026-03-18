@@ -16,15 +16,15 @@
         <el-card shadow="hover">
           <template #header>
             <div style="display: flex; align-items: center; gap: 8px;">
-              <span>🔑 核心 AI 驱动引擎 (Gemini API)</span>
+              <span>🔑 核心 AI 驱动引擎 (OpenRouter API)</span>
             </div>
           </template>
           <div style="margin-bottom: 15px; font-size: 0.9rem; color: #888;">
-            本系统由 Google Gemini 2.5 系列模型驱动。请输入您的免费 API Key，我们将用您的 Key 直接通过浏览器前端向 Google 发起请求。
+            本系统已升级至 OpenRouter 聚合模型 (nvidia/nemotron-3)。请输入您的 OpenRouter API Key，我们将用您的 Key 直接通过浏览器前端发起请求。
           </div>
           <el-input 
              v-model="apiKeyInput" 
-             placeholder="如：AIzaSy..." 
+             placeholder="如：sk-or-v1-..." 
              type="password"
              show-password
           />
@@ -73,7 +73,7 @@ onMounted(() => {
 const saveApiKey = () => {
     if (apiKeyInput.value.trim() !== '') {
         localStorage.setItem('gemini_api_key', apiKeyInput.value.trim())
-        ElMessage.success('Gemini API 密钥已强绑定在本地浏览器中！')
+        ElMessage.success('OpenRouter API 密钥已强绑定在本地浏览器中！')
     } else {
         localStorage.removeItem('gemini_api_key')
         ElMessage.warning('API 密钥已清除，您将无法使用智能出题与批改服务。')

@@ -8,13 +8,11 @@ describe('GenerateGrammarExerciseSkill Phase 3 tests', () => {
         global.fetch.mockClear()
     })
 
-    it('should completely parse Gemini JSON response directly mapped to Phase 2/3 ES Module structure', async () => {
+    it('should completely parse OpenRouter JSON response directly mapped to Phase 2/3 ES Module structure', async () => {
         const mockApiResponse = {
-            candidates: [{
-                content: {
-                    parts: [{
-                        text: '```json\n{"exercises": [{"id": "1", "type": "q_fill"}]}\n```'
-                    }]
+            choices: [{
+                message: {
+                    content: '```json\n{"exercises": [{"id": "1", "type": "q_fill"}]}\n```'
                 }
             }]
         }
