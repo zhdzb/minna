@@ -228,7 +228,14 @@ const currentQuestionIndex = computed(() => {
 const goToNextQuestion = (step) => {
     const newIndex = currentQuestionIndex.value + step;
     if (newIndex >= 0 && newIndex < tStore.exercises.length) {
-        // 切换前，强制刷入一次假名，防止用户没有失焦直接点按钮导致字母残留
+        // 切换前，先解绑旧输入框的 WanaKana
+        const oldId = tStore.activeQuestionId
+        const oldInput = boundInputMap.get(oldId)
+        if (oldInput && window.wanakana) {
+            window.wanakana.unbind(oldInput)
+            boundInputMap.delete(oldId)
+        }
+        // 强制刷入一次假名，防止用户没有失焦直接点按钮导致字母残留
         forceKanaConversion(tStore.activeQuestionId);
         tStore.activeQuestionId = tStore.exercises[newIndex].id;
     }
@@ -241,15 +248,13 @@ const forceKanaConversion = (id) => {
     }
 }
 
-const boundInputs = new Set()
+const boundInputMap = new Map()
 const bindWanaKana = (el, id) => {
     // el for el-input returns the component, the internal input is el.$el.querySelector('input')
     const nativeInput = el?.$el?.querySelector('input')
-    if (nativeInput && !boundInputs.has(id)) {
-        if (window.wanakana) {
-            window.wanakana.bind(nativeInput, { IMEMode: true })
-            boundInputs.add(id)
-        }
+    if (nativeInput && window.wanakana) {
+        window.wanakana.bind(nativeInput, { IMEMode: true })
+        boundInputMap.set(id, nativeInput)
     }
 }
 
