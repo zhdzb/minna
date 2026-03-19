@@ -1,6 +1,6 @@
 {
   "progress": {
-    "current_lesson": 6,
+    "current_lesson": 7,
     "completed_types_by_lesson": {
       "1": {
         "q_fill": "基础巩固",
@@ -27,8 +27,18 @@
         "q_translate": "基础巩固",
         "q_conversation": "基础巩固"
       },
+      "6": {
+        "q_fill": "基础巩固",
+        "q_translate": "基础巩固",
+        "q_conversation": "基础巩固"
+      },
       "14": {
         "q_fill": "基础巩固"
+      },
+      "18": {
+        "q_fill": "基础巩固",
+        "q_translate": "基础巩固",
+        "q_conversation": "基础巩固"
       }
     },
     "pass_threshold": 0.5,
@@ -78,6 +88,15 @@
         "last_difficulty": "基础巩固",
         "last_question_type": "ALL"
       },
+      "6": {
+        "lesson_id": 6,
+        "last_session_at": "2026-03-17T16:03:26.863Z",
+        "last_question_count": 16,
+        "last_correct_count": 9,
+        "last_correct_rate": 0.5625,
+        "last_difficulty": "基础巩固",
+        "last_question_type": "ALL"
+      },
       "14": {
         "lesson_id": 14,
         "last_session_at": "2026-03-09T16:43:12.352Z",
@@ -86,6 +105,15 @@
         "last_correct_rate": 0.8333333333333334,
         "last_difficulty": "基础巩固",
         "last_question_type": "q_fill"
+      },
+      "18": {
+        "lesson_id": 18,
+        "last_session_at": "2026-03-18T17:40:32.391Z",
+        "last_question_count": 20,
+        "last_correct_count": 10,
+        "last_correct_rate": 0.5,
+        "last_difficulty": "基础巩固",
+        "last_question_type": "ALL"
       }
     }
   },
@@ -464,10 +492,131 @@
       "user_wrong_input": "らいしゅうげつようびひこうきでいきます",
       "correct_answer": "来週の月曜日に飛行機で行きます。",
       "explanation": "表达基本正确。更自然和准确的说法是在「来週月曜日」后加上时间助词「に」。<br><br><b>💡 职场加点料:</b> 来週月曜、飛行機で行きます。"
+    },
+    {
+      "id": "1773768852742",
+      "timestamp": "2026-03-17T17:34:12.742Z",
+      "mark_type": "favorite",
+      "original_question": "我们一起去游泳吧",
+      "lesson": 6,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "いしゅにおよぎますか",
+      "correct_answer": "いっしょに およぎましょう。",
+      "explanation": "\"いっしょに\"写错为\"いしゅに\"；邀请建议应用ましょう形，不能用疑问式「およぎますか」。<br><br><b>💡 职场加点料:</b> 一緒に泳ぎましょう。"
+    },
+    {
+      "id": "1773768870955",
+      "timestamp": "2026-03-17T17:34:30.955Z",
+      "mark_type": "favorite",
+      "original_question": "我们一起去图书馆吧",
+      "lesson": 6,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "いしゅにとしょかんをいきますか",
+      "correct_answer": "いっしょに としょかんに いきましょう。",
+      "explanation": "\"いっしょに\"写错为\"いしゅに\"；地点应用助词「に」或「へ」，不能用「を」；邀请建议应用ましょう形，不能用疑问式「いきますか」。<br><br><b>💡 职场加点料:</b> 一緒に図書館に行きましょう。"
+    },
+    {
+      "id": "1773768901873",
+      "timestamp": "2026-03-17T17:35:01.873Z",
+      "mark_type": "favorite",
+      "original_question": "他在公园打羽毛球",
+      "lesson": 6,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "かだしはこうえんでバドミントンをします",
+      "correct_answer": "かれは こうえんで バドミントンを します。",
+      "explanation": "主语应为「彼（かれ）」，「かだし」不是正确的词汇。其余助词和动词正确。<br><br><b>💡 职场加点料:</b> 彼は公園でバドミントンをします。"
+    },
+    {
+      "id": "1773768939652",
+      "timestamp": "2026-03-17T17:35:39.652Z",
+      "mark_type": "favorite",
+      "original_question": "我听音乐",
+      "lesson": 6,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "わたしはおんがくをきます",
+      "correct_answer": "わたしは おんがくを ききます。",
+      "explanation": "听音乐的动词应为「聞きます」，用户写成「きます」（来），导致意思变成“来音乐”。<br><br><b>💡 职场加点料:</b> 私は音楽を聴きます。"
+    },
+    {
+      "id": "1773855805858",
+      "timestamp": "2026-03-18T17:43:25.858Z",
+      "mark_type": "favorite",
+      "original_question": "彼は 泳ぐ (___) できます。",
+      "lesson": 18,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "が",
+      "correct_answer": "こと が",
+      "explanation": "答案不正确。"
+    },
+    {
+      "id": "1773855837957",
+      "timestamp": "2026-03-18T17:43:57.957Z",
+      "mark_type": "favorite",
+      "original_question": "我能开车。",
+      "lesson": 18,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "わ た し は く る ま お う ん て ん こ と が で き ます",
+      "correct_answer": "私は 車を 運転する ことが できます。",
+      "explanation": "要表达“能做某事”，动词需要用辞书形加上「こと が できます」。因此，「運転する」后面要接「こと が できます」。或者，也可以直接用名词「運転」加上「が できます」，即「私は車の運転ができます」。<br><br><b>💡 职场加点料:</b> 私は車の運転ができます。"
+    },
+    {
+      "id": "1773855876556",
+      "timestamp": "2026-03-18T17:44:36.556Z",
+      "mark_type": "favorite",
+      "original_question": "我的爱好是画画。",
+      "lesson": 18,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "わ た し の しゅ み は か か る で す",
+      "correct_answer": "私の 趣味は 絵を 描く ことです。",
+      "explanation": "表示“我的爱好是做某事”时，需要将动词的辞书形加上「こと」来名词化，再接「です」。动词“画画”是「描く（かく）」。所以应该是「描くことです」。<br><br><b>💡 职场加点料:</b> 私の趣味は絵を描くことです。"
+    },
+    {
+      "id": "1773855913446",
+      "timestamp": "2026-03-18T17:45:13.446Z",
+      "mark_type": "favorite",
+      "original_question": "吃饭之前，请洗手。",
+      "lesson": 18,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "はんをたべるまえに、てをあらいでください",
+      "correct_answer": "ご飯を 食べる 前に、手を 洗って ください。",
+      "explanation": "动词「洗う（あらう）」是五段动词，其て形是「洗って（あらって）」。所以「请洗手」应该是「手を洗ってください」。<br><br><b>💡 职场加点料:</b> ご飯を食べる前に、手を洗ってください。"
+    },
+    {
+      "id": "1773855925270",
+      "timestamp": "2026-03-18T17:45:25.270Z",
+      "mark_type": "favorite",
+      "original_question": "睡觉之前，我读了书。",
+      "lesson": 18,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "ねむるまえに、わたしはほんをよみます",
+      "correct_answer": "眠る 前に、私は 本を 読みました。",
+      "explanation": "原句是“我读了书”，表示过去发生的事情，所以动词应该用过去式「読みました」。<br><br><b>💡 职场加点料:</b> 寝る前に、本を読みました。"
+    },
+    {
+      "id": "1773855941880",
+      "timestamp": "2026-03-18T17:45:41.880Z",
+      "mark_type": "favorite",
+      "original_question": "我的爱好是打高尔夫。",
+      "lesson": 18,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "わたしのしゅみはゴルフをします",
+      "correct_answer": "私の 趣味は ゴルフを する ことです。",
+      "explanation": "表示“我的爱好是做某事”时，需要将动词的辞书形加上「こと」来名词化，再接「です」。所以应该是「ゴルフをすることです」。<br><br><b>💡 职场加点料:</b> 私の趣味はゴルフをすることです。"
+    },
+    {
+      "id": "1773855961022",
+      "timestamp": "2026-03-18T17:46:01.022Z",
+      "mark_type": "favorite",
+      "original_question": "我能做饭。",
+      "lesson": 18,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "わたしははんができます",
+      "correct_answer": "私は 料理が できます。",
+      "explanation": "「ご飯ができます」通常表示“饭做好了”或者“能吃米饭”。要表达“能做饭”这个技能，应该用「料理（りょうり）ができます」或者「料理をすることができます」。<br><br><b>💡 职场加点料:</b> 私は料理ができます。"
     }
   ],
   "meta": {
-    "updated_at": "2026-03-15T16:25:29.415Z"
+    "updated_at": "2026-03-18T17:46:01.022Z"
   },
   "collections": []
 }
