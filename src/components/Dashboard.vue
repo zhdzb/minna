@@ -11,23 +11,105 @@
         </template>
     </el-alert>
 
+    <!-- 全局进度概览卡片 -->
     <el-card shadow="hover" style="margin-bottom: 20px;">
       <template #header>
-        <div style="font-size: 1.2rem; font-weight: bold; color: #409EFF;">
-          🏆 准备好开始今天的集训了吗？
-        </div>
+        <div style="font-weight: bold;">📊 全局学习概览</div>
       </template>
-      <div style="display: flex; align-items: center; justify-content: space-between;">
-          <p style="font-size: 1.1rem; display: flex; align-items: center; gap: 10px;">
-             目标集训课时：
-             <el-select v-model="config.targetLesson" style="width: 150px;" size="large">
-                <el-option v-for="l in syllabus.lessons" :key="l.id" :label="l.title" :value="l.id" />
-             </el-select>
-             <span style="font-size: 0.85rem; color: #888; margin-left: 5px;">
-                (当前推荐锚点: 第 {{ store.progress.current_lesson }} 课)
-             </span>
-          </p>
-          <el-button type="primary" plain @click="$router.push('/syllabus')">去大纲调整知识图云</el-button>
+      <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+        <div style="text-align: center; min-width: 120px;">
+          <div style="font-size: 2rem; font-weight: bold; color: #409EFF;">{{ store.progress.current_lesson }}</div>
+          <div style="color: #666; font-size: 0.9rem;">当前课时</div>
+        </div>
+        <div style="text-align: center; min-width: 120px;">
+          <div style="font-size: 2rem; font-weight: bold; color: #67C23A;">{{ totalLessons }}</div>
+          <div style="color: #666; font-size: 0.9rem;">总课时数</div>
+        </div>
+        <div style="flex: 1; min-width: 300px;">
+          <div style="font-size: 0.85rem; color: #888; margin-bottom: 8px;">近30天学习热力图</div>
+          <div style="display: flex; gap: 3px; flex-wrap: wrap;">
+            <div 
+              v-for="(count, date) in store.heatmapData" 
+              :key="date"
+              :style="{
+                width: '14px',
+                height: '14px',
+                borderRadius: '2px',
+                backgroundColor: getHeatmapColor(count),
+                cursor: 'pointer'
+              }"
+              :title="`${date}: ${count}次练习`"
+            />
+          </div>
+        </div>
+      </div>
+    </el-card>
+
+    <!-- 关键指标卡片 -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
+      <el-card shadow="hover" style="text-align: center;">
+        <div style="font-size: 1.8rem; font-weight: bold; color: #E6A23C;">{{ store.totalExercises }}</div>
+        <div style="color: #666;">总练习题数</div>
+      </el-card>
+      <el-card shadow="hover" style="text-align: center;">
+        <div style="font-size: 1.8rem; font-weight: bold; color: #67C23A;">{{ Math.round(store.avgAccuracy * 100) }}%</div>
+        <div style="color: #666;">平均正确率</div>
+      </el-card>
+      <el-card shadow="hover" style="text-align: center;">
+        <div style="font-size: 1.8rem; font-weight: bold; color: #F56C6C;">{{ store.streakDays }}</div>
+        <div style="color: #666;">连续学习天数</div>
+      </el-card>
+    </div>
+
+    <!-- 当前课详情卡片 -->
+    <el-card shadow="hover" style="margin-bottom: 20px;">
+      <template #header>
+        <div style="font-weight: bold;">📖 第 {{ store.progress.current_lesson }} 课详情</div>
+      </template>
+      <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+        <!-- 题型掌握度进度条 -->
+        <div style="flex: 1; min-width: 250px;">
+          <div style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">题型掌握度</div>
+          <div v-for="(count, type) in store.typeMastery" :key="type" style="margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 0.85rem;">{{ typeLabels[type] || type }}</span>
+              <span style="font-size: 0.85rem; color: #888;">{{ count }} 课完成</span>
+            </div>
+            <el-progress 
+              :percentage="Math.min(100, (count / totalLessons) * 100)" 
+              :stroke-width="10"
+              :show-text="false"
+            />
+          </div>
+        </div>
+        <!-- 历史正确率趋势图 -->
+        <div style="flex: 1; min-width: 250px;">
+          <div style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">正确率趋势（最近10次）</div>
+          <div v-if="store.accuracyTrend.length > 0" style="display: flex; align-items: flex-end; height: 120px; gap: 8px; padding: 10px; background: #f5f7fa; border-radius: 4px;">
+            <div 
+              v-for="(item, index) in store.accuracyTrend" 
+              :key="index"
+              style="flex: 1; display: flex; flex-direction: column; align-items: center;"
+            >
+              <div 
+                :style="{
+                  width: '100%',
+                  height: `${item.rate}%`,
+                  backgroundColor: item.rate >= 80 ? '#67C23A' : item.rate >= 60 ? '#E6A23C' : '#F56C6C',
+                  borderRadius: '2px 2px 0 0',
+                  minHeight: '4px',
+                  transition: 'height 0.3s'
+                }"
+              />
+              <div style="font-size: 0.7rem; color: #888; margin-top: 4px; writing-mode: vertical-rl; height: 50px; overflow: hidden;">
+                {{ item.date.slice(5) }}
+              </div>
+            </div>
+          </div>
+          <div v-else style="height: 120px; display: flex; align-items: center; justify-content: center; color: #888; background: #f5f7fa; border-radius: 4px;">
+            暂无历史数据
+          </div>
+        </div>
       </div>
     </el-card>
 
@@ -168,6 +250,18 @@ const store = useMainStore()
 const tStore = useTrainingStore()
 const router = useRouter()
 const syllabus = ref(syllabusDict)
+
+// 总课时数
+const totalLessons = computed(() => syllabus.value?.lessons?.length || 50)
+
+// 热力图颜色映射
+const getHeatmapColor = (count) => {
+  if (count === 0) return '#ebedf0'
+  if (count === 1) return '#9be9a8'
+  if (count === 2) return '#40c463'
+  if (count >= 3 && count <= 4) return '#30a14e'
+  return '#216e39'
+}
 
 const config = ref({
     targetLesson: store.progress.current_lesson,

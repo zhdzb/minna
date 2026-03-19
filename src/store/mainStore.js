@@ -59,6 +59,129 @@ export const useMainStore = defineStore('main', {
     }
     return getDefaultData()
   },
+
+  getters: {
+    // 总练习题数
+    totalExercises(state) {
+      const stats = state.progress?.lesson_stats || {};
+      return Object.values(stats).reduce((sum, lesson) => {
+        return sum + (lesson.last_question_count || 0);
+      }, 0);
+    },
+
+    // 平均正确率
+    avgAccuracy(state) {
+      const stats = state.progress?.lesson_stats || {};
+      const lessons = Object.values(stats);
+      if (lessons.length === 0) return 0;
+      
+      const totalRate = lessons.reduce((sum, lesson) => {
+        return sum + (lesson.last_correct_rate || 0);
+      }, 0);
+      
+      return Math.round((totalRate / lessons.length) * 100) / 100;
+    },
+
+    // 连续学习天数
+    streakDays(state) {
+      const stats = state.progress?.lesson_stats || {};
+      const lessons = Object.values(stats);
+      if (lessons.length === 0) return 0;
+
+      // 获取所有学习日期（去重，只保留日期部分）
+      const studyDates = lessons
+        .filter(l => l.last_session_at)
+        .map(l => {
+          const date = new Date(l.last_session_at);
+          return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+        })
+        .filter((v, i, a) => a.indexOf(v) === i) // 去重
+        .sort((a, b) => b - a); // 降序排列
+
+      if (studyDates.length === 0) return 0;
+
+      // 检查今天或昨天是否有学习记录
+      const today = new Date();
+      const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+      const yesterdayMidnight = todayMidnight - 86400000;
+
+      // 如果最新记录不是今天或昨天，连续天数为0
+      if (studyDates[0] < yesterdayMidnight) return 0;
+
+      // 从最新日期开始计算连续天数
+      let streak = 1;
+      let expectedPrev = studyDates[0] - 86400000;
+
+      for (let i = 1; i < studyDates.length; i++) {
+        if (studyDates[i] === expectedPrev) {
+          streak++;
+          expectedPrev -= 86400000;
+        } else if (studyDates[i] < expectedPrev) {
+          break;
+        }
+      }
+
+      return streak;
+    },
+
+    // 课时热力图数据（最近30天的学习情况）
+    heatmapData(state) {
+      const stats = state.progress?.lesson_stats || {};
+      const lessons = Object.values(stats);
+      const heatmap = {};
+
+      // 初始化最近30天
+      const today = new Date();
+      for (let i = 29; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        const dateStr = date.toISOString().split('T')[0];
+        heatmap[dateStr] = 0;
+      }
+
+      // 统计每天的练习次数
+      lessons.forEach(lesson => {
+        if (lesson.last_session_at) {
+          const dateStr = lesson.last_session_at.split('T')[0];
+          if (heatmap[dateStr] !== undefined) {
+            heatmap[dateStr]++;
+          }
+        }
+      });
+
+      return heatmap;
+    },
+
+    // 题型掌握度统计
+    typeMastery(state) {
+      const completedTypes = state.progress?.completed_types_by_lesson || {};
+      const mastery = { q_fill: 0, q_translate: 0, q_conversation: 0 };
+      
+      Object.values(completedTypes).forEach(types => {
+        if (Array.isArray(types)) {
+          types.forEach(t => { if (mastery[t] !== undefined) mastery[t]++; });
+        } else if (typeof types === 'object') {
+          Object.keys(types).forEach(t => { if (mastery[t] !== undefined) mastery[t]++; });
+        }
+      });
+
+      return mastery;
+    },
+
+    // 历史正确率趋势
+    accuracyTrend(state) {
+      const stats = state.progress?.lesson_stats || {};
+      return Object.values(stats)
+        .filter(l => l.last_session_at)
+        .sort((a, b) => new Date(a.last_session_at) - new Date(b.last_session_at))
+        .map(l => ({
+          date: l.last_session_at.split('T')[0],
+          rate: Math.round((l.last_correct_rate || 0) * 100),
+          lesson: l.lesson_id
+        }))
+        .slice(-10); // 最近10次
+    }
+  },
   
   actions: {
     // 保存至 LocalStorage 供随时读取，同时静默同步给本地物理文件 data.json (需在开发环境下通过 Vite 插件支持)
