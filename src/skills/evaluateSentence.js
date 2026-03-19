@@ -6,6 +6,8 @@ export default class EvaluateSentenceSkill {
     constructor(apiKey) {
         this.apiKey = apiKey;
         this.baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+        this.maxRetries = 3;
+        this.timeoutMs = 30000;
     }
 
     _buildSystemPrompt(currentLesson, batchArray) {
@@ -39,13 +41,57 @@ export default class EvaluateSentenceSkill {
 ${taskString}`;
     }
 
+    async _fetchWithTimeout(url, options) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), this.timeoutMs);
+        
+        try {
+            const response = await fetch(url, {
+                ...options,
+                signal: controller.signal
+            });
+            return response;
+        } finally {
+            clearTimeout(timeoutId);
+        }
+    }
+
+    async _fetchWithRetry(url, options) {
+        let lastError;
+        
+        for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+            try {
+                return await this._fetchWithTimeout(url, options);
+            } catch (error) {
+                lastError = error;
+                if (error.name === 'AbortError') {
+                    throw new Error(`API 请求超时 (${this.timeoutMs}ms)`);
+                }
+                if (attempt < this.maxRetries - 1) {
+                    const delay = Math.pow(2, attempt) * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+        }
+        
+        throw lastError;
+    }
+
+    _validateApiResponse(data) {
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (typeof text !== 'string' || text.trim() === '') {
+            throw new Error('API 响应结构无效：无法获取有效的文本内容');
+        }
+        return text;
+    }
+
     async evaluate(currentLesson, batchArray) {
         if (!batchArray || batchArray.length === 0) return [];
 
         const sysPrompt = this._buildSystemPrompt(currentLesson, batchArray);
 
         try {
-            const response = await fetch(`${this.baseUrl}?key=${this.apiKey}`, {
+            const response = await this._fetchWithRetry(`${this.baseUrl}?key=${this.apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -56,24 +102,35 @@ ${taskString}`;
                         parts: [{ text: sysPrompt }]
                     },
                     generationConfig: {
-                        temperature: 0.2, // 批改需要严谨低温
+                        temperature: 0.2,
                         responseMimeType: "application/json"
                     }
                 })
             });
 
             if (!response.ok) {
-                throw new Error("API Request Failed during evaluation");
+                throw new Error(`API 请求失败: ${response.status}`);
             }
 
             const data = await response.json();
-            const textResponse = data.candidates[0].content.parts[0].text;
+            const textResponse = this._validateApiResponse(data);
             
             let cleanJsonStr = textResponse.replace(/```json/g, '').replace(/```/g, '').trim();
-            return JSON.parse(cleanJsonStr);
+            
+            let parsed;
+            try {
+                parsed = JSON.parse(cleanJsonStr);
+            } catch (parseError) {
+                throw new Error(`JSON 解析失败: ${parseError.message}`);
+            }
+
+            if (!Array.isArray(parsed)) {
+                throw new Error('AI 返回数据格式错误：期望数组');
+            }
+
+            return parsed;
         } catch (error) {
             console.error("EvaluateSentenceSkill Error:", error);
-            // 兜底返回，防止应用崩溃
             return batchArray.map(item => ({
                 id: item.id,
                 is_correct: false,

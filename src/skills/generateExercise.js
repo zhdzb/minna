@@ -6,6 +6,8 @@ export default class GenerateGrammarExerciseSkill {
     constructor(apiKey) {
         this.apiKey = apiKey;
         this.baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+        this.maxRetries = 3;
+        this.timeoutMs = 30000;
     }
 
     _buildSystemPrompt(context) {
@@ -74,17 +76,86 @@ JSON 示例：
     { "id": "1", "type": "q_fill", "target_grammar": "N1 は N2 です", "question": "那是车。[指着稍远处的车] (___) は 車 です。", "options": ["それ", "これ", "あれ"], "answer": "それ" },
     { "id": "2", "type": "q_translate", "target_grammar": "句子 か", "chinese_prompt": "木村先生每天吃鸡蛋吗", "vocab_hints": [{"word": "木村", "kana": "きむら", "cn": "木村"}, {"word": "毎日", "kana": "まいにち", "cn": "每天"}], "answer_pattern": "きむらさんは まいにち たまごを たべますか。" },
     { "id": "3", "type": "q_conversation", "target_grammar": "隐性难点：初次见面寒暄", "question": "A: おはようございます。新入社員の山田です。\nB: (...)", "answer_pattern": "おはようございます。どうぞよろしく。" }
-  ]
+  }
 }`;
 
         return prompt;
+    }
+
+    async _fetchWithTimeout(url, options) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), this.timeoutMs);
+        
+        try {
+            const response = await fetch(url, {
+                ...options,
+                signal: controller.signal
+            });
+            return response;
+        } finally {
+            clearTimeout(timeoutId);
+        }
+    }
+
+    async _fetchWithRetry(url, options) {
+        let lastError;
+        
+        for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+            try {
+                return await this._fetchWithTimeout(url, options);
+            } catch (error) {
+                lastError = error;
+                if (error.name === 'AbortError') {
+                    throw new Error(`API 请求超时 (${this.timeoutMs}ms)`);
+                }
+                if (attempt < this.maxRetries - 1) {
+                    const delay = Math.pow(2, attempt) * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+        }
+        
+        throw lastError;
+    }
+
+    _validateApiResponse(data) {
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (typeof text !== 'string' || text.trim() === '') {
+            throw new Error('API 响应结构无效：无法获取有效的文本内容');
+        }
+        return text;
+    }
+
+    _validateExercises(parsed) {
+        const exercises = parsed?.exercises;
+        if (!Array.isArray(exercises)) {
+            throw new Error('AI 返回数据格式错误：缺少 exercises 数组');
+        }
+
+        const requiredFields = ['id', 'type', 'target_grammar'];
+        for (let i = 0; i < exercises.length; i++) {
+            const exercise = exercises[i];
+            for (const field of requiredFields) {
+                if (!exercise[field]) {
+                    throw new Error(`第 ${i + 1} 题缺少必要字段: ${field}`);
+                }
+            }
+            if (!['q_fill', 'q_translate', 'q_conversation'].includes(exercise.type)) {
+                throw new Error(`第 ${i + 1} 题 type 无效: ${exercise.type}`);
+            }
+            if (!exercise.question && !exercise.chinese_prompt) {
+                throw new Error(`第 ${i + 1} 题缺少 question 或 chinese_prompt`);
+            }
+        }
+
+        return parsed;
     }
 
     async generate(context) {
         const sysPrompt = this._buildSystemPrompt(context);
         
         try {
-            const response = await fetch(`${this.baseUrl}?key=${this.apiKey}`, {
+            const response = await this._fetchWithRetry(`${this.baseUrl}?key=${this.apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -103,16 +174,22 @@ JSON 示例：
             });
 
             if (!response.ok) {
-                throw new Error("API Request Failed");
+                throw new Error(`API 请求失败: ${response.status}`);
             }
 
             const data = await response.json();
-            const textResponse = data.candidates[0].content.parts[0].text;
+            const textResponse = this._validateApiResponse(data);
             
-            // 洗掉可能出现的 markdown
             let cleanJsonStr = textResponse.replace(/```json/g, '').replace(/```/g, '').trim();
             
-            return JSON.parse(cleanJsonStr);
+            let parsed;
+            try {
+                parsed = JSON.parse(cleanJsonStr);
+            } catch (parseError) {
+                throw new Error(`JSON 解析失败: ${parseError.message}`);
+            }
+
+            return this._validateExercises(parsed);
         } catch (error) {
             console.error("GenerateGrammarExerciseSkill Error:", error);
             throw new Error("AI生成失败，原因: " + error.message);

@@ -49,7 +49,7 @@ const normalizeData = (data) => {
 export const useMainStore = defineStore('main', {
   state: () => {
     // 纯粹的按新版 schema 读取
-    const saved = localStorage.getItem('minna_no_nihongo_data')
+    const saved = localStorage.getItem('minna_app_data')
     if (saved) {
       try {
         return normalizeData(JSON.parse(saved))
@@ -66,7 +66,7 @@ export const useMainStore = defineStore('main', {
       if (!this.meta) this.meta = {}
       this.meta.updated_at = new Date().toISOString()
       const stateStr = JSON.stringify(this.$state, null, 2)
-      localStorage.setItem('minna_no_nihongo_data', stateStr)
+      localStorage.setItem('minna_app_data', stateStr)
       
       // 静默发给本地 Vite 服务器写入本地磁盘，允许 git 自动追踪！
       fetch('/api/save-progress', {
@@ -203,7 +203,7 @@ export const useMainStore = defineStore('main', {
         const diskData = normalizeData(await res.json())
         const localUpdated = this.meta?.updated_at ? new Date(this.meta.updated_at).getTime() : 0
         const diskUpdated = diskData.meta?.updated_at ? new Date(diskData.meta.updated_at).getTime() : 0
-        const hasLocal = !!localStorage.getItem('minna_no_nihongo_data')
+        const hasLocal = !!localStorage.getItem('minna_app_data')
 
         if (!hasLocal) {
           this.$patch(diskData)

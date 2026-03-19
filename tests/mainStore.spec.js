@@ -44,7 +44,7 @@ describe('MainStore Pinia State Tests', () => {
         expect(store.mistakes_book.length).toBe(1)
 
         // Verify LocalStorage serialization
-        const savedRaw = window.localStorage.getItem('minna_no_nihongo_data')
+        const savedRaw = window.localStorage.getItem('minna_app_data')
         const saved = JSON.parse(savedRaw)
         expect(saved.progress.current_lesson).toBe(3)
     })
