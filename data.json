@@ -99,19 +99,19 @@
       },
       "14": {
         "lesson_id": 14,
-        "last_session_at": "2026-03-09T16:43:12.352Z",
-        "last_question_count": 12,
-        "last_correct_count": 10,
-        "last_correct_rate": 0.8333333333333334,
+        "last_session_at": "2026-03-24T15:34:38.720Z",
+        "last_question_count": 20,
+        "last_correct_count": 9,
+        "last_correct_rate": 0.45,
         "last_difficulty": "基础巩固",
-        "last_question_type": "q_fill"
+        "last_question_type": "ALL"
       },
       "18": {
         "lesson_id": 18,
-        "last_session_at": "2026-03-18T17:40:32.391Z",
+        "last_session_at": "2026-03-20T18:08:19.130Z",
         "last_question_count": 20,
-        "last_correct_count": 10,
-        "last_correct_rate": 0.5,
+        "last_correct_count": 17,
+        "last_correct_rate": 0.85,
         "last_difficulty": "基础巩固",
         "last_question_type": "ALL"
       }
@@ -613,10 +613,153 @@
       "user_wrong_input": "わたしははんができます",
       "correct_answer": "私は 料理が できます。",
       "explanation": "「ご飯ができます」通常表示“饭做好了”或者“能吃米饭”。要表达“能做饭”这个技能，应该用「料理（りょうり）ができます」或者「料理をすることができます」。<br><br><b>💡 职场加点料:</b> 私は料理ができます。"
+    },
+    {
+      "id": "1774030707334",
+      "timestamp": "2026-03-20T18:18:27.334Z",
+      "mark_type": "favorite",
+      "original_question": "睡觉前，请刷牙。",
+      "lesson": 18,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "ねむるまえに、はおみがきてください",
+      "correct_answer": "眠る前に、歯を磨いてください。",
+      "explanation": "“刷牙”的动词是「歯を磨きます」（はをみがきます），其て形是「磨いて」（みがいて）。所以“请刷牙”是「歯を磨いてください」。"
+    },
+    {
+      "id": "1774030871759",
+      "timestamp": "2026-03-20T18:21:11.759Z",
+      "mark_type": "favorite",
+      "original_question": "A: 明日の 出張の 準備は できましたか。\nB: はい、会社を (汇报离开公司前的准备)。",
+      "lesson": 18,
+      "grammar_point": "q_conversation",
+      "user_wrong_input": "はい、かいしゃをでるまえに、しりょうをかくにんします",
+      "correct_answer": "はい、会社を出る前に、資料を確認します。",
+      "explanation": "句子结构“Vる前に”表示在某个动作之前，使用正确。回答符合语境。"
+    },
+    {
+      "id": "1774366593519",
+      "timestamp": "2026-03-24T15:36:33.519Z",
+      "mark_type": "favorite",
+      "original_question": "请在这里坐下。ここに (___) ください。",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "座って",
+      "correct_answer": "座って",
+      "explanation": "回答正确。"
+    },
+    {
+      "id": "1774366714654",
+      "timestamp": "2026-03-24T15:38:34.654Z",
+      "mark_type": "favorite",
+      "original_question": "请给我打电话。私 (___) 電話をかけてください。",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "に",
+      "correct_answer": "に",
+      "explanation": "回答正确。"
+    },
+    {
+      "id": "1774366767128",
+      "timestamp": "2026-03-24T15:39:27.128Z",
+      "mark_type": "favorite",
+      "original_question": "请告诉我邮局 (___) 怎么走。郵便局 (___) 行く道を教えてください。",
+      "lesson": 14,
+      "grammar_point": "q_fill",
+      "user_wrong_input": "に",
+      "correct_answer": "へ",
+      "explanation": "答案不正确。"
+    },
+    {
+      "id": "1774367009112",
+      "timestamp": "2026-03-24T15:43:29.112Z",
+      "mark_type": "favorite",
+      "original_question": "请告诉我你的名字。",
+      "lesson": 14,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "あなたのなまえおしえてください",
+      "correct_answer": "あなたの名前を教えてください。",
+      "explanation": "“名字”是动词「教えます（おしえます）」的宾语，需要用助词「を」连接。所以是「名前を教えてください」。<br><br><b>💡 职场加点料:</b> お名前を教えていただけますか。（更礼貌的说法）"
+    },
+    {
+      "id": "1774367028714",
+      "timestamp": "2026-03-24T15:43:48.714Z",
+      "mark_type": "favorite",
+      "original_question": "请在这里写你的住址。",
+      "lesson": 14,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "ここにあなたのじゅうしょをかいてくださいう",
+      "correct_answer": "ここにあなたの住所を書いてください。",
+      "explanation": "「ください」的结尾没有「う」。请注意假名的正确拼写。<br><br><b>💡 职场加点料:</b> こちらにご住所をご記入ください。（更正式的职场表达）"
+    },
+    {
+      "id": "1774367155367",
+      "timestamp": "2026-03-24T15:45:55.367Z",
+      "mark_type": "favorite",
+      "original_question": "请告诉我美术馆怎么走。",
+      "lesson": 14,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "びじゅつかんに",
+      "correct_answer": "美術館への道を教えてください。",
+      "explanation": "您的回答只提到了“美术馆”，但没有表达出“怎么走”和“请告诉我”的含义。需要补充完整的句子，例如「美術館への道を教えてください」。<br><br><b>💡 职场加点料:</b> 美術館までどう行けばいいですか。（更口语化的问法）"
+    },
+    {
+      "id": "1774368079374",
+      "timestamp": "2026-03-24T16:01:19.374Z",
+      "mark_type": "favorite",
+      "original_question": "小野小姐住在京都。",
+      "lesson": 14,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "おのさんはきょうとにすみます",
+      "correct_answer": "小野さんは京都に住んでいます。",
+      "explanation": "表示“住在某个地方”这种持续状态时，动词「住みます（すみます）」需要使用「～ています」的形式，即「住んでいます」。"
+    },
+    {
+      "id": "1774368104615",
+      "timestamp": "2026-03-24T16:01:44.615Z",
+      "mark_type": "favorite",
+      "original_question": "我来帮你叫出租车吧。",
+      "lesson": 14,
+      "grammar_point": "q_translate",
+      "user_wrong_input": "わたしはタクシ",
+      "correct_answer": "わたしがタクシーを呼びましょうか。",
+      "explanation": "您的回答只写了“我”和不完整的“出租车”。“出租车”是「タクシー」，并且需要加上“叫”这个动词「呼びます（よびます）」的「～ましょうか」形式，表示“我来帮你做……吧”。<br><br><b>💡 职场加点料:</b> タクシーをお呼びしましょうか。（更自然的表达）"
+    },
+    {
+      "id": "1774368292195",
+      "timestamp": "2026-03-24T16:04:52.195Z",
+      "mark_type": "favorite",
+      "original_question": "A: [老师对在教室里吵闹的学生说] 请安静。\nB: はい、先生。",
+      "lesson": 14,
+      "grammar_point": "q_conversation",
+      "user_wrong_input": "しずかしてください",
+      "correct_answer": "静かにしてください。",
+      "explanation": "「静か（しずか）」是形容动词，要表示“请安静”时，需要将其变为副词形式「静かに」再接「してください」，即「静かにしてください」。"
+    },
+    {
+      "id": "1774368340762",
+      "timestamp": "2026-03-24T16:05:40.762Z",
+      "mark_type": "favorite",
+      "original_question": "A: 木村先生现在在哪里？\nB: (...)",
+      "lesson": 14,
+      "grammar_point": "q_conversation",
+      "user_wrong_input": "きむらさんはかいぎしています",
+      "correct_answer": "会議をしています。",
+      "explanation": "「会議（かいぎ）」是名词，表示“开会”时，通常说「会議をします」或「会議をしています」。您的回答缺少了助词「を」。也可以说「会議中です（かいぎちゅうです）」。<br><br><b>💡 职场加点料:</b> 会議中です。（更简洁的职场表达）"
+    },
+    {
+      "id": "1774368460232",
+      "timestamp": "2026-03-24T16:07:40.232Z",
+      "mark_type": "favorite",
+      "original_question": "A: すみません、駅へ行く道を教えてください。\nB: (...)",
+      "lesson": 14,
+      "grammar_point": "q_conversation",
+      "user_wrong_input": "えき",
+      "correct_answer": "はい、まっすぐ行ってください。",
+      "explanation": "您的回答只说了“车站”，但没有给出指路的信息。当别人问路时，需要给出具体的方向或者表示自己不知道。<br><br><b>💡 职场加点料:</b> はい、この道をまっすぐ行くと、左手に駅がありますよ。（更详细的指路）"
     }
   ],
   "meta": {
-    "updated_at": "2026-03-18T17:46:01.022Z"
+    "updated_at": "2026-03-29T15:19:22.749Z"
   },
   "collections": []
 }

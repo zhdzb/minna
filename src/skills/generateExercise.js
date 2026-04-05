@@ -89,6 +89,12 @@ ${JSON.stringify(recent_exercises.slice(0, 15), null, 2)}
 所有题目中出现的日语词汇必须严格限定在当前课程（${lesson}）及之前课程的范围内。
 禁止使用任何超出此范围的词汇，除非在 vocab_hints 中明确标注并提供假名注音。
 
+【5.2 核心词汇强制提示规则 (No-Assumption Policy)】
+对于 q_translate (翻译造句) 型，**严禁** 主观假设某个单词对学生是简单的。
+你 **必须** 为中文提示中出现的 **每一个** 核心名词、动词、形容词提供 vocab_hints。
+例如：中文提示包含“关窗户”，你 **必须** 提供“窗户(窓)”和“关上(閉める)”的提示，即使你认为它们很简单。
+没有提供核心词汇提示导致的无法答题是最高等级的错误。
+
 【6. 唯一答案绝对约束 (消灭主观歧义)】
 对于选择题 (q_fill)，**绝对不允许**出现所有选项在语法和逻辑上都能填入空格且都正确的情况！
 例如：错误出题：\`这是 (___)。选项：[书, 车, 钥匙]\` -> 这三个都能填，学生无法猜测！
@@ -302,6 +308,10 @@ ${JSON.stringify(recent_exercises.slice(0, 15), null, 2)}
                 }
                 if (!exercise.answer_pattern && !exercise.answer) {
                     throw new Error(`第 ${i + 1} 题 q_translate 缺少 answer_pattern 或 answer`);
+                }
+                // 强度验证：如果没有提示词，或者提示词太少（通常核心名词+动词至少2个），则警告
+                if (!exercise.vocab_hints || exercise.vocab_hints.length < 2) {
+                    console.warn(`⚠️ 第 ${i + 1} 题 (q_translate) 的 vocab_hints 数量可能不足 (${exercise.vocab_hints?.length || 0})，请检查是否遗漏核心动词/名词提示。`);
                 }
             }
         }
