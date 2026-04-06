@@ -118,7 +118,16 @@
         <div style="font-weight: bold;">📈 课内进度可视化</div>
       </template>
       <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+        <!-- 课时选择器 -->
         <div style="min-width: 180px; text-align: center;">
+          <el-select v-model="config.targetLesson" placeholder="请选择课时" style="width: 100%; margin-bottom: 10px;">
+            <el-option
+              v-for="lesson in totalLessons"
+              :key="lesson"
+              :label="`第 ${lesson} 课`"
+              :value="lesson"
+            />
+          </el-select>
           <el-progress type="circle" :percentage="lessonCompletionPercent" :stroke-width="10" />
           <div style="margin-top: 10px; color: #666;">第 {{ config.targetLesson }} 课题型完成度</div>
         </div>
