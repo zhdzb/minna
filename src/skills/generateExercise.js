@@ -76,7 +76,9 @@ ${JSON.stringify(recent_exercises.slice(0, 15), null, 2)}
 
 【4. 输出约束与 JSON 结构参考】
 1. 绝对不要返回任何 Markdown \`\`\`json 标记，直接返回纯净的 JSON 字符串！
-2. 每道题的 JSON 对象必须包含：
+2. 你必须返回一个包含 "exercises" 键的对象，该键的值是一个包含题目对象的数组。
+   结构如下： { "exercises": [ {...}, {...} ] }
+3. 每道题的 JSON 对象必须包含：
   - "id" 唯一字符串
   - "type": "q_fill" | "q_translate" | "q_conversation"
   - "question" 或 "chinese_prompt"
@@ -93,109 +95,54 @@ ${JSON.stringify(recent_exercises.slice(0, 15), null, 2)}
 对于 q_translate (翻译造句) 型，**严禁** 主观假设某个单词对学生是简单的。
 你 **必须** 为中文提示中出现的 **每一个** 核心名词、动词、形容词提供 vocab_hints。
 例如：中文提示包含“关窗户”，你 **必须** 提供“窗户(窓)”和“关上(閉める)”的提示，即使你认为它们很简单。
-没有提供核心词汇提示导致的无法答题是最高等级的错误。
 
 【6. 唯一答案绝对约束 (消灭主观歧义)】
 对于选择题 (q_fill)，**绝对不允许**出现所有选项在语法和逻辑上都能填入空格且都正确的情况！
-例如：错误出题：\`这是 (___)。选项：[书, 车, 钥匙]\` -> 这三个都能填，学生无法猜测！
-你**必须**在题干中提供足以唯一锁定答案的中文提示或强烈上下文语境：
-正确示范：\`这是书。これは (___) です。选项：[本, 車, 鍵]\` -> 根据中文提示，答案唯一确定为\`本\`。
-正确示范：\`[指着远处的车] (___)は 車 です。选项：[あれ, これ, それ]\` -> 根据物理距离暗示，答案唯一确定为\`あれ\`。
+你**必须**在题干中提供足以唯一锁定答案的中文提示或强烈上下文语境。
 
 【7. q_conversation 题型特殊格式】
 对于 q_conversation 类型，必须包含：
-- "scene_description": 场景描述（如：新人入职第一天，在办公室与前辈打招呼）
+- "scene_description": 场景描述
 - "turns": 对话轮次数组，每个元素包含 "speaker" (A/B) 和 "content"
 - "missing_turn_index": 需要学习者补全的轮次索引
 - "answer": 正确答案
 
 【8. Few-Shot 示例参考】
 
-**q_fill 示例：**
+**JSON 整体结构示例 (包裹在 exercises 键中)：**
 {
-  "id": "fill_example_1",
-  "type": "q_fill",
-  "target_grammar": "N1 は N2 です",
-  "question": "那是书。[指着稍远处] (___) は 本 です。",
-  "options": ["それ", "これ", "あれ"],
-  "answer": "それ"
-}
-
-{
-  "id": "fill_example_2",
-  "type": "q_fill",
-  "target_grammar": "動詞 ます形",
-  "question": "我每天早上喝咖啡。わたしは 毎朝 (___) を 飲みます。",
-  "options": ["コーヒー", "お茶", "ジュース"],
-  "answer": "コーヒー",
-  "vocab_hints": [{"word": "毎朝", "kana": "まいあさ", "cn": "每天早上"}]
-}
-
-**q_translate 示例：**
-{
-  "id": "trans_example_1",
-  "type": "q_translate",
-  "target_grammar": "～を ～ます",
-  "chinese_prompt": "田中先生每天在图书馆看书",
-  "vocab_hints": [
-    {"word": "田中", "kana": "たなか", "cn": "田中"},
-    {"word": "図書館", "kana": "としょかん", "cn": "图书馆"},
-    {"word": "毎日", "kana": "まいにち", "cn": "每天"},
-    {"word": "本", "kana": "ほん", "cn": "书"}
-  ],
-  "answer_pattern": "たなかさんは まいにち としょかんで ほんを よみます。"
-}
-
-{
-  "id": "trans_example_2",
-  "type": "q_translate",
-  "target_grammar": "～から ～まで",
-  "chinese_prompt": "我从早上九点到下午五点工作",
-  "vocab_hints": [
-    {"word": "午前", "kana": "ごぜん", "cn": "上午"},
-    {"word": "午後", "kana": "ごご", "cn": "下午"},
-    {"word": "働く", "kana": "はたらく", "cn": "工作"}
-  ],
-  "answer_pattern": "わたしは ごぜんくじから ごごごじまで はたらきます。"
-}
-
-**q_conversation 示例：**
-{
-  "id": "conv_example_1",
-  "type": "q_conversation",
-  "target_grammar": "依頼表現：～てください",
-  "scene_description": "在公司复印室，新人向前辈请求帮助",
-  "turns": [
-    {"speaker": "A", "content": "すみません、この書類のコピーを取りたいのですが..."},
-    {"speaker": "B", "content": "(...)"}
-  ],
-  "missing_turn_index": 1,
-  "answer": "もちろんです。こちらのボタンを押してください。"
-}
-
-{
-  "id": "conv_example_2",
-  "type": "q_conversation",
-  "target_grammar": "敬語：お～になる",
-  "scene_description": "在会议室，部下向部长确认会议时间",
-  "turns": [
-    {"speaker": "A", "content": "部長、明日の会議は何時からでしょうか？"},
-    {"speaker": "B", "content": "午後2時からだよ。資料はもう準備したかい？"},
-    {"speaker": "A", "content": "(...)"}
-  ],
-  "missing_turn_index": 2,
-  "answer": "はい、お目通しください。"
+  "exercises": [
+    {
+      "id": "fill_example_1",
+      "type": "q_fill",
+      "target_grammar": "N1 は N2 です",
+      "question": "那是书。[指着稍远处] (___) は 本 です。",
+      "options": ["それ", "这", "あれ"],
+      "answer": "それ"
+    },
+    {
+      "id": "trans_example_1",
+      "type": "q_translate",
+      "target_grammar": "～を ～ます",
+      "chinese_prompt": "田中先生每天在图书馆看书",
+      "vocab_hints": [
+        {"word": "田中", "kana": "たなか", "cn": "田中"},
+        {"word": "图书馆", "kana": "としょかん", "cn": "图书馆"},
+        {"word": "毎日", "kana": "まいにち", "cn": "每天"},
+        {"word": "本", "kana": "ほん", "cn": "书"}
+      ],
+      "answer_pattern": "たなかさんは まいにち としょかんで ほんを よみます。"
+    }
+  ]
 }
 
 【9. 最终质量检查清单 (输出前必须逐项确认，任何一项不通过则重新生成)】
 □ 题目数量精确等于 ${questionCount} 道
-□ 每道题都有唯一 id
+□ 结果包裹在 {"exercises": [...]} 结构中
+□ 每题都有唯一 id
 □ 每道题的 target_grammar 都在语法点列表中
-□ 语法点覆盖度 >= 80%（${grammar_points.length} 个语法点中至少覆盖 ${Math.ceil(grammar_points.length * 0.8)} 个）
-□ q_fill 题目选项有且仅有唯一正确答案，且题干提供足够上下文
-□ q_translate 题目包含 vocab_hints 且人名有假名注音
-□ q_conversation 题目包含 scene_description 和 turns 数组
-□ 没有与 recent_exercises 重复的内容
+□ 语法点覆盖度 >= 80%
+□ q_fill 题目选项有且仅有唯一正确答案
 □ JSON 格式正确，无 markdown 包裹
 □ 所有日语假名使用正确
 □ 未使用超出当前课程范围的语法或词汇`;
@@ -248,8 +195,18 @@ ${JSON.stringify(recent_exercises.slice(0, 15), null, 2)}
     }
 
     _validateExercises(parsed, expectedGrammarPoints = []) {
-        const exercises = parsed?.exercises;
+        let exercises;
+        // 增强鲁棒性：兼容直接返回数组和包裹在 exercises 键中两种情况
+        if (Array.isArray(parsed)) {
+            exercises = parsed;
+            // 自动转换为标准结构，方便后续代码统一访问
+            parsed = { exercises: exercises };
+        } else {
+            exercises = parsed?.exercises;
+        }
+
         if (!Array.isArray(exercises)) {
+            console.error("Invalid AI structure:", parsed);
             throw new Error('AI 返回数据格式错误：缺少 exercises 数组');
         }
 

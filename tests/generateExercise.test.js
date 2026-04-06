@@ -13,7 +13,7 @@ describe('GenerateGrammarExerciseSkill Phase 3 tests', () => {
             candidates: [{
                 content: {
                     parts: [{
-                        text: '```json\n{"exercises": [{"id": "1", "type": "q_fill"}]}\n```'
+                        text: '```json\n{"exercises": [{"id": "1", "type": "q_fill", "target_grammar": "名词 は 名词 です", "question": "Test?", "options": ["A", "B"], "answer": "A"}]}\n```'
                     }]
                 }
             }]
