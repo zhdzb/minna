@@ -1,40 +1,86 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import EvaluateSentenceSkill from '../src/skills/evaluateSentence.js'
 
-global.fetch = vi.fn()
+describe('EvaluateSentenceSkill', () => {
+  beforeEach(() => {
+    global.fetch = vi.fn()
+  })
 
-describe('EvaluateSentenceSkill Phase 3 tests', () => {
-    beforeEach(() => {
-        global.fetch.mockClear()
-    })
-
-    it('should parse batch evaluation results array correctly mapped to Phase 3 formats', async () => {
-        const mockApiResponse = {
-            candidates: [{
-                content: {
-                    parts: [{
-                        text: '```json\n[{"id": "q1", "is_correct": true, "correct_answer": "あした 京都へ 行きます。", "explanation": "非常好，毫无错误", "natural_expression": "..."}]\n```'
-                    }]
+  it('maps valid evaluation results back to the submitted items', async () => {
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        candidates: [
+          {
+            content: {
+              parts: [
+                {
+                  text: JSON.stringify([
+                    {
+                      id: 'q1',
+                      is_correct: true,
+                      error_type: '',
+                      correct_answer: 'わたしは いきます。',
+                      explanation: '表达正确。',
+                      natural_expression: 'わたしは いきます。'
+                    }
+                  ])
                 }
-            }]
-        }
-
-        global.fetch.mockResolvedValue({
-            ok: true,
-            json: async () => mockApiResponse
-        })
-
-        const skill = new EvaluateSentenceSkill("dummy_key")
-        
-        // Evaluate batch requires an array of questions objects
-        const results = await skill.evaluate(1, [
-            { id: "q1", original_prompt: "明天去京都", user_answer: "あした京都へ行きます", type: "q_translate" }
-        ])
-        
-        expect(Array.isArray(results)).toBe(true)
-        expect(results.length).toBe(1)
-        expect(results[0].id).toBe("q1")
-        expect(results[0].is_correct).toBe(true)
-        expect(results[0].explanation).toContain('非常')
+              ]
+            }
+          }
+        ]
+      })
     })
+
+    const skill = new EvaluateSentenceSkill('dummy')
+    const result = await skill.evaluate(1, [
+      {
+        id: 'q1',
+        original_prompt: '请造句',
+        user_answer: 'watashi wa ikimasu',
+        type: 'q_translate',
+        reference_answer: 'わたしは いきます。'
+      }
+    ])
+
+    expect(result).toHaveLength(1)
+    expect(result[0].is_correct).toBe(true)
+    expect(result[0].correct_answer).toBe('わたしは いきます。')
+  })
+
+  it('creates fallback results when the AI payload is incomplete', async () => {
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        candidates: [
+          {
+            content: {
+              parts: [
+                {
+                  text: JSON.stringify([])
+                }
+              ]
+            }
+          }
+        ]
+      })
+    })
+
+    const skill = new EvaluateSentenceSkill('dummy')
+    const result = await skill.evaluate(1, [
+      {
+        id: 'q1',
+        original_prompt: '请造句',
+        user_answer: '',
+        type: 'q_translate',
+        reference_answer: 'わたしは いきます。'
+      }
+    ])
+
+    expect(result).toHaveLength(1)
+    expect(result[0].is_correct).toBe(false)
+    expect(result[0].correct_answer).toBe('わたしは いきます。')
+    expect(result[0].explanation).toMatch(/did not return/i)
+  })
 })

@@ -271,6 +271,21 @@ const bindWanaKana = (el, id) => {
 
 const savedReviewIds = ref(new Set())
 
+const createExerciseSnapshot = (exercise, evaluation) => ({
+    id: exercise.id,
+    type: exercise.type,
+    target_grammar: exercise.target_grammar || '',
+    question: exercise.question || '',
+    chinese_prompt: exercise.chinese_prompt || '',
+    scene_description: exercise.scene_description || '',
+    options: Array.isArray(exercise.options) ? [...exercise.options] : [],
+    turns: Array.isArray(exercise.turns) ? exercise.turns.map(turn => ({ ...turn })) : [],
+    missing_turn_index: typeof exercise.missing_turn_index === 'number' ? exercise.missing_turn_index : null,
+    vocab_hints: Array.isArray(exercise.vocab_hints) ? exercise.vocab_hints.map(hint => ({ ...hint })) : [],
+    answer: evaluation?.correct_answer || exercise.answer || exercise.answer_pattern || '',
+    answer_pattern: exercise.answer_pattern || ''
+})
+
 const saveReviewItem = (res, markType) => {
     const key = `${res.id}:${markType}`
     if (savedReviewIds.value.has(key)) return;
@@ -279,10 +294,18 @@ const saveReviewItem = (res, markType) => {
     store.addReviewItem({
         original_question: res.original_question,
         lesson: targetLessonId,
-        grammar_point: res.type,
+        grammar_point: res.target_grammar || res.type,
+        question_type: res.type,
         user_wrong_input: res.user_answer,
         correct_answer: res.correct_answer,
-        explanation: res.explanation
+        explanation: res.explanation,
+        exercise_snapshot: createExerciseSnapshot(res, res),
+        evaluation_snapshot: {
+            is_correct: !!res.is_correct,
+            correct_answer: res.correct_answer || '',
+            explanation: res.explanation || '',
+            natural_expression: res.natural_expression || ''
+        }
     }, markType)
     savedReviewIds.value.add(key)
 }
@@ -331,7 +354,11 @@ const startSession = async () => {
         lesson: lessonData.title,
         grammar_points: lessonData.grammar_points,
         hidden_knowledge: lessonData.hidden_knowledge,
-        config: config
+        config: config,
+        recent_exercises: store.mistakes_book
+            .map(item => item.exercise_snapshot)
+            .filter(Boolean)
+            .slice(0, 15)
     }
 
     try {
@@ -360,7 +387,8 @@ const submitForEvaluation = async () => {
         id: ex.id,
         original_prompt: ex.question || ex.chinese_prompt || ex.scene_description || '情景对话内容',
         user_answer: tStore.userAnswers[ex.id] || '',
-        type: ex.type
+        type: ex.type,
+        reference_answer: ex.answer || ex.answer_pattern || ''
     }))
 
     try {

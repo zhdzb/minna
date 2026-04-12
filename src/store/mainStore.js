@@ -1,18 +1,48 @@
 import { defineStore } from 'pinia'
 
-// 初始化默认进度数据 (包含新版题型细粒度控制)
+const createReviewItemId = () =>
+  `review_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
+
 const getDefaultData = () => ({
   progress: {
     current_lesson: 1,
-    // 进度粒度可以细化，比如 { "1": ["q_fill", "q_translate"] } 表示第一课已经完成的题型
     completed_types_by_lesson: {},
     pass_threshold: 0.5,
     lesson_stats: {}
   },
   mistakes_book: [],
+  study_backups: [],
   meta: {
     updated_at: null
   }
+})
+
+const normalizeReviewItem = (item = {}) => ({
+  id: item.id || createReviewItemId(),
+  timestamp: item.timestamp || new Date().toISOString(),
+  mark_type: item.mark_type || 'mistake',
+  lesson: item.lesson || 1,
+  grammar_point: item.grammar_point || item.target_grammar || item.question_type || '',
+  question_type: item.question_type || item.exercise_snapshot?.type || '',
+  original_question: item.original_question || '',
+  user_wrong_input: item.user_wrong_input || '',
+  correct_answer: item.correct_answer || '',
+  explanation: item.explanation || '',
+  exercise_snapshot:
+    item.exercise_snapshot && typeof item.exercise_snapshot === 'object'
+      ? item.exercise_snapshot
+      : null,
+  evaluation_snapshot:
+    item.evaluation_snapshot && typeof item.evaluation_snapshot === 'object'
+      ? item.evaluation_snapshot
+      : null
+})
+
+const normalizeBackup = (backup = {}) => ({
+  id: backup.id || `backup_${Date.now()}`,
+  label: backup.label || '',
+  timestamp: backup.timestamp || new Date().toISOString(),
+  snapshot: backup.snapshot && typeof backup.snapshot === 'object' ? backup.snapshot : getDefaultData()
 })
 
 const normalizeData = (data) => {
@@ -24,7 +54,12 @@ const normalizeData = (data) => {
       ...base.progress,
       ...(data?.progress || {})
     },
-    mistakes_book: Array.isArray(data?.mistakes_book) ? data.mistakes_book : base.mistakes_book,
+    mistakes_book: Array.isArray(data?.mistakes_book)
+      ? data.mistakes_book.map(normalizeReviewItem)
+      : base.mistakes_book,
+    study_backups: Array.isArray(data?.study_backups)
+      ? data.study_backups.map(normalizeBackup)
+      : base.study_backups,
     meta: {
       ...base.meta,
       ...(data?.meta || {})
@@ -34,193 +69,245 @@ const normalizeData = (data) => {
   if (Array.isArray(data?.collections) && data.collections.length > 0) {
     merged.mistakes_book = [
       ...merged.mistakes_book,
-      ...data.collections.map((item) => ({
-        id: item.id || Date.now().toString(),
-        timestamp: item.timestamp || new Date().toISOString(),
-        mark_type: 'favorite',
-        ...item
-      }))
+      ...data.collections.map((item) =>
+        normalizeReviewItem({
+          ...item,
+          mark_type: 'favorite'
+        })
+      )
     ]
   }
 
   return merged
 }
 
+const mergeBackups = (current = [], incoming = []) => {
+  const merged = [...incoming, ...current].map(normalizeBackup)
+  const seen = new Set()
+
+  return merged.filter((item) => {
+    if (seen.has(item.id)) return false
+    seen.add(item.id)
+    return true
+  })
+}
+
+const buildPersistableState = (state, options = {}) => {
+  const includeBackups = options.includeBackups !== false
+
+  return normalizeData({
+    ...state,
+    study_backups: includeBackups ? state.study_backups : []
+  })
+}
+
 export const useMainStore = defineStore('main', {
   state: () => {
-    // 纯粹的按新版 schema 读取
     const saved = localStorage.getItem('minna_app_data')
     if (saved) {
       try {
         return normalizeData(JSON.parse(saved))
-      } catch (e) {
-        console.error('Failed to parse localStorage data, returning default', e)
+      } catch (error) {
+        console.error('Failed to parse localStorage data, falling back to defaults.', error)
       }
     }
+
     return getDefaultData()
   },
 
   getters: {
-    // 总练习题数
     totalExercises(state) {
-      const stats = state.progress?.lesson_stats || {};
-      return Object.values(stats).reduce((sum, lesson) => {
-        return sum + (lesson.last_question_count || 0);
-      }, 0);
+      const stats = state.progress?.lesson_stats || {}
+      return Object.values(stats).reduce((sum, lesson) => sum + (lesson.last_question_count || 0), 0)
     },
 
-    // 平均正确率
     avgAccuracy(state) {
-      const stats = state.progress?.lesson_stats || {};
-      const lessons = Object.values(stats);
-      if (lessons.length === 0) return 0;
-      
-      const totalRate = lessons.reduce((sum, lesson) => {
-        return sum + (lesson.last_correct_rate || 0);
-      }, 0);
-      
-      return Math.round((totalRate / lessons.length) * 100) / 100;
+      const stats = state.progress?.lesson_stats || {}
+      const lessons = Object.values(stats)
+      if (lessons.length === 0) return 0
+
+      const totalRate = lessons.reduce((sum, lesson) => sum + (lesson.last_correct_rate || 0), 0)
+      return Math.round((totalRate / lessons.length) * 100) / 100
     },
 
-    // 连续学习天数
     streakDays(state) {
-      const stats = state.progress?.lesson_stats || {};
-      const lessons = Object.values(stats);
-      if (lessons.length === 0) return 0;
+      const stats = state.progress?.lesson_stats || {}
+      const lessons = Object.values(stats)
+      if (lessons.length === 0) return 0
 
-      // 获取所有学习日期（去重，只保留日期部分）
       const studyDates = lessons
-        .filter(l => l.last_session_at)
-        .map(l => {
-          const date = new Date(l.last_session_at);
-          return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+        .filter((lesson) => lesson.last_session_at)
+        .map((lesson) => {
+          const date = new Date(lesson.last_session_at)
+          return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
         })
-        .filter((v, i, a) => a.indexOf(v) === i) // 去重
-        .sort((a, b) => b - a); // 降序排列
+        .filter((value, index, array) => array.indexOf(value) === index)
+        .sort((a, b) => b - a)
 
-      if (studyDates.length === 0) return 0;
+      if (studyDates.length === 0) return 0
 
-      // 检查今天或昨天是否有学习记录
-      const today = new Date();
-      const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
-      const yesterdayMidnight = todayMidnight - 86400000;
+      const today = new Date()
+      const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()
+      const yesterdayMidnight = todayMidnight - 86400000
 
-      // 如果最新记录不是今天或昨天，连续天数为0
-      if (studyDates[0] < yesterdayMidnight) return 0;
+      if (studyDates[0] < yesterdayMidnight) return 0
 
-      // 从最新日期开始计算连续天数
-      let streak = 1;
-      let expectedPrev = studyDates[0] - 86400000;
+      let streak = 1
+      let expectedPrev = studyDates[0] - 86400000
 
-      for (let i = 1; i < studyDates.length; i++) {
-        if (studyDates[i] === expectedPrev) {
-          streak++;
-          expectedPrev -= 86400000;
-        } else if (studyDates[i] < expectedPrev) {
-          break;
+      for (let index = 1; index < studyDates.length; index += 1) {
+        if (studyDates[index] === expectedPrev) {
+          streak += 1
+          expectedPrev -= 86400000
+        } else if (studyDates[index] < expectedPrev) {
+          break
         }
       }
 
-      return streak;
+      return streak
     },
 
-    // 课时热力图数据（最近30天的学习情况）
     heatmapData(state) {
-      const stats = state.progress?.lesson_stats || {};
-      const lessons = Object.values(stats);
-      const heatmap = {};
+      const stats = state.progress?.lesson_stats || {}
+      const lessons = Object.values(stats)
+      const heatmap = {}
+      const today = new Date()
 
-      // 初始化最近30天
-      const today = new Date();
-      for (let i = 29; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(date.getDate() - i);
-        const dateStr = date.toISOString().split('T')[0];
-        heatmap[dateStr] = 0;
+      for (let index = 29; index >= 0; index -= 1) {
+        const date = new Date(today)
+        date.setDate(date.getDate() - index)
+        const dateStr = date.toISOString().split('T')[0]
+        heatmap[dateStr] = 0
       }
 
-      // 统计每天的练习次数
-      lessons.forEach(lesson => {
-        if (lesson.last_session_at) {
-          const dateStr = lesson.last_session_at.split('T')[0];
-          if (heatmap[dateStr] !== undefined) {
-            heatmap[dateStr]++;
-          }
+      lessons.forEach((lesson) => {
+        if (!lesson.last_session_at) return
+        const dateStr = lesson.last_session_at.split('T')[0]
+        if (heatmap[dateStr] !== undefined) {
+          heatmap[dateStr] += 1
         }
-      });
+      })
 
-      return heatmap;
+      return heatmap
     },
 
-    // 题型掌握度统计
     typeMastery(state) {
-      const completedTypes = state.progress?.completed_types_by_lesson || {};
-      const mastery = { q_fill: 0, q_translate: 0, q_conversation: 0 };
-      
-      Object.values(completedTypes).forEach(types => {
-        if (Array.isArray(types)) {
-          types.forEach(t => { if (mastery[t] !== undefined) mastery[t]++; });
-        } else if (typeof types === 'object') {
-          Object.keys(types).forEach(t => { if (mastery[t] !== undefined) mastery[t]++; });
-        }
-      });
+      const completedTypes = state.progress?.completed_types_by_lesson || {}
+      const mastery = { q_fill: 0, q_translate: 0, q_conversation: 0 }
 
-      return mastery;
+      Object.values(completedTypes).forEach((types) => {
+        if (Array.isArray(types)) {
+          types.forEach((type) => {
+            if (mastery[type] !== undefined) mastery[type] += 1
+          })
+          return
+        }
+
+        if (typeof types === 'object' && types !== null) {
+          Object.keys(types).forEach((type) => {
+            if (mastery[type] !== undefined) mastery[type] += 1
+          })
+        }
+      })
+
+      return mastery
     },
 
-    // 历史正确率趋势
     accuracyTrend(state) {
-      const stats = state.progress?.lesson_stats || {};
+      const stats = state.progress?.lesson_stats || {}
       return Object.values(stats)
-        .filter(l => l.last_session_at)
+        .filter((lesson) => lesson.last_session_at)
         .sort((a, b) => new Date(a.last_session_at) - new Date(b.last_session_at))
-        .map(l => ({
-          date: l.last_session_at.split('T')[0],
-          rate: Math.round((l.last_correct_rate || 0) * 100),
-          lesson: l.lesson_id
+        .map((lesson) => ({
+          date: lesson.last_session_at.split('T')[0],
+          rate: Math.round((lesson.last_correct_rate || 0) * 100),
+          lesson: lesson.lesson_id
         }))
-        .slice(-10); // 最近10次
+        .slice(-10)
     }
   },
-  
+
   actions: {
-    // 保存至 LocalStorage 供随时读取，同时静默同步给本地物理文件 data.json (需在开发环境下通过 Vite 插件支持)
     saveState() {
       if (!this.meta) this.meta = {}
       this.meta.updated_at = new Date().toISOString()
-      const stateStr = JSON.stringify(this.$state, null, 2)
+
+      const persistable = buildPersistableState(this.$state)
+      const stateStr = JSON.stringify(persistable, null, 2)
+
       localStorage.setItem('minna_app_data', stateStr)
-      
-      // 静默发给本地 Vite 服务器写入本地磁盘，允许 git 自动追踪！
+
       fetch('/api/save-progress', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: stateStr
-      }).catch(err => {
-          console.warn("自动磁盘同步失败 (或许处于纯静态生产部署中): ", err)
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: stateStr
+      }).catch((error) => {
+        console.warn('Failed to sync progress to local disk.', error)
       })
     },
 
     addReviewItem(item, markType = 'mistake') {
-      this.mistakes_book.push({
-        id: Date.now().toString(),
-        timestamp: new Date().toISOString(),
-        mark_type: markType,
-        ...item
-      })
+      this.mistakes_book.push(
+        normalizeReviewItem({
+          ...item,
+          mark_type: markType
+        })
+      )
       this.saveState()
     },
 
-    // 记录错题
     addMistake(mistake) {
       this.addReviewItem(mistake, 'mistake')
     },
 
+    removeReviewItem(id) {
+      this.mistakes_book = this.mistakes_book.filter((item) => item.id !== id)
+      this.saveState()
+    },
+
+    clearReviewItems() {
+      this.mistakes_book = []
+      this.saveState()
+    },
+
+    createBackupSnapshot(label = '') {
+      const backup = normalizeBackup({
+        id: `backup_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+        label: label.trim(),
+        timestamp: new Date().toISOString(),
+        snapshot: buildPersistableState(this.$state, { includeBackups: false })
+      })
+
+      this.study_backups = [backup, ...this.study_backups].slice(0, 20)
+      this.saveState()
+
+      return backup
+    },
+
+    restoreBackupSnapshot(id) {
+      const backup = this.study_backups.find((item) => item.id === id)
+      if (!backup) return false
+
+      const backups = [...this.study_backups]
+      this.$patch({
+        ...normalizeData(backup.snapshot),
+        study_backups: backups
+      })
+      this.saveState()
+
+      return true
+    },
+
+    removeBackupSnapshot(id) {
+      this.study_backups = this.study_backups.filter((item) => item.id !== id)
+      this.saveState()
+    },
+
     setPassThreshold(value) {
-      const num = Number(value)
-      if (Number.isNaN(num)) return
-      const clamped = Math.max(0.3, Math.min(1, num))
-      this.progress.pass_threshold = clamped
+      const numeric = Number(value)
+      if (Number.isNaN(numeric)) return
+
+      this.progress.pass_threshold = Math.max(0.3, Math.min(1, numeric))
       this.saveState()
     },
 
@@ -228,6 +315,7 @@ export const useMainStore = defineStore('main', {
       if (!this.progress.lesson_stats) {
         this.progress.lesson_stats = {}
       }
+
       this.progress.lesson_stats[lessonId] = {
         lesson_id: lessonId,
         last_session_at: new Date().toISOString(),
@@ -237,93 +325,97 @@ export const useMainStore = defineStore('main', {
         last_difficulty: stats?.difficulty || '',
         last_question_type: stats?.question_type || ''
       }
+
       this.saveState()
     },
 
-    // 完成某一课的某一种题型，并物理挂载最高通关难度
     markTypeCompleted(lessonId, typeId, difficulty = '基础巩固') {
       if (!this.progress.completed_types_by_lesson[lessonId]) {
         this.progress.completed_types_by_lesson[lessonId] = {}
       }
-      
-      let typedata = this.progress.completed_types_by_lesson[lessonId];
-      
-      // 平滑向下兼容：将早期旧版的 Array 格式进度，静默升级为 JSON Object 结构
-      if (Array.isArray(typedata)) {
-        const migrated = {};
-        typedata.forEach(t => { migrated[t] = '基础巩固' });
-        this.progress.completed_types_by_lesson[lessonId] = migrated;
-        typedata = migrated;
+
+      let typeData = this.progress.completed_types_by_lesson[lessonId]
+
+      if (Array.isArray(typeData)) {
+        const migrated = {}
+        typeData.forEach((type) => {
+          migrated[type] = '基础巩固'
+        })
+        this.progress.completed_types_by_lesson[lessonId] = migrated
+        typeData = migrated
       }
-      
-      // 难度阶梯权重判定：高难度会覆盖低难度记录，低难度拒绝覆盖高难度
-      const difficultyLevels = { '基础巩固': 1, '职场进阶': 2, 'JLPT真题级': 3 };
-      const currentLevel = difficultyLevels[difficulty] || 1;
-      const existingLevel = difficultyLevels[typedata[typeId]] || 0;
-      
+
+      const difficultyLevels = {
+        基础巩固: 1,
+        职场进阶: 2,
+        JLPT真题级: 3
+      }
+      const currentLevel = difficultyLevels[difficulty] || 1
+      const existingLevel = difficultyLevels[typeData[typeId]] || 0
+
       if (currentLevel > existingLevel) {
-          typedata[typeId] = difficulty;
+        typeData[typeId] = difficulty
       }
-      
+
       this.saveState()
     },
 
-    // 允许用户在仪表盘手动干预/切换某课某个小类的通关状态
     toggleTypeCompletion(lessonId, typeId) {
       if (!this.progress.completed_types_by_lesson[lessonId]) {
         this.progress.completed_types_by_lesson[lessonId] = {}
       }
-      
-      let typedata = this.progress.completed_types_by_lesson[lessonId];
-      if (Array.isArray(typedata)) {
-        const migrated = {};
-        typedata.forEach(t => { migrated[t] = '基础巩固' });
-        this.progress.completed_types_by_lesson[lessonId] = migrated;
-        typedata = migrated;
+
+      let typeData = this.progress.completed_types_by_lesson[lessonId]
+      if (Array.isArray(typeData)) {
+        const migrated = {}
+        typeData.forEach((type) => {
+          migrated[type] = '基础巩固'
+        })
+        this.progress.completed_types_by_lesson[lessonId] = migrated
+        typeData = migrated
       }
-      
-      if (typedata[typeId]) {
-          // 已存在则移除（取消点亮）
-          delete typedata[typeId];
+
+      if (typeData[typeId]) {
+        delete typeData[typeId]
       } else {
-          // 不存在则点亮，默认授予“免试特批”标记
-          typedata[typeId] = '特批免试';
+        typeData[typeId] = '特批免试'
       }
-      
-      this.saveState();
+
+      this.saveState()
     },
 
-    // 检查并自动推进主线进度
     checkAndAdvanceLesson(targetLessonId, enabledTypes) {
-      if (targetLessonId === this.progress.current_lesson) {
-        let typedata = this.progress.completed_types_by_lesson[targetLessonId] || {}
-        if (Array.isArray(typedata)) {
-            const migrated = {};
-            typedata.forEach(t => { migrated[t] = '基础巩固' });
-            typedata = migrated;
-        }
-        
-        const isAllCleared = enabledTypes.every(type => Object.keys(typedata).includes(type))
-        if (isAllCleared) {
-          this.advanceLesson()
-          return true
-        }
+      if (targetLessonId !== this.progress.current_lesson) {
+        return false
       }
-      return false
+
+      let typeData = this.progress.completed_types_by_lesson[targetLessonId] || {}
+      if (Array.isArray(typeData)) {
+        const migrated = {}
+        typeData.forEach((type) => {
+          migrated[type] = '基础巩固'
+        })
+        typeData = migrated
+      }
+
+      const isAllCleared = enabledTypes.every((type) => Object.keys(typeData).includes(type))
+      if (!isAllCleared) return false
+
+      this.advanceLesson()
+      return true
     },
 
-    // 推进主线进度
     advanceLesson() {
-      // 简单递增，但可以增加验证判断是否超过总课数上限
       this.progress.current_lesson += 1
       this.saveState()
     },
- 
+
     async hydrateFromDisk() {
       try {
-        const res = await fetch('/data.json', { cache: 'no-cache' })
-        if (!res.ok) return
-        const diskData = normalizeData(await res.json())
+        const response = await fetch('/data.json', { cache: 'no-cache' })
+        if (!response.ok) return
+
+        const diskData = normalizeData(await response.json())
         const localUpdated = this.meta?.updated_at ? new Date(this.meta.updated_at).getTime() : 0
         const diskUpdated = diskData.meta?.updated_at ? new Date(diskData.meta.updated_at).getTime() : 0
         const hasLocal = !!localStorage.getItem('minna_app_data')
@@ -340,18 +432,26 @@ export const useMainStore = defineStore('main', {
           (this.mistakes_book || []).length === 0
 
         if (diskUpdated > localUpdated || isLocalEmpty) {
-          this.$patch(diskData)
+          this.$patch({
+            ...diskData,
+            study_backups: mergeBackups(this.study_backups, diskData.study_backups)
+          })
           this.saveState()
         }
-      } catch (e) {
+      } catch (_error) {
         return
       }
     },
-    
-    // 全库导入或覆盖恢复 (Git Sync 导入时用)
+
     overwriteState(newState) {
-      this.$patch(normalizeData(newState))
+      const normalized = normalizeData(newState)
+      this.$patch({
+        ...normalized,
+        study_backups: mergeBackups(this.study_backups, normalized.study_backups)
+      })
       this.saveState()
     }
   }
 })
+
+export { buildPersistableState, getDefaultData, normalizeData }

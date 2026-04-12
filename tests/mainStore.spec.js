@@ -1,66 +1,54 @@
-import { setActivePinia, createPinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
 import { useMainStore } from '../src/store/mainStore'
 
-// 模拟 LocalStorage
-const localStorageMock = (function() {
-  let store = {};
-  return {
-    getItem: function(key) {
-      return store[key] || null;
-    },
-    setItem: function(key, value) {
-      store[key] = value.toString();
-    },
-    clear: function() {
-      store = {};
-    }
-  };
-})();
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+describe('mainStore', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    window.localStorage.clear()
+    global.fetch = vi.fn(() => Promise.resolve({ ok: true }))
+  })
 
-describe('MainStore Pinia State Tests', () => {
-    beforeEach(() => {
-        setActivePinia(createPinia())
-        window.localStorage.clear()
+  it('initializes with the new default shape', () => {
+    const store = useMainStore()
+
+    expect(store.progress.current_lesson).toBe(1)
+    expect(store.mistakes_book).toEqual([])
+    expect(store.study_backups).toEqual([])
+  })
+
+  it('stores review items with exercise snapshots', () => {
+    const store = useMainStore()
+
+    store.addReviewItem({
+      lesson: 1,
+      grammar_point: 'A grammar point',
+      question_type: 'q_translate',
+      original_question: '请造句',
+      correct_answer: 'わたしは いきます。',
+      exercise_snapshot: {
+        id: 'q1',
+        type: 'q_translate',
+        chinese_prompt: '请造句'
+      }
     })
 
-    it('Initializes with default data when localStorage is empty', () => {
-        const store = useMainStore()
-        expect(store.progress.current_lesson).toBe(1)
-        expect(store.mistakes_book.length).toBe(0)
-        expect(store.progress.completed_types_by_lesson).toEqual({})
-    })
+    expect(store.mistakes_book).toHaveLength(1)
+    expect(store.mistakes_book[0].exercise_snapshot.type).toBe('q_translate')
+    expect(store.mistakes_book[0].question_type).toBe('q_translate')
+  })
 
-    it('Correctly overwrites state and dumps to Storage when overwriteState is called', () => {
-        const store = useMainStore()
-        const fakeData = {
-           progress: { current_lesson: 3, completed_types_by_lesson: { "1": ["q_fill"] } },
-           mistakes_book: [{ id: "m1", grammar_point: "q_fill" }],
-           collections: []
-        }
-        
-        store.overwriteState(fakeData)
-        expect(store.progress.current_lesson).toBe(3)
-        expect(store.mistakes_book.length).toBe(1)
+  it('creates and restores local backup snapshots', () => {
+    const store = useMainStore()
 
-        // Verify LocalStorage serialization
-        const savedRaw = window.localStorage.getItem('minna_app_data')
-        const saved = JSON.parse(savedRaw)
-        expect(saved.progress.current_lesson).toBe(3)
-    })
+    store.progress.current_lesson = 3
+    const backup = store.createBackupSnapshot('checkpoint')
 
-    it('Adds a mistake to the mistake book with a generated ID and Timestamp', () => {
-        const store = useMainStore()
-        store.addMistake({
-            lesson: 1,
-            grammar_point: "q_fill",
-            user_wrong_input: "だ",
-            correct_answer: "です"
-        })
+    store.progress.current_lesson = 7
+    const restored = store.restoreBackupSnapshot(backup.id)
 
-        expect(store.mistakes_book.length).toBe(1)
-        expect(store.mistakes_book[0].user_wrong_input).toBe("だ")
-        expect(store.mistakes_book[0].id).toBeDefined()
-        expect(store.mistakes_book[0].timestamp).toBeDefined()
-    })
+    expect(restored).toBe(true)
+    expect(store.progress.current_lesson).toBe(3)
+    expect(store.study_backups).toHaveLength(1)
+  })
 })

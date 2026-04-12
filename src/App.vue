@@ -2,13 +2,29 @@
   <el-config-provider>
     <div id="app-container" style="height: 100vh; overflow: hidden;">
       <el-container style="height: 100%; background: transparent;">
-        
-        <!-- 侧边栏导航 (Element Plus) -->
-        <el-aside width="220px" :style="{ backgroundColor: isAcgDark ? 'rgba(20, 15, 25, 0.4)' : '#2c3e50', backdropFilter: isAcgDark ? 'blur(10px)' : 'none', display: 'flex', flexDirection: 'column', borderRight: isAcgDark ? '1px solid rgba(255,126,179,0.1)' : 'none' }">
-          <div :style="{ padding: '20px', color: isAcgDark ? '#ff99c4' : 'white', fontWeight: 'bold', textAlign: 'center', fontSize: '1.2rem', borderBottom: isAcgDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #1a252f' }">
-            🗻 日语进阶私教
+        <el-aside
+          width="220px"
+          :style="{
+            backgroundColor: isAcgDark ? 'rgba(20, 15, 25, 0.4)' : '#2c3e50',
+            backdropFilter: isAcgDark ? 'blur(10px)' : 'none',
+            display: 'flex',
+            flexDirection: 'column',
+            borderRight: isAcgDark ? '1px solid rgba(255,126,179,0.1)' : 'none'
+          }"
+        >
+          <div
+            :style="{
+              padding: '20px',
+              color: isAcgDark ? '#ff99c4' : 'white',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              fontSize: '1.2rem',
+              borderBottom: isAcgDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #1a252f'
+            }"
+          >
+            日语学习助手
           </div>
-          
+
           <el-menu
             :default-active="activePath"
             class="el-menu-vertical"
@@ -18,164 +34,173 @@
             router
             style="border-right: none; flex: 1;"
           >
-            <!-- 修复了 default-active 和 router=true 的配合使用，index 即跳转的 route path -->
             <el-menu-item index="/">
-              <span>🎮 训练打卡区</span>
+              <span>训练面板</span>
             </el-menu-item>
             <el-menu-item index="/syllabus">
-              <span>📚 知识大纲管理</span>
+              <span>知识大纲</span>
             </el-menu-item>
             <el-menu-item index="/mistakes">
-              <span>📓 专属错题集</span>
+              <span>错题与收藏</span>
             </el-menu-item>
             <el-menu-item index="/settings">
-              <span>⚙️ 全局系统设置</span>
+              <span>系统设置</span>
             </el-menu-item>
           </el-menu>
 
-          <div :style="{ padding: '20px', textAlign: 'center', borderTop: isAcgDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #1a252f' }">
-             <p :style="{ color: isAcgDark ? '#b3aebd' : '#666', fontSize: '0.8rem', marginBottom: '10px' }">进度状态: 第 {{ store.progress.current_lesson }} 课</p>
-             <el-button type="info" plain size="small" @click="exportData" style="width: 100%; margin-bottom: 10px;">
-                💾 导出进度
-             </el-button>
-             <el-button type="success" size="small" @click="$refs.fileInput.click()" style="width: 100%; margin: 0;">
-                📂 导入存档
-             </el-button>
-             <input type="file" ref="fileInput" accept=".json" style="display: none;" @change="importData">
+          <div
+            :style="{
+              padding: '20px',
+              textAlign: 'center',
+              borderTop: isAcgDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #1a252f'
+            }"
+          >
+            <p :style="{ color: isAcgDark ? '#b3aebd' : '#666', fontSize: '0.8rem', marginBottom: '10px' }">
+              当前进度：第 {{ store.progress.current_lesson }} 课
+            </p>
+            <el-button type="warning" plain size="small" @click="createBackup" style="width: 100%; margin-bottom: 10px;">
+              保存本地存档
+            </el-button>
+            <el-button type="info" plain size="small" @click="exportData" style="width: 100%; margin-bottom: 10px;">
+              导出备份
+            </el-button>
+            <el-button type="success" size="small" @click="fileInput?.click()" style="width: 100%; margin: 0;">
+              导入备份
+            </el-button>
+            <input type="file" ref="fileInput" accept=".json" style="display: none;" @change="importData" />
           </div>
         </el-aside>
 
-        <!-- 主内容区 -->
         <el-main style="padding: 0; background: transparent;">
           <el-main class="app-main">
             <router-view />
           </el-main>
         </el-main>
-        
       </el-container>
 
-    <!-- 浮动控制面板 -->
-    <div class="theme-toggle-fab">
-      <el-switch
-        v-model="isAcgDark"
-        class="ml-2"
-        inline-prompt
-        style="--el-switch-on-color: #8b5cf6; --el-switch-off-color: #4b5563"
-        active-text="🌌 ACG 沉浸"
-        inactive-text="🏢 工作伪装"
-        @change="toggleTheme"
-      />
+      <div class="theme-toggle-fab">
+        <el-switch
+          v-model="isAcgDark"
+          inline-prompt
+          style="--el-switch-on-color: #8b5cf6; --el-switch-off-color: #4b5563"
+          active-text="沉浸"
+          inactive-text="简洁"
+          @change="toggleTheme"
+        />
+      </div>
     </div>
-  </div>
-</el-config-provider>
+  </el-config-provider>
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import { useMainStore } from '@/store/mainStore'
+import { buildPersistableState } from '@/store/mainStore'
 
 const store = useMainStore()
 const router = useRouter()
 const fileInput = ref(null)
 const isAcgDark = ref(false)
 
-const activePath = computed(() => {
-    return router?.currentRoute?.value?.path || '/'
-})
+const activePath = computed(() => router?.currentRoute?.value?.path || '/')
 
-const toggleTheme = (val) => {
-    isAcgDark.value = val;
-    // 强制开启 Element Plus 的基础暗黑模式
-    document.documentElement.classList.add('dark'); 
-    
-    if (val) {
-        document.documentElement.classList.add('acg-theme');
-    } else {
-        document.documentElement.classList.remove('acg-theme');
-    }
+const toggleTheme = (value) => {
+  isAcgDark.value = value
+  document.documentElement.classList.add('dark')
+
+  if (value) {
+    document.documentElement.classList.add('acg-theme')
+  } else {
+    document.documentElement.classList.remove('acg-theme')
+  }
 }
 
-const handleKeyDown = (e) => {
-    // Alt + D 快捷键切换老干部模式和二次元模式
-    if (e.altKey && e.key.toLowerCase() === 'd') {
-        e.preventDefault();
-        toggleTheme(!isAcgDark.value);
-    }
+const handleKeyDown = (event) => {
+  if (event.altKey && event.key.toLowerCase() === 'd') {
+    event.preventDefault()
+    toggleTheme(!isAcgDark.value)
+  }
 }
 
 const applyCustomBg = () => {
-    const customBg = localStorage.getItem('custom_acg_bg')
-    if (customBg) {
-        document.documentElement.style.setProperty('--acg-custom-bg', `url("${customBg}")`)
-    } else {
-        document.documentElement.style.removeProperty('--acg-custom-bg')
-    }
+  const customBg = localStorage.getItem('custom_acg_bg')
+  if (customBg) {
+    document.documentElement.style.setProperty('--acg-custom-bg', `url("${customBg}")`)
+  } else {
+    document.documentElement.style.removeProperty('--acg-custom-bg')
+  }
+}
+
+const buildExportFileName = () => {
+  const now = new Date()
+  const stamp = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}-${String(now.getSeconds()).padStart(2, '0')}`
+  return `minna-study-backup_${stamp}.json`
 }
 
 onMounted(async () => {
-    window.addEventListener('keydown', handleKeyDown)
-    window.addEventListener('bg-url-changed', applyCustomBg)
-    
-    // 初始化应用自定义背景
-    applyCustomBg()
+  window.addEventListener('keydown', handleKeyDown)
+  window.addEventListener('bg-url-changed', applyCustomBg)
 
-    const savedTheme = localStorage.getItem('theme_acg_dark')
-    if (savedTheme !== null) {
-        toggleTheme(savedTheme === 'true')
-    } else {
-        toggleTheme(true) // 默认开启
-    }
+  applyCustomBg()
 
-    await store.hydrateFromDisk()
+  const savedTheme = localStorage.getItem('theme_acg_dark')
+  toggleTheme(savedTheme === null ? true : savedTheme === 'true')
+
+  await store.hydrateFromDisk()
 })
 
 onUnmounted(() => {
-    window.removeEventListener('keydown', handleKeyDown)
-    window.removeEventListener('bg-url-changed', applyCustomBg)
+  window.removeEventListener('keydown', handleKeyDown)
+  window.removeEventListener('bg-url-changed', applyCustomBg)
 })
 
-watch(isAcgDark, (newVal) => {
-    localStorage.setItem('theme_acg_dark', newVal)
+watch(isAcgDark, (value) => {
+  localStorage.setItem('theme_acg_dark', String(value))
 })
 
-// Data Sync Ported Logic
-const exportData = () => {
-    const dataStr = JSON.stringify(store.$state, null, 2);
-    const blob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'data.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    alert("进度已导出！");
+const createBackup = () => {
+  store.createBackupSnapshot('manual')
+  ElMessage.success('已保存一份本地学习存档。')
 }
 
-const importData = async (e) => {
-    const file = e.target.files[0]
-    if (!file) return;
-    try {
-        const text = await file.text();
-        const data = JSON.parse(text);
-        if (data && data.progress && data.mistakes_book) {
-            store.overwriteState(data)
-            alert("学习进度恢复成功！");
-        } else {
-            throw new Error("JSON 格式不正确");
-        }
-    } catch (err) {
-        alert("读取失败: " + err.message);
+const exportData = () => {
+  const dataStr = JSON.stringify(buildPersistableState(store.$state), null, 2)
+  const blob = new Blob([dataStr], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const anchor = document.createElement('a')
+  anchor.href = url
+  anchor.download = buildExportFileName()
+  document.body.appendChild(anchor)
+  anchor.click()
+  document.body.removeChild(anchor)
+  URL.revokeObjectURL(url)
+  ElMessage.success('备份文件已导出。')
+}
+
+const importData = async (event) => {
+  const file = event.target.files?.[0]
+  if (!file) return
+
+  try {
+    const text = await file.text()
+    const data = JSON.parse(text)
+    if (!data?.progress || !Array.isArray(data?.mistakes_book)) {
+      throw new Error('备份文件格式不正确')
     }
-    e.target.value = ''
+
+    store.overwriteState(data)
+    ElMessage.success('学习数据已恢复。')
+  } catch (error) {
+    ElMessage.error(`导入失败: ${error.message}`)
+  }
+
+  event.target.value = ''
 }
 </script>
 
 <style>
-/* 重置全局 margin */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
