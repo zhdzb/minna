@@ -32,8 +32,19 @@
                         </div>
                         
                         <h3 style="margin-bottom: 20px; line-height: 1.5;">
-                            {{ currentExercise.question || currentExercise.chinese_prompt }}
+                            {{ currentExercise.question || currentExercise.chinese_prompt || currentExercise.scene_description }}
                         </h3>
+
+                        <!-- 情景对话专区 (q_conversation) -->
+                        <div v-if="currentExercise.type === 'q_conversation'" style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee;">
+                            <div v-for="(turn, idx) in currentExercise.turns" :key="idx" style="margin-bottom: 10px; display: flex; gap: 10px;">
+                                <el-tag size="small" :type="turn.speaker === 'A' ? '' : 'success'" style="width: 30px; text-align: center;">{{ turn.speaker }}</el-tag>
+                                <div style="flex: 1; font-size: 1rem;">
+                                    <span v-if="idx !== currentExercise.missing_turn_index">{{ turn.content }}</span>
+                                    <span v-else style="color: #409EFF; font-weight: bold; border-bottom: 2px dashed #409EFF;">(待补完处)</span>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- 词汇提示 (Hover 浮现模糊版) -->
                         <div v-if="currentExercise.vocab_hints" style="margin-bottom: 20px;">
@@ -347,7 +358,7 @@ const submitForEvaluation = async () => {
     const nonFillExercises = tStore.exercises.filter(ex => ex.type !== 'q_fill')
     const batchArray = nonFillExercises.map(ex => ({
         id: ex.id,
-        original_prompt: ex.question || ex.chinese_prompt,
+        original_prompt: ex.question || ex.chinese_prompt || ex.scene_description || '情景对话内容',
         user_answer: tStore.userAnswers[ex.id] || '',
         type: ex.type
     }))

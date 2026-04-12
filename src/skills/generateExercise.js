@@ -7,7 +7,7 @@ export default class GenerateGrammarExerciseSkill {
         this.apiKey = apiKey;
         this.baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
         this.maxRetries = 3;
-        this.timeoutMs = 30000;
+        this.timeoutMs = 120000;
     }
 
     _buildSystemPrompt(context) {
@@ -221,10 +221,6 @@ ${JSON.stringify(recent_exercises.slice(0, 15), null, 2)}
             if (!['q_fill', 'q_translate', 'q_conversation'].includes(exercise.type)) {
                 throw new Error(`第 ${i + 1} 题 type 无效: ${exercise.type}`);
             }
-            if (!exercise.question && !exercise.chinese_prompt) {
-                throw new Error(`第 ${i + 1} 题缺少 question 或 chinese_prompt`);
-            }
-
             // 验证 target_grammar 是否在预期语法点列表中
             if (expectedGrammarPoints.length > 0) {
                 const isValidGrammar = expectedGrammarPoints.some(gp => 
@@ -250,6 +246,9 @@ ${JSON.stringify(recent_exercises.slice(0, 15), null, 2)}
 
             // q_fill 题型选项验证
             if (exercise.type === 'q_fill') {
+                if (!exercise.question) {
+                    throw new Error(`第 ${i + 1} 题 q_fill 缺少 question`);
+                }
                 if (!Array.isArray(exercise.options) || exercise.options.length < 2) {
                     throw new Error(`第 ${i + 1} 题 q_fill 选项不足`);
                 }
@@ -311,7 +310,7 @@ ${JSON.stringify(recent_exercises.slice(0, 15), null, 2)}
                         temperature: 0.15,
                         topP: 0.7,
                         topK: 20,
-                        maxOutputTokens: 8192,
+                        maxOutputTokens: 32768,
                         responseMimeType: "application/json"
                     }
                 })

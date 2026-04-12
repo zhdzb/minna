@@ -7,7 +7,7 @@ export default class EvaluateSentenceSkill {
         this.apiKey = apiKey;
         this.baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
         this.maxRetries = 3;
-        this.timeoutMs = 30000;
+        this.timeoutMs = 120000;
     }
 
     _buildSystemPrompt(currentLesson, batchArray) {
@@ -103,6 +103,7 @@ ${taskString}`;
                     },
                     generationConfig: {
                         temperature: 0.2,
+                        maxOutputTokens: 16384,
                         responseMimeType: "application/json"
                     }
                 })
