@@ -15,23 +15,81 @@
       <el-col :span="12">
         <el-card shadow="hover">
           <template #header>
-            <span>Gemini API</span>
+            <span>模型 Provider</span>
           </template>
-          <div style="margin-bottom: 15px; font-size: 0.9rem; color: #888;">
-            API Key 只保存在当前浏览器，不会被写入项目代码。
+          <div style="margin-bottom: 12px; font-size: 0.9rem; color: #888;">
+            选择 Gemini 或 OpenAI Responses。API Key 仅保存在本地浏览器。
           </div>
-          <el-input
-            v-model="apiKeyInput"
-            placeholder="AIza..."
-            type="password"
-            show-password
-          />
+          <el-select v-model="provider" style="width: 100%; margin-bottom: 12px;">
+            <el-option label="Gemini" value="gemini" />
+            <el-option label="OpenAI (Responses)" value="openai" />
+          </el-select>
+
+          <div v-if="provider === 'gemini'">
+            <el-input
+              v-model="geminiApiKey"
+              placeholder="AIza..."
+              type="password"
+              show-password
+            />
+          </div>
+          <div v-else>
+            <el-input
+              v-model="openaiApiKey"
+              placeholder="sk-..."
+              type="password"
+              show-password
+            />
+          </div>
+
           <div style="margin-top: 15px; text-align: right;">
-            <el-button type="primary" @click="saveApiKey">保存 API Key</el-button>
+            <el-button type="primary" @click="saveProviderConfig">保存配置</el-button>
           </div>
         </el-card>
       </el-col>
 
+      <el-col :span="12">
+        <el-card shadow="hover">
+          <template #header>
+            <span>模型参数</span>
+          </template>
+          <div style="margin-bottom: 10px; font-size: 0.9rem; color: #888;">
+            仅影响当前 Provider。
+          </div>
+
+          <div v-if="provider === 'gemini'" style="margin-bottom: 12px;">
+            <div style="font-size: 0.85rem; color: #666; margin-bottom: 6px;">Gemini 模型</div>
+            <el-input v-model="geminiModel" placeholder="gemini-2.5-flash" />
+          </div>
+
+          <div v-else style="display: grid; gap: 12px;">
+            <div>
+              <div style="font-size: 0.85rem; color: #666; margin-bottom: 6px;">OpenAI 模型</div>
+              <el-input v-model="openaiModel" placeholder="gpt-5.4" />
+            </div>
+            <div>
+              <div style="font-size: 0.85rem; color: #666; margin-bottom: 6px;">Base URL</div>
+              <el-input v-model="openaiBaseUrl" placeholder="https://llmapi.devart.ai" />
+            </div>
+            <div>
+              <div style="font-size: 0.85rem; color: #666; margin-bottom: 6px;">Reasoning Effort</div>
+              <el-select v-model="openaiReasoningEffort" style="width: 100%;">
+                <el-option label="low" value="low" />
+                <el-option label="medium" value="medium" />
+                <el-option label="high" value="high" />
+                <el-option label="xhigh" value="xhigh" />
+              </el-select>
+            </div>
+          </div>
+
+          <div style="margin-top: 15px; text-align: right;">
+            <el-button type="primary" @click="saveModelConfig">保存参数</el-button>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="20" style="margin-bottom: 20px;">
       <el-col :span="12">
         <el-card shadow="hover">
           <template #header>
@@ -103,13 +161,26 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { useMainStore } from '@/store/mainStore'
 
 const store = useMainStore()
-const apiKeyInput = ref('')
+
+const provider = ref('gemini')
+const geminiApiKey = ref('')
+const openaiApiKey = ref('')
+const geminiModel = ref('gemini-2.5-flash')
+const openaiModel = ref('gpt-5.4')
+const openaiBaseUrl = ref('https://llmapi.devart.ai')
+const openaiReasoningEffort = ref('xhigh')
 const acgBgInput = ref('')
 
 const backups = computed(() => store.study_backups)
 
 onMounted(() => {
-  apiKeyInput.value = localStorage.getItem('gemini_api_key') || ''
+  provider.value = localStorage.getItem('llm_provider') || 'gemini'
+  geminiApiKey.value = localStorage.getItem('gemini_api_key') || ''
+  openaiApiKey.value = localStorage.getItem('openai_api_key') || ''
+  geminiModel.value = localStorage.getItem('gemini_model') || 'gemini-2.5-flash'
+  openaiModel.value = localStorage.getItem('openai_model') || 'gpt-5.4'
+  openaiBaseUrl.value = localStorage.getItem('openai_base_url') || 'https://llmapi.devart.ai'
+  openaiReasoningEffort.value = localStorage.getItem('openai_reasoning_effort') || 'xhigh'
   acgBgInput.value = localStorage.getItem('custom_acg_bg') || ''
 })
 
@@ -119,16 +190,33 @@ const formatTime = (ts) => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 }
 
-const saveApiKey = () => {
-  const value = apiKeyInput.value.trim()
-  if (value) {
-    localStorage.setItem('gemini_api_key', value)
-    ElMessage.success('API Key 已保存。')
-    return
+const saveProviderConfig = () => {
+  localStorage.setItem('llm_provider', provider.value)
+
+  const geminiKey = geminiApiKey.value.trim()
+  const openaiKey = openaiApiKey.value.trim()
+
+  if (geminiKey) {
+    localStorage.setItem('gemini_api_key', geminiKey)
+  } else {
+    localStorage.removeItem('gemini_api_key')
   }
 
-  localStorage.removeItem('gemini_api_key')
-  ElMessage.warning('API Key 已清除。')
+  if (openaiKey) {
+    localStorage.setItem('openai_api_key', openaiKey)
+  } else {
+    localStorage.removeItem('openai_api_key')
+  }
+
+  ElMessage.success('Provider 配置已保存。')
+}
+
+const saveModelConfig = () => {
+  localStorage.setItem('gemini_model', geminiModel.value.trim() || 'gemini-2.5-flash')
+  localStorage.setItem('openai_model', openaiModel.value.trim() || 'gpt-5.4')
+  localStorage.setItem('openai_base_url', openaiBaseUrl.value.trim() || 'https://llmapi.devart.ai')
+  localStorage.setItem('openai_reasoning_effort', openaiReasoningEffort.value || 'xhigh')
+  ElMessage.success('模型参数已保存。')
 }
 
 const saveBgUrl = () => {

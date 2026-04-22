@@ -150,4 +150,103 @@ describe('GenerateGrammarExerciseSkill', () => {
     expect(result.exercises[0].vocab_hints).toEqual([])
     expect(result.exercises[1].turns[0].speaker).toBe('あなた')
   })
+
+  it('parses OpenAI Responses output payload', async () => {
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        output: [
+          {
+            content: [
+              {
+                type: 'output_text',
+                text: JSON.stringify({
+                  exercises: [
+                    {
+                      id: 'q1',
+                      type: 'q_fill',
+                      target_grammar: 'A grammar point',
+                      question: 'Test question',
+                      options: ['A', 'B'],
+                      answer: 'A'
+                    }
+                  ]
+                })
+              }
+            ]
+          }
+        ]
+      })
+    })
+
+    const skill = new GenerateGrammarExerciseSkill({
+      provider: 'openai',
+      apiKey: 'dummy_openai',
+      openaiModel: 'gpt-5.4',
+      openaiBaseUrl: 'https://llmapi.devart.ai',
+      openaiReasoningEffort: 'xhigh'
+    })
+
+    const result = await skill.generate({
+      lesson: 'Lesson 1',
+      grammar_points: ['A grammar point'],
+      hidden_knowledge: [],
+      config: {
+        questionCount: 1,
+        questionType: 'q_fill'
+      }
+    })
+
+    expect(result.exercises).toHaveLength(1)
+    expect(result.exercises[0].id).toBe('q1')
+  })
+
+  it('allows empty content on the missing turn in q_conversation', async () => {
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        candidates: [
+          {
+            content: {
+              parts: [
+                {
+                  text: JSON.stringify({
+                    exercises: [
+                      {
+                        id: 'qc-1',
+                        type: 'q_conversation',
+                        target_grammar: 'A grammar point',
+                        scene_description: 'Classroom short dialog',
+                        turns: [
+                          { speaker: 'A', content: 'もう ひるごはんを たべましたか。' },
+                          { speaker: 'B', content: '' }
+                        ],
+                        missing_turn_index: 1,
+                        answer: 'はい、もう たべました。'
+                      }
+                    ]
+                  })
+                }
+              ]
+            }
+          }
+        ]
+      })
+    })
+
+    const skill = new GenerateGrammarExerciseSkill('dummy')
+    const result = await skill.generate({
+      lesson: 'Lesson 1',
+      grammar_points: ['A grammar point'],
+      hidden_knowledge: [],
+      config: {
+        questionCount: 1,
+        questionType: 'q_conversation'
+      }
+    })
+
+    expect(result.exercises).toHaveLength(1)
+    expect(result.exercises[0].missing_turn_index).toBe(1)
+    expect(result.exercises[0].turns[1].content).toBe('')
+  })
 })

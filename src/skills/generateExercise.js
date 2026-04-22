@@ -1,4 +1,5 @@
 import { parseJsonText, validateGeneratedExercisesPayload } from '@/utils/aiPayloadValidators'
+import { buildProviderConfig, requestLlmText } from '@/utils/llmProvider'
 
 const EXERCISE_TYPE_PROMPTS = {
   ALL: (questionCount) => {
@@ -17,12 +18,14 @@ const EXERCISE_TYPE_PROMPTS = {
 }
 
 export default class GenerateGrammarExerciseSkill {
-  constructor(apiKey) {
-    this.apiKey = apiKey
-    this.baseUrl =
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
-    this.maxRetries = 3
-    this.timeoutMs = 120000
+  constructor(providerConfig) {
+    if (typeof providerConfig === 'string') {
+      this.providerConfig = { provider: 'gemini', apiKey: providerConfig }
+    } else {
+      this.providerConfig = providerConfig || {}
+    }
+    this.maxRetries = this.providerConfig.maxRetries || 3
+    this.timeoutMs = this.providerConfig.timeoutMs || 120000
   }
 
   _buildSystemPrompt(context) {
@@ -108,94 +111,35 @@ ${recentExercises.length > 0 ? JSON.stringify(recentExercises.slice(0, 15), null
     `.trim()
   }
 
-  async _fetchWithTimeout(url, options) {
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), this.timeoutMs)
-
-    try {
-      return await fetch(url, {
-        ...options,
-        signal: controller.signal
-      })
-    } finally {
-      clearTimeout(timeoutId)
-    }
-  }
-
-  async _fetchWithRetry(url, options) {
-    let lastError
-
-    for (let attempt = 0; attempt < this.maxRetries; attempt += 1) {
-      try {
-        return await this._fetchWithTimeout(url, options)
-      } catch (error) {
-        lastError = error
-
-        if (error.name === 'AbortError') {
-          throw new Error(`API request timed out after ${this.timeoutMs}ms`)
-        }
-
-        if (attempt < this.maxRetries - 1) {
-          const delay = 1000 * Math.pow(2, attempt)
-          await new Promise((resolve) => setTimeout(resolve, delay))
-        }
-      }
-    }
-
-    throw lastError
-  }
-
-  _extractTextResponse(data) {
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text
-    if (typeof text !== 'string' || text.trim() === '') {
-      throw new Error('API returned an empty response body')
-    }
-
-    return text
-  }
-
   async generate(context) {
-    if (!this.apiKey) {
-      throw new Error('Gemini API key is missing')
-    }
-
     const systemPrompt = this._buildSystemPrompt(context)
     const expectedGrammarPoints = Array.isArray(context?.grammar_points) ? context.grammar_points : []
     const expectedCount = context?.config?.questionCount || 10
 
     try {
-      const response = await this._fetchWithRetry(`${this.baseUrl}?key=${this.apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: 'Return the exercise payload now. Output valid JSON only.'
-                }
-              ]
-            }
-          ],
-          systemInstruction: {
-            parts: [{ text: systemPrompt }]
-          },
-          generationConfig: {
-            temperature: 0.1,
-            topP: 0.7,
-            topK: 20,
-            maxOutputTokens: 32768,
-            responseMimeType: 'application/json'
-          }
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`)
+      const effectiveConfig = buildProviderConfig(this.providerConfig)
+      if (!effectiveConfig.apiKey) {
+        throw new Error(`${effectiveConfig.provider === 'openai' ? 'OpenAI' : 'Gemini'} API key is missing`)
       }
 
-      const data = await response.json()
-      const parsed = parseJsonText(this._extractTextResponse(data), 'exercise generation')
+      const textResponse = await requestLlmText({
+        providerConfig: {
+          ...effectiveConfig,
+          maxRetries: this.maxRetries,
+          timeoutMs: this.timeoutMs
+        },
+        systemPrompt,
+        userPrompt: 'Return the exercise payload now. Output valid JSON only.',
+        generationConfig: {
+          temperature: 0.1,
+          topP: 0.7,
+          topK: 20,
+          maxOutputTokens: 32768,
+          responseMimeType: 'application/json'
+        }
+      })
+
+      const parsed = parseJsonText(textResponse, 'exercise generation')
 
       return validateGeneratedExercisesPayload(parsed, {
         expectedGrammarPoints,

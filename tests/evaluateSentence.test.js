@@ -83,4 +83,53 @@ describe('EvaluateSentenceSkill', () => {
     expect(result[0].correct_answer).toBe('わたしは いきます。')
     expect(result[0].explanation).toMatch(/did not return/i)
   })
+
+  it('parses OpenAI Responses output payload', async () => {
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        output: [
+          {
+            content: [
+              {
+                type: 'output_text',
+                text: JSON.stringify([
+                  {
+                    id: 'q1',
+                    is_correct: true,
+                    error_type: '',
+                    correct_answer: 'わたしは いきます。',
+                    explanation: '表达正确。',
+                    natural_expression: ''
+                  }
+                ])
+              }
+            ]
+          }
+        ]
+      })
+    })
+
+    const skill = new EvaluateSentenceSkill({
+      provider: 'openai',
+      apiKey: 'dummy_openai',
+      openaiModel: 'gpt-5.4',
+      openaiBaseUrl: 'https://llmapi.devart.ai',
+      openaiReasoningEffort: 'xhigh'
+    })
+
+    const result = await skill.evaluate(1, [
+      {
+        id: 'q1',
+        original_prompt: '请造句',
+        user_answer: 'watashi wa ikimasu',
+        type: 'q_translate',
+        reference_answer: 'わたしは いきます。'
+      }
+    ])
+
+    expect(result).toHaveLength(1)
+    expect(result[0].is_correct).toBe(true)
+    expect(result[0].correct_answer).toBe('わたしは いきます。')
+  })
 })

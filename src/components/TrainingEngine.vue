@@ -223,6 +223,7 @@ import { useTrainingStore } from '@/store/trainingStore'
 import syllabusDict from '@/data/syllabus.json'
 import GenerateGrammarExerciseSkill from '@/skills/generateExercise.js'
 import EvaluateSentenceSkill from '@/skills/evaluateSentence.js'
+import { buildProviderConfig } from '@/utils/llmProvider'
 
 const route = useRoute()
 const store = useMainStore()
@@ -362,7 +363,8 @@ const startSession = async () => {
     }
 
     try {
-        const skill = new GenerateGrammarExerciseSkill(window.CONFIG.GEMINI_API_KEY)
+        const providerConfig = buildProviderConfig()
+        const skill = new GenerateGrammarExerciseSkill(providerConfig)
         const res = await skill.generate(context)
         
         // 我们在 prompt 中告诉模型按量出题，后端直接全量接住并存入 Store
@@ -395,7 +397,8 @@ const submitForEvaluation = async () => {
         const targetLessonId = tStore.currentConfig?.targetLesson || store.progress.current_lesson
         let res = []
         if (batchArray.length > 0) {
-            const skill = new EvaluateSentenceSkill(window.CONFIG.GEMINI_API_KEY)
+            const providerConfig = buildProviderConfig()
+            const skill = new EvaluateSentenceSkill(providerConfig)
             res = await skill.evaluate(targetLessonId, batchArray)
         }
         

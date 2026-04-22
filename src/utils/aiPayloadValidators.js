@@ -151,6 +151,10 @@ const normalizeGeneratedExercise = (exercise, index, expectedGrammarPoints) => {
       throw new Error(`exercise ${index + 1}: turns must contain at least 2 items`)
     }
 
+    const missingIndex = Number.isInteger(exercise.missing_turn_index)
+      ? exercise.missing_turn_index
+      : null
+
     normalized.turns = exercise.turns.map((turn, turnIndex) => {
       if (!turn || typeof turn !== 'object') {
         throw new Error(`exercise ${index + 1}: turns[${turnIndex}] must be an object`)
@@ -161,24 +165,26 @@ const normalizeGeneratedExercise = (exercise, index, expectedGrammarPoints) => {
         `exercise ${index + 1}: turns[${turnIndex}].speaker`
       )
 
+      const content = normalizeText(turn.content)
+      if (content === '' && missingIndex !== turnIndex) {
+        throw new Error(`exercise ${index + 1}: turns[${turnIndex}].content is required`)
+      }
+
       return {
         speaker,
-        content: assertNonEmptyString(
-          turn.content,
-          `exercise ${index + 1}: turns[${turnIndex}].content`
-        )
+        content
       }
     })
 
-    if (!Number.isInteger(exercise.missing_turn_index)) {
+    if (missingIndex === null) {
       throw new Error(`exercise ${index + 1}: missing_turn_index must be an integer`)
     }
 
-    if (exercise.missing_turn_index < 0 || exercise.missing_turn_index >= normalized.turns.length) {
+    if (missingIndex < 0 || missingIndex >= normalized.turns.length) {
       throw new Error(`exercise ${index + 1}: missing_turn_index is out of range`)
     }
 
-    normalized.missing_turn_index = exercise.missing_turn_index
+    normalized.missing_turn_index = missingIndex
     normalized.vocab_hints = normalizeVocabHints(exercise.vocab_hints, index, { allowEmpty: true })
   }
 
