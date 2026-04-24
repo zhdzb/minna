@@ -132,4 +132,54 @@ describe('EvaluateSentenceSkill', () => {
     expect(result[0].is_correct).toBe(true)
     expect(result[0].correct_answer).toBe('わたしは いきます。')
   })
+
+  it('does not force json_object format for OpenAI evaluation batches', async () => {
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        output: [
+          {
+            content: [
+              {
+                type: 'output_text',
+                text: JSON.stringify([
+                  {
+                    id: 'q1',
+                    is_correct: true,
+                    error_type: '',
+                    correct_answer: 'dummy',
+                    explanation: 'ok',
+                    natural_expression: ''
+                  }
+                ])
+              }
+            ]
+          }
+        ]
+      })
+    })
+
+    const skill = new EvaluateSentenceSkill({
+      provider: 'openai',
+      apiKey: 'dummy_openai',
+      openaiModel: 'gpt-5.4',
+      openaiBaseUrl: 'https://llmapi.devart.ai',
+      openaiReasoningEffort: 'xhigh'
+    })
+
+    await skill.evaluate(1, [
+      {
+        id: 'q1',
+        original_prompt: 'prompt',
+        user_answer: 'answer',
+        type: 'q_translate',
+        reference_answer: 'ref'
+      }
+    ])
+
+    expect(global.fetch).toHaveBeenCalled()
+    const [, options] = global.fetch.mock.calls[0]
+    const requestBody = JSON.parse(options.body)
+    expect(requestBody.text).toBeUndefined()
+  })
 })

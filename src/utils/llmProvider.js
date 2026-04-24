@@ -116,6 +116,75 @@ const extractGeminiText = (data) => {
   return typeof text === 'string' ? text : ''
 }
 
+const parseOpenAISsePayload = (rawText) => {
+  const lines = String(rawText || '').split(/\r?\n/)
+  let finalResponse = null
+  let deltaText = ''
+
+  for (const line of lines) {
+    if (!line.startsWith('data:')) continue
+    const payload = line.slice(5).trim()
+    if (!payload || payload === '[DONE]') continue
+
+    try {
+      const eventData = JSON.parse(payload)
+
+      if (typeof eventData?.delta === 'string') {
+        deltaText += eventData.delta
+      }
+
+      if (typeof eventData?.output_text === 'string') {
+        deltaText += eventData.output_text
+      }
+
+      if (eventData?.response && typeof eventData.response === 'object') {
+        finalResponse = eventData.response
+      }
+
+      if (eventData?.type === 'response.completed' && eventData?.response) {
+        finalResponse = eventData.response
+      }
+    } catch (_error) {
+      // Ignore malformed SSE payload lines and keep scanning.
+    }
+  }
+
+  if (finalResponse) {
+    if (!finalResponse.output_text && deltaText.trim()) {
+      finalResponse.output_text = deltaText
+    }
+    return finalResponse
+  }
+
+  if (deltaText.trim()) {
+    return { output_text: deltaText }
+  }
+
+  throw new Error('API returned a non-JSON streaming response')
+}
+
+const parseOpenAIResponse = async (response) => {
+  if (typeof response?.text !== 'function') {
+    if (typeof response?.json === 'function') {
+      return response.json()
+    }
+    throw new Error('API response object is missing both text() and json() readers')
+  }
+
+  const rawText = await response.text()
+  const trimmed = rawText.trim()
+  if (!trimmed) return {}
+
+  try {
+    return JSON.parse(trimmed)
+  } catch (_error) {
+    if (trimmed.includes('event:') || trimmed.includes('data:')) {
+      return parseOpenAISsePayload(trimmed)
+    }
+    throw new Error(`API returned invalid JSON: ${trimmed.slice(0, 120)}`)
+  }
+}
+
 const requestWithTimeout = async (url, options, timeoutMs) => {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
@@ -130,11 +199,20 @@ const requestWithTimeout = async (url, options, timeoutMs) => {
   }
 }
 
+const isRetryableStatus = (status) =>
+  status === 408 || status === 429 || status === 500 || status === 502 || status === 503 || status === 504
+
 const requestWithRetry = async (url, options, timeoutMs, maxRetries) => {
   let lastError
   for (let attempt = 0; attempt < maxRetries; attempt += 1) {
     try {
-      return await requestWithTimeout(url, options, timeoutMs)
+      const response = await requestWithTimeout(url, options, timeoutMs)
+      if (!response.ok && isRetryableStatus(response.status) && attempt < maxRetries - 1) {
+        const delay = 1000 * Math.pow(2, attempt)
+        await new Promise((resolve) => setTimeout(resolve, delay))
+        continue
+      }
+      return response
     } catch (error) {
       lastError = error
       if (error.name === 'AbortError') {
@@ -147,6 +225,28 @@ const requestWithRetry = async (url, options, timeoutMs, maxRetries) => {
     }
   }
   throw lastError
+}
+
+const buildHttpError = async (response) => {
+  const status = response?.status
+  let detail = ''
+  try {
+    const raw = await response.text()
+    if (raw && raw.trim()) {
+      try {
+        const parsed = JSON.parse(raw)
+        const msg = parsed?.error?.message || parsed?.message || parsed?.error || parsed?.type
+        detail = typeof msg === 'string' && msg.trim() ? msg.trim() : raw.trim()
+      } catch (_error) {
+        detail = raw.trim()
+      }
+    }
+  } catch (_error) {
+    // Ignore text parsing errors and return status-only message.
+  }
+
+  const suffix = detail ? `: ${detail.slice(0, 300)}` : ''
+  return new Error(`API request failed with status ${status}${suffix}`)
 }
 
 export const requestLlmText = async ({
@@ -171,8 +271,14 @@ export const requestLlmText = async ({
       model: config.openaiModel,
       input: userPrompt,
       instructions: systemPrompt,
-      text: { format: { type: 'json_object' } },
+      stream: false,
       temperature: generationConfig.temperature
+    }
+
+    // Only force json_object when caller explicitly asks for JSON mime mode.
+    // Some tasks (e.g. evaluation) need top-level arrays, which conflict with json_object.
+    if (generationConfig.responseMimeType === 'application/json') {
+      body.text = { format: { type: 'json_object' } }
     }
 
     if (typeof generationConfig.maxOutputTokens === 'number') {
@@ -189,6 +295,7 @@ export const requestLlmText = async ({
 
     const requestHeaders = {
       'Content-Type': 'application/json',
+      Accept: 'application/json',
       Authorization: `Bearer ${config.apiKey}`
     }
 
@@ -206,10 +313,10 @@ export const requestLlmText = async ({
     )
 
     if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`)
+      throw await buildHttpError(response)
     }
 
-    const data = await response.json()
+    const data = await parseOpenAIResponse(response)
     const text = extractOpenAIText(data)
     if (!text.trim()) {
       throw new Error('API returned an empty response body')
@@ -266,7 +373,7 @@ export const requestLlmText = async ({
   )
 
   if (!response.ok) {
-    throw new Error(`API request failed with status ${response.status}`)
+    throw await buildHttpError(response)
   }
 
   const data = await response.json()

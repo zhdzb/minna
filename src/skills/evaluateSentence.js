@@ -10,6 +10,7 @@ export default class EvaluateSentenceSkill {
     }
     this.maxRetries = this.providerConfig.maxRetries || 3
     this.timeoutMs = this.providerConfig.timeoutMs || 120000
+    this.batchSize = this.providerConfig.batchSize || 8
   }
 
   _buildSystemPrompt(currentLesson, batchArray) {
@@ -65,24 +66,52 @@ ${tasks}
         return validateEvaluationPayload(null, batchArray)
       }
 
-      const textResponse = await requestLlmText({
-        providerConfig: {
-          ...effectiveConfig,
-          maxRetries: this.maxRetries,
-          timeoutMs: this.timeoutMs
-        },
-        systemPrompt: this._buildSystemPrompt(currentLesson, batchArray),
-        userPrompt: 'Evaluate the learner answers now.',
-        generationConfig: {
-          temperature: 0.1,
-          maxOutputTokens: 16384,
-          responseMimeType: 'application/json'
+      const resultMap = new Map()
+      for (let i = 0; i < batchArray.length; i += this.batchSize) {
+        const chunk = batchArray.slice(i, i + this.batchSize)
+        try {
+          const textResponse = await requestLlmText({
+            providerConfig: {
+              ...effectiveConfig,
+              maxRetries: this.maxRetries,
+              timeoutMs: this.timeoutMs
+            },
+            systemPrompt: this._buildSystemPrompt(currentLesson, chunk),
+            userPrompt: 'Evaluate the learner answers now.',
+            generationConfig: {
+              temperature: 0.1,
+              maxOutputTokens: 16384
+            }
+          })
+
+          const parsed = parseJsonText(textResponse, 'evaluation')
+          const normalized = validateEvaluationPayload(parsed, chunk)
+          normalized.forEach((item) => {
+            resultMap.set(String(item.id), item)
+          })
+        } catch (chunkError) {
+          console.error('EvaluateSentenceSkill chunk error:', chunkError)
+          const fallback = validateEvaluationPayload(null, chunk).map((item) => ({
+            ...item,
+            error_type: 'Network_Error',
+            explanation: `AI鎵规敼澶辫触: ${chunkError.message}`
+          }))
+          fallback.forEach((item) => {
+            resultMap.set(String(item.id), item)
+          })
+        }
+      }
+
+      return batchArray.map((item) => {
+        const existing = resultMap.get(String(item.id))
+        if (existing) return existing
+        const fallback = validateEvaluationPayload(null, [item])[0]
+        return {
+          ...fallback,
+          error_type: 'Network_Error',
+          explanation: 'AI鎵规敼澶辫触: no evaluation returned'
         }
       })
-
-      const parsed = parseJsonText(textResponse, 'evaluation')
-
-      return validateEvaluationPayload(parsed, batchArray)
     } catch (error) {
       console.error('EvaluateSentenceSkill error:', error)
       return validateEvaluationPayload(null, batchArray).map((item) => ({

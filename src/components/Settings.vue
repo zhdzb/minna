@@ -196,6 +196,16 @@ const saveProviderConfig = () => {
   const geminiKey = geminiApiKey.value.trim()
   const openaiKey = openaiApiKey.value.trim()
 
+  if (provider.value === 'openai' && !openaiKey) {
+    ElMessage.error('当前选择 OpenAI，请先填写 OpenAI API Key')
+    return
+  }
+
+  if (provider.value === 'gemini' && !geminiKey) {
+    ElMessage.error('当前选择 Gemini，请先填写 Gemini API Key')
+    return
+  }
+
   if (geminiKey) {
     localStorage.setItem('gemini_api_key', geminiKey)
   } else {

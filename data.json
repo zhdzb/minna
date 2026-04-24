@@ -38,7 +38,12 @@
       "17": {
         "q_translate": "特批免试"
       },
-      "18": {}
+      "18": {},
+      "19": {
+        "q_fill": "基础巩固",
+        "q_translate": "基础巩固",
+        "q_conversation": "基础巩固"
+      }
     },
     "pass_threshold": 0.5,
     "lesson_stats": {
@@ -96,6 +101,15 @@
         "last_difficulty": "基础巩固",
         "last_question_type": "ALL"
       },
+      "7": {
+        "lesson_id": 7,
+        "last_session_at": "2026-04-22T16:52:01.727Z",
+        "last_question_count": 5,
+        "last_correct_count": 0,
+        "last_correct_rate": 0,
+        "last_difficulty": "基础巩固",
+        "last_question_type": "ALL"
+      },
       "14": {
         "lesson_id": 14,
         "last_session_at": "2026-04-06T09:33:04.490Z",
@@ -134,10 +148,10 @@
       },
       "19": {
         "lesson_id": 19,
-        "last_session_at": "2026-04-21T12:51:39.358Z",
-        "last_question_count": 15,
-        "last_correct_count": 2,
-        "last_correct_rate": 0.13333333333333333,
+        "last_session_at": "2026-04-22T17:26:55.019Z",
+        "last_question_count": 18,
+        "last_correct_count": 10,
+        "last_correct_rate": 0.5555555555555556,
         "last_difficulty": "基础巩固",
         "last_question_type": "ALL"
       }
@@ -1059,11 +1073,203 @@
         "explanation": "助词错误，应为「会社に」。动词「来る」的「必须」形式活用错误，应为「来なければなりません」。",
         "natural_expression": ""
       }
+    },
+    {
+      "id": "review_1776879756015_osd7rm",
+      "timestamp": "2026-04-22T17:42:36.015Z",
+      "mark_type": "favorite",
+      "lesson": 19,
+      "grammar_point": "Vた 形变形规则 (动词过去形式)",
+      "question_type": "q_translate",
+      "original_question": "昨天我看了电影。",
+      "user_wrong_input": "きのうわたしはえいがをみたことがあります",
+      "correct_answer": "きのう えいがを みた。",
+      "explanation": "「〜たことがあります」表示“有过……经验”，这里应使用过去式「みた」。<br><br><b>💡 职场加点料:</b> きのう わたしは えいがを みた。",
+      "exercise_snapshot": {
+        "id": "mng19-trans-01",
+        "type": "q_translate",
+        "target_grammar": "Vた 形变形规则 (动词过去形式)",
+        "question": "",
+        "chinese_prompt": "昨天我看了电影。",
+        "scene_description": "",
+        "options": [],
+        "turns": [],
+        "missing_turn_index": null,
+        "vocab_hints": [
+          {
+            "word": "昨日",
+            "kana": "きのう",
+            "cn": "昨天"
+          },
+          {
+            "word": "映画",
+            "kana": "えいが",
+            "cn": "电影"
+          },
+          {
+            "word": "見ます",
+            "kana": "みます",
+            "cn": "看"
+          }
+        ],
+        "answer": "きのう えいがを みた。",
+        "answer_pattern": ""
+      },
+      "evaluation_snapshot": {
+        "is_correct": false,
+        "correct_answer": "きのう えいがを みた。",
+        "explanation": "「〜たことがあります」表示“有过……经验”，这里应使用过去式「みた」。<br><br><b>💡 职场加点料:</b> きのう わたしは えいがを みた。",
+        "natural_expression": ""
+      }
+    },
+    {
+      "id": "review_1776879756882_rvra8v",
+      "timestamp": "2026-04-22T17:42:36.882Z",
+      "mark_type": "favorite",
+      "lesson": 19,
+      "grammar_point": "Vた 形变形规则 (动词过去形式)",
+      "question_type": "q_translate",
+      "original_question": "上周我和朋友喝了咖啡。",
+      "user_wrong_input": "せんしゅうわたしはともだちとコヒをのんだこたがあります",
+      "correct_answer": "せんしゅう ともだちと コーヒーを のんだ。",
+      "explanation": "这里要表达上周做了某事，不是“喝过咖啡的经验”，应使用「のんだ」。<br><br><b>💡 职场加点料:</b> せんしゅう わたしは ともだちと コーヒーを のんだ。",
+      "exercise_snapshot": {
+        "id": "mng19-trans-02",
+        "type": "q_translate",
+        "target_grammar": "Vた 形变形规则 (动词过去形式)",
+        "question": "",
+        "chinese_prompt": "上周我和朋友喝了咖啡。",
+        "scene_description": "",
+        "options": [],
+        "turns": [],
+        "missing_turn_index": null,
+        "vocab_hints": [
+          {
+            "word": "先週",
+            "kana": "せんしゅう",
+            "cn": "上周"
+          },
+          {
+            "word": "友達",
+            "kana": "ともだち",
+            "cn": "朋友"
+          },
+          {
+            "word": "コーヒー",
+            "kana": "こーひー",
+            "cn": "咖啡"
+          },
+          {
+            "word": "飲みます",
+            "kana": "のみます",
+            "cn": "喝"
+          }
+        ],
+        "answer": "せんしゅう ともだちと コーヒーを のんだ。",
+        "answer_pattern": "先週 友達と コーヒーを 飲んだ。"
+      },
+      "evaluation_snapshot": {
+        "is_correct": false,
+        "correct_answer": "せんしゅう ともだちと コーヒーを のんだ。",
+        "explanation": "这里要表达上周做了某事，不是“喝过咖啡的经验”，应使用「のんだ」。<br><br><b>💡 职场加点料:</b> せんしゅう わたしは ともだちと コーヒーを のんだ。",
+        "natural_expression": ""
+      }
+    },
+    {
+      "id": "review_1776879822226_8f9cnn",
+      "timestamp": "2026-04-22T17:43:42.226Z",
+      "mark_type": "favorite",
+      "lesson": 19,
+      "grammar_point": "V1たり、V2たり します (列举典型的几个动作)",
+      "question_type": "q_translate",
+      "original_question": "暑假时我游游泳，拍照照。",
+      "user_wrong_input": "なつやすみわたしはおよだし、しゃしんをとでりしました",
+      "correct_answer": "なつやすみに およいだり、しゃしんを とったり しました。",
+      "explanation": "应是「およいだり、とったり しました」。「およだし」「とでり」拼写不对。<br><br><b>💡 职场加点料:</b> なつやすみに わたしは およいだり、しゃしんを とったり しました。",
+      "exercise_snapshot": {
+        "id": "mng19-trans-06",
+        "type": "q_translate",
+        "target_grammar": "V1たり、V2たり します (列举典型的几个动作)",
+        "question": "",
+        "chinese_prompt": "暑假时我游游泳，拍照照。",
+        "scene_description": "",
+        "options": [],
+        "turns": [],
+        "missing_turn_index": null,
+        "vocab_hints": [
+          {
+            "word": "夏休み",
+            "kana": "なつやすみ",
+            "cn": "暑假"
+          },
+          {
+            "word": "泳ぎます",
+            "kana": "およぎます",
+            "cn": "游泳"
+          },
+          {
+            "word": "写真",
+            "kana": "しゃしん",
+            "cn": "照片"
+          },
+          {
+            "word": "撮ります",
+            "kana": "とります",
+            "cn": "拍摄"
+          }
+        ],
+        "answer": "なつやすみに およいだり、しゃしんを とったり しました。",
+        "answer_pattern": "夏休みに 泳いだり、写真を 撮ったり しました。"
+      },
+      "evaluation_snapshot": {
+        "is_correct": false,
+        "correct_answer": "なつやすみに およいだり、しゃしんを とったり しました。",
+        "explanation": "应是「およいだり、とったり しました」。「およだし」「とでり」拼写不对。<br><br><b>💡 职场加点料:</b> なつやすみに わたしは およいだり、しゃしんを とったり しました。",
+        "natural_expression": ""
+      }
+    },
+    {
+      "id": "review_1776879835791_ibx9je",
+      "timestamp": "2026-04-22T17:43:55.791Z",
+      "mark_type": "favorite",
+      "lesson": 19,
+      "grammar_point": "い形(去い)く / な形(去な)に / Nに なります (状态发生改变)",
+      "question_type": "q_translate",
+      "original_question": "天气变冷了。",
+      "user_wrong_input": "てんきはさむくなります",
+      "correct_answer": "さむく なりました。",
+      "explanation": "中文是“变冷了”，要用过去式「なりました」，不是「なります」。<br><br><b>💡 职场加点料:</b> てんきが さむく なりました。",
+      "exercise_snapshot": {
+        "id": "mng19-trans-07",
+        "type": "q_translate",
+        "target_grammar": "い形(去い)く / な形(去な)に / Nに なります (状态发生改变)",
+        "question": "",
+        "chinese_prompt": "天气变冷了。",
+        "scene_description": "",
+        "options": [],
+        "turns": [],
+        "missing_turn_index": null,
+        "vocab_hints": [
+          {
+            "word": "寒い",
+            "kana": "さむい",
+            "cn": "冷"
+          }
+        ],
+        "answer": "さむく なりました。",
+        "answer_pattern": ""
+      },
+      "evaluation_snapshot": {
+        "is_correct": false,
+        "correct_answer": "さむく なりました。",
+        "explanation": "中文是“变冷了”，要用过去式「なりました」，不是「なります」。<br><br><b>💡 职场加点料:</b> てんきが さむく なりました。",
+        "natural_expression": ""
+      }
     }
   ],
   "study_backups": [],
   "meta": {
-    "updated_at": "2026-04-21T12:51:39.359Z"
+    "updated_at": "2026-04-22T17:43:55.791Z"
   },
   "collections": []
 }
