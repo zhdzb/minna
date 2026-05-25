@@ -4,6 +4,8 @@
 - Deployed mode must move LLM traffic behind server-side routes and must not depend on browser-stored API keys.
 - Existing automated tests use `vitest` with `happy-dom`; new pure data or store logic should get unit tests before UI stories land.
 - The current frontend provider flow lives in `src/utils/llmProvider.js`, `config.js`, and `src/components/Settings.vue`; migrate it in stages instead of replacing everything at once.
+- Shared server-side LLM helpers should own timeout, retry, provider branching, and secret-safe error shaping in one place so future routes stay thin.
+- Store-agnostic server utilities should accept plain data inputs and injectable dependencies like `fetchImpl` to stay easy to test without Pinia or network access.
 
 ## Progress Log
 
@@ -120,4 +122,20 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Server-side provider configuration should return both a full internal config and a public status object so UI and routes do not need to hand-roll secret filtering.
   - Task-specific provider routing is cheap to add early and avoids later churn when plan, evaluation, and summary flows need different providers.
   - Keeping provider normalization in one module prevents drift between frontend and server-side routing logic.
+---
+
+## 2026-05-25 14:29:38 +08:00 - US-008
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a shared server-side LLM request helper with centralized timeout, retry, provider routing, and response parsing behavior.
+- Added support for both OpenAI-compatible Responses API calls and Gemini `generateContent` calls through one helper contract.
+- Added unit tests for provider-specific requests, retryable HTTP failures, and secret-safe error handling.
+- Files changed:
+  - `src/server/llmRequest.js`
+  - `tests/llmRequest.test.js`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Shared request helpers should take an injectable `fetchImpl` so tests can exercise retry and error behavior without touching the network.
+  - Secret-safe error shaping belongs in the shared helper rather than individual routes so auth tokens and raw provider payloads never leak accidentally.
+  - Provider-specific request builders keep the public helper small while still allowing route-level generation settings.
 ---
