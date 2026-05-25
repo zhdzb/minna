@@ -16,6 +16,8 @@ This repository is being refactored from a local-only Japanese study tool into a
 - `src/store/trainingStore.js` owns active training session state and should stay focused on session flow.
 - `src/utils/llmProvider.js` currently contains frontend-side provider behavior. Migrate to server-side routing incrementally, not in one sweeping rewrite.
 - `src/utils/planRules.js` should stay as a pure rule module so plan generation can be tested independently from Pinia state and AI calls.
+- Server-side provider modules should separate full internal config from a secret-free public status payload.
+- Adapters that depend on runtime globals like `fetch` or `localStorage` should resolve them lazily so tests and alternate runtimes can override them after module import.
 - `vite.config.js` contains development-only middleware for `/api/save-progress` and `/api/llm`; do not mistake these for production-ready runtime APIs.
 - New schema-like state additions should be normalized with backward compatibility for existing local data.
 

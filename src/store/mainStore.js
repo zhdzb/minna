@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { buildDailyPlanRules } from '@/utils/planRules'
+import { createLocalPersistenceAdapter } from '@/utils/persistenceAdapter'
 
 const createReviewItemId = () =>
   `review_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -123,6 +124,7 @@ const normalizeDailyPlan = (plan) => {
 }
 
 const getTodayDateString = () => new Date().toISOString().split('T')[0]
+const persistenceAdapter = createLocalPersistenceAdapter()
 
 const recomputeDailyPlanStatus = (dailyPlan) => {
   const requiredTasks = dailyPlan.tasks.filter((task) => task.required)
@@ -259,10 +261,10 @@ const buildPersistableState = (state, options = {}) => {
 
 export const useMainStore = defineStore('main', {
   state: () => {
-    const saved = localStorage.getItem('minna_app_data')
+    const saved = persistenceAdapter.load()
     if (saved) {
       try {
-        return normalizeData(JSON.parse(saved))
+        return normalizeData(saved)
       } catch (error) {
         console.error('Failed to parse localStorage data, falling back to defaults.', error)
       }
@@ -389,17 +391,7 @@ export const useMainStore = defineStore('main', {
       this.meta.updated_at = new Date().toISOString()
 
       const persistable = buildPersistableState(this.$state)
-      const stateStr = JSON.stringify(persistable, null, 2)
-
-      localStorage.setItem('minna_app_data', stateStr)
-
-      fetch('/api/save-progress', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: stateStr
-      }).catch((error) => {
-        console.warn('Failed to sync progress to local disk.', error)
-      })
+      persistenceAdapter.save(persistable)
     },
 
     addReviewItem(item, markType = 'mistake') {

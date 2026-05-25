@@ -85,5 +85,23 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Learnings for future iterations:**
   - Daily plan lifecycle state is easiest to manage when task-level statuses remain granular but plan-level status is recomputed from required tasks.
   - Plan creation should normalize rule output immediately so downstream UI can rely on ids, timestamps, and task defaults being present.
-  - Optional tasks can live in the same `daily_plan.tasks` array as required tasks as long as `required` stays explicit and completion checks only look at required items.
+- Optional tasks can live in the same `daily_plan.tasks` array as required tasks as long as `required` stays explicit and completion checks only look at required items.
+---
+
+## 2026-05-25 14:22:09 +08:00 - US-006
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a reusable local persistence adapter with `load`, `save`, and `patch` methods.
+- Wired `mainStore` initialization and save flow through the adapter while keeping the existing local persistence behavior.
+- Added adapter tests and updated repository guidance about lazy runtime dependency resolution.
+- Files changed:
+  - `src/utils/persistenceAdapter.js`
+  - `src/store/mainStore.js`
+  - `tests/persistenceAdapter.test.js`
+  - `AGENTS.md`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Persistence adapters should resolve runtime globals lazily so tests can override `fetch` and `localStorage` after module import.
+  - A shared `patch` method is a useful bridge for future cloud adapters even before stores fully switch to remote persistence.
+  - Replacing persistence entry points in the store is safest when done only at initialization and full-save boundaries first.
 ---
