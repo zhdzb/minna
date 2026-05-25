@@ -359,3 +359,19 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Verification note:**
   - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
 ---
+
+## 2026-05-25 15:12:43 +08:00 - US-021
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added daily task execution UI showing per-task status, required/optional metadata, and quick status actions.
+- Wired task actions to `store.setDailyTaskStatus()` for start/complete/skip transitions.
+- Mission completion progress now updates from required-task completion state.
+- Files changed:
+  - `src/components/Dashboard.vue`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Task cards should expose status actions inline to reduce navigation friction during daily execution.
+  - Completion bars should use required tasks only so optional tasks do not block daily completion.
+- **Verification note:**
+  - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
+---
