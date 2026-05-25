@@ -8,6 +8,7 @@
 - Store-agnostic server utilities should accept plain data inputs and injectable dependencies like `fetchImpl` to stay easy to test without Pinia or network access.
 - Dev middleware routes should stay as thin adapters around reusable `src/server/` modules so Vite-only code does not become the real application layer.
 - Exercise-related server routes should reuse `aiPayloadValidators` to keep generation/evaluation validation behavior consistent across frontend and server flows.
+- Summary routes should normalize model output into strict JSON contracts before returning responses to UI callers.
 
 ## Progress Log
 
@@ -210,4 +211,22 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Evaluation routes should normalize batch records first so fallback behavior from shared validators can map results back to stable ids.
   - Reusing the same validation helpers for server and frontend keeps correction behavior consistent during migration.
   - Keeping evaluation routes independent from Pinia state makes them easy to deploy in serverless runtimes later.
+---
+
+## 2026-05-25 14:51:08 +08:00 - US-013
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a reusable server-side weekly summary route that validates aggregated weekly stats, uses a sanitized context snapshot, and requests AI output through the shared server helper.
+- Wired a dev-only `/api/ai/weekly-summary` endpoint in `vite.config.js` so weekly review generation can run through server-side routing in local mode.
+- Added unit tests for structured weekly summary normalization and pre-LLM payload rejection.
+- Files changed:
+  - `src/server/routes/weeklySummaryRoute.js`
+  - `tests/weeklySummaryRoute.test.js`
+  - `vite.config.js`
+  - `AGENTS.md`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Weekly summary routes should accept aggregated stats explicitly instead of pulling raw store state to keep server contracts stable.
+  - Summary handlers should normalize and validate response shape before returning data to UI callers.
+  - Reusing context snapshots keeps prompt inputs consistent across daily planning and weekly review features.
 ---

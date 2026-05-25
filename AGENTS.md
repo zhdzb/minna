@@ -21,6 +21,7 @@ This repository is being refactored from a local-only Japanese study tool into a
 - Server-side helpers such as LLM request utilities and context snapshot builders should stay store-agnostic and accept plain data inputs.
 - Dev-only API endpoints in `vite.config.js` should delegate into reusable modules under `src/server/` so deployed handlers can reuse the same route logic later.
 - Exercise-generation and evaluation routes should reuse `src/utils/aiPayloadValidators.js` so server and frontend apply the same output validation contract.
+- Summary-style routes should return a strict normalized JSON shape (not raw model text) so dashboard/report UIs stay stable across providers.
 - `vite.config.js` contains development-only middleware for `/api/save-progress` and `/api/llm`; do not mistake these for production-ready runtime APIs.
 - New schema-like state additions should be normalized with backward compatibility for existing local data.
 
