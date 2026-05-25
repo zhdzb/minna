@@ -329,3 +329,18 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Verification note:**
   - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
 ---
+
+## 2026-05-25 15:11:46 +08:00 - US-019
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added daily time selection controls on dashboard with 30/60/90/120 presets.
+- Added bounded custom study-time input (`15..240`) and resolved-minute logic used by plan creation.
+- Files changed:
+  - `src/components/Dashboard.vue`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Time-selection controls should centralize “effective minutes” calculation so rule generation and UI display stay consistent.
+  - Custom inputs need explicit bounds to avoid unrealistic plan generation.
+- **Verification note:**
+  - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
+---
