@@ -1,358 +1,253 @@
 <template>
   <div>
-    <el-alert 
-        v-if="tStore.exercises.length > 0 && tStore.currentPhase === 'answering'" 
-        type="warning" 
-        show-icon 
-        style="margin-bottom: 20px;">
-        <template #title>
-            您有一个未完成的集训正在进行中！
-            <el-button size="small" type="primary" style="margin-left: 15px;" @click="onResume">继续集训</el-button>
-        </template>
+    <el-alert
+      v-if="tStore.exercises.length > 0 && tStore.currentPhase === 'answering'"
+      type="warning"
+      show-icon
+      style="margin-bottom: 16px;"
+    >
+      <template #title>
+        你有一个未完成的训练会话。
+        <el-button size="small" type="primary" style="margin-left: 12px;" @click="resumeTraining">
+          继续训练
+        </el-button>
+      </template>
     </el-alert>
 
-    <!-- 全局进度概览卡片 -->
-    <el-card shadow="hover" style="margin-bottom: 20px;">
+    <el-card shadow="hover" style="margin-bottom: 16px;">
       <template #header>
-        <div style="font-weight: bold;">📊 全局学习概览</div>
+        <div style="font-weight: 700;">今日任务</div>
       </template>
-      <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-        <div style="text-align: center; min-width: 120px;">
-          <div style="font-size: 2rem; font-weight: bold; color: #409EFF;">{{ store.progress.current_lesson }}</div>
-          <div style="color: #666; font-size: 0.9rem;">当前课时</div>
+
+      <div style="display: grid; gap: 12px;">
+        <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+          <div><strong>目标：</strong>{{ missionTitle }}</div>
+          <div><strong>今日时长：</strong>{{ missionMinutes }} 分钟</div>
+          <div><strong>必做：</strong>{{ requiredCount }} 项</div>
+          <div><strong>选做：</strong>{{ optionalCount }} 项</div>
         </div>
-        <div style="text-align: center; min-width: 120px;">
-          <div style="font-size: 2rem; font-weight: bold; color: #67C23A;">{{ totalLessons }}</div>
-          <div style="color: #666; font-size: 0.9rem;">总课时数</div>
+        <el-progress :percentage="completionPercent" />
+        <div v-if="store.daily_plan.ai_summary" style="color: #666;">{{ store.daily_plan.ai_summary }}</div>
+      </div>
+    </el-card>
+
+    <el-card shadow="hover" style="margin-bottom: 16px;">
+      <template #header>
+        <div style="font-weight: 700;">生成今日计划</div>
+      </template>
+
+      <div style="display: grid; gap: 14px;">
+        <div>
+          <div style="font-size: 13px; color: #666; margin-bottom: 8px;">快速时长</div>
+          <el-radio-group v-model="presetMinutes">
+            <el-radio-button :label="30">30 分钟</el-radio-button>
+            <el-radio-button :label="60">60 分钟</el-radio-button>
+            <el-radio-button :label="90">90 分钟</el-radio-button>
+            <el-radio-button :label="120">120 分钟</el-radio-button>
+          </el-radio-group>
         </div>
-        <div style="flex: 1; min-width: 300px;">
-          <div style="font-size: 0.85rem; color: #888; margin-bottom: 8px;">近30天学习热力图</div>
-          <div style="display: flex; gap: 3px; flex-wrap: wrap;">
-            <div 
-              v-for="(count, date) in store.heatmapData" 
-              :key="date"
-              :style="{
-                width: '14px',
-                height: '14px',
-                borderRadius: '2px',
-                backgroundColor: getHeatmapColor(count),
-                cursor: 'pointer'
-              }"
-              :title="`${date}: ${count}次练习`"
-            />
-          </div>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 13px; color: #666;">自定义时长</span>
+          <el-input-number v-model="customMinutes" :min="15" :max="240" :step="5" />
+          <span style="font-size: 13px; color: #666;">分钟</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <el-switch v-model="enableAiEnhancement" />
+          <span style="font-size: 13px; color: #666;">生成后使用 AI 增强说明与练习提示</span>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <el-button type="primary" :loading="isGeneratingPlan" @click="generatePlan">生成计划</el-button>
+          <el-button plain @click="startTraining">去训练页</el-button>
         </div>
       </div>
     </el-card>
 
-    <!-- 关键指标卡片 -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
-      <el-card shadow="hover" style="text-align: center;">
-        <div style="font-size: 1.8rem; font-weight: bold; color: #E6A23C;">{{ store.totalExercises }}</div>
-        <div style="color: #666;">总练习题数</div>
-      </el-card>
-      <el-card shadow="hover" style="text-align: center;">
-        <div style="font-size: 1.8rem; font-weight: bold; color: #67C23A;">{{ Math.round(store.avgAccuracy * 100) }}%</div>
-        <div style="color: #666;">平均正确率</div>
-      </el-card>
-      <el-card shadow="hover" style="text-align: center;">
-        <div style="font-size: 1.8rem; font-weight: bold; color: #F56C6C;">{{ store.streakDays }}</div>
-        <div style="color: #666;">连续学习天数</div>
-      </el-card>
-    </div>
-
-    <!-- 当前课详情卡片 -->
-    <el-card shadow="hover" style="margin-bottom: 20px;">
+    <el-card shadow="hover">
       <template #header>
-        <div style="font-weight: bold;">📖 第 {{ store.progress.current_lesson }} 课详情</div>
+        <div style="font-weight: 700;">任务执行</div>
       </template>
-      <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-        <!-- 题型掌握度进度条 -->
-        <div style="flex: 1; min-width: 250px;">
-          <div style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">题型掌握度</div>
-          <div v-for="(count, type) in store.typeMastery" :key="type" style="margin-bottom: 12px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-              <span style="font-size: 0.85rem;">{{ typeLabels[type] || type }}</span>
-              <span style="font-size: 0.85rem; color: #888;">{{ count }} 课完成</span>
+
+      <el-empty v-if="planTasks.length === 0" description="先生成今天的计划，再开始执行任务。" />
+
+      <div v-else style="display: grid; gap: 10px;">
+        <div
+          v-for="task in planTasks"
+          :key="task.id"
+          style="border: 1px solid #ebeef5; border-radius: 8px; padding: 12px;"
+        >
+          <div style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+            <div>
+              <div style="font-weight: 600;">{{ task.title }}</div>
+              <div style="font-size: 12px; color: #888;">{{ task.minutes }} 分钟 · {{ task.required ? '必做' : '选做' }}</div>
             </div>
-            <el-progress 
-              :percentage="Math.min(100, (count / totalLessons) * 100)" 
-              :stroke-width="10"
-              :show-text="false"
-            />
+            <el-tag :type="statusTagType(task.status)">{{ statusLabel(task.status) }}</el-tag>
           </div>
-        </div>
-        <!-- 历史正确率趋势图 -->
-        <div style="flex: 1; min-width: 250px;">
-          <div style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">正确率趋势（最近10次）</div>
-          <div v-if="store.accuracyTrend.length > 0" style="display: flex; align-items: flex-end; height: 120px; gap: 8px; padding: 10px; background: #f5f7fa; border-radius: 4px;">
-            <div 
-              v-for="(item, index) in store.accuracyTrend" 
-              :key="index"
-              style="flex: 1; display: flex; flex-direction: column; align-items: center;"
-            >
-              <div 
-                :style="{
-                  width: '100%',
-                  height: `${item.rate}%`,
-                  backgroundColor: item.rate >= 80 ? '#67C23A' : item.rate >= 60 ? '#E6A23C' : '#F56C6C',
-                  borderRadius: '2px 2px 0 0',
-                  minHeight: '4px',
-                  transition: 'height 0.3s'
-                }"
-              />
-              <div style="font-size: 0.7rem; color: #888; margin-top: 4px; writing-mode: vertical-rl; height: 50px; overflow: hidden;">
-                {{ item.date.slice(5) }}
-              </div>
-            </div>
-          </div>
-          <div v-else style="height: 120px; display: flex; align-items: center; justify-content: center; color: #888; background: #f5f7fa; border-radius: 4px;">
-            暂无历史数据
+          <div style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <el-button size="small" @click="setTaskStatus(task.id, 'in_progress')">开始</el-button>
+            <el-button size="small" type="success" @click="setTaskStatus(task.id, 'completed')">完成</el-button>
+            <el-button size="small" type="warning" @click="setTaskStatus(task.id, 'skipped')">跳过</el-button>
           </div>
         </div>
       </div>
-    </el-card>
-
-    <el-card shadow="hover" style="margin-bottom: 20px;">
-      <template #header>
-        <div style="font-weight: bold;">📈 课内进度可视化</div>
-      </template>
-      <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-        <!-- 课时选择器 -->
-        <div style="min-width: 180px; text-align: center;">
-          <el-select v-model="config.targetLesson" placeholder="请选择课时" style="width: 100%; margin-bottom: 10px;">
-            <el-option
-              v-for="lesson in totalLessons"
-              :key="lesson"
-              :label="`第 ${lesson} 课`"
-              :value="lesson"
-            />
-          </el-select>
-          <el-progress type="circle" :percentage="lessonCompletionPercent" :stroke-width="10" />
-          <div style="margin-top: 10px; color: #666;">第 {{ config.targetLesson }} 课题型完成度</div>
-        </div>
-        <div style="flex: 1; min-width: 260px;">
-          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
-            <el-tag 
-              v-for="type in enabledTypes"
-              :key="type"
-              :type="getTypeCompletion(type) ? 'success' : 'info'"
-              effect="dark"
-            >
-              {{ typeLabels[type] || type }}
-            </el-tag>
-          </div>
-          <div style="font-size: 0.9rem; color: #888;">
-            上次练习：{{ lastSessionText }}
-          </div>
-        </div>
-      </div>
-    </el-card>
-
-    <!-- Phase 3: Element Plus Form -->
-    <el-card shadow="hover" style="margin-top: 20px;">
-        <template #header>
-            <div style="font-weight: bold;">🕹️ AI 动态出题控制台</div>
-        </template>
-        
-        <el-form label-width="140px" :model="config" size="large">
-            
-            <el-form-item label="生成题量控制：">
-                <el-slider v-model="config.questionCount" :min="1" :max="20" show-input style="width: 80%;" />
-                <span style="margin-left: 15px; color: #888;">道题目</span>
-            </el-form-item>
-
-            <el-form-item label="难度梯度：">
-                <el-radio-group v-model="config.difficulty">
-                    <el-radio-button label="基础巩固" />
-                    <el-radio-button label="职场进阶" />
-                    <el-radio-button label="JLPT真题级" />
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item label="专项题型挑选：">
-                <el-select v-model="config.questionType" placeholder="请选择题型" style="width: 300px;">
-                    <el-option label="🎲 混合实战考核 (All)" value="ALL" />
-                    <el-option label="📝 专项：基础语感填空" value="q_fill" />
-                    <el-option label="🗣️ 专项：日汉翻译造句突破" value="q_translate" />
-                    <el-option label="🏢 专项：职场情景对话补全" value="q_conversation" />
-                </el-select>
-            </el-form-item>
-
-            <el-form-item label="通关正确率门槛：">
-                <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
-                    <el-slider v-model="passThreshold" :min="0.3" :max="1" :step="0.05" style="flex: 1;" />
-                    <el-tag type="warning">{{ Math.round(passThreshold * 100) }}%</el-tag>
-                </div>
-            </el-form-item>
-
-            <el-form-item label="题型完成雷达：">
-               <div style="display: flex; gap: 10px;">
-                   <el-tooltip content="点击即可手动点亮/熄灭此项印记" placement="top">
-                       <el-tag 
-                           :type="getTypeCompletion('q_fill') ? 'success' : 'info'" 
-                           effect="dark" 
-                           style="cursor: pointer; transition: all 0.2s;"
-                           @click="store.toggleTypeCompletion(config.targetLesson, 'q_fill')"
-                       >
-                          {{ getTypeCompletion('q_fill') ? `✅ 语感填空 (${getTypeCompletion('q_fill')})` : '⏳ 语感填空 (点击空降通关)' }}
-                       </el-tag>
-                   </el-tooltip>
-                   
-                   <el-tooltip content="点击即可手动点亮/熄灭此项印记" placement="top">
-                       <el-tag 
-                           :type="getTypeCompletion('q_translate') ? 'success' : 'info'" 
-                           effect="dark"
-                           style="cursor: pointer; transition: all 0.2s;"
-                           @click="store.toggleTypeCompletion(config.targetLesson, 'q_translate')"
-                       >
-                          {{ getTypeCompletion('q_translate') ? `✅ 翻译造句 (${getTypeCompletion('q_translate')})` : '⏳ 翻译造句 (点击空降通关)' }}
-                       </el-tag>
-                   </el-tooltip>
-                   
-                   <el-tooltip content="点击即可手动点亮/熄灭此项印记" placement="top">
-                       <el-tag 
-                           :type="getTypeCompletion('q_conversation') ? 'success' : 'info'" 
-                           effect="dark"
-                           style="cursor: pointer; transition: all 0.2s;"
-                           @click="store.toggleTypeCompletion(config.targetLesson, 'q_conversation')"
-                       >
-                          {{ getTypeCompletion('q_conversation') ? `✅ 职场情景 (${getTypeCompletion('q_conversation')})` : '⏳ 职场情景 (点击空降通关)' }}
-                       </el-tag>
-                   </el-tooltip>
-               </div>
-            </el-form-item>
-
-            <el-form-item label="定制化要求 (Prompt)：">
-                <el-input 
-                    v-model="config.customPrompt" 
-                    placeholder="可选，例如：我是程序员，多出电脑工作与加班相关的词汇造句..." 
-                    clearable
-                />
-                <div style="margin-top: 10px; display: flex; gap: 10px;">
-                    <span style="font-size: 0.85rem; color: #888;">快捷注入标签:</span>
-                    <el-tag size="small" style="cursor: pointer;" @click="appendTag('职场商务Keigo')">💼 职场商务 (Keigo)</el-tag>
-                    <el-tag size="small" style="cursor: pointer;" @click="appendTag('IT与程序员日常')">💻 IT与程序员日常</el-tag>
-                    <el-tag size="small" style="cursor: pointer;" @click="appendTag('旅行与点餐')">🍱 旅行与生存点餐</el-tag>
-                    <el-tag size="small" style="cursor: pointer;" type="danger" @click="appendTag('地道关西腔体验')">🐙 地道关西腔体验</el-tag>
-                </div>
-            </el-form-item>
-
-            <el-form-item>
-                <el-button type="primary" size="large" @click="onStart" style="width: 200px; font-weight: bold;" icon="el-icon-video-play">
-                    🚀 发起 AI 训练请求
-                </el-button>
-            </el-form-item>
-            
-        </el-form>
     </el-card>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import { useMainStore } from '@/store/mainStore'
 import { useTrainingStore } from '@/store/trainingStore'
-import syllabusDict from '@/data/syllabus.json'
 
 const store = useMainStore()
 const tStore = useTrainingStore()
 const router = useRouter()
-const syllabus = ref(syllabusDict)
 
-// 总课时数
-const totalLessons = computed(() => syllabus.value?.lessons?.length || 50)
+const presetMinutes = ref(60)
+const customMinutes = ref(60)
+const enableAiEnhancement = ref(true)
+const isGeneratingPlan = ref(false)
 
-// 热力图颜色映射
-const getHeatmapColor = (count) => {
-  if (count === 0) return '#ebedf0'
-  if (count === 1) return '#9be9a8'
-  if (count === 2) return '#40c463'
-  if (count >= 3 && count <= 4) return '#30a14e'
-  return '#216e39'
+const planTasks = computed(() => store.daily_plan?.tasks || [])
+const requiredTasks = computed(() => planTasks.value.filter((item) => item.required))
+const optionalTasks = computed(() => planTasks.value.filter((item) => !item.required))
+
+const requiredCount = computed(() => requiredTasks.value.length)
+const optionalCount = computed(() => optionalTasks.value.length)
+
+const missionMinutes = computed(() => store.daily_plan?.available_minutes || 0)
+const missionTitle = computed(() => {
+  const type = store.daily_plan?.plan_type || ''
+  if (!type) return '未生成计划'
+  const labels = {
+    foundation_review: '基础回炉',
+    new_lesson: '新课推进',
+    listening_speaking: '听说强化',
+    mistake_review: '错题复盘',
+    weekend_long_session: '周末长时段'
+  }
+  return labels[type] || type
+})
+
+const completionPercent = computed(() => {
+  if (requiredTasks.value.length === 0) return 0
+  const completed = requiredTasks.value.filter((item) => item.status === 'completed').length
+  return Math.round((completed / requiredTasks.value.length) * 100)
+})
+
+const resolvedMinutes = computed(() => {
+  const custom = Number(customMinutes.value)
+  if (Number.isFinite(custom) && custom >= 15 && custom <= 240) {
+    return custom
+  }
+  return Number(presetMinutes.value) || 60
+})
+
+const statusLabel = (status) => {
+  if (status === 'completed') return '已完成'
+  if (status === 'in_progress') return '进行中'
+  if (status === 'skipped') return '已跳过'
+  return '待开始'
 }
 
-const config = ref({
-    targetLesson: store.progress.current_lesson,
-    questionCount: 5,
-    difficulty: '基础巩固',
-    customPrompt: '',
-    questionType: 'ALL'
-})
-
-watch(() => store.progress.current_lesson, (newVal) => {
-    config.value.targetLesson = newVal;
-})
-
-const getTypeCompletion = (type) => {
-    const lessonId = config.value.targetLesson
-    const completedData = store.progress.completed_types_by_lesson[lessonId]
-    if (!completedData) return false;
-    
-    if (Array.isArray(completedData)) {
-        return completedData.includes(type) ? '基础巩固' : false;
-    }
-    
-    return completedData[type] || false;
+const statusTagType = (status) => {
+  if (status === 'completed') return 'success'
+  if (status === 'in_progress') return 'primary'
+  if (status === 'skipped') return 'warning'
+  return 'info'
 }
 
-const passThreshold = computed({
-    get() {
-        return store.progress.pass_threshold || 0.5
-    },
-    set(val) {
-        store.setPassThreshold(val)
-    }
-})
-
-const enabledTypes = computed(() => {
-    const lesson = syllabus.value.lessons.find(l => l.id === config.value.targetLesson)
-    return lesson?.enabled_question_types || []
-})
-
-const typeLabels = {
-    q_fill: '语感填空',
-    q_translate: '翻译造句',
-    q_conversation: '职场情景'
+const setTaskStatus = (taskId, status) => {
+  const ok = store.setDailyTaskStatus(taskId, status)
+  if (!ok) {
+    ElMessage.error('任务状态更新失败。')
+  }
 }
 
-const lessonCompletionPercent = computed(() => {
-    const total = enabledTypes.value.length
-    if (!total) return 0
-    const completed = enabledTypes.value.filter(t => !!getTypeCompletion(t)).length
-    return Math.round((completed / total) * 100)
-})
-
-const lastSessionText = computed(() => {
-    const stats = store.progress.lesson_stats?.[config.value.targetLesson]
-    if (!stats || !stats.last_session_at) return '暂无记录'
-    const rate = Math.round((stats.last_correct_rate || 0) * 100)
-    return `${rate}% 正确率 / ${stats.last_correct_count || 0} 正确 / ${stats.last_question_count || 0} 题`
-})
-
-const appendTag = (tag) => {
-    if (config.value.customPrompt.includes(tag)) return;
-    config.value.customPrompt += config.value.customPrompt ? `，并且包含【${tag}】场景` : `设定为【${tag}】场景`;
-}
-
-const onStart = () => {
-    // Navigate via router, passing the complex config object as a JSON string in query/state
-    router.push({
-        path: '/training',
-        query: {
-            sessionConfig: JSON.stringify(config.value),
-            t: Date.now()
-        }
+const generatePlan = async () => {
+  isGeneratingPlan.value = true
+  try {
+    const basePlan = store.createDailyPlanFromRules({
+      availableMinutes: resolvedMinutes.value,
+      currentLesson: store.progress.current_lesson,
+      prioritizeListeningSpeaking: true
     })
+
+    if (!enableAiEnhancement.value) {
+      ElMessage.success('已生成规则计划。')
+      return
+    }
+
+    try {
+      const response = await fetch('/api/ai/daily-plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan: basePlan,
+          context: {
+            current_stage: 'study_execution',
+            target_exam: 'N3',
+            priority_skills: ['listening', 'speaking'],
+            current_lesson: store.progress.current_lesson,
+            active_review_lessons: basePlan.focus_lessons || [],
+            recent_weak_patterns: Object.keys(store.pattern_mastery || {}).slice(0, 6),
+            last_7_days_summary: {
+              planned_minutes: resolvedMinutes.value * 5,
+              completed_minutes: 0,
+              missed_tasks: 0
+            },
+            provider: 'server',
+            prompt_version: 'daily-plan-v1'
+          }
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error(`AI route failed: ${response.status}`)
+      }
+
+      const payload = await response.json()
+      const aiData = payload?.data
+      if (aiData?.summary) {
+        store.daily_plan.ai_summary = aiData.summary
+        store.saveState()
+      }
+      ElMessage.success('已生成并增强今日计划。')
+    } catch (_error) {
+      ElMessage.warning('AI 增强失败，已保留规则计划。')
+    }
+  } finally {
+    isGeneratingPlan.value = false
+  }
 }
 
-const onResume = () => {
-    router.push({
-        path: '/training',
-        query: {
-            sessionConfig: JSON.stringify(tStore.currentConfig),
-            t: tStore.sessionTimestamp
-        }
-    })
+const startTraining = () => {
+  router.push({
+    path: '/training',
+    query: {
+      sessionConfig: JSON.stringify({
+        targetLesson: store.progress.current_lesson,
+        questionCount: 5,
+        difficulty: '基础巩固',
+        customPrompt: '',
+        questionType: 'ALL'
+      }),
+      t: Date.now()
+    }
+  })
+}
+
+const resumeTraining = () => {
+  router.push({
+    path: '/training',
+    query: {
+      sessionConfig: JSON.stringify(tStore.currentConfig),
+      t: tStore.sessionTimestamp
+    }
+  })
 }
 </script>

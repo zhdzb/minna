@@ -12,6 +12,7 @@
 - State load/save endpoints should delegate through a server persistence adapter so deployed and local storage behavior can switch without changing route contracts.
 - Store save flows should keep in-memory state authoritative and surface persistence failures as user-visible errors instead of reverting state.
 - Backup export should stay anchored to `buildPersistableState()` so new normalized fields are automatically included in JSON backups.
+- Dashboard mission UIs should display rule-plan metrics directly from `daily_plan` and keep AI enhancement strictly optional.
 
 ## Progress Log
 
@@ -311,4 +312,20 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Shared schema validators reduce drift between export expectations and import acceptance logic.
 - **Verification note:**
   - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through automated checks.
+---
+
+## 2026-05-25 15:11:02 +08:00 - US-018
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Rebuilt `Dashboard.vue` with a primary “今日任务” mission section shown above other controls.
+- Mission section now displays goal, planned minutes, required/optional task counts, and required-task completion progress.
+- Files changed:
+  - `src/components/Dashboard.vue`
+  - `AGENTS.md`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Mission cards should derive counts and progress from `daily_plan.tasks` to avoid duplicating completion state.
+  - Keep mission summary resilient when no plan exists by providing clear “未生成计划” defaults.
+- **Verification note:**
+  - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
 ---

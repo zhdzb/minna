@@ -25,6 +25,7 @@ This repository is being refactored from a local-only Japanese study tool into a
 - Persistence API routes should go through `src/server/persistence/serverPersistenceAdapter.js` so runtime storage strategy (local file vs deployed memory/cloud) is switched in one place.
 - Frontend persistence should use `createRuntimePersistenceAdapter()` so local mode keeps `data.json` compatibility while deployed mode targets `/api/state/*` contracts.
 - Backup import/export flows should validate payload shape with `src/utils/backupPayload.js` before mutating store state.
+- Dashboard mission workflows should treat rule-based plan creation as the baseline and AI enhancement as optional best-effort with graceful fallback.
 - `vite.config.js` contains development-only middleware for `/api/save-progress` and `/api/llm`; do not mistake these for production-ready runtime APIs.
 - New schema-like state additions should be normalized with backward compatibility for existing local data.
 
