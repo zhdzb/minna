@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { buildDailyPlanRules } from '@/utils/planRules'
-import { createLocalPersistenceAdapter } from '@/utils/persistenceAdapter'
+import { createRuntimePersistenceAdapter } from '@/utils/persistenceAdapter'
 
 const createReviewItemId = () =>
   `review_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -51,7 +51,8 @@ const getDefaultData = () => ({
   mistakes_book: [],
   study_backups: [],
   meta: {
-    updated_at: null
+    updated_at: null,
+    last_persistence_error: ''
   }
 })
 
@@ -124,7 +125,7 @@ const normalizeDailyPlan = (plan) => {
 }
 
 const getTodayDateString = () => new Date().toISOString().split('T')[0]
-const persistenceAdapter = createLocalPersistenceAdapter()
+const persistenceAdapter = createRuntimePersistenceAdapter()
 
 const recomputeDailyPlanStatus = (dailyPlan) => {
   const requiredTasks = dailyPlan.tasks.filter((task) => task.required)
@@ -391,7 +392,13 @@ export const useMainStore = defineStore('main', {
       this.meta.updated_at = new Date().toISOString()
 
       const persistable = buildPersistableState(this.$state)
-      persistenceAdapter.save(persistable)
+      Promise.resolve(persistenceAdapter.save(persistable))
+        .then(() => {
+          this.meta.last_persistence_error = ''
+        })
+        .catch((error) => {
+          this.meta.last_persistence_error = error instanceof Error ? error.message : String(error)
+        })
     },
 
     addReviewItem(item, markType = 'mistake') {
@@ -606,10 +613,18 @@ export const useMainStore = defineStore('main', {
 
     async hydrateFromDisk() {
       try {
-        const response = await fetch('/data.json', { cache: 'no-cache' })
-        if (!response.ok) return
+        let diskData = null
 
-        const diskData = normalizeData(await response.json())
+        if (persistenceAdapter.mode === 'deployed') {
+          const remote = await persistenceAdapter.loadRemote()
+          if (!remote) return
+          diskData = normalizeData(remote)
+        } else {
+          const response = await fetch('/data.json', { cache: 'no-cache' })
+          if (!response.ok) return
+          diskData = normalizeData(await response.json())
+        }
+
         const localUpdated = this.meta?.updated_at ? new Date(this.meta.updated_at).getTime() : 0
         const diskUpdated = diskData.meta?.updated_at ? new Date(diskData.meta.updated_at).getTime() : 0
         const hasLocal = !!localStorage.getItem('minna_app_data')

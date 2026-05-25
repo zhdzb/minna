@@ -10,6 +10,7 @@
 - Exercise-related server routes should reuse `aiPayloadValidators` to keep generation/evaluation validation behavior consistent across frontend and server flows.
 - Summary routes should normalize model output into strict JSON contracts before returning responses to UI callers.
 - State load/save endpoints should delegate through a server persistence adapter so deployed and local storage behavior can switch without changing route contracts.
+- Store save flows should keep in-memory state authoritative and surface persistence failures as user-visible errors instead of reverting state.
 
 ## Progress Log
 
@@ -251,4 +252,26 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Persistence route contracts should stay storage-agnostic and route all behavior through a shared adapter to keep migration risk low.
   - Deployed runtime mode should avoid repository file writes so serverless deployments do not depend on writable project files.
   - Keeping load/save/patch as separate handlers makes it easier to wire cloud providers incrementally behind the same API shape.
+---
+
+## 2026-05-25 15:00:45 +08:00 - US-015
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Wired frontend persistence to a runtime adapter that keeps local mode behavior and switches deployed mode to `/api/state/load|save|patch`.
+- Updated `mainStore` save flow to keep in-memory progress intact on save failures and record a persistence error in `meta.last_persistence_error`.
+- Updated app-level UI behavior to show a user-visible toast when persistence save errors occur.
+- Added deployed-mode persistence adapter tests covering state-save endpoint usage and save failure propagation.
+- Files changed:
+  - `src/utils/persistenceAdapter.js`
+  - `src/store/mainStore.js`
+  - `src/App.vue`
+  - `tests/persistenceAdapter.test.js`
+  - `AGENTS.md`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Runtime mode checks should live in adapter factories so store code can stay mode-agnostic.
+  - Save operations should signal failures upward in deployed mode so UI can notify users without mutating in-memory progress backward.
+  - Keep local fallback writes (localStorage) enabled in deployed mode to reduce data-loss risk during transient network failures.
+- **Verification note:**
+  - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through unit tests and build/test checks.
 ---

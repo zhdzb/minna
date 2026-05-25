@@ -160,6 +160,15 @@ watch(isAcgDark, (value) => {
   localStorage.setItem('theme_acg_dark', String(value))
 })
 
+watch(
+  () => store.meta?.last_persistence_error,
+  (value, previous) => {
+    if (value && value !== previous) {
+      ElMessage.error(`数据保存失败：${value}`)
+    }
+  }
+)
+
 const createBackup = () => {
   store.createBackupSnapshot('manual')
   ElMessage.success('已保存一份本地学习存档。')

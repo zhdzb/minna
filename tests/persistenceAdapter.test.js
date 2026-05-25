@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
+  DEFAULT_STATE_SAVE_URL,
   DEFAULT_STORAGE_KEY,
   DEFAULT_SYNC_URL,
-  createLocalPersistenceAdapter
+  createLocalPersistenceAdapter,
+  createRuntimePersistenceAdapter
 } from '../src/utils/persistenceAdapter'
 
 const createMemoryStorage = () => {
@@ -62,5 +64,34 @@ describe('persistenceAdapter', () => {
 
     expect(nextState.progress.current_lesson).toBe(5)
     expect(JSON.parse(storage.getItem(DEFAULT_STORAGE_KEY)).progress.current_lesson).toBe(5)
+  })
+
+  it('uses state API endpoints in deployed runtime mode', async () => {
+    const adapter = createRuntimePersistenceAdapter({
+      mode: 'deployed',
+      storage,
+      fetch: fetchMock
+    })
+
+    const state = { progress: { current_lesson: 12 } }
+    await adapter.save(state)
+
+    expect(fetchMock).toHaveBeenCalledWith(DEFAULT_STATE_SAVE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(state, null, 2)
+    })
+    expect(JSON.parse(storage.getItem(DEFAULT_STORAGE_KEY))).toEqual(state)
+  })
+
+  it('throws save errors in deployed mode so store can surface user-visible messages', async () => {
+    const failingFetch = vi.fn(() => Promise.resolve({ ok: false, status: 500 }))
+    const adapter = createRuntimePersistenceAdapter({
+      mode: 'deployed',
+      storage,
+      fetch: failingFetch
+    })
+
+    await expect(adapter.save({ progress: { current_lesson: 2 } })).rejects.toThrow(/State save failed/)
   })
 })
