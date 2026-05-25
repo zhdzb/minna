@@ -21,6 +21,9 @@
                <el-button size="small" type="primary" plain @click="openPatternSubstitutionMode">
                   句型替换训练
                </el-button>
+               <el-button size="small" type="primary" plain @click="openScenarioSpeakingMode">
+                  场景口语训练
+               </el-button>
             </div>
             <div style="font-size: 0.9rem; color: #888; margin-bottom: 20px;">
                已作答 {{ answeredCount }} / {{ totalCount }} 题
@@ -512,6 +515,10 @@ const answeredCount = computed(() => {
 
 const openPatternSubstitutionMode = () => {
     router.push('/training/pattern-substitution')
+}
+
+const openScenarioSpeakingMode = () => {
+    router.push('/training/scenario-speaking')
 }
 </script>
 

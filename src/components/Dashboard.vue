@@ -116,6 +116,15 @@
             >
               进入 Shadowing
             </el-button>
+            <el-button
+              v-if="task.type === 'scenario_speaking'"
+              size="small"
+              type="primary"
+              plain
+              @click="launchScenarioMode(task.id)"
+            >
+              进入场景口语
+            </el-button>
           </div>
         </div>
       </div>
@@ -208,6 +217,11 @@ const launchListeningMode = (taskId) => {
 const launchShadowingMode = (taskId) => {
   setTaskStatus(taskId, 'in_progress')
   router.push('/training/shadowing')
+}
+
+const launchScenarioMode = (taskId) => {
+  setTaskStatus(taskId, 'in_progress')
+  router.push('/training/scenario-speaking')
 }
 
 const generatePlan = async () => {

@@ -27,6 +27,7 @@ This repository is being refactored from a local-only Japanese study tool into a
 - Backup import/export flows should validate payload shape with `src/utils/backupPayload.js` before mutating store state.
 - Dashboard mission workflows should treat rule-based plan creation as the baseline and AI enhancement as optional best-effort with graceful fallback.
 - Skill-mode pages under `src/components/*Mode.vue` should update mastery via `mainStore` actions, while launch entry points stay in dashboard task cards.
+- Scenario speaking mode should consume `/api/ai/exercise-generate` and `/api/ai/exercise-evaluate` routes directly and save final evaluations through `addReviewItem`.
 - `vite.config.js` contains development-only middleware for `/api/save-progress` and `/api/llm`; do not mistake these for production-ready runtime APIs.
 - New schema-like state additions should be normalized with backward compatibility for existing local data.
 

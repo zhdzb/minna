@@ -14,6 +14,7 @@
 - Backup export should stay anchored to `buildPersistableState()` so new normalized fields are automatically included in JSON backups.
 - Dashboard mission UIs should display rule-plan metrics directly from `daily_plan` and keep AI enhancement strictly optional.
 - New guided training modes should expose standalone routes and update mastery through dedicated store actions to avoid coupling with the AI exercise session flow.
+- Scenario speaking modes should reuse server-side generation/evaluation routes rather than embedding provider logic in UI components.
 
 ## Progress Log
 
@@ -425,6 +426,27 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Learnings for future iterations:**
   - Shadowing flows can keep friction low by using quick self-ratings instead of mandatory speech recognition.
   - Speaking mastery updates should be rating-weighted so high-quality repetitions are rewarded more.
+- **Verification note:**
+  - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
+---
+
+## 2026-05-25 15:24:40 +08:00 - US-025
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a scenario speaking mode page with situation prompt, grammar scope, answer input, and AI-backed correction.
+- Scenario mode uses `/api/ai/exercise-generate` to create a `q_conversation` item and `/api/ai/exercise-evaluate` to grade user output.
+- Added save-to-mistakes and save-to-favorites actions using `addReviewItem` with exercise/evaluation snapshots.
+- Added launch entry points from dashboard task cards (`scenario_speaking`) and training flow toolbar.
+- Files changed:
+  - `src/components/ScenarioSpeakingMode.vue`
+  - `src/components/Dashboard.vue`
+  - `src/components/TrainingEngine.vue`
+  - `src/router/index.js`
+  - `AGENTS.md`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Scenario drills are easiest to evolve when they reuse existing structured route contracts (`exercise-generate`/`exercise-evaluate`).
+  - Saving snapshots at the mode layer keeps Mistakes/Favorites consistent with the main training engine.
 - **Verification note:**
   - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
 ---

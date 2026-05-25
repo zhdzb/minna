@@ -5,6 +5,7 @@ import TrainingEngine from '@/components/TrainingEngine.vue'
 import PatternSubstitutionMode from '@/components/PatternSubstitutionMode.vue'
 import ListeningKeywordMode from '@/components/ListeningKeywordMode.vue'
 import ShadowingMode from '@/components/ShadowingMode.vue'
+import ScenarioSpeakingMode from '@/components/ScenarioSpeakingMode.vue'
 
 const routes = [
   {
@@ -48,6 +49,11 @@ const routes = [
     path: '/training/shadowing',
     name: 'ShadowingMode',
     component: ShadowingMode
+  },
+  {
+    path: '/training/scenario-speaking',
+    name: 'ScenarioSpeakingMode',
+    component: ScenarioSpeakingMode
   }
 ]
 
