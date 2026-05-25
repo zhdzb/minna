@@ -16,6 +16,7 @@
 - New guided training modes should expose standalone routes and update mastery through dedicated store actions to avoid coupling with the AI exercise session flow.
 - Scenario speaking modes should reuse server-side generation/evaluation routes rather than embedding provider logic in UI components.
 - Weekly summary payloads should be built from store-side aggregated records (plan/task status, mastery timestamps, and mistakes) before being sent to summary routes.
+- Settings and provider UX must branch on runtime mode; deployed mode should never ask for or persist provider API keys in browser storage.
 
 ## Progress Log
 
@@ -68,6 +69,21 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Weekly review UIs should derive payloads from `store.buildWeeklyReviewPayload()` so prompt inputs stay consistent with store-side aggregation logic.
   - AI summary failures should not block visibility of deterministic weekly metrics; keep fallback UX explicit and data-first.
   - Add new study surfaces through router + sidebar together to avoid orphaned pages.
+- **Verification note:**
+- Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through `npm run verify`.
+---
+
+## 2026-05-25 15:35:26 +08:00 - US-028
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Updated settings behavior to be runtime-mode aware: in deployed mode, provider API key fields are hidden and no API key read/write happens from `localStorage`.
+- Kept provider/model preference save flow intact while preventing deployed mode from requiring key input.
+- Files changed:
+  - `src/components/Settings.vue`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Runtime-sensitive security behavior should reuse `getRuntimeMode()` so UI restrictions match persistence/runtime branching.
+  - In deployed mode, clear legacy local key fields defensively when saving provider settings to avoid stale secret artifacts.
 - **Verification note:**
   - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through `npm run verify`.
 ---

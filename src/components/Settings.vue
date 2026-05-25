@@ -25,7 +25,7 @@
             <el-option label="OpenAI (Responses)" value="openai" />
           </el-select>
 
-          <div v-if="provider === 'gemini'">
+          <div v-if="!isDeployedMode && provider === 'gemini'">
             <el-input
               v-model="geminiApiKey"
               placeholder="AIza..."
@@ -33,7 +33,7 @@
               show-password
             />
           </div>
-          <div v-else>
+          <div v-else-if="!isDeployedMode">
             <el-input
               v-model="openaiApiKey"
               placeholder="sk-..."
@@ -159,6 +159,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useMainStore } from '@/store/mainStore'
+import { getRuntimeMode } from '@/utils/persistenceAdapter'
 
 const store = useMainStore()
 
@@ -170,13 +171,14 @@ const openaiModel = ref('gpt-5.4')
 const openaiBaseUrl = ref('https://llmapi.devart.ai')
 const openaiReasoningEffort = ref('xhigh')
 const acgBgInput = ref('')
+const isDeployedMode = getRuntimeMode() === 'deployed'
 
 const backups = computed(() => store.study_backups)
 
 onMounted(() => {
   provider.value = localStorage.getItem('llm_provider') || 'gemini'
-  geminiApiKey.value = localStorage.getItem('gemini_api_key') || ''
-  openaiApiKey.value = localStorage.getItem('openai_api_key') || ''
+  geminiApiKey.value = isDeployedMode ? '' : localStorage.getItem('gemini_api_key') || ''
+  openaiApiKey.value = isDeployedMode ? '' : localStorage.getItem('openai_api_key') || ''
   geminiModel.value = localStorage.getItem('gemini_model') || 'gemini-2.5-flash'
   openaiModel.value = localStorage.getItem('openai_model') || 'gpt-5.4'
   openaiBaseUrl.value = localStorage.getItem('openai_base_url') || 'https://llmapi.devart.ai'
@@ -196,25 +198,28 @@ const saveProviderConfig = () => {
   const geminiKey = geminiApiKey.value.trim()
   const openaiKey = openaiApiKey.value.trim()
 
-  if (provider.value === 'openai' && !openaiKey) {
+  if (!isDeployedMode && provider.value === 'openai' && !openaiKey) {
     ElMessage.error('当前选择 OpenAI，请先填写 OpenAI API Key')
     return
   }
 
-  if (provider.value === 'gemini' && !geminiKey) {
+  if (!isDeployedMode && provider.value === 'gemini' && !geminiKey) {
     ElMessage.error('当前选择 Gemini，请先填写 Gemini API Key')
     return
   }
 
-  if (geminiKey) {
+  if (isDeployedMode) {
+    localStorage.removeItem('gemini_api_key')
+    localStorage.removeItem('openai_api_key')
+  } else if (geminiKey) {
     localStorage.setItem('gemini_api_key', geminiKey)
   } else {
     localStorage.removeItem('gemini_api_key')
   }
 
-  if (openaiKey) {
+  if (!isDeployedMode && openaiKey) {
     localStorage.setItem('openai_api_key', openaiKey)
-  } else {
+  } else if (!isDeployedMode) {
     localStorage.removeItem('openai_api_key')
   }
 
