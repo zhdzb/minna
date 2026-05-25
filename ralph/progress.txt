@@ -69,5 +69,21 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Learnings for future iterations:**
   - Plan skeleton generation belongs in a pure utility module so both store actions and future server routes can reuse it without pulling in Pinia.
   - Rule tests should assert both selected plan types and a few representative task types, not only the top-level shape.
-  - Keeping minute normalization inside the rule module avoids duplicated bucketing logic in later planning flows.
+- Keeping minute normalization inside the rule module avoids duplicated bucketing logic in later planning flows.
+---
+
+## 2026-05-25 14:15:20 +08:00 - US-005
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added store actions to create a normalized daily plan from rule output and to update individual daily task statuses.
+- Added persisted daily plan lifecycle fields for status, created_at, and completed_at.
+- Extended main store tests to verify plan creation and automatic completion when required tasks are finished.
+- Files changed:
+  - `src/store/mainStore.js`
+  - `tests/mainStore.spec.js`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Daily plan lifecycle state is easiest to manage when task-level statuses remain granular but plan-level status is recomputed from required tasks.
+  - Plan creation should normalize rule output immediately so downstream UI can rely on ids, timestamps, and task defaults being present.
+  - Optional tasks can live in the same `daily_plan.tasks` array as required tasks as long as `required` stays explicit and completion checks only look at required items.
 ---

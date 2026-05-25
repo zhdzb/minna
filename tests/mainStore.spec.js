@@ -20,7 +20,10 @@ describe('mainStore', () => {
       focus_lessons: [],
       tasks: [],
       completion_criteria: [],
-      ai_summary: ''
+      ai_summary: '',
+      status: 'idle',
+      created_at: null,
+      completed_at: null
     })
     expect(store.lesson_mastery).toEqual({})
     expect(store.pattern_mastery).toEqual({})
@@ -62,6 +65,9 @@ describe('mainStore', () => {
     expect(normalized.daily_plan.tasks[0].id).toEqual(expect.any(String))
     expect(normalized.daily_plan.completion_criteria).toEqual(['Finish required tasks'])
     expect(normalized.daily_plan.ai_summary).toBe('Focus on review today.')
+    expect(normalized.daily_plan.status).toBe('idle')
+    expect(normalized.daily_plan.created_at).toBeNull()
+    expect(normalized.daily_plan.completed_at).toBeNull()
   })
 
   it('normalizes lesson mastery records without breaking existing users', () => {
@@ -166,5 +172,35 @@ describe('mainStore', () => {
     expect(restored).toBe(true)
     expect(store.progress.current_lesson).toBe(3)
     expect(store.study_backups).toHaveLength(1)
+  })
+
+  it('creates a daily plan from rules and marks it complete when required tasks finish', () => {
+    const store = useMainStore()
+
+    const dailyPlan = store.createDailyPlanFromRules({
+      availableMinutes: 60,
+      currentLesson: 10,
+      foundationRestartEnabled: true,
+      recentMistakeCount: 1,
+      date: '2026-05-25'
+    })
+
+    expect(dailyPlan.date).toBe('2026-05-25')
+    expect(dailyPlan.plan_type).toBe('foundation_review')
+    expect(dailyPlan.status).toBe('pending')
+    expect(dailyPlan.tasks.length).toBeGreaterThan(0)
+
+    const requiredTasks = dailyPlan.tasks.filter((task) => task.required)
+    expect(requiredTasks.length).toBeGreaterThan(0)
+
+    expect(store.setDailyTaskStatus(requiredTasks[0].id, 'in_progress')).toBe(true)
+    expect(store.daily_plan.status).toBe('in_progress')
+
+    requiredTasks.forEach((task) => {
+      expect(store.setDailyTaskStatus(task.id, 'completed')).toBe(true)
+    })
+
+    expect(store.daily_plan.status).toBe('completed')
+    expect(store.daily_plan.completed_at).toEqual(expect.any(String))
   })
 })

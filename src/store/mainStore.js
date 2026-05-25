@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { buildDailyPlanRules } from '@/utils/planRules'
 
 const createReviewItemId = () =>
   `review_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -13,7 +14,10 @@ const getDefaultDailyPlan = () => ({
   focus_lessons: [],
   tasks: [],
   completion_criteria: [],
-  ai_summary: ''
+  ai_summary: '',
+  status: 'idle',
+  created_at: null,
+  completed_at: null
 })
 
 const getDefaultLessonMasteryEntry = () => ({
@@ -87,6 +91,11 @@ const normalizeDailyTask = (task = {}) => ({
   status: task.status || 'pending'
 })
 
+const normalizeDailyPlanStatus = (status) => {
+  const allowedStatuses = new Set(['idle', 'pending', 'in_progress', 'completed'])
+  return allowedStatuses.has(status) ? status : 'idle'
+}
+
 const normalizeDailyPlan = (plan) => {
   const base = getDefaultDailyPlan()
   if (!plan || typeof plan !== 'object') return base
@@ -106,8 +115,23 @@ const normalizeDailyPlan = (plan) => {
     completion_criteria: Array.isArray(plan.completion_criteria)
       ? plan.completion_criteria.filter((criterion) => typeof criterion === 'string')
       : base.completion_criteria,
-    ai_summary: typeof plan.ai_summary === 'string' ? plan.ai_summary : base.ai_summary
+    ai_summary: typeof plan.ai_summary === 'string' ? plan.ai_summary : base.ai_summary,
+    status: normalizeDailyPlanStatus(plan.status),
+    created_at: typeof plan.created_at === 'string' ? plan.created_at : base.created_at,
+    completed_at: typeof plan.completed_at === 'string' ? plan.completed_at : base.completed_at
   }
+}
+
+const getTodayDateString = () => new Date().toISOString().split('T')[0]
+
+const recomputeDailyPlanStatus = (dailyPlan) => {
+  const requiredTasks = dailyPlan.tasks.filter((task) => task.required)
+  if (requiredTasks.length === 0) return 'pending'
+  if (requiredTasks.every((task) => task.status === 'completed')) return 'completed'
+  if (requiredTasks.some((task) => task.status === 'in_progress' || task.status === 'completed')) {
+    return 'in_progress'
+  }
+  return 'pending'
 }
 
 const normalizeMasteryScore = (value) => {
@@ -441,6 +465,52 @@ export const useMainStore = defineStore('main', {
 
       this.progress.pass_threshold = Math.max(0.3, Math.min(1, numeric))
       this.saveState()
+    },
+
+    createDailyPlanFromRules(context = {}) {
+      const rulePlan = buildDailyPlanRules({
+        currentLesson: context.currentLesson || this.progress.current_lesson,
+        availableMinutes: context.availableMinutes,
+        foundationRestartEnabled: context.foundationRestartEnabled,
+        recentMistakeCount: context.recentMistakeCount,
+        prioritizeListeningSpeaking: context.prioritizeListeningSpeaking,
+        isWeekend: context.isWeekend
+      })
+
+      const nextPlan = normalizeDailyPlan({
+        date: context.date || getTodayDateString(),
+        available_minutes: rulePlan.available_minutes,
+        plan_type: rulePlan.plan_type,
+        focus_lessons: rulePlan.focus_lessons,
+        tasks: [...(rulePlan.tasks || []), ...(rulePlan.optional_tasks || [])],
+        completion_criteria:
+          context.completionCriteria || ['Complete all required tasks', 'Review the final plan summary'],
+        ai_summary: context.aiSummary || '',
+        status: 'pending',
+        created_at: new Date().toISOString(),
+        completed_at: null
+      })
+
+      this.daily_plan = nextPlan
+      this.saveState()
+
+      return nextPlan
+    },
+
+    setDailyTaskStatus(taskId, status) {
+      const allowedStatuses = new Set(['pending', 'in_progress', 'completed', 'skipped'])
+      if (!allowedStatuses.has(status)) return false
+
+      const task = this.daily_plan.tasks.find((item) => item.id === taskId)
+      if (!task) return false
+
+      task.status = status
+      this.daily_plan.status = recomputeDailyPlanStatus(this.daily_plan)
+      this.daily_plan.completed_at =
+        this.daily_plan.status === 'completed' ? new Date().toISOString() : null
+      this.saveState()
+
+      return true
     },
 
     recordLessonStats(lessonId, stats) {
