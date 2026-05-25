@@ -1,0 +1,9 @@
+## Codebase Patterns
+- `src/store/mainStore.js` is the current persistence boundary for study state and is the safest place to stage new normalized fields during migration.
+- Local mode currently depends on `localStorage`, `/data.json`, and the Vite `/api/save-progress` middleware; keep that compatibility until the persistence adapter is in place.
+- Deployed mode must move LLM traffic behind server-side routes and must not depend on browser-stored API keys.
+- Existing automated tests use `vitest` with `happy-dom`; new pure data or store logic should get unit tests before UI stories land.
+- The current frontend provider flow lives in `src/utils/llmProvider.js`, `config.js`, and `src/components/Settings.vue`; migrate it in stages instead of replacing everything at once.
+
+## Progress Log
+

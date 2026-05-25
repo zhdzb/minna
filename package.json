@@ -3,7 +3,8 @@
     "dev": "vite",
     "build": "vite build",
     "start": "vite",
-    "test": "vitest run"
+    "test": "vitest run",
+    "verify": "npm run build && npm run test"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.4",
