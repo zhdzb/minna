@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import fs from 'fs'
@@ -117,7 +117,7 @@ const writeJson = (res, statusCode, payload) => {
   res.end(JSON.stringify(payload))
 }
 
-const aiRoutePlugin = () => {
+const aiRoutePlugin = (runtimeEnv) => {
   return {
     name: 'ai-routes',
     configureServer(server) {
@@ -130,7 +130,7 @@ const aiRoutePlugin = () => {
         try {
           const payload = await readJsonBody(req)
           const result = await handleDailyPlanEnhancement(payload, {
-            providerOptions: { env: process.env }
+            providerOptions: { env: runtimeEnv }
           })
 
           writeJson(res, 200, { success: true, data: result })
@@ -151,7 +151,7 @@ const aiRoutePlugin = () => {
         try {
           const payload = await readJsonBody(req)
           const result = await handleExerciseGeneration(payload, {
-            providerOptions: { env: process.env }
+            providerOptions: { env: runtimeEnv }
           })
 
           writeJson(res, 200, { success: true, data: result })
@@ -172,7 +172,7 @@ const aiRoutePlugin = () => {
         try {
           const payload = await readJsonBody(req)
           const result = await handleExerciseEvaluation(payload, {
-            providerOptions: { env: process.env }
+            providerOptions: { env: runtimeEnv }
           })
 
           writeJson(res, 200, { success: true, data: result })
@@ -193,7 +193,7 @@ const aiRoutePlugin = () => {
         try {
           const payload = await readJsonBody(req)
           const result = await handleWeeklySummary(payload, {
-            providerOptions: { env: process.env }
+            providerOptions: { env: runtimeEnv }
           })
 
           writeJson(res, 200, { success: true, data: result })
@@ -209,8 +209,8 @@ const aiRoutePlugin = () => {
   }
 }
 
-const stateRoutePlugin = () => {
-  const adapter = createServerPersistenceAdapter({ env: process.env })
+const stateRoutePlugin = (runtimeEnv) => {
+  const adapter = createServerPersistenceAdapter({ env: runtimeEnv })
 
   return {
     name: 'state-routes',
@@ -271,18 +271,23 @@ const stateRoutePlugin = () => {
   }
 }
 
-export default defineConfig({
-  plugins: [vue(), saveLocalDataPlugin(), llmProxyPlugin(), aiRoutePlugin(), stateRoutePlugin()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src')
+export default defineConfig(({ mode }) => {
+  const fileEnv = loadEnv(mode, process.cwd(), '')
+  const runtimeEnv = { ...process.env, ...fileEnv }
+
+  return {
+    plugins: [vue(), saveLocalDataPlugin(), llmProxyPlugin(), aiRoutePlugin(runtimeEnv), stateRoutePlugin(runtimeEnv)],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src')
+      }
+    },
+    server: {
+      port: 8080
+    },
+    test: {
+      globals: true,
+      environment: 'happy-dom'
     }
-  },
-  server: {
-    port: 8080
-  },
-  test: {
-    globals: true,
-    environment: 'happy-dom'
   }
 })

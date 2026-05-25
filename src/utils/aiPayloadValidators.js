@@ -14,10 +14,68 @@ const stripMarkdownFence = (text) =>
     .replace(/\s*```$/i, '')
     .trim()
 
+const extractJsonCandidate = (text) => {
+  const source = String(text || '')
+  const start = source.search(/[\{\[]/)
+  if (start === -1) return ''
+
+  let inString = false
+  let escaped = false
+  const stack = []
+
+  for (let index = start; index < source.length; index += 1) {
+    const char = source[index]
+
+    if (inString) {
+      if (escaped) {
+        escaped = false
+      } else if (char === '\\') {
+        escaped = true
+      } else if (char === '"') {
+        inString = false
+      }
+      continue
+    }
+
+    if (char === '"') {
+      inString = true
+      continue
+    }
+
+    if (char === '{' || char === '[') {
+      stack.push(char)
+      continue
+    }
+
+    if (char === '}' || char === ']') {
+      const open = stack[stack.length - 1]
+      const matched = (open === '{' && char === '}') || (open === '[' && char === ']')
+      if (!matched) return ''
+      stack.pop()
+      if (stack.length === 0) {
+        return source.slice(start, index + 1)
+      }
+    }
+  }
+
+  return ''
+}
+
 const parseJsonText = (text, label) => {
+  const normalized = stripMarkdownFence(text)
+
   try {
-    return JSON.parse(stripMarkdownFence(text))
+    return JSON.parse(normalized)
   } catch (error) {
+    const extracted = extractJsonCandidate(normalized)
+    if (extracted) {
+      try {
+        return JSON.parse(extracted)
+      } catch (_innerError) {
+        // Fall through to the original error message.
+      }
+    }
+
     throw new Error(`${label} JSON parse failed: ${error.message}`)
   }
 }

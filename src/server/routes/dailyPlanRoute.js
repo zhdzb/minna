@@ -101,11 +101,42 @@ const normalizeResponse = (parsed) => {
   }
 }
 
+const createFallbackResponse = ({ plan, context }) => {
+  const lessonNumbers = plan.focus_lessons?.length ? plan.focus_lessons : [context.current_lesson].filter(Boolean)
+  const lessonLabel = lessonNumbers.length ? `第 ${lessonNumbers.join(', ')} 课` : '当前复习课次'
+  const requiredTasks = (plan.tasks || []).filter((task) => task.required)
+  const topTaskTitles = requiredTasks.slice(0, 3).map((task) => task.title)
+
+  return {
+    summary: `今天围绕${lessonLabel}完成核心复习，优先巩固听力和口语相关任务，再回顾近期错误。`,
+    focus_notes: [
+      `总时长 ${plan.available_minutes} 分钟，先完成必做任务，再处理选做任务。`,
+      topTaskTitles.length
+        ? `优先顺序：${topTaskTitles.join('、')}`
+        : '优先完成语法复习、听力输入和跟读输出三类任务。',
+      '每完成一项任务后，用 30 秒口头复述本轮练习的重点。'
+    ],
+    speaking_prompts: [
+      '请用目标语法说 2 到 3 句，概括你今天的学习安排。',
+      '请用自己的话总结今天最难的语法点，并各造一个例句。'
+    ],
+    listening_prompts: [
+      '听课文或示例句两遍，记录 3 个关键词，再复述大意。',
+      '同一段音频先跟读一遍，再脱离文本复述一遍。'
+    ],
+    review_reminders: [
+      '结束前回看今天的错题，至少修正 1 个表达错误。',
+      '把今天最容易混淆的句型加入明天的第一个复习任务。'
+    ]
+  }
+}
+
 const handleDailyPlanEnhancement = async (
   payload,
   { requestLlm = requestServerLlmText, providerOptions } = {}
 ) => {
   const normalizedInput = assertPlanPayload(payload)
+
   const text = await requestLlm({
     taskName: 'plan',
     systemPrompt: buildSystemPrompt(),
@@ -118,8 +149,12 @@ const handleDailyPlanEnhancement = async (
     providerOptions
   })
 
-  const parsed = parseJsonText(text, 'daily plan enhancement')
-  return normalizeResponse(parsed)
+  try {
+    const parsed = parseJsonText(text, 'daily plan enhancement')
+    return normalizeResponse(parsed)
+  } catch (_error) {
+    return createFallbackResponse(normalizedInput)
+  }
 }
 
 export { handleDailyPlanEnhancement }

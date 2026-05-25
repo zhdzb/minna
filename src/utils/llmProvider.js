@@ -3,7 +3,9 @@ const DEFAULTS = {
   geminiModel: 'gemini-2.5-flash',
   openaiModel: 'gpt-5.4',
   openaiBaseUrl: 'https://llmapi.devart.ai',
-  openaiReasoningEffort: 'xhigh'
+  openaiReasoningEffort: 'xhigh',
+  openrouterModel: 'minimax/minimax-m2.7',
+  openrouterBaseUrl: 'https://openrouter.ai/api'
 }
 
 const safeWindow = () => (typeof window !== 'undefined' ? window : null)
@@ -26,8 +28,14 @@ const getConfigValue = (key, fallback = '') => {
 
 const normalizeProvider = (provider) => {
   const value = String(provider || '').toLowerCase().trim()
-  return value === 'openai' ? 'openai' : 'gemini'
+  if (value === 'openai') return 'openai'
+  if (value === 'openrouter') return 'openrouter'
+  return 'gemini'
 }
+
+const sanitizeApiKey = (value) => String(value || '').trim().replace(/^['"]|['"]$/g, '')
+
+const hasNonAsciiChar = (value) => /[^\x00-\x7F]/.test(String(value || ''))
 
 export const buildProviderConfig = (overrides = {}) => {
   const provider = normalizeProvider(
@@ -56,9 +64,25 @@ export const buildProviderConfig = (overrides = {}) => {
     getConfigValue('OPENAI_REASONING_EFFORT') ||
     getLocalStorageValue('openai_reasoning_effort', DEFAULTS.openaiReasoningEffort)
 
+  const openrouterModel =
+    overrides.openrouterModel ||
+    getConfigValue('OPENROUTER_MODEL') ||
+    getLocalStorageValue('openrouter_model', DEFAULTS.openrouterModel)
+
+  const openrouterBaseUrl =
+    overrides.openrouterBaseUrl ||
+    getConfigValue('OPENROUTER_BASE_URL') ||
+    getLocalStorageValue('openrouter_base_url', DEFAULTS.openrouterBaseUrl)
+
   const apiKey =
-    overrides.apiKey ||
-    (provider === 'openai' ? getConfigValue('OPENAI_API_KEY') : getConfigValue('GEMINI_API_KEY'))
+    sanitizeApiKey(
+      overrides.apiKey ||
+        (provider === 'openai'
+          ? getConfigValue('OPENAI_API_KEY')
+          : provider === 'openrouter'
+            ? getConfigValue('OPENROUTER_API_KEY')
+            : getConfigValue('GEMINI_API_KEY'))
+    )
 
   return {
     provider,
@@ -67,6 +91,8 @@ export const buildProviderConfig = (overrides = {}) => {
     openaiModel,
     openaiBaseUrl,
     openaiReasoningEffort,
+    openrouterModel,
+    openrouterBaseUrl,
     timeoutMs: overrides.timeoutMs,
     maxRetries: overrides.maxRetries
   }
@@ -77,6 +103,14 @@ const buildOpenAIUrl = (baseUrl) => {
   if (trimmed.endsWith('/v1/responses')) return trimmed
   if (trimmed.endsWith('/v1')) return `${trimmed}/responses`
   return `${trimmed}/v1/responses`
+}
+
+const buildOpenRouterUrl = (baseUrl) => {
+  const trimmed = String(baseUrl || DEFAULTS.openrouterBaseUrl).replace(/\/+$/, '')
+  if (trimmed.endsWith('/v1/chat/completions')) return trimmed
+  if (trimmed.endsWith('/api/v1')) return `${trimmed}/chat/completions`
+  if (trimmed.endsWith('/api')) return `${trimmed}/v1/chat/completions`
+  return `${trimmed}/v1/chat/completions`
 }
 
 const isDevProxyEnabled = () => {
@@ -113,6 +147,12 @@ const extractOpenAIText = (data) => {
 
 const extractGeminiText = (data) => {
   const text = data?.candidates?.[0]?.content?.parts?.[0]?.text
+  return typeof text === 'string' ? text : ''
+}
+
+const extractOpenRouterText = (data) => {
+  const choice = Array.isArray(data?.choices) ? data.choices[0] : null
+  const text = choice?.message?.content
   return typeof text === 'string' ? text : ''
 }
 
@@ -260,7 +300,17 @@ export const requestLlmText = async ({
   const maxRetries = config.maxRetries || 3
 
   if (!config.apiKey) {
-    throw new Error(`${config.provider === 'openai' ? 'OpenAI' : 'Gemini'} API key is missing`)
+    const providerLabel =
+      config.provider === 'openai' ? 'OpenAI' : config.provider === 'openrouter' ? 'OpenRouter' : 'Gemini'
+    throw new Error(`${providerLabel} API key is missing`)
+  }
+
+  if (hasNonAsciiChar(config.apiKey)) {
+    const providerLabel =
+      config.provider === 'openai' ? 'OpenAI' : config.provider === 'openrouter' ? 'OpenRouter' : 'Gemini'
+    throw new Error(
+      `${providerLabel} API key contains non-ASCII characters. Please clear local key settings and paste a plain key only.`
+    )
   }
 
   const useDevProxy = isDevProxyEnabled()
@@ -318,6 +368,60 @@ export const requestLlmText = async ({
 
     const data = await parseOpenAIResponse(response)
     const text = extractOpenAIText(data)
+    if (!text.trim()) {
+      throw new Error('API returned an empty response body')
+    }
+    return text
+  }
+
+  if (config.provider === 'openrouter') {
+    const url = buildOpenRouterUrl(config.openrouterBaseUrl)
+    const body = {
+      model: config.openrouterModel,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: generationConfig.temperature
+    }
+
+    if (typeof generationConfig.maxOutputTokens === 'number') {
+      body.max_tokens = generationConfig.maxOutputTokens
+    }
+
+    if (typeof generationConfig.topP === 'number') {
+      body.top_p = generationConfig.topP
+    }
+
+    if (generationConfig.responseMimeType === 'application/json') {
+      body.response_format = { type: 'json_object' }
+    }
+
+    const requestHeaders = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: `Bearer ${config.apiKey}`,
+      'HTTP-Referer': 'http://localhost:8080',
+      'X-Title': 'Minna no Nihongo AI Tutor'
+    }
+
+    const response = await requestWithRetry(
+      useDevProxy ? '/api/llm/openrouter' : url,
+      {
+        method: 'POST',
+        headers: useDevProxy ? { 'Content-Type': 'application/json' } : requestHeaders,
+        body: JSON.stringify(useDevProxy ? buildProxyBody(url, requestHeaders, body) : body)
+      },
+      timeoutMs,
+      maxRetries
+    )
+
+    if (!response.ok) {
+      throw await buildHttpError(response)
+    }
+
+    const data = await response.json()
+    const text = extractOpenRouterText(data)
     if (!text.trim()) {
       throw new Error('API returned an empty response body')
     }

@@ -56,6 +56,39 @@ describe('llmRequest', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
+  it('requests text from OpenRouter with chat completions', async () => {
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({
+        choices: [{ message: { content: '{"summary":"router"}' } }]
+      })
+    }))
+
+    const text = await requestServerLlmText({
+      taskName: 'plan',
+      systemPrompt: 'system',
+      userPrompt: 'user',
+      fetchImpl: fetchMock,
+      generationConfig: {
+        responseMimeType: 'application/json'
+      },
+      providerOptions: {
+        env: {
+          DEFAULT_LLM_PROVIDER: 'openrouter',
+          OPENROUTER_API_KEY: 'router-key',
+          OPENROUTER_BASE_URL: 'https://openrouter.ai/api',
+          OPENROUTER_MODEL: 'minimax/minimax-m2.7'
+        }
+      }
+    })
+
+    expect(text).toBe('{"summary":"router"}')
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    const [url, options] = fetchMock.mock.calls[0]
+    expect(url).toBe('https://openrouter.ai/api/v1/chat/completions')
+    expect(options.headers['X-Title']).toBe('Minna no Nihongo AI Tutor')
+  })
+
   it('retries on retryable HTTP status codes', async () => {
     const fetchMock = vi
       .fn()

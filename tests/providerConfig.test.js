@@ -4,6 +4,7 @@ import { getServerProviderConfig, getTaskProvider, normalizeProvider } from '../
 describe('providerConfig', () => {
   it('normalizes provider names to the supported set', () => {
     expect(normalizeProvider('OPENAI')).toBe('openai')
+    expect(normalizeProvider('OpenRouter')).toBe('openrouter')
     expect(normalizeProvider('gemini')).toBe('gemini')
     expect(normalizeProvider('anything-else')).toBe('gemini')
   })
@@ -28,8 +29,25 @@ describe('providerConfig', () => {
     expect(config.openai.baseUrl).toBe('https://example.com')
     expect(config.publicStatus.availableProviders).toEqual({
       gemini: true,
-      openai: true
+      openai: true,
+      openrouter: false
     })
+  })
+
+  it('builds dedicated openrouter config from env values', () => {
+    const config = getServerProviderConfig({
+      env: {
+        DEFAULT_LLM_PROVIDER: 'openrouter',
+        OPENROUTER_API_KEY: 'router-key',
+        OPENROUTER_MODEL: 'minimax/minimax-m2.7',
+        OPENROUTER_BASE_URL: 'https://openrouter.ai/api'
+      }
+    })
+
+    expect(config.defaultProvider).toBe('openrouter')
+    expect(config.openrouter.apiKey).toBe('router-key')
+    expect(config.openrouter.model).toBe('minimax/minimax-m2.7')
+    expect(config.publicStatus.availableProviders.openrouter).toBe(true)
   })
 
   it('allows task-specific provider overrides', () => {
@@ -58,7 +76,8 @@ describe('providerConfig', () => {
     expect(config.publicStatus.defaultProvider).toBe('gemini')
     expect(config.publicStatus.availableProviders).toEqual({
       gemini: true,
-      openai: true
+      openai: true,
+      openrouter: false
     })
     expect(config.publicStatus).not.toHaveProperty('gemini')
     expect(config.publicStatus).not.toHaveProperty('openai')

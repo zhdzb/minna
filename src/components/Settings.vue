@@ -23,6 +23,7 @@
           <el-select v-model="provider" style="width: 100%; margin-bottom: 12px;">
             <el-option label="Gemini" value="gemini" />
             <el-option label="OpenAI (Responses)" value="openai" />
+            <el-option label="OpenRouter" value="openrouter" />
           </el-select>
 
           <div v-if="!isDeployedMode && provider === 'gemini'">
@@ -35,7 +36,7 @@
           </div>
           <div v-else-if="!isDeployedMode">
             <el-input
-              v-model="openaiApiKey"
+              v-model="activeApiKey"
               placeholder="sk-..."
               type="password"
               show-password
@@ -62,7 +63,7 @@
             <el-input v-model="geminiModel" placeholder="gemini-2.5-flash" />
           </div>
 
-          <div v-else style="display: grid; gap: 12px;">
+          <div v-else-if="provider === 'openai'" style="display: grid; gap: 12px;">
             <div>
               <div style="font-size: 0.85rem; color: #666; margin-bottom: 6px;">OpenAI 模型</div>
               <el-input v-model="openaiModel" placeholder="gpt-5.4" />
@@ -79,6 +80,17 @@
                 <el-option label="high" value="high" />
                 <el-option label="xhigh" value="xhigh" />
               </el-select>
+            </div>
+          </div>
+
+          <div v-else style="display: grid; gap: 12px;">
+            <div>
+              <div style="font-size: 0.85rem; color: #666; margin-bottom: 6px;">OpenRouter 妯″瀷</div>
+              <el-input v-model="openrouterModel" placeholder="minimax/minimax-m2.7" />
+            </div>
+            <div>
+              <div style="font-size: 0.85rem; color: #666; margin-bottom: 6px;">Base URL</div>
+              <el-input v-model="openrouterBaseUrl" placeholder="https://openrouter.ai/api" />
             </div>
           </div>
 
@@ -166,23 +178,41 @@ const store = useMainStore()
 const provider = ref('gemini')
 const geminiApiKey = ref('')
 const openaiApiKey = ref('')
+const openrouterApiKey = ref('')
 const geminiModel = ref('gemini-2.5-flash')
 const openaiModel = ref('gpt-5.4')
 const openaiBaseUrl = ref('https://llmapi.devart.ai')
 const openaiReasoningEffort = ref('xhigh')
+const openrouterModel = ref('minimax/minimax-m2.7')
+const openrouterBaseUrl = ref('https://openrouter.ai/api')
 const acgBgInput = ref('')
 const isDeployedMode = getRuntimeMode() === 'deployed'
 
 const backups = computed(() => store.study_backups)
+const activeApiKey = computed({
+  get() {
+    return provider.value === 'openrouter' ? openrouterApiKey.value : openaiApiKey.value
+  },
+  set(value) {
+    if (provider.value === 'openrouter') {
+      openrouterApiKey.value = value
+    } else {
+      openaiApiKey.value = value
+    }
+  }
+})
 
 onMounted(() => {
   provider.value = localStorage.getItem('llm_provider') || 'gemini'
   geminiApiKey.value = isDeployedMode ? '' : localStorage.getItem('gemini_api_key') || ''
   openaiApiKey.value = isDeployedMode ? '' : localStorage.getItem('openai_api_key') || ''
+  openrouterApiKey.value = isDeployedMode ? '' : localStorage.getItem('openrouter_api_key') || ''
   geminiModel.value = localStorage.getItem('gemini_model') || 'gemini-2.5-flash'
   openaiModel.value = localStorage.getItem('openai_model') || 'gpt-5.4'
   openaiBaseUrl.value = localStorage.getItem('openai_base_url') || 'https://llmapi.devart.ai'
   openaiReasoningEffort.value = localStorage.getItem('openai_reasoning_effort') || 'xhigh'
+  openrouterModel.value = localStorage.getItem('openrouter_model') || 'minimax/minimax-m2.7'
+  openrouterBaseUrl.value = localStorage.getItem('openrouter_base_url') || 'https://openrouter.ai/api'
   acgBgInput.value = localStorage.getItem('custom_acg_bg') || ''
 })
 
@@ -192,14 +222,37 @@ const formatTime = (ts) => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 }
 
+const containsNonAscii = (value) => /[^\x00-\x7F]/.test(String(value || ''))
+
 const saveProviderConfig = () => {
   localStorage.setItem('llm_provider', provider.value)
 
   const geminiKey = geminiApiKey.value.trim()
   const openaiKey = openaiApiKey.value.trim()
+  const openrouterKey = openrouterApiKey.value.trim()
+
+  if (!isDeployedMode && geminiKey && containsNonAscii(geminiKey)) {
+    ElMessage.error('Gemini API Key 含有非英文字符，请重新粘贴纯 ASCII key')
+    return
+  }
+
+  if (!isDeployedMode && openaiKey && containsNonAscii(openaiKey)) {
+    ElMessage.error('OpenAI API Key 含有非英文字符，请重新粘贴纯 ASCII key')
+    return
+  }
+
+  if (!isDeployedMode && openrouterKey && containsNonAscii(openrouterKey)) {
+    ElMessage.error('OpenRouter API Key contains non-ASCII characters, please paste a plain ASCII key')
+    return
+  }
 
   if (!isDeployedMode && provider.value === 'openai' && !openaiKey) {
     ElMessage.error('当前选择 OpenAI，请先填写 OpenAI API Key')
+    return
+  }
+
+  if (!isDeployedMode && provider.value === 'openrouter' && !openrouterKey) {
+    ElMessage.error('OpenRouter API Key is required for the selected provider')
     return
   }
 
@@ -211,6 +264,7 @@ const saveProviderConfig = () => {
   if (isDeployedMode) {
     localStorage.removeItem('gemini_api_key')
     localStorage.removeItem('openai_api_key')
+    localStorage.removeItem('openrouter_api_key')
   } else if (geminiKey) {
     localStorage.setItem('gemini_api_key', geminiKey)
   } else {
@@ -223,6 +277,12 @@ const saveProviderConfig = () => {
     localStorage.removeItem('openai_api_key')
   }
 
+  if (!isDeployedMode && openrouterKey) {
+    localStorage.setItem('openrouter_api_key', openrouterKey)
+  } else if (!isDeployedMode) {
+    localStorage.removeItem('openrouter_api_key')
+  }
+
   ElMessage.success('Provider 配置已保存。')
 }
 
@@ -231,6 +291,8 @@ const saveModelConfig = () => {
   localStorage.setItem('openai_model', openaiModel.value.trim() || 'gpt-5.4')
   localStorage.setItem('openai_base_url', openaiBaseUrl.value.trim() || 'https://llmapi.devart.ai')
   localStorage.setItem('openai_reasoning_effort', openaiReasoningEffort.value || 'xhigh')
+  localStorage.setItem('openrouter_model', openrouterModel.value.trim() || 'minimax/minimax-m2.7')
+  localStorage.setItem('openrouter_base_url', openrouterBaseUrl.value.trim() || 'https://openrouter.ai/api')
   ElMessage.success('模型参数已保存。')
 }
 

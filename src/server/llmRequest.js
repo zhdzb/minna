@@ -67,11 +67,25 @@ const extractGeminiText = (data) => {
   return typeof text === 'string' ? text : ''
 }
 
+const extractOpenRouterText = (data) => {
+  const choice = Array.isArray(data?.choices) ? data.choices[0] : null
+  const text = choice?.message?.content
+  return typeof text === 'string' ? text : ''
+}
+
 const buildOpenAIUrl = (baseUrl) => {
   const trimmed = String(baseUrl || '').replace(/\/+$/, '')
   if (trimmed.endsWith('/v1/responses')) return trimmed
   if (trimmed.endsWith('/v1')) return `${trimmed}/responses`
   return `${trimmed}/v1/responses`
+}
+
+const buildOpenRouterUrl = (baseUrl) => {
+  const trimmed = String(baseUrl || '').replace(/\/+$/, '')
+  if (trimmed.endsWith('/v1/chat/completions')) return trimmed
+  if (trimmed.endsWith('/api/v1')) return `${trimmed}/chat/completions`
+  if (trimmed.endsWith('/api')) return `${trimmed}/v1/chat/completions`
+  return `${trimmed}/v1/chat/completions`
 }
 
 const buildSafeHttpError = async (response) => {
@@ -94,6 +108,13 @@ const buildSafeHttpError = async (response) => {
   }
 
   return new Error(`LLM request failed with status ${status}${detail ? `: ${detail.slice(0, 300)}` : ''}`)
+}
+
+const hasNonAscii = (value) => /[^\x00-\x7F]/.test(String(value || ''))
+
+const getFirstNonAsciiCode = (value) => {
+  const firstNonAscii = [...String(value || '')].find((ch) => ch.charCodeAt(0) > 127)
+  return firstNonAscii ? firstNonAscii.charCodeAt(0) : null
 }
 
 const requestWithTimeout = async (fetchImpl, url, options, timeoutMs) => {
@@ -212,6 +233,48 @@ const buildGeminiRequest = ({ providerConfig, systemPrompt, userPrompt, generati
   }
 }
 
+const buildOpenRouterRequest = ({ providerConfig, systemPrompt, userPrompt, generationConfig = {} }) => {
+  const body = {
+    model: providerConfig.openrouter.model,
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt }
+    ],
+    temperature: generationConfig.temperature
+  }
+
+  if (typeof generationConfig.maxOutputTokens === 'number') {
+    body.max_tokens = generationConfig.maxOutputTokens
+  }
+
+  if (typeof generationConfig.topP === 'number') {
+    body.top_p = generationConfig.topP
+  }
+
+  if (generationConfig.responseMimeType === 'application/json') {
+    body.response_format = { type: 'json_object' }
+  }
+
+  return {
+    url: buildOpenRouterUrl(providerConfig.openrouter.baseUrl),
+    options: {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${providerConfig.openrouter.apiKey}`,
+        'HTTP-Referer': 'http://localhost:8080',
+        'X-Title': 'Minna no Nihongo AI Tutor'
+      },
+      body: JSON.stringify(body)
+    },
+    parse: async (response) => {
+      const data = await response.json()
+      return extractOpenRouterText(data)
+    }
+  }
+}
+
 const requestServerLlmText = async ({
   taskName = 'plan',
   systemPrompt,
@@ -225,18 +288,49 @@ const requestServerLlmText = async ({
   const timeoutMs = generationConfig.timeoutMs || 120000
   const maxRetries = generationConfig.maxRetries || 3
 
+  const selectedKey =
+    providerName === 'openai'
+      ? providerConfig.openai.apiKey
+      : providerName === 'openrouter'
+        ? providerConfig.openrouter.apiKey
+        : providerConfig.gemini.apiKey
+  const selectedModel =
+    providerName === 'openai'
+      ? providerConfig.openai.model
+      : providerName === 'openrouter'
+        ? providerConfig.openrouter.model
+        : providerConfig.gemini.model
+  const selectedBaseUrl =
+    providerName === 'openai'
+      ? providerConfig.openai.baseUrl
+      : providerName === 'openrouter'
+        ? providerConfig.openrouter.baseUrl
+        : 'https://generativelanguage.googleapis.com'
+  if (!selectedKey) {
+    throw new Error(`[${providerName}] API key is missing for task "${taskName}"`)
+  }
+
+  if (hasNonAscii(selectedKey)) {
+    throw new Error(
+      `[${providerName}] API key contains non-ASCII characters (first code: ${getFirstNonAsciiCode(selectedKey)})`
+    )
+  }
+
   const requestBuilder =
     providerName === 'openai'
       ? buildOpenAIRequest({ providerConfig, systemPrompt, userPrompt, generationConfig })
-      : buildGeminiRequest({ providerConfig, systemPrompt, userPrompt, generationConfig })
+      : providerName === 'openrouter'
+        ? buildOpenRouterRequest({ providerConfig, systemPrompt, userPrompt, generationConfig })
+        : buildGeminiRequest({ providerConfig, systemPrompt, userPrompt, generationConfig })
 
-  const response = await requestWithRetry(
-    fetchImpl,
-    requestBuilder.url,
-    requestBuilder.options,
-    timeoutMs,
-    maxRetries
-  )
+  let response
+  try {
+    response = await requestWithRetry(fetchImpl, requestBuilder.url, requestBuilder.options, timeoutMs, maxRetries)
+  } catch (error) {
+    throw new Error(
+      `LLM transport failed (provider=${providerName}, task=${taskName}, model=${selectedModel}, baseUrl=${selectedBaseUrl}): ${error.message}`
+    )
+  }
 
   if (!response.ok) {
     throw await buildSafeHttpError(response)
