@@ -7,6 +7,7 @@
 - Shared server-side LLM helpers should own timeout, retry, provider branching, and secret-safe error shaping in one place so future routes stay thin.
 - Store-agnostic server utilities should accept plain data inputs and injectable dependencies like `fetchImpl` to stay easy to test without Pinia or network access.
 - Dev middleware routes should stay as thin adapters around reusable `src/server/` modules so Vite-only code does not become the real application layer.
+- Exercise-related server routes should reuse `aiPayloadValidators` to keep generation/evaluation validation behavior consistent across frontend and server flows.
 
 ## Progress Log
 
@@ -191,4 +192,22 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Route-level generation handlers should reuse shared payload validators to keep model output checks aligned with existing frontend safeguards.
   - Generation routes should normalize and bound user-configurable values like question counts before prompt assembly.
   - Keeping route prompts deterministic makes it easier to compare provider behavior and debug invalid model outputs.
+---
+
+## 2026-05-25 14:50:20 +08:00 - US-012
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a reusable server-side exercise evaluation route that validates batch payloads, builds evaluation prompts, and routes requests through the shared server LLM helper.
+- Wired a dev-only `/api/ai/exercise-evaluate` endpoint in `vite.config.js` so answer evaluation can run through server-side routing in local mode.
+- Added unit tests for successful structured evaluation and pre-LLM payload rejection.
+- Files changed:
+  - `src/server/routes/exerciseEvaluationRoute.js`
+  - `tests/exerciseEvaluationRoute.test.js`
+  - `vite.config.js`
+  - `AGENTS.md`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Evaluation routes should normalize batch records first so fallback behavior from shared validators can map results back to stable ids.
+  - Reusing the same validation helpers for server and frontend keeps correction behavior consistent during migration.
+  - Keeping evaluation routes independent from Pinia state makes them easy to deploy in serverless runtimes later.
 ---

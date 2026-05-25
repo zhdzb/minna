@@ -4,6 +4,7 @@ import path from 'path'
 import fs from 'fs'
 import { handleDailyPlanEnhancement } from './src/server/routes/dailyPlanRoute.js'
 import { handleExerciseGeneration } from './src/server/routes/exerciseGenerationRoute.js'
+import { handleExerciseEvaluation } from './src/server/routes/exerciseEvaluationRoute.js'
 
 // Custom Vite plugin to handle local data.json saving automatically
 const saveLocalDataPlugin = () => {
@@ -143,6 +144,27 @@ const aiRoutePlugin = () => {
         try {
           const payload = await readJsonBody(req)
           const result = await handleExerciseGeneration(payload, {
+            providerOptions: { env: process.env }
+          })
+
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/ai/exercise-evaluate', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handleExerciseEvaluation(payload, {
             providerOptions: { env: process.env }
           })
 
