@@ -334,6 +334,81 @@
         "口语确认疑问：简体提问不用带『か』，直接使用上扬语调。比如『ごはん、食べた？⤴︎』。"
       ],
       "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+    },
+    {
+      "id": 21,
+      "title": "第 21 课",
+      "grammar_points": [
+        "思います（表达看法）",
+        "と言います（引用说话内容）",
+        "でしょう（推测与确认）",
+        "何と言いましたか（转述问答）"
+      ],
+      "hidden_knowledge": [
+        "职场表达看法时优先用「〜と思います」，比直接断言更礼貌、更稳妥。",
+        "转述上级或客户的话，建议先用「〜と言っていました」避免语气过硬。"
+      ],
+      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+    },
+    {
+      "id": 22,
+      "title": "第 22 课",
+      "grammar_points": [
+        "V辞书形 + 前に（在…之前）",
+        "N の前に（名词前置顺序）",
+        "Vた形 + ことがあります（经历）",
+        "数量词 + も（强调数量）"
+      ],
+      "hidden_knowledge": [
+        "表达流程时「〜前に」在日本工作语境非常高频，用于会议、提交、审批说明。",
+        "不要混淆「Nの前に」和「Vる前に」：一个接名词，一个接动词辞书形。"
+      ],
+      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+    },
+    {
+      "id": 23,
+      "title": "第 23 课",
+      "grammar_points": [
+        "Vる / Vない / Vた + とき（在…的时候）",
+        "N のとき（名词时间点）",
+        "V辞书形 + と（恒常条件）",
+        "道案内常用句型（转角、直走、到达）"
+      ],
+      "hidden_knowledge": [
+        "「〜と」更偏向自然结果或固定规律，不适合表达主观命令和意志。",
+        "面试和入职初期常会被问通勤路线，本课道案内句型要做到脱口而出。"
+      ],
+      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+    },
+    {
+      "id": 24,
+      "title": "第 24 课",
+      "grammar_points": [
+        "くれます / もらいます（授受关系）",
+        "Vて くれます（别人为我做）",
+        "Vて もらいます（我请求别人做）",
+        "对象与受益者助词整理（に / から）"
+      ],
+      "hidden_knowledge": [
+        "「Vて もらいます」在工作沟通里比命令式更自然，适合提出协作请求。",
+        "授受动词是日语人际关系核心语法，主语视角错了整句礼貌关系就会错。"
+      ],
+      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+    },
+    {
+      "id": 25,
+      "title": "第 25 课",
+      "grammar_points": [
+        "Vたら（条件与假设）",
+        "〜たら、どうしますか（假设场景应对）",
+        "简体引用 + と思います（复合表达）",
+        "原因与应对的口语化表达"
+      ],
+      "hidden_knowledge": [
+        "「〜たら」是面向实际工作的关键句型，常用于故障、延期、变更等应急对话。",
+        "建议把本课作为上册收束课，重点练“听到条件就能立即给出对策”的口语反应。"
+      ],
+      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
     }
   ]
 }
