@@ -22,6 +22,7 @@ describe('mainStore', () => {
       completion_criteria: [],
       ai_summary: ''
     })
+    expect(store.lesson_mastery).toEqual({})
     expect(store.mistakes_book).toEqual([])
     expect(store.study_backups).toEqual([])
   })
@@ -60,6 +61,35 @@ describe('mainStore', () => {
     expect(normalized.daily_plan.tasks[0].id).toEqual(expect.any(String))
     expect(normalized.daily_plan.completion_criteria).toEqual(['Finish required tasks'])
     expect(normalized.daily_plan.ai_summary).toBe('Focus on review today.')
+  })
+
+  it('normalizes lesson mastery records without breaking existing users', () => {
+    const normalized = normalizeData({
+      progress: { current_lesson: 8 },
+      lesson_mastery: {
+        5: {
+          grammar: '0.65',
+          listening: -1,
+          speaking: 2,
+          reading: 'bad',
+          last_reviewed_at: '2026-05-25T08:00:00.000Z'
+        },
+        bad: {
+          grammar: 0.5
+        }
+      }
+    })
+
+    expect(normalized.progress.current_lesson).toBe(8)
+    expect(normalized.lesson_mastery).toEqual({
+      '5': {
+        grammar: 0.65,
+        listening: 0,
+        speaking: 1,
+        reading: 0,
+        last_reviewed_at: '2026-05-25T08:00:00.000Z'
+      }
+    })
   })
 
   it('stores review items with exercise snapshots', () => {

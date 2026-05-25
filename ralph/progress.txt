@@ -20,5 +20,21 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Learnings for future iterations:**
   - New top-level study state should be added through `getDefaultData()` and `normalizeData()` together so persisted local data remains backward compatible.
   - Store-focused stories in this codebase are easiest to verify by testing `normalizeData()` directly alongside Pinia store initialization.
-  - Numeric values coming from saved JSON should be normalized eagerly in the store layer to keep later planning logic simpler.
+- Numeric values coming from saved JSON should be normalized eagerly in the store layer to keep later planning logic simpler.
+---
+
+## 2026-05-25 14:03:14 +08:00 - US-002
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added normalized `lesson_mastery` state to `mainStore` with backward-compatible defaults for persisted users.
+- Added lesson mastery score normalization for grammar, listening, speaking, reading, and normalized review timestamps.
+- Extended main store tests to verify default lesson mastery shape and legacy payload migration behavior.
+- Files changed:
+  - `src/store/mainStore.js`
+  - `tests/mainStore.spec.js`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - New keyed mastery maps work best when lesson ids are normalized to strings and invalid keys are discarded early.
+  - Progress-related scores should be clamped in the store layer so later planning and analytics code can assume a stable 0..1 range.
+  - Backward-compatible migration tests are easiest to keep readable by asserting one representative normalized lesson entry rather than rebuilding the whole store state.
 ---

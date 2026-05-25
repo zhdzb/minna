@@ -16,6 +16,14 @@ const getDefaultDailyPlan = () => ({
   ai_summary: ''
 })
 
+const getDefaultLessonMasteryEntry = () => ({
+  grammar: 0,
+  listening: 0,
+  speaking: 0,
+  reading: 0,
+  last_reviewed_at: null
+})
+
 const getDefaultData = () => ({
   progress: {
     current_lesson: 1,
@@ -24,6 +32,7 @@ const getDefaultData = () => ({
     lesson_stats: {}
   },
   daily_plan: getDefaultDailyPlan(),
+  lesson_mastery: {},
   mistakes_book: [],
   study_backups: [],
   meta: {
@@ -91,6 +100,39 @@ const normalizeDailyPlan = (plan) => {
   }
 }
 
+const normalizeMasteryScore = (value) => {
+  const numeric = Number(value)
+  if (!Number.isFinite(numeric)) return 0
+  return Math.max(0, Math.min(1, numeric))
+}
+
+const normalizeLessonMasteryEntry = (entry = {}) => {
+  const base = getDefaultLessonMasteryEntry()
+
+  return {
+    ...base,
+    grammar: normalizeMasteryScore(entry.grammar),
+    listening: normalizeMasteryScore(entry.listening),
+    speaking: normalizeMasteryScore(entry.speaking),
+    reading: normalizeMasteryScore(entry.reading),
+    last_reviewed_at: typeof entry.last_reviewed_at === 'string' ? entry.last_reviewed_at : base.last_reviewed_at
+  }
+}
+
+const normalizeLessonMastery = (mastery) => {
+  if (!mastery || typeof mastery !== 'object' || Array.isArray(mastery)) {
+    return {}
+  }
+
+  return Object.entries(mastery).reduce((accumulator, [lessonId, entry]) => {
+    const normalizedLessonId = Number(lessonId)
+    if (!Number.isFinite(normalizedLessonId)) return accumulator
+
+    accumulator[String(normalizedLessonId)] = normalizeLessonMasteryEntry(entry)
+    return accumulator
+  }, {})
+}
+
 const normalizeData = (data) => {
   const base = getDefaultData()
   const merged = {
@@ -107,6 +149,7 @@ const normalizeData = (data) => {
       ? data.study_backups.map(normalizeBackup)
       : base.study_backups,
     daily_plan: normalizeDailyPlan(data?.daily_plan),
+    lesson_mastery: normalizeLessonMastery(data?.lesson_mastery),
     meta: {
       ...base.meta,
       ...(data?.meta || {})
@@ -501,4 +544,10 @@ export const useMainStore = defineStore('main', {
   }
 })
 
-export { buildPersistableState, getDefaultData, getDefaultDailyPlan, normalizeData }
+export {
+  buildPersistableState,
+  getDefaultData,
+  getDefaultDailyPlan,
+  getDefaultLessonMasteryEntry,
+  normalizeData
+}
