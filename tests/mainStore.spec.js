@@ -23,6 +23,7 @@ describe('mainStore', () => {
       ai_summary: ''
     })
     expect(store.lesson_mastery).toEqual({})
+    expect(store.pattern_mastery).toEqual({})
     expect(store.mistakes_book).toEqual([])
     expect(store.study_backups).toEqual([])
   })
@@ -88,6 +89,46 @@ describe('mainStore', () => {
         speaking: 1,
         reading: 0,
         last_reviewed_at: '2026-05-25T08:00:00.000Z'
+      }
+    })
+  })
+
+  it('normalizes pattern mastery records without breaking existing users', () => {
+    const normalized = normalizeData({
+      progress: { current_lesson: 9 },
+      pattern_mastery: {
+        lesson_5_ni_ikimasu: {
+          lesson: '5',
+          recognition: '0.8',
+          controlled_output: -1,
+          free_output: 2,
+          last_practiced_at: '2026-05-25T09:00:00.000Z'
+        },
+        lesson_9_bad: {
+          pattern: '',
+          lesson: 'bad',
+          recognition: 0.3
+        }
+      }
+    })
+
+    expect(normalized.progress.current_lesson).toBe(9)
+    expect(normalized.pattern_mastery).toEqual({
+      lesson_5_ni_ikimasu: {
+        lesson: 5,
+        pattern: 'lesson_5_ni_ikimasu',
+        recognition: 0.8,
+        controlled_output: 0,
+        free_output: 1,
+        last_practiced_at: '2026-05-25T09:00:00.000Z'
+      },
+      lesson_9_bad: {
+        lesson: 1,
+        pattern: 'lesson_9_bad',
+        recognition: 0.3,
+        controlled_output: 0,
+        free_output: 0,
+        last_practiced_at: null
       }
     })
   })

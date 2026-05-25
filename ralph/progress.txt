@@ -36,5 +36,21 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Learnings for future iterations:**
   - New keyed mastery maps work best when lesson ids are normalized to strings and invalid keys are discarded early.
   - Progress-related scores should be clamped in the store layer so later planning and analytics code can assume a stable 0..1 range.
-  - Backward-compatible migration tests are easiest to keep readable by asserting one representative normalized lesson entry rather than rebuilding the whole store state.
+- Backward-compatible migration tests are easiest to keep readable by asserting one representative normalized lesson entry rather than rebuilding the whole store state.
+---
+
+## 2026-05-25 14:10:59 +08:00 - US-003
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added normalized `pattern_mastery` state to `mainStore` with backward-compatible defaults for persisted users.
+- Added pattern mastery normalization for lesson, pattern id, recognition, controlled output, free output, and practice timestamps.
+- Extended main store tests to verify default pattern mastery shape and legacy payload migration behavior.
+- Files changed:
+  - `src/store/mainStore.js`
+  - `tests/mainStore.spec.js`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Keyed pattern maps should derive the fallback `pattern` field from the record key so later consumers can rely on a populated identifier.
+  - Mastery maps and score-bearing fields can reuse the same normalization helpers to keep data semantics consistent across store slices.
+  - Migration tests for nested maps stay clearer when one invalid entry is included alongside one valid entry to prove filtering behavior.
 ---

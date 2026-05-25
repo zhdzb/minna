@@ -24,6 +24,15 @@ const getDefaultLessonMasteryEntry = () => ({
   last_reviewed_at: null
 })
 
+const getDefaultPatternMasteryEntry = () => ({
+  lesson: 1,
+  pattern: '',
+  recognition: 0,
+  controlled_output: 0,
+  free_output: 0,
+  last_practiced_at: null
+})
+
 const getDefaultData = () => ({
   progress: {
     current_lesson: 1,
@@ -33,6 +42,7 @@ const getDefaultData = () => ({
   },
   daily_plan: getDefaultDailyPlan(),
   lesson_mastery: {},
+  pattern_mastery: {},
   mistakes_book: [],
   study_backups: [],
   meta: {
@@ -133,6 +143,37 @@ const normalizeLessonMastery = (mastery) => {
   }, {})
 }
 
+const normalizePatternMasteryEntry = (entry = {}, patternId = '') => {
+  const base = getDefaultPatternMasteryEntry()
+  const normalizedPattern = typeof entry.pattern === 'string' && entry.pattern.trim() ? entry.pattern : patternId
+  const normalizedLesson = Number(entry.lesson)
+
+  return {
+    ...base,
+    lesson: Number.isFinite(normalizedLesson) ? normalizedLesson : base.lesson,
+    pattern: normalizedPattern,
+    recognition: normalizeMasteryScore(entry.recognition),
+    controlled_output: normalizeMasteryScore(entry.controlled_output),
+    free_output: normalizeMasteryScore(entry.free_output),
+    last_practiced_at:
+      typeof entry.last_practiced_at === 'string' ? entry.last_practiced_at : base.last_practiced_at
+  }
+}
+
+const normalizePatternMastery = (mastery) => {
+  if (!mastery || typeof mastery !== 'object' || Array.isArray(mastery)) {
+    return {}
+  }
+
+  return Object.entries(mastery).reduce((accumulator, [patternId, entry]) => {
+    const normalizedPatternId = String(patternId || '').trim()
+    if (!normalizedPatternId) return accumulator
+
+    accumulator[normalizedPatternId] = normalizePatternMasteryEntry(entry, normalizedPatternId)
+    return accumulator
+  }, {})
+}
+
 const normalizeData = (data) => {
   const base = getDefaultData()
   const merged = {
@@ -150,6 +191,7 @@ const normalizeData = (data) => {
       : base.study_backups,
     daily_plan: normalizeDailyPlan(data?.daily_plan),
     lesson_mastery: normalizeLessonMastery(data?.lesson_mastery),
+    pattern_mastery: normalizePatternMastery(data?.pattern_mastery),
     meta: {
       ...base.meta,
       ...(data?.meta || {})
@@ -549,5 +591,6 @@ export {
   getDefaultData,
   getDefaultDailyPlan,
   getDefaultLessonMasteryEntry,
+  getDefaultPatternMasteryEntry,
   normalizeData
 }
