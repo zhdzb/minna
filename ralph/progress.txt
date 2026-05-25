@@ -52,5 +52,22 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Learnings for future iterations:**
   - Keyed pattern maps should derive the fallback `pattern` field from the record key so later consumers can rely on a populated identifier.
   - Mastery maps and score-bearing fields can reuse the same normalization helpers to keep data semantics consistent across store slices.
-  - Migration tests for nested maps stay clearer when one invalid entry is included alongside one valid entry to prove filtering behavior.
+- Migration tests for nested maps stay clearer when one invalid entry is included alongside one valid entry to prove filtering behavior.
+---
+
+## 2026-05-25 14:13:26 +08:00 - US-004
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a pure daily plan rule engine module for deterministic plan skeleton generation.
+- Added plan rule coverage for 30, 60, 90, and 120 minute sessions and for all required plan type branches.
+- Updated repository guidance to keep plan rule generation pure and independently testable.
+- Files changed:
+  - `src/utils/planRules.js`
+  - `tests/planRules.test.js`
+  - `AGENTS.md`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Plan skeleton generation belongs in a pure utility module so both store actions and future server routes can reuse it without pulling in Pinia.
+  - Rule tests should assert both selected plan types and a few representative task types, not only the top-level shape.
+  - Keeping minute normalization inside the rule module avoids duplicated bucketing logic in later planning flows.
 ---
