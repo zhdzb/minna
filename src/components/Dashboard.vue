@@ -89,6 +89,33 @@
             <el-button size="small" @click="setTaskStatus(task.id, 'in_progress')">开始</el-button>
             <el-button size="small" type="success" @click="setTaskStatus(task.id, 'completed')">完成</el-button>
             <el-button size="small" type="warning" @click="setTaskStatus(task.id, 'skipped')">跳过</el-button>
+            <el-button
+              v-if="task.type === 'pattern_drill'"
+              size="small"
+              type="primary"
+              plain
+              @click="launchPatternMode(task.id)"
+            >
+              进入句型替换
+            </el-button>
+            <el-button
+              v-if="task.type === 'listening_drill'"
+              size="small"
+              type="primary"
+              plain
+              @click="launchListeningMode(task.id)"
+            >
+              进入听力关键词
+            </el-button>
+            <el-button
+              v-if="task.type === 'shadowing'"
+              size="small"
+              type="primary"
+              plain
+              @click="launchShadowingMode(task.id)"
+            >
+              进入 Shadowing
+            </el-button>
           </div>
         </div>
       </div>
@@ -166,6 +193,21 @@ const setTaskStatus = (taskId, status) => {
   if (!ok) {
     ElMessage.error('任务状态更新失败。')
   }
+}
+
+const launchPatternMode = (taskId) => {
+  setTaskStatus(taskId, 'in_progress')
+  router.push('/training/pattern-substitution')
+}
+
+const launchListeningMode = (taskId) => {
+  setTaskStatus(taskId, 'in_progress')
+  router.push('/training/listening-keyword')
+}
+
+const launchShadowingMode = (taskId) => {
+  setTaskStatus(taskId, 'in_progress')
+  router.push('/training/shadowing')
 }
 
 const generatePlan = async () => {

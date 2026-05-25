@@ -203,4 +203,44 @@ describe('mainStore', () => {
     expect(store.daily_plan.status).toBe('completed')
     expect(store.daily_plan.completed_at).toEqual(expect.any(String))
   })
+
+  it('updates pattern mastery from pattern substitution results', () => {
+    const store = useMainStore()
+
+    const updated = store.recordPatternSubstitutionResult({
+      lesson: 5,
+      pattern: 'N1 は いま Vています',
+      isCorrect: true
+    })
+
+    expect(updated).toBe(true)
+    expect(store.pattern_mastery['N1 は いま Vています']).toMatchObject({
+      lesson: 5,
+      pattern: 'N1 は いま Vています'
+    })
+    expect(store.pattern_mastery['N1 は いま Vています'].controlled_output).toBeGreaterThan(0)
+    expect(store.pattern_mastery['N1 は いま Vています'].last_practiced_at).toEqual(expect.any(String))
+  })
+
+  it('updates lesson mastery listening and speaking from mode results', () => {
+    const store = useMainStore()
+
+    expect(
+      store.recordListeningPracticeResult({
+        lesson: 6,
+        isCorrect: true
+      })
+    ).toBe(true)
+
+    expect(
+      store.recordShadowingPracticeResult({
+        lesson: 6,
+        rating: 4
+      })
+    ).toBe(true)
+
+    expect(store.lesson_mastery['6'].listening).toBeGreaterThan(0)
+    expect(store.lesson_mastery['6'].speaking).toBeGreaterThan(0)
+    expect(store.lesson_mastery['6'].last_reviewed_at).toEqual(expect.any(String))
+  })
 })

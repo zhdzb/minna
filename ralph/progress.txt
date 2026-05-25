@@ -13,6 +13,7 @@
 - Store save flows should keep in-memory state authoritative and surface persistence failures as user-visible errors instead of reverting state.
 - Backup export should stay anchored to `buildPersistableState()` so new normalized fields are automatically included in JSON backups.
 - Dashboard mission UIs should display rule-plan metrics directly from `daily_plan` and keep AI enhancement strictly optional.
+- New guided training modes should expose standalone routes and update mastery through dedicated store actions to avoid coupling with the AI exercise session flow.
 
 ## Progress Log
 
@@ -372,6 +373,28 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Learnings for future iterations:**
   - Task cards should expose status actions inline to reduce navigation friction during daily execution.
   - Completion bars should use required tasks only so optional tasks do not block daily completion.
+- **Verification note:**
+  - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
+---
+
+## 2026-05-25 15:18:31 +08:00 - US-022
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a pattern substitution training mode with base sentence, replacement slots, and answer input in a dedicated page.
+- Added `recordPatternSubstitutionResult` action to update `pattern_mastery.controlled_output` and practice timestamp.
+- Added launch entry from dashboard task cards (`pattern_drill`) and from training flow UI.
+- Files changed:
+  - `src/components/PatternSubstitutionMode.vue`
+  - `src/components/Dashboard.vue`
+  - `src/components/TrainingEngine.vue`
+  - `src/router/index.js`
+  - `src/store/mainStore.js`
+  - `tests/mainStore.spec.js`
+  - `AGENTS.md`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Standalone mode routes are safer than overloading the existing AI exercise session pipeline for guided drills.
+  - Pattern mastery writes should be tiny incremental updates to avoid score spikes from one attempt.
 - **Verification note:**
   - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
 ---

@@ -17,6 +17,11 @@
             <div style="font-size: 1.2rem; margin-bottom: 8px; color: #409EFF;">
                <i class="el-icon-edit-outline"></i> 正在挑战: {{ tStore.currentConfig?.difficulty }} ( 第 {{ tStore.currentConfig?.targetLesson || store.progress.current_lesson }} 课 )
             </div>
+            <div style="margin-bottom: 12px;">
+               <el-button size="small" type="primary" plain @click="openPatternSubstitutionMode">
+                  句型替换训练
+               </el-button>
+            </div>
             <div style="font-size: 0.9rem; color: #888; margin-bottom: 20px;">
                已作答 {{ answeredCount }} / {{ totalCount }} 题
             </div>
@@ -217,7 +222,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useMainStore } from '@/store/mainStore'
 import { useTrainingStore } from '@/store/trainingStore'
 import syllabusDict from '@/data/syllabus.json'
@@ -226,6 +231,7 @@ import EvaluateSentenceSkill from '@/skills/evaluateSentence.js'
 import { buildProviderConfig } from '@/utils/llmProvider'
 
 const route = useRoute()
+const router = useRouter()
 const store = useMainStore()
 const tStore = useTrainingStore()
 
@@ -503,6 +509,10 @@ const answeredCount = computed(() => {
         return val !== undefined && val !== null && String(val).trim() !== ''
     }).length
 })
+
+const openPatternSubstitutionMode = () => {
+    router.push('/training/pattern-substitution')
+}
 </script>
 
 <style scoped>

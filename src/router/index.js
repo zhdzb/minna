@@ -2,6 +2,9 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Dashboard from '@/components/Dashboard.vue'
 import SyllabusManager from '@/components/SyllabusManager.vue'
 import TrainingEngine from '@/components/TrainingEngine.vue'
+import PatternSubstitutionMode from '@/components/PatternSubstitutionMode.vue'
+import ListeningKeywordMode from '@/components/ListeningKeywordMode.vue'
+import ShadowingMode from '@/components/ShadowingMode.vue'
 
 const routes = [
   {
@@ -30,6 +33,21 @@ const routes = [
     path: '/settings',
     name: 'SettingsCenter',
     component: () => import('@/components/Settings.vue')
+  },
+  {
+    path: '/training/pattern-substitution',
+    name: 'PatternSubstitutionMode',
+    component: PatternSubstitutionMode
+  },
+  {
+    path: '/training/listening-keyword',
+    name: 'ListeningKeywordMode',
+    component: ListeningKeywordMode
+  },
+  {
+    path: '/training/shadowing',
+    name: 'ShadowingMode',
+    component: ShadowingMode
   }
 ]
 

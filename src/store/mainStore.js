@@ -512,6 +512,74 @@ export const useMainStore = defineStore('main', {
       return true
     },
 
+    recordPatternSubstitutionResult({ lesson, pattern, isCorrect }) {
+      const normalizedLesson = Number(lesson)
+      if (!Number.isFinite(normalizedLesson)) return false
+      const patternKey = String(pattern || `lesson_${normalizedLesson}_pattern_substitution`).trim()
+      if (!patternKey) return false
+
+      const existing = this.pattern_mastery?.[patternKey] || getDefaultPatternMasteryEntry()
+      const nextControlled = Math.max(
+        0,
+        Math.min(1, Number(existing.controlled_output || 0) + (isCorrect ? 0.08 : 0.02))
+      )
+
+      this.pattern_mastery = {
+        ...(this.pattern_mastery || {}),
+        [patternKey]: normalizePatternMasteryEntry(
+          {
+            ...existing,
+            lesson: normalizedLesson,
+            pattern: patternKey,
+            controlled_output: nextControlled,
+            last_practiced_at: new Date().toISOString()
+          },
+          patternKey
+        )
+      }
+
+      this.saveState()
+      return true
+    },
+
+    recordListeningPracticeResult({ lesson, isCorrect }) {
+      const lessonId = String(Number(lesson || this.progress.current_lesson))
+      const existing = this.lesson_mastery?.[lessonId] || getDefaultLessonMasteryEntry()
+      const nextListening = Math.max(0, Math.min(1, Number(existing.listening || 0) + (isCorrect ? 0.08 : 0.03)))
+
+      this.lesson_mastery = {
+        ...(this.lesson_mastery || {}),
+        [lessonId]: normalizeLessonMasteryEntry({
+          ...existing,
+          listening: nextListening,
+          last_reviewed_at: new Date().toISOString()
+        })
+      }
+
+      this.saveState()
+      return true
+    },
+
+    recordShadowingPracticeResult({ lesson, rating }) {
+      const lessonId = String(Number(lesson || this.progress.current_lesson))
+      const existing = this.lesson_mastery?.[lessonId] || getDefaultLessonMasteryEntry()
+      const normalizedRating = Math.max(1, Math.min(5, Number(rating || 1)))
+      const gain = normalizedRating >= 4 ? 0.08 : normalizedRating >= 3 ? 0.05 : 0.02
+      const nextSpeaking = Math.max(0, Math.min(1, Number(existing.speaking || 0) + gain))
+
+      this.lesson_mastery = {
+        ...(this.lesson_mastery || {}),
+        [lessonId]: normalizeLessonMasteryEntry({
+          ...existing,
+          speaking: nextSpeaking,
+          last_reviewed_at: new Date().toISOString()
+        })
+      }
+
+      this.saveState()
+      return true
+    },
+
     recordLessonStats(lessonId, stats) {
       if (!this.progress.lesson_stats) {
         this.progress.lesson_stats = {}
