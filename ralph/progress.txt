@@ -103,5 +103,21 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Learnings for future iterations:**
   - Persistence adapters should resolve runtime globals lazily so tests can override `fetch` and `localStorage` after module import.
   - A shared `patch` method is a useful bridge for future cloud adapters even before stores fully switch to remote persistence.
-  - Replacing persistence entry points in the store is safest when done only at initialization and full-save boundaries first.
+- Replacing persistence entry points in the store is safest when done only at initialization and full-save boundaries first.
+---
+
+## 2026-05-25 14:22:58 +08:00 - US-007
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a server-side provider configuration module for Gemini and OpenAI-compatible APIs.
+- Added support for default provider selection, task-specific provider overrides, and a secret-free public provider status payload.
+- Added unit tests for provider normalization, environment-driven configuration, and public status behavior.
+- Files changed:
+  - `src/server/providerConfig.js`
+  - `tests/providerConfig.test.js`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Server-side provider configuration should return both a full internal config and a public status object so UI and routes do not need to hand-roll secret filtering.
+  - Task-specific provider routing is cheap to add early and avoids later churn when plan, evaluation, and summary flows need different providers.
+  - Keeping provider normalization in one module prevents drift between frontend and server-side routing logic.
 ---
