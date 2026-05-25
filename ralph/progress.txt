@@ -413,3 +413,18 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Verification note:**
   - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
 ---
+
+## 2026-05-25 15:20:18 +08:00 - US-024
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a shadowing mode with sentence playback, replay control, self-rating input, and completion state.
+- Shadowing self-ratings now update lesson speaking mastery through `recordShadowingPracticeResult`.
+- Files changed:
+  - `src/components/ShadowingMode.vue`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Shadowing flows can keep friction low by using quick self-ratings instead of mandatory speech recognition.
+  - Speaking mastery updates should be rating-weighted so high-quality repetitions are rewarded more.
+- **Verification note:**
+  - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
+---
