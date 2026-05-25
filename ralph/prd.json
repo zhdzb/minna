@@ -1,0 +1,433 @@
+{
+  "project": "Minna no Nihongo AI Tutor",
+  "branchName": "ralph/ai-study-system-refactor",
+  "description": "Refactor the app into a deployable AI-driven study execution system with daily planning, listening/speaking-oriented training, server-side LLM routing, cloud persistence, and persistent AI context.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Add daily plan data model normalization",
+      "description": "As a developer, I need normalized daily plan state so that the app can persist and reload today's study plan safely.",
+      "acceptanceCriteria": [
+        "Add normalized daily plan state with date, available_minutes, plan_type, focus_lessons, tasks, completion_criteria, and ai_summary",
+        "Existing users without daily plan data load without errors",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Add lesson mastery normalization",
+      "description": "As a developer, I need lesson mastery records so that the app can track grammar, listening, speaking, and reading strength by lesson.",
+      "acceptanceCriteria": [
+        "Add lesson_mastery records with grammar, listening, speaking, reading, and last_reviewed_at fields",
+        "Existing progress.current_lesson remains supported",
+        "Existing users without lesson_mastery load without errors",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Add pattern mastery normalization",
+      "description": "As a developer, I need pattern mastery records so that the app can target weak sentence patterns during planning and training.",
+      "acceptanceCriteria": [
+        "Add pattern_mastery records with lesson, pattern id, recognition, controlled_output, free_output, and last_practiced_at",
+        "Existing users without pattern_mastery load without errors",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Create plan rule engine module",
+      "description": "As a developer, I need deterministic plan rules so that daily plans have a stable skeleton before AI enhancement.",
+      "acceptanceCriteria": [
+        "Add a rule module that generates plan type, time allocation, required tasks, and optional tasks",
+        "Rules support 30, 60, 90, and 120 minute plans",
+        "Rules support foundation review, new lesson, listening_speaking, mistake_review, and weekend_long_session plan types",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Add daily plan store actions",
+      "description": "As a developer, I need store actions for plan creation and task status updates so that plan execution can be tracked consistently.",
+      "acceptanceCriteria": [
+        "Add store actions to create a daily plan from rule output",
+        "Add task status updates for pending, in_progress, completed, and skipped",
+        "Completing all required tasks marks the plan as completed",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "Create persistence adapter abstraction",
+      "description": "As a developer, I need a persistence adapter layer so that local and cloud-backed storage can share one contract.",
+      "acceptanceCriteria": [
+        "Add a persistence adapter interface with load, save, and patch methods for study state",
+        "Current local persistence path can be called through the adapter",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Add server-side provider configuration module",
+      "description": "As an operator, I need server-side configurable provider routing so that Gemini and OpenAI-compatible APIs can be selected without frontend changes.",
+      "acceptanceCriteria": [
+        "Add a server-side provider configuration module for Gemini and OpenAI-compatible APIs",
+        "Provider can be selected by environment variable or server-side setting",
+        "Frontend does not receive provider secrets",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Add server-side LLM request helper",
+      "description": "As a developer, I need a shared server-side LLM request helper so that plan, exercise, and summary routes have consistent timeout and retry behavior.",
+      "acceptanceCriteria": [
+        "Add a server-side helper for LLM requests with timeout and retry support",
+        "Helper supports Gemini and OpenAI-compatible responses",
+        "Helper never exposes API keys to client responses",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Add AI context snapshot builder",
+      "description": "As a developer, I need sanitized AI context snapshots so that plan and summary generation can be debugged and improved safely.",
+      "acceptanceCriteria": [
+        "Add a context snapshot builder for current stage, target exam, priority skills, current lesson, active review lessons, weak patterns, recent task summary, provider, and prompt version",
+        "Snapshot excludes API keys and sensitive raw values",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Add server route for daily plan AI enhancement",
+      "description": "As a deployed app user, I want daily plans enhanced through a server route so that AI explanations and prompts do not require browser access to model APIs.",
+      "acceptanceCriteria": [
+        "Add a server API route for daily plan AI enhancement",
+        "Route accepts structured plan context and returns JSON summary, focus notes, speaking prompts, listening prompts, and review reminders",
+        "Route uses the server-side provider helper",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "Add server route for exercise generation",
+      "description": "As a deployed app user, I want exercise generation to run through a server route so that the app can generate training content without direct browser access to LLM APIs.",
+      "acceptanceCriteria": [
+        "Add a server API route for exercise generation",
+        "Route accepts structured lesson and training context",
+        "Route uses the server-side provider helper",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "Add server route for exercise evaluation",
+      "description": "As a deployed app user, I want answer evaluation to run through a server route so that correction logic stays available in deployed mode without exposing provider keys.",
+      "acceptanceCriteria": [
+        "Add a server API route for exercise evaluation",
+        "Route accepts structured answer payloads and returns validated evaluation JSON",
+        "Route uses the server-side provider helper",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "Add server route for weekly AI summary",
+      "description": "As a deployed app user, I want weekly review generation through a server route so that summaries can be produced from persisted study data.",
+      "acceptanceCriteria": [
+        "Add a server API route for weekly AI summary generation",
+        "Route accepts aggregated weekly learning context and returns structured summary JSON",
+        "Route uses the server-side provider helper",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "Add cloud persistence API contract",
+      "description": "As a deployed app user, I need API endpoints for cloud-backed study state so that deployed mode does not depend on writing data.json.",
+      "acceptanceCriteria": [
+        "Add API endpoints or handlers for loading and saving study state through the persistence adapter",
+        "Deployed mode no longer requires runtime writes to root data.json",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-015",
+      "title": "Wire deployed mode to cloud-backed persistence",
+      "description": "As a deployed app user, I want the app to load and save through cloud-backed persistence so that my study data survives Vercel deployments.",
+      "acceptanceCriteria": [
+        "App uses the persistence adapter to load and save study state in deployed mode",
+        "Failure to save shows a user-visible error without deleting in-memory progress",
+        "Typecheck passes",
+        "Tests pass",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-016",
+      "title": "Keep JSON export backup flow",
+      "description": "As a learner, I want to export my study data as JSON so that I can keep a portable backup of my progress.",
+      "acceptanceCriteria": [
+        "User can export current study state as a JSON backup file",
+        "Exported data includes daily plan, mastery, progress, mistakes, and backups when present",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-017",
+      "title": "Keep JSON import backup flow",
+      "description": "As a learner, I want to import a JSON backup so that I can restore or migrate my study data safely.",
+      "acceptanceCriteria": [
+        "User can import a valid JSON backup file",
+        "Import validates schema before applying changes",
+        "Import requires explicit confirmation before overwrite or merge",
+        "Typecheck passes",
+        "Tests pass",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-018",
+      "title": "Add dashboard mission section",
+      "description": "As a learner, I want a today's mission section on the dashboard so that I immediately see what I should study.",
+      "acceptanceCriteria": [
+        "Dashboard shows a primary today's mission section above existing statistics",
+        "Section displays goal, available minutes, required task count, optional task count, and completion progress",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-019",
+      "title": "Add daily time selection controls",
+      "description": "As a learner, I want to choose available study time so that the system can generate a realistic daily plan.",
+      "acceptanceCriteria": [
+        "User can choose presets for 30, 60, 90, and 120 minutes",
+        "User can enter a custom study time within a bounded range",
+        "Selected minutes are passed into plan generation",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 19,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-020",
+      "title": "Wire dashboard plan generation flow",
+      "description": "As a learner, I want the app to generate and show today's plan from the dashboard so that I can begin studying without navigating elsewhere.",
+      "acceptanceCriteria": [
+        "Dashboard can create a plan from selected time using the rule engine",
+        "Dashboard can optionally enhance the plan through the daily plan AI route",
+        "If AI enhancement fails, the rule-generated plan still renders",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 20,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-021",
+      "title": "Add daily task completion UI",
+      "description": "As a learner, I want to mark plan tasks complete, skipped, or in progress so that I can track whether I finished today's work.",
+      "acceptanceCriteria": [
+        "Each daily task shows its current status",
+        "User can start, complete, and skip tasks from the mission UI",
+        "Plan completion updates when required tasks are completed",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 21,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-022",
+      "title": "Add pattern substitution training mode",
+      "description": "As a learner who struggles to create my own sentences, I want guided pattern substitution practice so that I can move from reading to controlled output.",
+      "acceptanceCriteria": [
+        "Add a pattern substitution training mode with base sentence, replacement slots, and answer input",
+        "Results update pattern mastery",
+        "Training mode can be launched from a plan task or training flow",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 22,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-023",
+      "title": "Add listening keyword capture training mode",
+      "description": "As a learner focused on work in Japan, I want short listening tasks so that I can get better at catching key information.",
+      "acceptanceCriteria": [
+        "Add a listening keyword capture mode with playback or speech output and an answer prompt",
+        "Results update listening mastery",
+        "Mode includes replay control and visible completion state",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 23,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-024",
+      "title": "Add shadowing task mode",
+      "description": "As a learner, I want shadowing tasks with self-rating so that reading practice becomes speaking practice inside the daily plan.",
+      "acceptanceCriteria": [
+        "Add a shadowing task mode with sentence text, playback control, and self-rating",
+        "Self-rating updates speaking mastery",
+        "Speech recognition is not required in this story",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 24,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-025",
+      "title": "Add scenario speaking training mode",
+      "description": "As a learner preparing for work in Japan, I want workplace and daily-life scenario speaking tasks so that I can practice practical output with correction.",
+      "acceptanceCriteria": [
+        "Add a scenario speaking mode with situation, role, intent, grammar scope, and answer input",
+        "Mode uses the exercise generation and evaluation routes for AI-backed content and correction",
+        "Results can be saved to mistakes or favorites",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 25,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-026",
+      "title": "Add weekly review aggregation",
+      "description": "As a developer, I need weekly study aggregates so that the app can generate AI weekly reviews from persisted records instead of chat history.",
+      "acceptanceCriteria": [
+        "Aggregate completed plans, skipped tasks, mastery changes, and recent mistakes into a weekly review payload",
+        "Aggregation can be passed into the weekly AI summary route",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 26,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-027",
+      "title": "Add weekly review UI",
+      "description": "As a learner, I want a weekly review view so that I can understand what improved and what to focus on next week.",
+      "acceptanceCriteria": [
+        "Add a weekly review UI that displays wins, weak points, and next-week focus from structured summary data",
+        "If AI review fails, the UI still shows that weekly data exists but summary generation failed",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 27,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-028",
+      "title": "Remove deployed-mode frontend API key entry",
+      "description": "As a deployed app owner, I need real provider keys kept off the browser so that production keys are not exposed in localStorage or public frontend code.",
+      "acceptanceCriteria": [
+        "Deployed mode does not read gemini_api_key or openai_api_key from localStorage",
+        "Settings UI does not request production provider keys in deployed mode",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 28,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-029",
+      "title": "Add deployment and migration documentation",
+      "description": "As a developer, I need clear deployment and migration docs so that the app can be configured safely on Vercel and existing data can be moved forward with confidence.",
+      "acceptanceCriteria": [
+        "Document required environment variables for deployed mode",
+        "Document cloud storage expectations and JSON backup behavior",
+        "Document local development versus deployed mode differences",
+        "Document smoke tests for deployed API routes",
+        "Typecheck passes"
+      ],
+      "priority": 29,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}
