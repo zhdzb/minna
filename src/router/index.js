@@ -6,6 +6,7 @@ import PatternSubstitutionMode from '@/components/PatternSubstitutionMode.vue'
 import ListeningKeywordMode from '@/components/ListeningKeywordMode.vue'
 import ShadowingMode from '@/components/ShadowingMode.vue'
 import ScenarioSpeakingMode from '@/components/ScenarioSpeakingMode.vue'
+import WeeklyReview from '@/components/WeeklyReview.vue'
 
 const routes = [
   {
@@ -34,6 +35,11 @@ const routes = [
     path: '/settings',
     name: 'SettingsCenter',
     component: () => import('@/components/Settings.vue')
+  },
+  {
+    path: '/weekly-review',
+    name: 'WeeklyReview',
+    component: WeeklyReview
   },
   {
     path: '/training/pattern-substitution',

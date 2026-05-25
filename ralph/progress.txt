@@ -50,7 +50,26 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Learnings for future iterations:**
   - Weekly review should use timestamp-filtered persisted records instead of transient chat/session memory.
   - Keep summary routes tolerant of extra aggregated fields so payload shape can evolve without breaking callers.
-  - Store-side aggregation helpers are easier to test deterministically when `now` is injectable.
+- Store-side aggregation helpers are easier to test deterministically when `now` is injectable.
+---
+
+## 2026-05-25 15:32:22 +08:00 - US-027
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a new weekly review page that shows weekly aggregate stats and can request structured AI weekly summaries from `/api/ai/weekly-summary`.
+- Added success/failure handling in the weekly review UI; when AI generation fails, the page now keeps showing weekly data and surfaces an explicit failure message.
+- Added app navigation and router wiring for the weekly review view.
+- Files changed:
+  - `src/components/WeeklyReview.vue`
+  - `src/router/index.js`
+  - `src/App.vue`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Weekly review UIs should derive payloads from `store.buildWeeklyReviewPayload()` so prompt inputs stay consistent with store-side aggregation logic.
+  - AI summary failures should not block visibility of deterministic weekly metrics; keep fallback UX explicit and data-first.
+  - Add new study surfaces through router + sidebar together to avoid orphaned pages.
+- **Verification note:**
+  - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through `npm run verify`.
 ---
 
 ## 2026-05-25 14:03:14 +08:00 - US-002

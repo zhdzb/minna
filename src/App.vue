@@ -46,6 +46,9 @@
             <el-menu-item index="/settings">
               <span>系统设置</span>
             </el-menu-item>
+            <el-menu-item index="/weekly-review">
+              <span>每周复盘</span>
+            </el-menu-item>
           </el-menu>
 
           <div
