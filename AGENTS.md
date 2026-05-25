@@ -22,6 +22,7 @@ This repository is being refactored from a local-only Japanese study tool into a
 - Dev-only API endpoints in `vite.config.js` should delegate into reusable modules under `src/server/` so deployed handlers can reuse the same route logic later.
 - Exercise-generation and evaluation routes should reuse `src/utils/aiPayloadValidators.js` so server and frontend apply the same output validation contract.
 - Summary-style routes should return a strict normalized JSON shape (not raw model text) so dashboard/report UIs stay stable across providers.
+- Persistence API routes should go through `src/server/persistence/serverPersistenceAdapter.js` so runtime storage strategy (local file vs deployed memory/cloud) is switched in one place.
 - `vite.config.js` contains development-only middleware for `/api/save-progress` and `/api/llm`; do not mistake these for production-ready runtime APIs.
 - New schema-like state additions should be normalized with backward compatibility for existing local data.
 
@@ -36,3 +37,4 @@ This repository is being refactored from a local-only Japanese study tool into a
 - Production LLM keys belong in server-side environment variables only.
 - Browser `localStorage` may still hold non-secret UX preferences, but not production API keys.
 - Cloud persistence is the target for deployed mode; `data.json` becomes a backup/import-export format.
+- Deployed mode should not require writes to repository-root `data.json`; use a server persistence adapter mode that avoids runtime file writes.

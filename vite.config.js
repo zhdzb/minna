@@ -6,6 +6,12 @@ import { handleDailyPlanEnhancement } from './src/server/routes/dailyPlanRoute.j
 import { handleExerciseGeneration } from './src/server/routes/exerciseGenerationRoute.js'
 import { handleExerciseEvaluation } from './src/server/routes/exerciseEvaluationRoute.js'
 import { handleWeeklySummary } from './src/server/routes/weeklySummaryRoute.js'
+import { createServerPersistenceAdapter } from './src/server/persistence/serverPersistenceAdapter.js'
+import {
+  handleLoadStudyState,
+  handlePatchStudyState,
+  handleSaveStudyState
+} from './src/server/routes/studyStateRoute.js'
 
 // Custom Vite plugin to handle local data.json saving automatically
 const saveLocalDataPlugin = () => {
@@ -203,8 +209,70 @@ const aiRoutePlugin = () => {
   }
 }
 
+const stateRoutePlugin = () => {
+  const adapter = createServerPersistenceAdapter({ env: process.env })
+
+  return {
+    name: 'state-routes',
+    configureServer(server) {
+      server.middlewares.use('/api/state/load', async (req, res) => {
+        if (req.method !== 'GET') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const result = await handleLoadStudyState({ adapter })
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/state/save', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handleSaveStudyState(payload, { adapter })
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/state/patch', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handlePatchStudyState(payload, { adapter })
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+    }
+  }
+}
+
 export default defineConfig({
-  plugins: [vue(), saveLocalDataPlugin(), llmProxyPlugin(), aiRoutePlugin()],
+  plugins: [vue(), saveLocalDataPlugin(), llmProxyPlugin(), aiRoutePlugin(), stateRoutePlugin()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')

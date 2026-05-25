@@ -9,6 +9,7 @@
 - Dev middleware routes should stay as thin adapters around reusable `src/server/` modules so Vite-only code does not become the real application layer.
 - Exercise-related server routes should reuse `aiPayloadValidators` to keep generation/evaluation validation behavior consistent across frontend and server flows.
 - Summary routes should normalize model output into strict JSON contracts before returning responses to UI callers.
+- State load/save endpoints should delegate through a server persistence adapter so deployed and local storage behavior can switch without changing route contracts.
 
 ## Progress Log
 
@@ -229,4 +230,25 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Weekly summary routes should accept aggregated stats explicitly instead of pulling raw store state to keep server contracts stable.
   - Summary handlers should normalize and validate response shape before returning data to UI callers.
   - Reusing context snapshots keeps prompt inputs consistent across daily planning and weekly review features.
+---
+
+## 2026-05-25 14:57:06 +08:00 - US-014
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a server persistence adapter module with runtime mode switching between local file persistence and deployed memory-backed persistence.
+- Added reusable state route handlers for load, save, and patch operations through the shared adapter contract.
+- Wired dev endpoints `/api/state/load`, `/api/state/save`, and `/api/state/patch` in `vite.config.js`.
+- Added unit tests for server persistence adapter behavior and study state route handlers.
+- Files changed:
+  - `src/server/persistence/serverPersistenceAdapter.js`
+  - `src/server/routes/studyStateRoute.js`
+  - `tests/serverPersistenceAdapter.test.js`
+  - `tests/studyStateRoute.test.js`
+  - `vite.config.js`
+  - `AGENTS.md`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Persistence route contracts should stay storage-agnostic and route all behavior through a shared adapter to keep migration risk low.
+  - Deployed runtime mode should avoid repository file writes so serverless deployments do not depend on writable project files.
+  - Keeping load/save/patch as separate handlers makes it easier to wire cloud providers incrementally behind the same API shape.
 ---
