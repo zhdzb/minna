@@ -3,6 +3,19 @@ import { defineStore } from 'pinia'
 const createReviewItemId = () =>
   `review_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
 
+const createDailyTaskId = () =>
+  `plan_task_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
+
+const getDefaultDailyPlan = () => ({
+  date: null,
+  available_minutes: null,
+  plan_type: '',
+  focus_lessons: [],
+  tasks: [],
+  completion_criteria: [],
+  ai_summary: ''
+})
+
 const getDefaultData = () => ({
   progress: {
     current_lesson: 1,
@@ -10,6 +23,7 @@ const getDefaultData = () => ({
     pass_threshold: 0.5,
     lesson_stats: {}
   },
+  daily_plan: getDefaultDailyPlan(),
   mistakes_book: [],
   study_backups: [],
   meta: {
@@ -45,6 +59,38 @@ const normalizeBackup = (backup = {}) => ({
   snapshot: backup.snapshot && typeof backup.snapshot === 'object' ? backup.snapshot : getDefaultData()
 })
 
+const normalizeDailyTask = (task = {}) => ({
+  id: task.id || createDailyTaskId(),
+  type: task.type || '',
+  title: task.title || '',
+  minutes: Number.isFinite(Number(task.minutes)) ? Number(task.minutes) : 0,
+  required: task.required !== false,
+  status: task.status || 'pending'
+})
+
+const normalizeDailyPlan = (plan) => {
+  const base = getDefaultDailyPlan()
+  if (!plan || typeof plan !== 'object') return base
+
+  return {
+    ...base,
+    ...plan,
+    date: typeof plan.date === 'string' ? plan.date : base.date,
+    available_minutes: Number.isFinite(Number(plan.available_minutes))
+      ? Number(plan.available_minutes)
+      : base.available_minutes,
+    plan_type: typeof plan.plan_type === 'string' ? plan.plan_type : base.plan_type,
+    focus_lessons: Array.isArray(plan.focus_lessons)
+      ? plan.focus_lessons.filter((lesson) => Number.isFinite(Number(lesson))).map(Number)
+      : base.focus_lessons,
+    tasks: Array.isArray(plan.tasks) ? plan.tasks.map(normalizeDailyTask) : base.tasks,
+    completion_criteria: Array.isArray(plan.completion_criteria)
+      ? plan.completion_criteria.filter((criterion) => typeof criterion === 'string')
+      : base.completion_criteria,
+    ai_summary: typeof plan.ai_summary === 'string' ? plan.ai_summary : base.ai_summary
+  }
+}
+
 const normalizeData = (data) => {
   const base = getDefaultData()
   const merged = {
@@ -60,6 +106,7 @@ const normalizeData = (data) => {
     study_backups: Array.isArray(data?.study_backups)
       ? data.study_backups.map(normalizeBackup)
       : base.study_backups,
+    daily_plan: normalizeDailyPlan(data?.daily_plan),
     meta: {
       ...base.meta,
       ...(data?.meta || {})
@@ -454,4 +501,4 @@ export const useMainStore = defineStore('main', {
   }
 })
 
-export { buildPersistableState, getDefaultData, normalizeData }
+export { buildPersistableState, getDefaultData, getDefaultDailyPlan, normalizeData }

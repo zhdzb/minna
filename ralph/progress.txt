@@ -7,3 +7,18 @@
 
 ## Progress Log
 
+## 2026-05-25 13:58:30 +08:00 - US-001
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added normalized `daily_plan` state to `mainStore` with backward-compatible defaults for persisted study data.
+- Added daily task normalization for ids, minutes, required flags, and default task status.
+- Extended main store tests to verify the new default shape and partial legacy payload migration.
+- Files changed:
+  - `src/store/mainStore.js`
+  - `tests/mainStore.spec.js`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - New top-level study state should be added through `getDefaultData()` and `normalizeData()` together so persisted local data remains backward compatible.
+  - Store-focused stories in this codebase are easiest to verify by testing `normalizeData()` directly alongside Pinia store initialization.
+  - Numeric values coming from saved JSON should be normalized eagerly in the store layer to keep later planning logic simpler.
+---
