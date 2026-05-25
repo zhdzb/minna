@@ -344,3 +344,18 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Verification note:**
   - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
 ---
+
+## 2026-05-25 15:12:15 +08:00 - US-020
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Wired dashboard plan-generation flow to `store.createDailyPlanFromRules()` using selected study minutes.
+- Added optional AI enhancement call to `/api/ai/daily-plan`; on failure, dashboard keeps and displays the rule-generated plan.
+- Files changed:
+  - `src/components/Dashboard.vue`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Keep AI enhancement as post-processing over deterministic rule plans so failures do not block plan execution.
+  - Route failures should surface as non-blocking warnings when a usable baseline plan already exists.
+- **Verification note:**
+  - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
+---
