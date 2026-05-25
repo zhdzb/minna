@@ -175,3 +175,20 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Vite middleware is a good development adapter, but the reusable route logic should live under `src/server/` to prepare for deployed runtimes.
   - Returning a stable JSON shape from the route keeps downstream UI and analytics logic simpler than passing raw model text around.
 ---
+
+## 2026-05-25 14:48:28 +08:00 - US-011
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a reusable server-side exercise generation route that validates lesson and grammar context, builds a constrained generation prompt, and routes requests through the shared server LLM helper.
+- Wired a dev-only `/api/ai/exercise-generate` endpoint in `vite.config.js` so exercise generation can run through server-side routing in local mode.
+- Added unit tests for successful structured generation and payload rejection before LLM calls.
+- Files changed:
+  - `src/server/routes/exerciseGenerationRoute.js`
+  - `tests/exerciseGenerationRoute.test.js`
+  - `vite.config.js`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Route-level generation handlers should reuse shared payload validators to keep model output checks aligned with existing frontend safeguards.
+  - Generation routes should normalize and bound user-configurable values like question counts before prompt assembly.
+  - Keeping route prompts deterministic makes it easier to compare provider behavior and debug invalid model outputs.
+---

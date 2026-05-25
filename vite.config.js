@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import fs from 'fs'
 import { handleDailyPlanEnhancement } from './src/server/routes/dailyPlanRoute.js'
+import { handleExerciseGeneration } from './src/server/routes/exerciseGenerationRoute.js'
 
 // Custom Vite plugin to handle local data.json saving automatically
 const saveLocalDataPlugin = () => {
@@ -132,6 +133,28 @@ const aiRoutePlugin = () => {
           })
         }
       })
+
+      server.middlewares.use('/api/ai/exercise-generate', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handleExerciseGeneration(payload, {
+            providerOptions: { env: process.env }
+          })
+
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
     }
   }
 }
