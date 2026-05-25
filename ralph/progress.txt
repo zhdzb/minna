@@ -139,3 +139,20 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Secret-safe error shaping belongs in the shared helper rather than individual routes so auth tokens and raw provider payloads never leak accidentally.
   - Provider-specific request builders keep the public helper small while still allowing route-level generation settings.
 ---
+
+## 2026-05-25 14:32:16 +08:00 - US-009
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a sanitized AI context snapshot builder for planning and summary flows.
+- Normalized stage, exam target, priority skills, lesson references, weak patterns, weekly summary metrics, provider, and prompt version into a stable snapshot shape.
+- Added unit tests for sanitized snapshots and safe default fallback behavior.
+- Files changed:
+  - `src/server/contextSnapshot.js`
+  - `tests/contextSnapshot.test.js`
+  - `AGENTS.md`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Context snapshots should keep only stable prompt inputs and derived metrics, not raw store payloads or secret config fields.
+  - Snapshot builders are easiest to evolve when they sanitize arrays and numeric strings at the boundary instead of expecting upstream callers to pre-clean data.
+  - Keeping snapshot builders store-agnostic makes them reusable in both server routes and offline summary tooling.
+---

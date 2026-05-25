@@ -18,6 +18,7 @@ This repository is being refactored from a local-only Japanese study tool into a
 - `src/utils/planRules.js` should stay as a pure rule module so plan generation can be tested independently from Pinia state and AI calls.
 - Server-side provider modules should separate full internal config from a secret-free public status payload.
 - Adapters that depend on runtime globals like `fetch` or `localStorage` should resolve them lazily so tests and alternate runtimes can override them after module import.
+- Server-side helpers such as LLM request utilities and context snapshot builders should stay store-agnostic and accept plain data inputs.
 - `vite.config.js` contains development-only middleware for `/api/save-progress` and `/api/llm`; do not mistake these for production-ready runtime APIs.
 - New schema-like state additions should be normalized with backward compatibility for existing local data.
 
