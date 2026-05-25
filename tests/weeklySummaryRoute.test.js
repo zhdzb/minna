@@ -28,7 +28,14 @@ describe('weeklySummaryRoute', () => {
           missed_tasks: 3,
           completed_days: 4,
           total_days: 7
-        }
+        },
+        completed_plans: {
+          total: 2,
+          partial: 1
+        },
+        skipped_tasks: [{ id: 'task_2', title: 'shadowing' }],
+        mastery_changes: [{ entity: 'lesson', key: '6' }],
+        recent_mistakes: [{ id: 'm1', grammar_point: 'N が あります' }]
       },
       { requestLlm }
     )
@@ -37,6 +44,8 @@ describe('weeklySummaryRoute', () => {
     expect(result.speaking_tasks).toHaveLength(1)
     expect(requestLlm).toHaveBeenCalledTimes(1)
     expect(requestLlm.mock.calls[0][0].taskName).toBe('summary')
+    expect(requestLlm.mock.calls[0][0].userPrompt).toMatch(/Completed plans:/)
+    expect(requestLlm.mock.calls[0][0].userPrompt).toMatch(/Mastery changes:/)
   })
 
   it('rejects missing weekly stats before calling LLM', async () => {

@@ -243,4 +243,91 @@ describe('mainStore', () => {
     expect(store.lesson_mastery['6'].speaking).toBeGreaterThan(0)
     expect(store.lesson_mastery['6'].last_reviewed_at).toEqual(expect.any(String))
   })
+
+  it('builds a weekly review payload from persisted plan, mastery, and mistakes', () => {
+    const store = useMainStore()
+    const now = new Date('2026-05-25T10:00:00.000Z').getTime()
+
+    store.daily_plan = {
+      ...store.daily_plan,
+      date: '2026-05-25',
+      available_minutes: 120,
+      status: 'in_progress',
+      created_at: '2026-05-24T09:00:00.000Z',
+      tasks: [
+        {
+          id: 'task_1',
+          type: 'pattern_substitution',
+          title: 'Pattern drill',
+          minutes: 20,
+          required: true,
+          status: 'completed'
+        },
+        {
+          id: 'task_2',
+          type: 'shadowing',
+          title: 'Shadowing',
+          minutes: 15,
+          required: true,
+          status: 'skipped'
+        }
+      ]
+    }
+    store.progress.lesson_stats = {
+      1: { lesson_id: 1, last_session_at: '2026-05-23T08:00:00.000Z' },
+      2: { lesson_id: 2, last_session_at: '2026-05-24T08:00:00.000Z' }
+    }
+    store.lesson_mastery = {
+      '6': {
+        grammar: 0.3,
+        listening: 0.5,
+        speaking: 0.4,
+        reading: 0.2,
+        last_reviewed_at: '2026-05-24T08:00:00.000Z'
+      }
+    }
+    store.pattern_mastery = {
+      pattern_a: {
+        lesson: 6,
+        pattern: 'pattern_a',
+        recognition: 0.4,
+        controlled_output: 0.6,
+        free_output: 0.2,
+        last_practiced_at: '2026-05-24T09:00:00.000Z'
+      }
+    }
+    store.mistakes_book = [
+      {
+        id: 'm1',
+        timestamp: '2026-05-24T07:00:00.000Z',
+        mark_type: 'mistake',
+        lesson: 6,
+        grammar_point: 'N が あります',
+        question_type: 'q_translate',
+        correct_answer: '机の上に本があります'
+      }
+    ]
+
+    const payload = store.buildWeeklyReviewPayload(
+      {
+        target_exam: 'N3',
+        priority_skills: ['listening', 'speaking']
+      },
+      { now }
+    )
+
+    expect(payload.weekly_stats).toMatchObject({
+      planned_minutes: 120,
+      completed_minutes: 20,
+      missed_tasks: 1,
+      completed_days: 2,
+      total_days: 7
+    })
+    expect(payload.completed_plans).toEqual({ total: 0, partial: 1 })
+    expect(payload.skipped_tasks).toHaveLength(1)
+    expect(payload.mastery_changes.length).toBeGreaterThanOrEqual(2)
+    expect(payload.recent_mistakes).toHaveLength(1)
+    expect(payload.context.current_lesson).toBe(1)
+    expect(payload.context.target_exam).toBe('N3')
+  })
 })

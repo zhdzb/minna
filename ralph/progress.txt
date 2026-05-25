@@ -15,6 +15,7 @@
 - Dashboard mission UIs should display rule-plan metrics directly from `daily_plan` and keep AI enhancement strictly optional.
 - New guided training modes should expose standalone routes and update mastery through dedicated store actions to avoid coupling with the AI exercise session flow.
 - Scenario speaking modes should reuse server-side generation/evaluation routes rather than embedding provider logic in UI components.
+- Weekly summary payloads should be built from store-side aggregated records (plan/task status, mastery timestamps, and mistakes) before being sent to summary routes.
 
 ## Progress Log
 
@@ -32,6 +33,24 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - New top-level study state should be added through `getDefaultData()` and `normalizeData()` together so persisted local data remains backward compatible.
   - Store-focused stories in this codebase are easiest to verify by testing `normalizeData()` directly alongside Pinia store initialization.
 - Numeric values coming from saved JSON should be normalized eagerly in the store layer to keep later planning logic simpler.
+---
+
+## 2026-05-25 15:29:32 +08:00 - US-026
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a reusable weekly review aggregation builder in `mainStore` that composes `weekly_stats`, `completed_plans`, `skipped_tasks`, `mastery_changes`, and `recent_mistakes` from persisted study state.
+- Extended weekly summary route input normalization so aggregated fields are accepted and included in AI prompt context.
+- Added regression tests for store aggregation output and route prompt wiring.
+- Files changed:
+  - `src/store/mainStore.js`
+  - `src/server/routes/weeklySummaryRoute.js`
+  - `tests/mainStore.spec.js`
+  - `tests/weeklySummaryRoute.test.js`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Weekly review should use timestamp-filtered persisted records instead of transient chat/session memory.
+  - Keep summary routes tolerant of extra aggregated fields so payload shape can evolve without breaking callers.
+  - Store-side aggregation helpers are easier to test deterministically when `now` is injectable.
 ---
 
 ## 2026-05-25 14:03:14 +08:00 - US-002

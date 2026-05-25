@@ -7,6 +7,9 @@ const normalizeString = (value) => String(value || '').trim()
 const normalizeStringArray = (value) =>
   Array.isArray(value) ? value.map((item) => normalizeString(item)).filter(Boolean) : []
 
+const normalizeObjectArray = (value) =>
+  Array.isArray(value) ? value.filter((item) => item && typeof item === 'object' && !Array.isArray(item)) : []
+
 const assertWeeklySummaryPayload = (payload) => {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
     throw new Error('weekly summary route requires a JSON object payload')
@@ -35,7 +38,21 @@ const assertWeeklySummaryPayload = (payload) => {
       total_days: Number.isFinite(Number(weeklyStats.total_days))
         ? Number(weeklyStats.total_days)
         : 7
-    }
+    },
+    completed_plans:
+      payload.completed_plans && typeof payload.completed_plans === 'object' && !Array.isArray(payload.completed_plans)
+        ? {
+            total: Number.isFinite(Number(payload.completed_plans.total))
+              ? Number(payload.completed_plans.total)
+              : 0,
+            partial: Number.isFinite(Number(payload.completed_plans.partial))
+              ? Number(payload.completed_plans.partial)
+              : 0
+          }
+        : { total: 0, partial: 0 },
+    skipped_tasks: normalizeObjectArray(payload.skipped_tasks),
+    mastery_changes: normalizeObjectArray(payload.mastery_changes),
+    recent_mistakes: normalizeObjectArray(payload.recent_mistakes)
   }
 }
 
@@ -60,13 +77,25 @@ Rules:
 4. Do not include markdown fences or extra keys.
 `.trim()
 
-const buildUserPrompt = ({ context, weekly_stats }) =>
+const buildUserPrompt = ({ context, weekly_stats, completed_plans, skipped_tasks, mastery_changes, recent_mistakes }) =>
   `
 Context snapshot:
 ${JSON.stringify(context, null, 2)}
 
 Weekly stats:
 ${JSON.stringify(weekly_stats, null, 2)}
+
+Completed plans:
+${JSON.stringify(completed_plans, null, 2)}
+
+Skipped tasks:
+${JSON.stringify(skipped_tasks, null, 2)}
+
+Mastery changes:
+${JSON.stringify(mastery_changes, null, 2)}
+
+Recent mistakes:
+${JSON.stringify(recent_mistakes, null, 2)}
 
 Generate the weekly summary JSON now.
 `.trim()

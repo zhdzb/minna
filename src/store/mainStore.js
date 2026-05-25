@@ -143,6 +143,20 @@ const normalizeMasteryScore = (value) => {
   return Math.max(0, Math.min(1, numeric))
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000
+
+const parseTimestamp = (value) => {
+  if (typeof value !== 'string') return null
+  const time = new Date(value).getTime()
+  return Number.isFinite(time) ? time : null
+}
+
+const isWithinDays = (value, days = 7, now = Date.now()) => {
+  const time = parseTimestamp(value)
+  if (time === null) return false
+  return now - time <= days * DAY_MS
+}
+
 const normalizeLessonMasteryEntry = (entry = {}) => {
   const base = getDefaultLessonMasteryEntry()
 
@@ -578,6 +592,122 @@ export const useMainStore = defineStore('main', {
 
       this.saveState()
       return true
+    },
+
+    buildWeeklyReviewPayload(context = {}, options = {}) {
+      const now = Number.isFinite(Number(options.now)) ? Number(options.now) : Date.now()
+      const windowDays = Number.isFinite(Number(options.windowDays)) ? Number(options.windowDays) : 7
+      const progress = this.progress || {}
+      const lessonStats = progress.lesson_stats || {}
+      const dailyPlan = this.daily_plan || getDefaultDailyPlan()
+      const reviewItems = Array.isArray(this.mistakes_book) ? this.mistakes_book : []
+
+      const completedTaskCount = Array.isArray(dailyPlan.tasks)
+        ? dailyPlan.tasks.filter((task) => task.status === 'completed').length
+        : 0
+      const skippedTaskItems = Array.isArray(dailyPlan.tasks)
+        ? dailyPlan.tasks.filter((task) => task.status === 'skipped')
+        : []
+      const completedDays = Object.values(lessonStats).reduce((count, lesson) => {
+        return isWithinDays(lesson?.last_session_at, windowDays, now) ? count + 1 : count
+      }, 0)
+
+      const plannedMinutes = Number(dailyPlan.available_minutes || 0)
+      const completedMinutes = Array.isArray(dailyPlan.tasks)
+        ? dailyPlan.tasks
+            .filter((task) => task.status === 'completed')
+            .reduce((sum, task) => sum + Number(task.minutes || 0), 0)
+        : 0
+      const hasCompletedPlan =
+        dailyPlan.status === 'completed' && isWithinDays(dailyPlan.completed_at, windowDays, now)
+      const hasStartedPlan =
+        (dailyPlan.status === 'in_progress' || completedTaskCount > 0) &&
+        isWithinDays(dailyPlan.created_at, windowDays, now)
+
+      const lessonMasteryChanges = Object.entries(this.lesson_mastery || {})
+        .filter(([, entry]) => isWithinDays(entry?.last_reviewed_at, windowDays, now))
+        .map(([lesson, entry]) => ({
+          entity: 'lesson',
+          key: lesson,
+          updated_at: entry.last_reviewed_at,
+          scores: {
+            grammar: Number(entry.grammar || 0),
+            listening: Number(entry.listening || 0),
+            speaking: Number(entry.speaking || 0),
+            reading: Number(entry.reading || 0)
+          }
+        }))
+
+      const patternMasteryChanges = Object.entries(this.pattern_mastery || {})
+        .filter(([, entry]) => isWithinDays(entry?.last_practiced_at, windowDays, now))
+        .map(([patternId, entry]) => ({
+          entity: 'pattern',
+          key: patternId,
+          lesson: Number(entry.lesson || 1),
+          updated_at: entry.last_practiced_at,
+          scores: {
+            recognition: Number(entry.recognition || 0),
+            controlled_output: Number(entry.controlled_output || 0),
+            free_output: Number(entry.free_output || 0)
+          }
+        }))
+
+      const recentMistakes = reviewItems
+        .filter((item) => isWithinDays(item?.timestamp, windowDays, now))
+        .slice(-8)
+        .map((item) => ({
+          id: item.id,
+          timestamp: item.timestamp,
+          lesson: Number(item.lesson || 1),
+          mark_type: item.mark_type || 'mistake',
+          grammar_point: item.grammar_point || '',
+          question_type: item.question_type || '',
+          correct_answer: item.correct_answer || ''
+        }))
+
+      return {
+        context: {
+          current_stage: context.current_stage || 'foundation_rebuild',
+          target_exam: context.target_exam || '',
+          priority_skills: Array.isArray(context.priority_skills) ? context.priority_skills : [],
+          current_lesson: Number(context.current_lesson || progress.current_lesson || 1),
+          active_review_lessons: Array.isArray(context.active_review_lessons)
+            ? context.active_review_lessons
+            : dailyPlan.focus_lessons || [],
+          recent_weak_patterns: Array.isArray(context.recent_weak_patterns)
+            ? context.recent_weak_patterns
+            : Object.keys(this.pattern_mastery || {}).slice(0, 8),
+          last_7_days_summary: {
+            planned_minutes: plannedMinutes,
+            completed_minutes: completedMinutes,
+            missed_tasks: skippedTaskItems.length
+          },
+          provider: context.provider || '',
+          prompt_version: context.prompt_version || ''
+        },
+        weekly_stats: {
+          planned_minutes: plannedMinutes,
+          completed_minutes: completedMinutes,
+          missed_tasks: skippedTaskItems.length,
+          completed_days: completedDays,
+          total_days: windowDays
+        },
+        completed_plans: {
+          total: hasCompletedPlan ? 1 : 0,
+          partial: hasStartedPlan && !hasCompletedPlan ? 1 : 0
+        },
+        skipped_tasks: skippedTaskItems.map((task) => ({
+          id: task.id,
+          type: task.type || '',
+          title: task.title || '',
+          minutes: Number(task.minutes || 0),
+          required: task.required !== false
+        })),
+        mastery_changes: [...lessonMasteryChanges, ...patternMasteryChanges].sort(
+          (left, right) => (parseTimestamp(right.updated_at) || 0) - (parseTimestamp(left.updated_at) || 0)
+        ),
+        recent_mistakes: recentMistakes
+      }
     },
 
     recordLessonStats(lessonId, stats) {
