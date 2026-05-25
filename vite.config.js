@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import fs from 'fs'
+import { handleDailyPlanEnhancement } from './src/server/routes/dailyPlanRoute.js'
 
 // Custom Vite plugin to handle local data.json saving automatically
 const saveLocalDataPlugin = () => {
@@ -85,8 +86,58 @@ const llmProxyPlugin = () => {
   }
 }
 
+const readJsonBody = (req) =>
+  new Promise((resolve, reject) => {
+    let body = ''
+    req.on('data', (chunk) => {
+      body += chunk.toString()
+    })
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(body || '{}'))
+      } catch (error) {
+        reject(error)
+      }
+    })
+    req.on('error', reject)
+  })
+
+const writeJson = (res, statusCode, payload) => {
+  res.statusCode = statusCode
+  res.setHeader('Content-Type', 'application/json')
+  res.end(JSON.stringify(payload))
+}
+
+const aiRoutePlugin = () => {
+  return {
+    name: 'ai-routes',
+    configureServer(server) {
+      server.middlewares.use('/api/ai/daily-plan', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handleDailyPlanEnhancement(payload, {
+            providerOptions: { env: process.env }
+          })
+
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+    }
+  }
+}
+
 export default defineConfig({
-  plugins: [vue(), saveLocalDataPlugin(), llmProxyPlugin()],
+  plugins: [vue(), saveLocalDataPlugin(), llmProxyPlugin(), aiRoutePlugin()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')

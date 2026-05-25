@@ -6,6 +6,7 @@
 - The current frontend provider flow lives in `src/utils/llmProvider.js`, `config.js`, and `src/components/Settings.vue`; migrate it in stages instead of replacing everything at once.
 - Shared server-side LLM helpers should own timeout, retry, provider branching, and secret-safe error shaping in one place so future routes stay thin.
 - Store-agnostic server utilities should accept plain data inputs and injectable dependencies like `fetchImpl` to stay easy to test without Pinia or network access.
+- Dev middleware routes should stay as thin adapters around reusable `src/server/` modules so Vite-only code does not become the real application layer.
 
 ## Progress Log
 
@@ -155,4 +156,22 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Context snapshots should keep only stable prompt inputs and derived metrics, not raw store payloads or secret config fields.
   - Snapshot builders are easiest to evolve when they sanitize arrays and numeric strings at the boundary instead of expecting upstream callers to pre-clean data.
   - Keeping snapshot builders store-agnostic makes them reusable in both server routes and offline summary tooling.
+---
+
+## 2026-05-25 14:34:45 +08:00 - US-010
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a reusable server-side daily plan enhancement route module that validates structured plan payloads, builds a sanitized context snapshot, and requests AI output through the shared server helper.
+- Wired a dev-only `/api/ai/daily-plan` endpoint in `vite.config.js` so the route can be exercised locally without exposing provider keys to the browser.
+- Added unit tests for structured response normalization and invalid payload rejection.
+- Files changed:
+  - `src/server/routes/dailyPlanRoute.js`
+  - `tests/dailyPlanRoute.test.js`
+  - `vite.config.js`
+  - `AGENTS.md`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Route modules should validate structured payloads before calling the LLM so bad client input fails fast and cheaply.
+  - Vite middleware is a good development adapter, but the reusable route logic should live under `src/server/` to prepare for deployed runtimes.
+  - Returning a stable JSON shape from the route keeps downstream UI and analytics logic simpler than passing raw model text around.
 ---
