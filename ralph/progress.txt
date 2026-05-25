@@ -294,3 +294,21 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Verification note:**
   - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through automated checks.
 ---
+
+## 2026-05-25 15:08:31 +08:00 - US-017
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added backup import schema validation via `validateBackupPayloadShape` before state overwrite.
+- Added explicit confirmation dialog before applying imported backup data to prevent accidental overwrite.
+- Added import-cancel feedback path to keep UX clear when users back out of overwrite.
+- Files changed:
+  - `src/App.vue`
+  - `src/utils/backupPayload.js`
+  - `tests/backupPayload.test.js`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Import flows should validate shape first and only then ask for overwrite confirmation to avoid confirming invalid files.
+  - Shared schema validators reduce drift between export expectations and import acceptance logic.
+- **Verification note:**
+  - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through automated checks.
+---
