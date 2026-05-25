@@ -398,3 +398,18 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - **Verification note:**
   - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
 ---
+
+## 2026-05-25 15:19:40 +08:00 - US-023
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added a listening keyword capture mode with playback/replay controls, keyword answer input, and visible completion status.
+- Listening mode now updates lesson listening mastery through `recordListeningPracticeResult`.
+- Files changed:
+  - `src/components/ListeningKeywordMode.vue`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Lightweight listening drills can use keyword-hit thresholds to keep quick daily tasks practical.
+  - Listening modes should always expose replay controls since one-pass audio is too punishing for beginner-intermediate users.
+- **Verification note:**
+  - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through build/test checks.
+---
