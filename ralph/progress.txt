@@ -85,7 +85,20 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Runtime-sensitive security behavior should reuse `getRuntimeMode()` so UI restrictions match persistence/runtime branching.
   - In deployed mode, clear legacy local key fields defensively when saving provider settings to avoid stale secret artifacts.
 - **Verification note:**
-  - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through `npm run verify`.
+- Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through `npm run verify`.
+---
+
+## 2026-05-25 15:36:47 +08:00 - US-029
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Added deployment and migration documentation covering required deployed env vars, cloud persistence expectations, JSON backup behavior, local vs deployed differences, and API smoke tests.
+- Documented migration checklist for safe rollout to deployed runtime.
+- Files changed:
+  - `DEPLOYMENT_MIGRATION.md`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Deployment docs should mirror runtime adapter boundaries (`/api/state/*`, `/api/ai/*`) so infra changes can happen behind stable contracts.
+  - Keep backup/import-export behavior documented as a migration safety path while cloud persistence evolves.
 ---
 
 ## 2026-05-25 14:03:14 +08:00 - US-002
