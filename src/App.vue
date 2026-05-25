@@ -95,9 +95,10 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { useMainStore } from '@/store/mainStore'
 import { buildPersistableState } from '@/store/mainStore'
+import { validateBackupPayloadShape } from '@/utils/backupPayload'
 
 const store = useMainStore()
 const router = useRouter()
@@ -194,15 +195,26 @@ const importData = async (event) => {
 
   try {
     const text = await file.text()
-    const data = JSON.parse(text)
-    if (!data?.progress || !Array.isArray(data?.mistakes_book)) {
-      throw new Error('备份文件格式不正确')
-    }
+    const data = validateBackupPayloadShape(JSON.parse(text))
+
+    await ElMessageBox.confirm(
+      '导入会覆盖当前学习进度。建议先导出一份当前备份。是否继续？',
+      '确认导入备份',
+      {
+        confirmButtonText: '继续导入',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
 
     store.overwriteState(data)
-    ElMessage.success('学习数据已恢复。')
+    ElMessage.success('备份导入完成。')
   } catch (error) {
-    ElMessage.error(`导入失败: ${error.message}`)
+    if (error === 'cancel' || error === 'close') {
+      ElMessage.info('已取消导入。')
+    } else {
+      ElMessage.error(`导入失败: ${error.message}`)
+    }
   }
 
   event.target.value = ''

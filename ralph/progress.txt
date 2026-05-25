@@ -11,6 +11,7 @@
 - Summary routes should normalize model output into strict JSON contracts before returning responses to UI callers.
 - State load/save endpoints should delegate through a server persistence adapter so deployed and local storage behavior can switch without changing route contracts.
 - Store save flows should keep in-memory state authoritative and surface persistence failures as user-visible errors instead of reverting state.
+- Backup export should stay anchored to `buildPersistableState()` so new normalized fields are automatically included in JSON backups.
 
 ## Progress Log
 
@@ -274,4 +275,22 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Keep local fallback writes (localStorage) enabled in deployed mode to reduce data-loss risk during transient network failures.
 - **Verification note:**
   - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through unit tests and build/test checks.
+---
+
+## 2026-05-25 15:07:22 +08:00 - US-016
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Kept JSON export backup flow in the main app shell and confirmed it still exports full normalized study state via `buildPersistableState(store.$state)`.
+- Added regression coverage for backup payload schema expectations to protect future export/import compatibility.
+- Files changed:
+  - `src/App.vue`
+  - `src/utils/backupPayload.js`
+  - `tests/backupPayload.test.js`
+  - `AGENTS.md`
+  - `ralph/prd.json`
+  - `ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Export flows should remain tied to normalized store snapshots so schema additions are included automatically.
+  - Backup schema guards are easier to keep stable when shared between import validation and regression tests.
+- **Verification note:**
+  - Browser verification via `dev-browser` skill was not run in this environment; behavior was validated through automated checks.
 ---
