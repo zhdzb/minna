@@ -252,7 +252,7 @@ Completion record:
 
 ## Step 04: 新建 event log 工具
 
-状态：pending
+状态：done
 
 目标：
 
@@ -274,6 +274,12 @@ Completion record:
 - 追加多条事件后均可逐行解析。
 - 读取最近事件顺序正确。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Added the Agent Study event log utility with normalized event records, append-only JSONL writes, generated event IDs when needed, and recent-event reads that preserve chronological order.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/server/agentStudy/eventLog.js`, `tests/agentStudyEventLog.test.js`.
+- Verification: `npx vitest run tests/agentStudyEventLog.test.js` passed, and `npm run verify` passed with the new event-log coverage included.
+- Follow-up: Next is `Step 05`, which should add prompt templates and keep the template rules aligned with this append-only event log contract.
 
 ## Step 05: 新建 prompt templates
 
