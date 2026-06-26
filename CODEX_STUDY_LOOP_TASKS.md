@@ -182,7 +182,7 @@ Completion record:
 
 ## Step 02B: 新增 index rebuild 工具
 
-状态：pending
+状态：done
 
 目标：
 
@@ -206,6 +206,12 @@ Completion record:
 - 删除或损坏 index 后可以重建。
 - 重建结果通过 schema 校验。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Added an Agent Study index rebuild utility that scans `study/daily/`, `study/reviews/`, and `study/prompts/generated/`, validates daily/review candidates, rewrites `study/index.json`, and falls back to rebuilding when the current index is missing or corrupted.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/server/agentStudy/indexRebuilder.js`, `tests/agentStudyIndexRebuilder.test.js`.
+- Verification: `npx vitest run tests/agentStudyIndexRebuilder.test.js` passed, and `npm run verify` passed with the new rebuild coverage included.
+- Follow-up: Next is `Step 03`, which should add the `agentStudy` file store and use this rebuild utility as the index fallback path.
 ## Step 03: 新建 agentStudy 文件读写模块
 
 状态：pending
