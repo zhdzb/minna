@@ -22,6 +22,7 @@
 
 ## 总体阶段
 
+- Phase 0：深度 review 补强约束。
 - Phase 1：数据协议和 seed 数据。
 - Phase 2：本地读写模块和校验。
 - Phase 3：Agent 文件工作流。
@@ -30,6 +31,32 @@
 - Phase 6：复习页和整体 Review 页。
 - Phase 7：删除旧逻辑和收尾。
 
+## Step 00: 固化深度 review 补强约束
+
+状态：pending
+
+目标：
+
+- 把长期稳定性约束落入开发计划，避免后续只实现能跑的最小版本。
+
+改动范围：
+
+- `CODEX_STUDY_LOOP_DEVELOPMENT.md`
+- `CODEX_STUDY_LOOP_TASKS.md`
+
+实现要点：
+
+- 明确新增 `study/state/profile.json`。
+- 明确所有 study JSON 需要 `revision` 和 `updated_at`。
+- 明确需要 index rebuild 工具。
+- 明确需要 content quality checker。
+- 明确 review 需要 confidence、acceptable variants、manual override。
+- 明确分题型 rubric、SRS 更新规则、学习流程顺序和激进删除策略。
+
+验收标准：
+
+- 开发文档和任务文档都包含上述约束。
+- 不修改 `data.json`。
 ## Step 01: 建立 study 目录和 seed 数据
 
 状态：pending
@@ -42,6 +69,7 @@
 改动范围：
 
 - `study/index.json`
+- `study/state/profile.json`
 - `study/state/current.json`
 - `study/state/mastery.json`
 - `study/state/review-queue.json`
@@ -56,12 +84,17 @@
 实现要点：
 
 - seed 数据使用当前学习主线：第 7 课基础重建。
+- 所有 seed JSON 必须包含 `schema_version`、`revision`、`updated_at`。
+- `profile.json` 记录学习目标、时间预算、输入偏好、教材范围和是否允许新课推进。
 - `study/index.json` 指向 latest daily、latest prompt、latest review，可为空但字段必须稳定。
+- `study/index.json` 记录当前 schema 版本集合，后续 migration 和 rebuild 工具要依赖它。
 - `agent-events.jsonl` 可以先为空文件或包含 seed 初始化事件。
 
 验收标准：
 
 - 所有 JSON 文件可被 `JSON.parse` 解析。
+- 所有 seed JSON 包含 revision 和 updated_at。
+- `profile.json` 可被读取并解释学习目标。
 - 目录结构与开发文档一致。
 - 不修改 `data.json`。
 
@@ -80,16 +113,74 @@
 
 实现要点：
 
-- 校验 `index`、`current`、`mastery`、`reviewQueue`、`promotionRules`、`dailyPacket`、`reviewResult`。
+- 校验 `index`、`profile`、`current`、`mastery`、`reviewQueue`、`promotionRules`、`dailyPacket`、`reviewResult`。
 - 先用手写 validator，不引入新依赖。
 - validator 返回 normalized object 或抛出明确错误。
+- validator 必须校验 `schema_version`、`revision`、`updated_at`。
+- 旧版本数据进入时必须 normalize 成当前版本，测试覆盖至少一个旧版本 fixture。
 
 验收标准：
 
 - seed JSON 均能通过校验。
+- profile/current/mastery/index 的 schema version 和 revision 校验生效。
 - 缺少关键字段时测试失败并给出明确错误。
 - `npm run verify` 通过。
 
+## Step 02A: 新增内容质量校验模块
+
+状态：pending
+
+目标：
+
+- 在 JSON shape 校验之外，校验 Agent 生成内容是否真的适合学习和渲染。
+
+改动范围：
+
+- `src/utils/agentStudyContentQuality.js`
+- `tests/agentStudyContentQuality.test.js`
+
+实现要点：
+
+- 检查题目数量不超过当天计划能完成的范围。
+- 检查每道题绑定 lesson、skill、target_grammar 或 review_queue item。
+- 检查同一目标语法没有重复题。
+- 检查语法说明至少包含 2 个例句。
+- 检查输出题有参考答案或评分标准。
+- 检查听力/跟读任务有脚本。
+- 检查 review drill 生成的是变体题，不只是重复原题。
+
+验收标准：
+
+- seed daily packet 通过内容质量校验。
+- 构造重复题、缺少例句、缺少参考答案时测试失败。
+- `npm run verify` 通过。
+
+## Step 02B: 新增 index rebuild 工具
+
+状态：pending
+
+目标：
+
+- 让 `study/index.json` 可从磁盘事实重建，避免成为单点故障。
+
+改动范围：
+
+- `src/server/agentStudy/indexRebuilder.js`
+- `tests/agentStudyIndexRebuilder.test.js`
+
+实现要点：
+
+- 扫描 `study/daily/` 找 latest daily。
+- 扫描 `study/reviews/` 找 latest review。
+- 扫描 `study/prompts/generated/` 找 latest prompt。
+- 校验候选文件后生成 index。
+- index 缺失或损坏时可以 fallback rebuild。
+
+验收标准：
+
+- 删除或损坏 index 后可以重建。
+- 重建结果通过 schema 校验。
+- `npm run verify` 通过。
 ## Step 03: 新建 agentStudy 文件读写模块
 
 状态：pending
@@ -107,8 +198,11 @@
 
 - 支持读取 index、latest daily、latest review。
 - 支持保存 daily 草稿。
+- 保存时检查 revision，不允许无提示覆盖新版本。
 - 支持提交 daily packet。
 - 写入前调用 schema 校验。
+- 写入前调用 content quality 校验。
+- 写入使用临时文件加原子替换。
 - 路径必须限制在项目 `study/` 目录内。
 
 验收标准：
@@ -116,6 +210,7 @@
 - 可以读取 seed 数据。
 - 可以写入 daily packet 副本。
 - 不允许路径穿越。
+- revision 冲突时拒绝写入。
 - `npm run verify` 通过。
 
 ## Step 04: 新建 event log 工具
@@ -315,6 +410,7 @@
 
 - 支持 `q_fill`、`q_translate`、`q_conversation` 的最小渲染。
 - 答案写入 `daily.answers`。
+- 保存草稿时携带 revision，冲突时提示用户刷新。
 - 保存草稿调用 `/api/agent-study/daily/save`。
 
 验收标准：
@@ -340,6 +436,7 @@
 
 - 提交时写入 self_assessment。
 - 状态从 `answering` 或 `learning` 变为 `submitted`。
+- 提交时检查 revision，防止覆盖 Codex 或其他页面更新。
 - 追加 `session_submitted` 或 `daily_submitted` event。
 - 页面显示下一步：复制 review prompt 给 Codex。
 
@@ -391,6 +488,8 @@
 实现要点：
 
 - review 包含 overall、items、mastery_updates、review_queue_updates、promotion_decision。
+- 每个 item 包含 confidence、acceptable_variants、needs_user_input、manual_override。
+- 每个 item 包含分题型 rubric 分项分数。
 - daily packet 的 correction 状态更新为 `reviewed`。
 
 验收标准：
@@ -413,7 +512,9 @@
 实现要点：
 
 - 显示总体正确率、summary、next_focus。
+- 显示 confidence、acceptable variants、needs_user_input。
 - 按题显示正确/错误、错因标签、解释、参考答案。
+- 支持记录 manual override，并追加 event log。
 
 验收标准：
 
@@ -437,6 +538,7 @@
 
 - 支持状态升降级。
 - 支持 grammar/listening/speaking/reading 分数更新。
+- mastery 更新必须读取 review item 的 rubric 分项分数和 confidence。
 - 不允许无 review 证据推进课次。
 
 验收标准：
@@ -461,7 +563,9 @@
 实现要点：
 
 - 错题进入 due 或短间隔复习。
+- wrong/hard/good/easy 按开发文档中的 SRS 简化规则更新 interval_days。
 - 连续正确延长 interval。
+- mastered 后保留远期复测，不永久移除。
 - 已掌握内容再次错可重新进入队列。
 
 验收标准：
@@ -490,10 +594,12 @@
 - 追加 event log。
 - 更新 next-agent-context。
 - 最后更新 index。
+- 任一步失败时不更新 index，可通过 index rebuild 恢复入口。
 
 验收标准：
 
 - 工作流按原子写入顺序执行。
+- review workflow 覆盖 confidence、manual override、rubric scores 对 mastery 的影响。
 - 失败时不更新 index。
 - `npm run verify` 通过。
 
@@ -514,6 +620,7 @@
 实现要点：
 
 - 显示 current lesson。
+- 显示 learner profile 摘要。
 - 显示 mastery 状态。
 - 显示 review queue 摘要。
 - 显示 promotion decision。
@@ -647,6 +754,7 @@
 实现要点：
 
 - 导航只突出 Agent Study、Review Drill、Progress Review。
+- 直接移除旧 Dashboard/TrainingEngine 的主导航入口，不再为旧流程保留默认路径。
 - 旧 Dashboard/TrainingEngine 不再作为默认入口。
 
 验收标准：
@@ -673,7 +781,9 @@
 实现要点：
 
 - 确认无新页面依赖这些文件。
+- 不再保留浏览器 API key/provider 配置路径。
 - 删除或替换旧引用。
+- 如果旧组件因删除 skills 无法运行，直接删除旧组件或移出路由，不做兼容修补。
 - 若测试依赖旧逻辑，同步移除或改写。
 
 验收标准：
@@ -705,6 +815,7 @@
 验收标准：
 
 - 新贡献者能从 README/开发文档知道下一步。
+- 文档明确旧项目只作为可复用资产来源，新三页面是唯一主流程。
 - `npm run verify` 通过。
 
 ## Step 27: 端到端本地闭环验证
@@ -725,12 +836,15 @@
 6. 写入 review 样例或让 Codex 执行 review。
 7. 刷新页面展示 review。
 8. 查看 progress review 状态变化。
+9. 人工覆盖一条批改结果。
+10. 验证 override 写入 event log 且 mastery 可解释。
 
 验收标准：
 
 - 文件状态流完整。
 - event log 完整。
 - next-agent-context 更新。
+- manual override 流程完整。
 - `npm run verify` 通过。
 
 ## 完成定义

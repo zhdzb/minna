@@ -620,7 +620,144 @@ GET  /api/agent-study/review/latest
 - 不让复习页只重复原题，必须支持变体题。
 - 不让 prompt 自由漂移，必须引用模板和 schema。
 
-## 21. 第一批开发任务
+## 21. 深度 Review 后的必补设计
+
+本节是最终落地前必须补齐的闭环。没有这些约束，系统可以跑起来，但长期使用会出现状态冲突、上下文漂移、复习无效或错误晋级。
+
+### 21.1 Learner Profile
+
+新增：
+
+```text
+study/state/profile.json
+```
+
+职责：
+
+- 记录学习目标：工作日语、JLPT、口语输出、听力优先级等。
+- 记录每天可用时间、学习节奏、是否允许推进新课。
+- 记录输入偏好：是否允许罗马音、是否优先假名、是否练汉字。
+- 记录教材范围和禁用内容，避免 Agent 生成超纲材料。
+
+没有 profile，Agent 只能根据错题和课次推断学习策略，长期不稳定。
+
+### 21.2 Revision 和并发写入
+
+所有可由前端和 Codex 同时读写的 JSON 都必须包含：
+
+```json
+{
+  "revision": 1,
+  "updated_at": "2026-06-26T00:00:00+08:00"
+}
+```
+
+写入规则：
+
+- 前端保存草稿时带上读取到的 revision。
+- 后端发现 revision 不匹配时拒绝覆盖，并返回冲突。
+- Codex 或本地工具写入时也要递增 revision。
+- 文件写入使用临时文件加原子替换。
+- 中途失败时不更新 `study/index.json`。
+
+### 21.3 Schema Version 和迁移
+
+每类文件都必须包含 `schema_version`，并有迁移策略：
+
+- validator 只接受当前版本和明确支持的旧版本。
+- 旧版本进入系统时先 normalize 成当前版本。
+- 每次 schema 变化必须添加 fixture 和 migration 测试。
+- `study/index.json` 记录当前 schema 版本集合。
+
+### 21.4 Index 可重建
+
+`study/index.json` 是入口，但不能成为单点故障。必须提供 rebuild 工具：
+
+- 扫描 `study/daily/` 找 latest daily。
+- 扫描 `study/reviews/` 找 latest review。
+- 扫描 `study/prompts/generated/` 找 latest prompt。
+- 校验后重写 index。
+
+### 21.5 内容质量门槛
+
+Agent 生成 daily packet 后，需要校验学习内容，而不只是校验 JSON。
+
+最低质量规则：
+
+- 题目数量不超过当天计划能完成的范围。
+- 每道题必须绑定 lesson、skill、target_grammar 或 review_queue item。
+- 不允许同一目标语法生成重复题。
+- 新语法解释必须包含至少 2 个例句。
+- 输出题必须有参考答案或评分标准。
+- 听力/跟读任务必须有脚本。
+- review drill 必须生成变体题，不只重复原题。
+
+### 21.6 批改置信度和人工覆盖
+
+Review 结果需要记录置信度和人工修正入口：
+
+```json
+{
+  "confidence": 0.82,
+  "needs_user_input": false,
+  "acceptable_variants": [],
+  "manual_override": null
+}
+```
+
+规则：
+
+- 如果答案可能有多个正确表达，Codex 应标记 `needs_user_input` 或给出 acceptable variants。
+- 用户认为批改错误时，Review 页应允许记录人工覆盖。
+- 人工覆盖必须追加 event log，不能静默修改 review。
+
+### 21.7 分题型评分 Rubric
+
+不同题型不能共用同一个评分逻辑。
+
+- `q_fill`：严格匹配或选项匹配。
+- `q_translate`：语义、目标语法、助词、变形、自然度分项评分。
+- `q_conversation`：语境匹配、礼貌体、回答意图、自然度分项评分。
+- `q_shadowing`：第一版可用自评，后续可接录音或发音评估。
+- `q_listening_keyword`：关键词命中率和误听标签。
+- `q_pattern_substitution`：目标句型结构和替换槽正确性。
+
+Review JSON 必须保留分项分数，否则 mastery 更新依据不透明。
+
+### 21.8 SRS 复习算法
+
+`review-queue.json` 第一版采用简单间隔规则：
+
+- wrong：`interval_days = 1`，状态 `due`。
+- hard：`interval_days = max(1, floor(interval_days * 1.2))`。
+- good：`interval_days = ceil(interval_days * 2)`。
+- easy：`interval_days = ceil(interval_days * 3)`。
+- mastered 后仍保留远期复测，不永久移除。
+
+### 21.9 学习流程顺序
+
+每天不要直接进入答题。Daily Packet 应尽量遵守：
+
+```text
+复习旧错因 -> 学习/对比语法 -> 看例句 -> 控制输出 -> 自由输出 -> 自评 -> 批改 -> 复盘
+```
+
+如果时间不足，优先保留“复习旧错因 + 控制输出 + 批改”。
+
+### 21.10 上下文长度预算
+
+`next-agent-context.md` 必须短，建议上限 1500 到 2500 中文字。超过上限时触发 `compress_context`。
+
+上下文只写摘要和文件路径，不复制完整 daily/review。Codex 需要细节时回读文件。
+
+### 21.11 激进清理策略
+
+新流程优先，不再为旧路径付兼容成本：
+
+- UI 开发开始前可以直接移除旧导航入口。
+- 新三页面稳定后删除旧 `src/skills/*` 和前端 LLM provider。
+- 旧组件文案乱码严重时直接删除或重写，不投入修复成本。
+- 保留 `syllabus.json`、`types.json`、验证器思路、历史错题数据这些可复用资产。
 
 建议正式开发从这些任务开始：
 
