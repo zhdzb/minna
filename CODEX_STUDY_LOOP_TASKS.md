@@ -33,7 +33,7 @@
 
 ## Step 00: 固化深度 review 补强约束
 
-状态：pending
+状态：done
 
 目标：
 
@@ -57,6 +57,13 @@
 
 - 开发文档和任务文档都包含上述约束。
 - 不修改 `data.json`。
+
+完成记录：
+- 完成内容：确认深度 review 补强约束已写入开发文档和任务拆解，包括 profile.json、revision、updated_at、index rebuild、content quality checker、review confidence/acceptable variants/manual override、分题型 rubric、SRS 规则、学习流程顺序和激进清理策略。
+- 修改文件：CODEX_STUDY_LOOP_TASKS.md
+- 验证结果：本 Step 仅涉及文档状态与完成记录；未修改代码，未运行 npm run verify。
+- 后续注意事项：下一步执行 Step 01，建立 study 目录和 seed 数据，继续避免覆盖历史 daily/review/log 文件。
+
 ## Step 01: 建立 study 目录和 seed 数据
 
 状态：pending
