@@ -112,7 +112,7 @@ Completion record:
 - Follow-up: Next is `Step 02`, which should add schema validation and tests for these seed files.
 ## Step 02: 定义 Agent Study schema 校验模块
 
-状态：pending
+状态：done
 
 目标：
 
@@ -138,6 +138,13 @@ Completion record:
 - 缺少关键字段时测试失败并给出明确错误。
 - `npm run verify` 通过。
 
+
+
+Completion record:
+- Completed: Added a handwritten Agent Study schema validator for index, profile, current, mastery, reviewQueue, promotionRules, dailyPacket, and reviewResult, including legacy profile normalization from schema version 0 to 1.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/utils/agentStudySchema.js`, `tests/agentStudySchema.test.js`.
+- Verification: `npm run verify` passed, and the new schema test suite validates all seed study JSON files plus revision/schema and missing-field failures.
+- Follow-up: Next is `Step 02A`, which should add content quality validation on top of this shape validation layer.
 ## Step 02A: 新增内容质量校验模块
 
 状态：pending
