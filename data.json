@@ -45,12 +45,6 @@
         "q_conversation": "基础巩固"
       },
       "20": {}
-      ,
-      "21": {},
-      "22": {},
-      "23": {},
-      "24": {},
-      "25": {}
     },
     "pass_threshold": 0.5,
     "lesson_stats": {
@@ -171,6 +165,83 @@
         "last_difficulty": "基础巩固",
         "last_question_type": "ALL"
       }
+    }
+  },
+  "daily_plan": {
+    "date": "2026-05-28",
+    "available_minutes": 60,
+    "plan_type": "foundation_review",
+    "focus_lessons": [
+      7
+    ],
+    "tasks": [
+      {
+        "id": "plan_task_1779954588116_kf7a79",
+        "type": "grammar_review",
+        "title": "Review lesson 7 core grammar",
+        "minutes": 15,
+        "required": true,
+        "status": "completed"
+      },
+      {
+        "id": "plan_task_1779954588116_3nxdwa",
+        "type": "pattern_drill",
+        "title": "Practice lesson 7 pattern substitutions",
+        "minutes": 15,
+        "required": true,
+        "status": "in_progress"
+      },
+      {
+        "id": "plan_task_1779954588116_4m2tpe",
+        "type": "listening_drill",
+        "title": "Listen for key phrases from lesson 7",
+        "minutes": 12,
+        "required": true,
+        "status": "pending"
+      },
+      {
+        "id": "plan_task_1779954588116_yno25w",
+        "type": "shadowing",
+        "title": "Shadow lesson 7 sample lines",
+        "minutes": 12,
+        "required": true,
+        "status": "pending"
+      },
+      {
+        "id": "plan_task_1779954588116_uzxc6o",
+        "type": "mistake_review",
+        "title": "Review recent mistakes",
+        "minutes": 6,
+        "required": true,
+        "status": "pending"
+      },
+      {
+        "id": "plan_task_1779954588116_txkoq8",
+        "type": "scenario_speaking",
+        "title": "Try one speaking scenario using lesson 7",
+        "minutes": 10,
+        "required": false,
+        "status": "pending"
+      }
+    ],
+    "completion_criteria": [
+      "Complete all required tasks",
+      "Review the final plan summary"
+    ],
+    "ai_summary": "今日重点复习第7课语法基础，重点强化听力和口语输出，共6项任务约50分钟。",
+    "status": "in_progress",
+    "created_at": "2026-05-28T07:49:48.116Z",
+    "completed_at": null
+  },
+  "lesson_mastery": {},
+  "pattern_mastery": {
+    "N(工具/手段) で V (使用某种工具做某事)": {
+      "lesson": 7,
+      "pattern": "N(工具/手段) で V (使用某种工具做某事)",
+      "recognition": 0,
+      "controlled_output": 0.02,
+      "free_output": 0,
+      "last_practiced_at": "2026-05-28T11:19:44.738Z"
     }
   },
   "mistakes_book": [
@@ -1285,7 +1356,8 @@
   ],
   "study_backups": [],
   "meta": {
-    "updated_at": "2026-04-28T12:37:46.294Z"
+    "updated_at": "2026-05-28T11:19:44.738Z",
+    "last_persistence_error": ""
   },
   "collections": []
 }
