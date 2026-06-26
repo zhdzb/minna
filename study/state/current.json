@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-06-26T00:00:00+08:00",
+  "current_lesson": 7,
+  "learning_mode": "foundation_rebuild",
+  "active_goals": [
+    "??? 7 ?????",
+    "??????"
+  ],
+  "weakness_summary": [
+    {
+      "scope": "lesson",
+      "key": "7",
+      "problem": "???? lesson 7 ?????????????????????",
+      "evidence": [
+        "data.json:daily_plan.focus_lessons[0]",
+        "data.json:pattern_mastery.lesson-7-foundation"
+      ]
+    }
+  ],
+  "recent_focus": {
+    "grammar": [
+      "N ? V",
+      "N1 ? N2 ? ????",
+      "N1 ? N2 ? ?????"
+    ],
+    "listening": [
+      "lesson 7 key phrase listening"
+    ],
+    "speaking": [
+      "controlled output with lesson 7 patterns"
+    ]
+  },
+  "next_recommendation": {
+    "date": "2026-06-26",
+    "plan_type": "review_then_output",
+    "minutes": 60
+  }
+}

@@ -66,7 +66,7 @@
 
 ## Step 01: 建立 study 目录和 seed 数据
 
-状态：pending
+状态：done
 
 目标：
 
@@ -105,6 +105,11 @@
 - 目录结构与开发文档一致。
 - 不修改 `data.json`。
 
+Completion record:
+- Completed: Created the `study/` directory, lesson 7 seed state files, a minimal daily packet, and a seed initialization event log.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `study/index.json`, `study/state/profile.json`, `study/state/current.json`, `study/state/mastery.json`, `study/state/review-queue.json`, `study/state/promotion-rules.json`, `study/daily/2026-06-26.json`, `study/logs/agent-events.jsonl`, `study/reviews/.gitkeep`, `study/prompts/templates/.gitkeep`, `study/prompts/generated/.gitkeep`, `study/context/.gitkeep`.
+- Verification: Verified with a Node script that every seed JSON parses with `JSON.parse` and includes `schema_version`, `revision`, and `updated_at`. This step did not change runtime code, so `npm run verify` was not run.
+- Follow-up: Next is `Step 02`, which should add schema validation and tests for these seed files.
 ## Step 02: 定义 Agent Study schema 校验模块
 
 状态：pending

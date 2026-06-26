@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-06-26T00:00:00+08:00",
+  "learner_id": "local-default",
+  "goals": [
+    "??? 7 ???????",
+    "????????"
+  ],
+  "daily_time_budget_minutes": 60,
+  "pace_preference": "steady",
+  "input_preferences": {
+    "allow_romaji": false,
+    "prefer_kana_first": true,
+    "practice_kanji": true,
+    "ui_language": "zh-CN"
+  },
+  "material_scope": {
+    "series": "??????",
+    "current_focus_lessons": [
+      7
+    ],
+    "allow_new_lessons": false
+  },
+  "notes": [
+    "???? 7 ?????????",
+    "??? review ?????????"
+  ]
+}

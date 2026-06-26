@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-06-26T00:00:00+08:00",
+  "lesson_gate": {
+    "min_recent_sessions": 2,
+    "min_output_accuracy": 0.75,
+    "max_repeat_mistakes_per_key_point": 1,
+    "required_skill_scores": {
+      "grammar": 0.7,
+      "listening": 0.45,
+      "speaking": 0.45
+    }
+  }
+}

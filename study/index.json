@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-06-26T00:00:00+08:00",
+  "latest_daily": "study/daily/2026-06-26.json",
+  "latest_prompt": null,
+  "latest_review": null,
+  "schema_versions": {
+    "index": 1,
+    "profile": 1,
+    "current": 1,
+    "mastery": 1,
+    "review_queue": 1,
+    "promotion_rules": 1,
+    "daily_packet": 1,
+    "review_result": 1
+  }
+}

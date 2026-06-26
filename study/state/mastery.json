@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-06-26T00:00:00+08:00",
+  "current_gate": "lesson-7-foundation",
+  "lesson_states": {
+    "lesson-7": {
+      "lesson": 7,
+      "status": "learning",
+      "skill_scores": {
+        "grammar": 0.22,
+        "listening": 0.18,
+        "speaking": 0.16,
+        "reading": 0.35
+      },
+      "last_reviewed_at": "2026-05-28T11:19:44.738Z"
+    }
+  },
+  "grammar_points": {
+    "lesson-7/tool-means": {
+      "lesson": 7,
+      "pattern": "N ? V",
+      "status": "weak",
+      "recognition": 0.3,
+      "controlled_output": 0.02,
+      "free_output": 0,
+      "last_practiced_at": "2026-05-28T11:19:44.738Z"
+    },
+    "lesson-7/ageru": {
+      "lesson": 7,
+      "pattern": "N1 ? N2 ? ????",
+      "status": "learning",
+      "recognition": 0.35,
+      "controlled_output": 0.1,
+      "free_output": 0,
+      "last_practiced_at": "2026-05-28T11:19:44.738Z"
+    },
+    "lesson-7/morau": {
+      "lesson": 7,
+      "pattern": "N1 ? N2 ? ?????",
+      "status": "learning",
+      "recognition": 0.32,
+      "controlled_output": 0.08,
+      "free_output": 0,
+      "last_practiced_at": "2026-05-28T11:19:44.738Z"
+    }
+  }
+}

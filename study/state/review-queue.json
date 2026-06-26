@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-06-26T00:00:00+08:00",
+  "items": [
+    {
+      "id": "rq-lesson-7-tool-means",
+      "kind": "grammar_point",
+      "key": "lesson-7/tool-means",
+      "status": "due",
+      "due_date": "2026-06-26",
+      "interval_days": 1,
+      "ease": 2.1,
+      "last_result": "wrong"
+    },
+    {
+      "id": "rq-lesson-7-ageru-morau",
+      "kind": "grammar_point",
+      "key": "lesson-7/ageru-morau",
+      "status": "due",
+      "due_date": "2026-06-26",
+      "interval_days": 1,
+      "ease": 2.2,
+      "last_result": "hard"
+    }
+  ]
+}

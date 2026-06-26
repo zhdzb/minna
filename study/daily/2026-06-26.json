@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-06-26T00:00:00+08:00",
+  "id": "daily-2026-06-26",
+  "date": "2026-06-26",
+  "status": "planned",
+  "created_at": "2026-06-26T00:00:00+08:00",
+  "mission": {
+    "title": "? 7 ?????",
+    "plan_type": "review_then_output",
+    "available_minutes": 60,
+    "focus_lessons": [
+      7
+    ],
+    "goals": [
+      "??? 7 ?????",
+      "????????",
+      "????????"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "task-review-l7",
+      "type": "grammar_review",
+      "title": "??? 7 ?????",
+      "minutes": 15,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-drill-l7",
+      "type": "pattern_drill",
+      "title": "??? 7 ????????",
+      "minutes": 25,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-listen-l7",
+      "type": "listening_shadowing",
+      "title": "?????? 7 ???",
+      "minutes": 20,
+      "required": true,
+      "status": "pending"
+    }
+  ],
+  "study_materials": [
+    {
+      "id": "material-lesson-7-grammar",
+      "type": "grammar_note",
+      "lesson": 7,
+      "title": "? 7 ?????",
+      "content": "?? N ? V?N1 ? N2 ? ?????N1 ? N2 ? ????????????????",
+      "examples": [
+        {
+          "ja": "??? ??? ?????",
+          "zh": "????????",
+          "note": "N ? ??????????"
+        },
+        {
+          "ja": "???? ????? ?? ??????",
+          "zh": "?????????",
+          "note": "???? ???????????"
+        }
+      ]
+    },
+    {
+      "id": "material-lesson-7-listening",
+      "type": "listening_script",
+      "lesson": 7,
+      "title": "? 7 ?????",
+      "content": "???? ??? ??????? ?? ??? ??? ??????",
+      "examples": [
+        {
+          "ja": "???? ??? ???????",
+          "zh": "???????????",
+          "note": "????? ?????? ??"
+        },
+        {
+          "ja": "?? ??? ??? ??????",
+          "zh": "??????????",
+          "note": "? received item ?? N ? V?"
+        }
+      ]
+    }
+  ],
+  "review_items": [
+    {
+      "review_queue_id": "rq-lesson-7-tool-means",
+      "lesson": 7,
+      "skill": "grammar",
+      "target_grammar": "N ? V"
+    },
+    {
+      "review_queue_id": "rq-lesson-7-ageru-morau",
+      "lesson": 7,
+      "skill": "output",
+      "target_grammar": "N1 ? N2 ? ???? / ?????"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-001",
+      "type": "q_fill",
+      "lesson": 7,
+      "target_grammar": "N ? V",
+      "prompt": "???? ???  ???? ?????",
+      "vocab_hints": [
+        "?"
+      ],
+      "answer_reference": "?",
+      "metadata": {
+        "source": "codex",
+        "difficulty": "foundation",
+        "skill": "grammar"
+      }
+    },
+    {
+      "id": "ex-002",
+      "type": "q_translate",
+      "lesson": 7,
+      "target_grammar": "N1 ? N2 ? ????",
+      "prompt": "?????????????????",
+      "vocab_hints": [
+        "??",
+        "??"
+      ],
+      "answer_reference": "???? ??? ??? ??????",
+      "metadata": {
+        "source": "codex",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "ex-003",
+      "type": "q_conversation",
+      "lesson": 7,
+      "target_grammar": "N1 ? N2 ? ?????",
+      "prompt": "?????A??? ??? ???????? B?????  ????????",
+      "vocab_hints": [
+        "?"
+      ],
+      "answer_reference": "?",
+      "metadata": {
+        "source": "codex",
+        "difficulty": "foundation",
+        "skill": "conversation"
+      }
+    }
+  ],
+  "answers": {
+    "ex-001": "",
+    "ex-002": "",
+    "ex-003": ""
+  },
+  "self_assessment": {
+    "difficulty": null,
+    "uncertain_exercise_ids": [],
+    "confusing_points": [],
+    "pace": "",
+    "note": ""
+  },
+  "correction": {
+    "status": "pending",
+    "prompt_file": "",
+    "review_file": ""
+  },
+  "review_result": null
+}
