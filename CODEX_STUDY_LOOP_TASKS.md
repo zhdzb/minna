@@ -214,7 +214,7 @@ Completion record:
 - Follow-up: Next is `Step 03`, which should add the `agentStudy` file store and use this rebuild utility as the index fallback path.
 ## Step 03: 新建 agentStudy 文件读写模块
 
-状态：pending
+状态：done
 
 目标：
 
@@ -243,6 +243,12 @@ Completion record:
 - 不允许路径穿越。
 - revision 冲突时拒绝写入。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Added the Agent Study file store with unified index/latest daily/latest review reads, safe `study/` path resolution, atomic JSON writes, revision conflict checks, daily draft saves, and daily submission writes that update `study/index.json`.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/server/agentStudy/fileStore.js`, `tests/agentStudyFileStore.test.js`.
+- Verification: `npx vitest run tests/agentStudyFileStore.test.js` passed, and `npm run verify` passed with the new file-store coverage included.
+- Follow-up: Next is `Step 04`, which should add the event log utility and plug it into the write workflow without overwriting historical logs.
 
 ## Step 04: 新建 event log 工具
 
