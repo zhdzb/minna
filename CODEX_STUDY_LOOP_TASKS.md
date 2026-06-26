@@ -147,7 +147,7 @@ Completion record:
 - Follow-up: Next is `Step 02A`, which should add content quality validation on top of this shape validation layer.
 ## Step 02A: 新增内容质量校验模块
 
-状态：pending
+状态：done
 
 目标：
 
@@ -173,6 +173,12 @@ Completion record:
 - seed daily packet 通过内容质量校验。
 - 构造重复题、缺少例句、缺少参考答案时测试失败。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Added Agent Study content quality validators for daily packets and review drills, covering exercise budget, lesson/skill/grammar binding, duplicate prompts, example minimums, answer references, listening scripts, and review-drill variant checks.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/utils/agentStudyContentQuality.js`, `tests/agentStudyContentQuality.test.js`.
+- Verification: `npm run verify` passed, and the new test suite confirms the seed daily packet succeeds while duplicate exercises, missing examples, missing answer references, missing scripts, and identical review variants fail.
+- Follow-up: Next is `Step 02B`, which should add an index rebuild utility that reconstructs `study/index.json` from on-disk daily/review/prompt files.
 
 ## Step 02B: 新增 index rebuild 工具
 
