@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-06-26T00:00:00+08:00",
+  "templates": [
+    {
+      "id": "create-daily-packet",
+      "path": "study/prompts/templates/create-daily-packet.md",
+      "operation": "create_daily_packet",
+      "requires_event_log": true,
+      "writes_history": false
+    },
+    {
+      "id": "review-submitted-packet",
+      "path": "study/prompts/templates/review-submitted-packet.md",
+      "operation": "review_submitted_packet",
+      "requires_event_log": true,
+      "writes_history": false
+    },
+    {
+      "id": "compress-context",
+      "path": "study/prompts/templates/compress-context.md",
+      "operation": "compress_context",
+      "requires_event_log": true,
+      "writes_history": false
+    }
+  ]
+}

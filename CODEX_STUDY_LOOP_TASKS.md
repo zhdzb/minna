@@ -283,7 +283,7 @@ Completion record:
 
 ## Step 05: 新建 prompt templates
 
-状态：pending
+状态：done
 
 目标：
 
@@ -306,6 +306,12 @@ Completion record:
 - 模板可直接复制给 Codex 使用。
 - `manifest.json` 可解析。
 - 不需要跑 `npm run verify`，除非同时改代码。
+
+Completion record:
+- Completed: Added stable prompt templates for `create_daily_packet`, `review_submitted_packet`, and `compress_context`, plus a prompt manifest that records template paths and event-log requirements.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `study/prompts/templates/create-daily-packet.md`, `study/prompts/templates/review-submitted-packet.md`, `study/prompts/templates/compress-context.md`, `study/prompts/manifest.json`.
+- Verification: Verified that `study/prompts/manifest.json` parses and that all referenced template files exist. This step only changed prompt/template documents, so `npm run verify` was not run.
+- Follow-up: Next is `Step 06`, which should generate `study/context/next-agent-context.md` from the current state, index, and recent review references.
 
 ## Step 06: 生成 next-agent-context 工具
 
