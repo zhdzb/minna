@@ -662,7 +662,7 @@ Completion record:
 
 ## Step 17: 实现 review queue 更新工具
 
-状态：pending
+状态：done
 
 目标：
 
@@ -685,6 +685,12 @@ Completion record:
 
 - wrong/correct 两类更新均有测试。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Added a pure `reviewQueueUpdater` utility that validates review queue/review inputs, applies the simplified SRS rules for wrong, hard, good, and easy outcomes, keeps long-term mastered items scheduled instead of removing them, and reactivates delayed items back to `due` when later review evidence is wrong.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/server/agentStudy/reviewQueueUpdater.js`, `tests/agentStudyReviewQueueUpdater.test.js`.
+- Verification: `npx vitest run tests/agentStudyReviewQueueUpdater.test.js` passed, and `npm run verify` passed.
+- Follow-up: Next is `Step 18`, which should connect review writeback into an atomic `reviewWorkflow` that updates mastery, review queue, daily correction state, next-agent-context, event log, and index in order.
 
 ## Step 18: 实现 review_submitted_packet 工作流工具
 
