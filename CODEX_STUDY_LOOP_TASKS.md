@@ -768,7 +768,7 @@ Completion record:
 
 ## Step 20: 新建 AgentReviewDrill 页面
 
-状态：pending
+状态：done
 
 目标：
 
@@ -792,6 +792,12 @@ Completion record:
 - `/agent-review-drill` 可访问。
 - due items 可渲染。
 - `npm run verify` 通过。
+
+完成记录：
+- 完成内容：新增 `AgentReviewDrill` 页面，复用现有 progress 聚合数据，只渲染 `review queue` 里 `due` 的项目；页面展示 grammar point、最近错因、到期时间和轻量占位答题区，为后续 `Step 21` 的结构化 drill packet 预留入口。
+- 修改文件：`CODEX_STUDY_LOOP_TASKS.md`、`src/components/AgentReviewDrill.vue`、`src/router/index.js`、`src/App.vue`、`tests/agentReviewDrill.test.js`
+- 验证结果：`npx vitest run tests/agentReviewDrill.test.js tests/agentProgressReview.test.js tests/agentStudyClient.test.js` 通过；`npm run verify` 通过；本地 Vite 页面在 `http://127.0.0.1:8081/#/agent-review-drill` 验证，`/`、`/#/agent-review-drill` 和 `/api/agent-study/progress` 均返回 `200`
+- 后续注意事项：下一步执行 `Step 21`，为 review drill 增加结构化 drill packet、答题保存和提交流程
 
 ## Step 21: 支持复习 drill packet
 
