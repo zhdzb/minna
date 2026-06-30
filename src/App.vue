@@ -37,6 +37,9 @@
             <el-menu-item index="/">
               <span>训练面板</span>
             </el-menu-item>
+            <el-menu-item index="/agent-study">
+              <span>Agent Study</span>
+            </el-menu-item>
             <el-menu-item index="/syllabus">
               <span>知识大纲</span>
             </el-menu-item>

@@ -441,7 +441,7 @@ Completion record:
 
 ## Step 10: 新建 AgentStudyWorkspace 页面骨架
 
-状态：pending
+状态：done
 
 目标：
 
@@ -464,6 +464,12 @@ Completion record:
 - `/agent-study` 可访问。
 - seed daily packet 可渲染。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Added the initial `AgentStudyWorkspace` page, wired `/agent-study` into the router, and exposed a sidebar entry so the seed daily packet can be loaded and rendered with sections for mission, tasks, materials, exercises, and review hints.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/components/AgentStudyWorkspace.vue`, `src/router/index.js`, `src/App.vue`, `tests/agentStudyWorkspace.test.js`.
+- Verification: `npx vitest run tests/agentStudyWorkspace.test.js` passed, `npm run verify` passed, and a local Vite dev server returned `200` for `http://127.0.0.1:8080/` while `/api/agent-study/latest` returned the seed daily packet JSON used by the page.
+- Follow-up: Next is `Step 11`, which should add minimal answer input and draft-save behavior inside `AgentStudyWorkspace`.
 
 ## Step 11: 实现 AgentStudyWorkspace 答题草稿
 
