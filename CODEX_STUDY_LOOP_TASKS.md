@@ -832,7 +832,7 @@ Completion record:
 
 ## Step 22: 实现 compress_context 工具
 
-状态：pending
+状态：done
 
 目标：
 
@@ -855,6 +855,12 @@ Completion record:
 - 能生成一份 snapshot。
 - next-agent-context 不包含大量历史全文。
 - `npm run verify` 通过。
+
+完成记录：
+- 完成内容：新增 `contextCompressor`，可从 latest daily/review、current/mastery/review queue 与最近 event log 生成周度 snapshot，重写更短的 `study/context/next-agent-context.md`，并按规则追加 `context_compressed` 事件；同时用该工具生成了 seed snapshot 与压缩后的 seed context。
+- 修改文件：`CODEX_STUDY_LOOP_TASKS.md`、`src/server/agentStudy/contextCompressor.js`、`tests/agentStudyContextCompressor.test.js`、`study/context/next-agent-context.md`、`study/context/snapshots/2026-W27-context.md`、`study/logs/agent-events.jsonl`
+- 验证结果：`npx vitest run tests/agentStudyContextCompressor.test.js tests/agentStudyContextWriter.test.js` 通过；`npm run verify` 通过；本 Step 不涉及 UI 页面改动，因此未单独启动页面验证
+- 后续注意事项：下一步执行 `Step 23`，迁移 `data.json` 中有价值的历史学习数据到 `study/`，并继续避免覆盖既有 `daily/review/log` 历史文件
 
 ## Step 23: 迁移 data.json 历史数据
 
