@@ -630,7 +630,7 @@ Completion record:
 
 ## Step 16: 实现 mastery 更新工具
 
-状态：pending
+状态：done
 
 目标：
 
@@ -653,6 +653,12 @@ Completion record:
 - 正确更新 mastery。
 - 错误输入被拒绝。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Added a pure `masteryUpdater` utility that validates mastery/review inputs, maps review evidence back onto grammar points, updates grammar/listening/speaking/reading scores from rubric plus confidence, supports both downgrade and recovery paths, and refuses unsupported or evidence-free mastery updates.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/server/agentStudy/masteryUpdater.js`, `tests/agentStudyMasteryUpdater.test.js`.
+- Verification: `npx vitest run tests/agentStudyMasteryUpdater.test.js` passed, and `npm run verify` passed.
+- Follow-up: Next is `Step 17`, which should update `study/state/review-queue.json` from review outcomes so wrong, hard, good, and easy results change future spacing with the simplified SRS rules.
 
 ## Step 17: 实现 review queue 更新工具
 
