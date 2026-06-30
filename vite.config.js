@@ -13,6 +13,7 @@ import {
   handleSaveStudyState
 } from './src/server/routes/studyStateRoute.js'
 import {
+  handleGetAgentProgressReview,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
   handleGetLatestReview,
@@ -290,6 +291,23 @@ const agentStudyRoutePlugin = () => {
 
         try {
           const result = await handleGetLatestAgentStudy()
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/progress', async (req, res) => {
+        if (req.method !== 'GET') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const result = await handleGetAgentProgressReview()
           writeJson(res, 200, { success: true, data: result })
         } catch (error) {
           writeJson(res, 400, {

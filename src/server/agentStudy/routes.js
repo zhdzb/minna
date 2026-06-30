@@ -1,3 +1,9 @@
+import {
+  validateCurrent,
+  validateMastery,
+  validateProfile,
+  validateReviewQueue
+} from '../../utils/agentStudySchema.js'
 import { createAgentStudyEventLog } from './eventLog.js'
 import { createAgentStudyFileStore } from './fileStore.js'
 
@@ -33,6 +39,30 @@ const handleGetLatestAgentStudy = async ({ fileStore = createAgentStudyFileStore
     index,
     dailyPacket: fileStore.loadLatestDaily(),
     reviewResult: fileStore.loadLatestReview()
+  }
+}
+
+const handleGetAgentProgressReview = async (
+  {
+    fileStore = createAgentStudyFileStore(),
+    eventLog = createAgentStudyEventLog(),
+    recentEventLimit = 8
+  } = {}
+) => {
+  const index = fileStore.loadIndex()
+
+  return {
+    index,
+    profile: fileStore.readStudyJson('study/state/profile.json', validateProfile),
+    current: fileStore.readStudyJson('study/state/current.json', validateCurrent),
+    mastery: fileStore.readStudyJson('study/state/mastery.json', validateMastery),
+    reviewQueue: fileStore.readStudyJson('study/state/review-queue.json', validateReviewQueue),
+    reviewResult: fileStore.loadLatestReview(),
+    recentEvents: eventLog.readRecentEvents(recentEventLimit),
+    nextAgentContext: {
+      path: 'study/context/next-agent-context.md',
+      content: fileStore.readStudyText('study/context/next-agent-context.md')
+    }
   }
 }
 
@@ -109,6 +139,7 @@ const handleSubmitDailyPacket = async (
 }
 
 export {
+  handleGetAgentProgressReview,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
   handleGetLatestReview,

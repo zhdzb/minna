@@ -76,6 +76,11 @@ const createAgentStudyClient = (options = {}) => {
       method: 'GET'
     })
 
+  const loadProgressReview = async () =>
+    request('progress', {
+      method: 'GET'
+    })
+
   const loadLatestReview = async () =>
     request('review/latest', {
       method: 'GET'
@@ -110,6 +115,7 @@ const createAgentStudyClient = (options = {}) => {
 
   return {
     loadLatestAgentStudy,
+    loadProgressReview,
     loadPromptFile,
     loadLatestReview,
     saveDailyPacket,

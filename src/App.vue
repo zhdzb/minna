@@ -40,6 +40,9 @@
             <el-menu-item index="/agent-study">
               <span>Agent Study</span>
             </el-menu-item>
+            <el-menu-item index="/agent-progress-review">
+              <span>Progress Review</span>
+            </el-menu-item>
             <el-menu-item index="/syllabus">
               <span>知识大纲</span>
             </el-menu-item>

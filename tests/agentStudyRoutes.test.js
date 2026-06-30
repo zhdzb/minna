@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { createAgentStudyEventLog } from '../src/server/agentStudy/eventLog.js'
 import { createAgentStudyFileStore } from '../src/server/agentStudy/fileStore.js'
 import {
+  handleGetAgentProgressReview,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
   handleGetLatestReview,
@@ -174,6 +175,104 @@ const createReviewResult = ({ date = '2026-06-30' } = {}) => ({
   }
 })
 
+const createProfile = () => ({
+  schema_version: 1,
+  revision: 1,
+  updated_at: '2026-06-30T09:00:00+08:00',
+  learner_id: 'learner-001',
+  goals: ['stabilize lesson 7 output', 'build speaking confidence'],
+  daily_time_budget_minutes: 45,
+  pace_preference: 'steady',
+  input_preferences: {
+    allow_romaji: false,
+    prefer_kana_first: true,
+    practice_kanji: true,
+    ui_language: 'zh-CN'
+  },
+  material_scope: {
+    series: 'Minna no Nihongo',
+    current_focus_lessons: [7],
+    allow_new_lessons: false
+  },
+  notes: ['Keep review pressure manageable']
+})
+
+const createCurrent = () => ({
+  schema_version: 1,
+  revision: 1,
+  updated_at: '2026-06-30T09:00:00+08:00',
+  current_lesson: 7,
+  learning_mode: 'foundation_rebuild',
+  active_goals: ['stabilize lesson 7 output'],
+  weakness_summary: [
+    {
+      scope: 'grammar_point',
+      key: 'lesson-7/tool-means',
+      problem: 'Means particle still unstable.',
+      evidence: ['review-2026-06-30']
+    }
+  ],
+  recent_focus: {
+    grammar: ['N ? V'],
+    listening: ['lesson 7 keywords'],
+    speaking: ['short replies']
+  },
+  next_recommendation: {
+    date: '2026-06-30',
+    plan_type: 'review_then_output',
+    minutes: 45
+  }
+})
+
+const createMastery = () => ({
+  schema_version: 1,
+  revision: 1,
+  updated_at: '2026-06-30T09:00:00+08:00',
+  current_gate: 'lesson-7-foundation',
+  lesson_states: {
+    'lesson-7': {
+      lesson: 7,
+      status: 'weak',
+      skill_scores: {
+        grammar: 0.44,
+        listening: 0.36,
+        speaking: 0.33,
+        reading: 0.51
+      },
+      last_reviewed_at: '2026-06-30T08:30:00+08:00'
+    }
+  },
+  grammar_points: {
+    'lesson-7/tool-means': {
+      lesson: 7,
+      pattern: 'N ? V',
+      status: 'weak',
+      recognition: 0.4,
+      controlled_output: 0.15,
+      free_output: 0.05,
+      last_practiced_at: '2026-06-30T08:30:00+08:00'
+    }
+  }
+})
+
+const createReviewQueue = () => ({
+  schema_version: 1,
+  revision: 1,
+  updated_at: '2026-06-30T09:00:00+08:00',
+  items: [
+    {
+      id: 'rq-001',
+      kind: 'grammar_point',
+      key: 'lesson-7/tool-means',
+      status: 'due',
+      due_date: '2026-06-30',
+      interval_days: 1,
+      ease: 2.1,
+      last_result: 'wrong'
+    }
+  ]
+})
+
 afterEach(() => {
   while (tempDirs.length > 0) {
     fs.rmSync(tempDirs.pop(), { recursive: true, force: true })
@@ -201,6 +300,54 @@ describe('agentStudyRoutes', () => {
     expect(latest.dailyPacket.id).toBe('daily-2026-06-30')
     expect(latest.reviewResult.id).toBe('review-2026-06-30')
     expect(latestReview.id).toBe('review-2026-06-30')
+  })
+
+  it('loads the aggregated progress review payload', async () => {
+    const studyRoot = createTempStudyRoot()
+    writeJson(path.join(studyRoot, 'daily', '2026-06-30.json'), createDailyPacket())
+    writeJson(
+      path.join(studyRoot, 'reviews', '2026-06-30-review.json'),
+      createReviewResult()
+    )
+    writeJson(path.join(studyRoot, 'state', 'profile.json'), createProfile())
+    writeJson(path.join(studyRoot, 'state', 'current.json'), createCurrent())
+    writeJson(path.join(studyRoot, 'state', 'mastery.json'), createMastery())
+    writeJson(path.join(studyRoot, 'state', 'review-queue.json'), createReviewQueue())
+    writeJson(
+      path.join(studyRoot, 'index.json'),
+      createIndexDocument({ latestReview: 'study/reviews/2026-06-30-review.json' })
+    )
+    fs.mkdirSync(path.join(studyRoot, 'context'), { recursive: true })
+    fs.writeFileSync(
+      path.join(studyRoot, 'context', 'next-agent-context.md'),
+      '# Next Agent Context\n- Read study/state/current.json first.\n',
+      'utf8'
+    )
+
+    const fileStore = createAgentStudyFileStore({ studyRoot })
+    const eventLog = createAgentStudyEventLog({
+      studyRoot,
+      createId: () => 'event-progress-1'
+    })
+    eventLog.appendEvent({
+      time: '2026-06-30T09:10:00+08:00',
+      actor: 'codex',
+      event: 'review_applied',
+      input_files: ['study/daily/2026-06-30.json'],
+      output_files: ['study/state/mastery.json'],
+      summary: 'Applied latest review.'
+    })
+
+    const result = await handleGetAgentProgressReview({ fileStore, eventLog })
+
+    expect(result.profile.learner_id).toBe('learner-001')
+    expect(result.current.current_lesson).toBe(7)
+    expect(result.mastery.current_gate).toBe('lesson-7-foundation')
+    expect(result.reviewQueue.items).toHaveLength(1)
+    expect(result.reviewResult.id).toBe('review-2026-06-30')
+    expect(result.recentEvents[0].event).toBe('review_applied')
+    expect(result.nextAgentContext.path).toBe('study/context/next-agent-context.md')
+    expect(result.nextAgentContext.content).toContain('Read study/state/current.json first.')
   })
 
   it('saves a daily packet draft and returns the updated packet', async () => {

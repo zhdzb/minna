@@ -111,6 +111,32 @@ describe('agentStudyClient', () => {
     })
   })
 
+  it('loads the progress review payload through the progress endpoint', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      createJsonResponse({
+        body: {
+          success: true,
+          data: {
+            current: { current_lesson: 7 },
+            recentEvents: []
+          }
+        }
+      })
+    )
+    const client = createAgentStudyClient({ fetchImpl: fetchMock })
+
+    await expect(client.loadProgressReview()).resolves.toEqual({
+      current: { current_lesson: 7 },
+      recentEvents: []
+    })
+    expect(fetchMock).toHaveBeenCalledWith('/api/agent-study/progress', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+  })
+
   it('loads a prompt file through the prompt endpoint', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
       createJsonResponse({

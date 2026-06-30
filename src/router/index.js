@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import AgentStudyWorkspace from '@/components/AgentStudyWorkspace.vue'
+import AgentProgressReview from '@/components/AgentProgressReview.vue'
 import Dashboard from '@/components/Dashboard.vue'
 import SyllabusManager from '@/components/SyllabusManager.vue'
 import TrainingEngine from '@/components/TrainingEngine.vue'
@@ -19,6 +20,11 @@ const routes = [
     path: '/agent-study',
     name: 'AgentStudyWorkspace',
     component: AgentStudyWorkspace
+  },
+  {
+    path: '/agent-progress-review',
+    name: 'AgentProgressReview',
+    component: AgentProgressReview
   },
   {
     path: '/syllabus',

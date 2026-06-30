@@ -732,7 +732,7 @@ Completion record:
 
 ## Step 19: 新建 AgentProgressReview 页面
 
-状态：pending
+状态：done
 
 目标：
 
@@ -759,6 +759,12 @@ Completion record:
 - `/agent-progress-review` 可访问。
 - seed state 可渲染。
 - `npm run verify` 通过。
+
+完成记录：
+- 完成内容：新增 `AgentProgressReview` 页面，并补了 `GET /api/agent-study/progress` 聚合接口与前端 client 入口，集中展示 learner profile、current lesson、mastery、review queue、promotion decision、recent events 和 next-agent-context；同时把页面接入路由和侧边导航。
+- 修改文件：`CODEX_STUDY_LOOP_TASKS.md`、`src/components/AgentProgressReview.vue`、`src/server/agentStudy/routes.js`、`src/utils/agentStudyClient.js`、`src/router/index.js`、`src/App.vue`、`vite.config.js`、`tests/agentStudyRoutes.test.js`、`tests/agentStudyClient.test.js`、`tests/agentProgressReview.test.js`
+- 验证结果：`npx vitest run tests/agentStudyRoutes.test.js tests/agentStudyClient.test.js tests/agentProgressReview.test.js` 通过；`npm run verify` 通过；本地 Vite 页面在 `http://127.0.0.1:8081/#/agent-progress-review` 验证，`/` 和 `/api/agent-study/progress` 均返回 `200`
+- 后续注意事项：下一步执行 `Step 20`，实现 `AgentReviewDrill` 页面，优先把 due review queue 的可视化和预留答题区接起来
 
 ## Step 20: 新建 AgentReviewDrill 页面
 
