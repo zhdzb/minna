@@ -62,6 +62,13 @@ const createDailyPacket = (overrides = {}) => ({
     "exercise-translate": "",
     "exercise-conversation": ""
   },
+  self_assessment: {
+    difficulty: null,
+    uncertain_exercise_ids: [],
+    confusing_points: [],
+    pace: "",
+    note: ""
+  },
   ...overrides
 })
 
@@ -80,6 +87,29 @@ const createClient = (options = {}) => ({
         "exercise-fill": "ni",
         "exercise-translate": "watashi wa sensei ni hon o agemasu",
         "exercise-conversation": "tomodachi ni moraimashita"
+      }
+    }),
+    targetPath: "study/daily/2026-06-26.json"
+  }),
+  submitDailyPacket: vi.fn().mockResolvedValue({
+    dailyPacket: createDailyPacket({
+      status: "submitted",
+      answers: options.savedAnswers || {
+        "exercise-fill": "ni",
+        "exercise-translate": "watashi wa sensei ni hon o agemasu",
+        "exercise-conversation": "tomodachi ni moraimashita"
+      },
+      self_assessment: {
+        difficulty: "steady",
+        uncertain_exercise_ids: ["exercise-conversation"],
+        confusing_points: ["ageru and morau contrast"],
+        pace: "steady",
+        note: "Need another look at receiving verbs."
+      },
+      correction: {
+        status: "pending",
+        prompt_file: "study/prompts/generated/2026-06-26-review.md",
+        review_file: ""
       }
     }),
     targetPath: "study/daily/2026-06-26.json"
@@ -178,6 +208,47 @@ describe("AgentStudyWorkspace", () => {
     expect(wrapper.text()).toContain("Draft saved")
   })
 
+  it("submits the packet with self assessment and shows the next review handoff", async () => {
+    const client = createClient()
+    const wrapper = mountWorkspace(client)
+    await flushPromises()
+
+    const inputs = wrapper.findAll(".stub-input")
+    const textareas = wrapper.findAll(".stub-textarea")
+
+    await inputs[0].setValue("ni")
+    await wrapper.find('select.assessment-input').setValue("steady")
+    await wrapper.find('input.assessment-input').setValue("steady")
+    await textareas[0].setValue("watashi wa sensei ni hon o agemasu")
+    await textareas[1].setValue("tomodachi ni moraimashita")
+    await wrapper.find('textarea.assessment-input').setValue("ageru and morau contrast")
+    await wrapper.findAll('textarea.assessment-input')[1].setValue("Need another look at receiving verbs.")
+    await wrapper.find('input[type="checkbox"]').setValue(true)
+    await wrapper.findAll("button")[2].trigger("click")
+    await flushPromises()
+
+    expect(client.submitDailyPacket).toHaveBeenCalledWith({
+      dailyPacket: expect.objectContaining({
+        revision: 2,
+        status: "submitted",
+        answers: expect.objectContaining({
+          "exercise-fill": "ni",
+          "exercise-translate": "watashi wa sensei ni hon o agemasu",
+          "exercise-conversation": "tomodachi ni moraimashita"
+        }),
+        self_assessment: {
+          difficulty: "steady",
+          uncertain_exercise_ids: ["exercise-fill"],
+          confusing_points: ["ageru and morau contrast"],
+          pace: "steady",
+          note: "Need another look at receiving verbs."
+        }
+      })
+    })
+    expect(wrapper.text()).toContain("Packet submitted")
+    expect(wrapper.text()).toContain("study/prompts/generated/2026-06-26-review.md")
+  })
+
   it("shows a refresh prompt when draft save hits a revision conflict", async () => {
     const client = createClient()
     client.saveDailyPacket.mockRejectedValueOnce(new Error("Revision conflict detected"))
@@ -193,6 +264,20 @@ describe("AgentStudyWorkspace", () => {
     expect(wrapper.text()).toContain("Please refresh")
   })
 
+  it("shows a refresh prompt when submit hits a revision conflict", async () => {
+    const client = createClient()
+    client.submitDailyPacket.mockRejectedValueOnce(new Error("Revision conflict detected"))
+
+    const wrapper = mountWorkspace(client)
+    await flushPromises()
+
+    await wrapper.findAll("button")[2].trigger("click")
+    await flushPromises()
+
+    expect(wrapper.text()).toContain("Submit failed")
+    expect(wrapper.text()).toContain("Please refresh")
+  })
+
   it("renders an empty state when there is no daily packet", async () => {
     const client = {
       loadLatestAgentStudy: vi.fn().mockResolvedValue({
@@ -200,7 +285,8 @@ describe("AgentStudyWorkspace", () => {
         dailyPacket: null,
         reviewResult: null
       }),
-      saveDailyPacket: vi.fn()
+      saveDailyPacket: vi.fn(),
+      submitDailyPacket: vi.fn()
     }
 
     const wrapper = mountWorkspace(client)

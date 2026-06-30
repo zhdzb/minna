@@ -504,7 +504,7 @@ Completion record:
 
 ## Step 12: 实现提交到仓库
 
-状态：pending
+状态：done
 
 目标：
 
@@ -528,6 +528,12 @@ Completion record:
 - 文件状态变为 `submitted`。
 - event log 有提交事件。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Added self-assessment inputs and submit flow in `AgentStudyWorkspace`, submitted packets through `/api/agent-study/daily/submit`, carried `answers` plus `self_assessment` into the payload, handled revision conflicts, and showed the post-submit review handoff state on the page.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/components/AgentStudyWorkspace.vue`, `tests/agentStudyWorkspace.test.js`.
+- Verification: `npx vitest run tests/agentStudyWorkspace.test.js` passed, `npm run verify` passed, and a local Vite dev server returned `200` for `http://127.0.0.1:8080/`, `http://127.0.0.1:8080/agent-study`, and `http://127.0.0.1:8080/api/agent-study/latest`.
+- Follow-up: Next is `Step 13`, which should expose the generated review prompt path/content with a direct copy action for handing review work to Codex.
 
 ## Step 13: 实现复制批改提示词
 

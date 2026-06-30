@@ -16,6 +16,14 @@
         >
           Save Draft
         </el-button>
+        <el-button
+          type="success"
+          :loading="isSubmitting"
+          :disabled="isSubmitDisabled"
+          @click="submitPacket"
+        >
+          Submit Packet
+        </el-button>
       </div>
     </header>
 
@@ -64,6 +72,14 @@
 
       <section v-else-if="saveMessage" class="agent-study-band">
         <el-alert :closable="false" show-icon title="Draft saved" type="success" :description="saveMessage" />
+      </section>
+
+      <section v-if="submitError" class="agent-study-band">
+        <el-alert :closable="false" show-icon title="Submit failed" type="error" :description="submitError" />
+      </section>
+
+      <section v-else-if="submitMessage" class="agent-study-band">
+        <el-alert :closable="false" show-icon title="Packet submitted" type="success" :description="submitMessage" />
       </section>
 
       <section class="agent-study-band">
@@ -153,6 +169,78 @@
 
       <section class="agent-study-band">
         <div class="section-heading">
+          <h2>Self Assessment</h2>
+          <span>Required for submission</span>
+        </div>
+        <div class="assessment-grid">
+          <label class="answer-field">
+            <span>Difficulty</span>
+            <select
+              class="assessment-input"
+              :value="selfAssessmentDraft.difficulty"
+              @change="updateDifficulty($event.target.value)"
+            >
+              <option value="">Choose one</option>
+              <option value="easy">easy</option>
+              <option value="steady">steady</option>
+              <option value="hard">hard</option>
+            </select>
+          </label>
+
+          <label class="answer-field">
+            <span>Pace</span>
+            <input
+              class="assessment-input"
+              :value="selfAssessmentDraft.pace"
+              placeholder="For example: steady, rushed, slow"
+              @input="updateAssessmentField('pace', $event.target.value)"
+            />
+          </label>
+        </div>
+
+        <div class="assessment-grid">
+          <label class="answer-field">
+            <span>Confusing Points</span>
+            <textarea
+              class="assessment-input assessment-textarea"
+              :value="confusingPointsText"
+              rows="3"
+              placeholder="One confusing point per line"
+              @input="updateConfusingPoints($event.target.value)"
+            />
+          </label>
+
+          <label class="answer-field">
+            <span>Note</span>
+            <textarea
+              class="assessment-input assessment-textarea"
+              :value="selfAssessmentDraft.note"
+              rows="3"
+              placeholder="Anything you want Codex to know before review"
+              @input="updateAssessmentField('note', $event.target.value)"
+            />
+          </label>
+        </div>
+
+        <div v-if="dailyPacket.exercises?.length" class="uncertain-block">
+          <p class="uncertain-title">Mark exercises that still feel uncertain</p>
+          <label
+            v-for="exercise in dailyPacket.exercises"
+            :key="`uncertain-${exercise.id}`"
+            class="uncertain-item"
+          >
+            <input
+              type="checkbox"
+              :checked="selfAssessmentDraft.uncertain_exercise_ids.includes(exercise.id)"
+              @change="toggleUncertainExercise(exercise.id, $event.target.checked)"
+            />
+            <span>{{ exercise.prompt || exercise.id }}</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="agent-study-band">
+        <div class="section-heading">
           <h2>Review Hints</h2>
           <span>{{ reviewItemCountLabel }}</span>
         </div>
@@ -172,6 +260,20 @@
         </div>
         <el-empty v-else description="No review hints are available yet." />
       </section>
+
+      <section v-if="showSubmissionNextStep" class="agent-study-band next-step-band">
+        <div class="section-heading">
+          <h2>Next Step</h2>
+          <span>Review handoff</span>
+        </div>
+        <p class="item-copy">
+          This packet is submitted. The next review handoff for Codex should use
+          <strong>{{ reviewPromptPath || "the generated review prompt once it is available" }}</strong>.
+        </p>
+        <p class="item-note">
+          Step 13 will add direct copy support for the review prompt. For now, the page keeps the submission status visible.
+        </p>
+      </section>
     </template>
   </div>
 </template>
@@ -189,13 +291,23 @@ const props = defineProps({
 
 const isLoading = ref(true)
 const isSaving = ref(false)
+const isSubmitting = ref(false)
 const loadError = ref("")
 const saveError = ref("")
 const saveMessage = ref("")
+const submitError = ref("")
+const submitMessage = ref("")
 const indexDocument = ref(null)
 const dailyPacket = ref(null)
 const reviewResult = ref(null)
 const answerDrafts = ref({})
+const selfAssessmentDraft = ref({
+  difficulty: "",
+  uncertain_exercise_ids: [],
+  confusing_points: [],
+  pace: "",
+  note: ""
+})
 
 const client = computed(() => props.client || createAgentStudyClient())
 
@@ -229,6 +341,9 @@ const taskCountLabel = computed(() => `${dailyPacket.value?.tasks?.length || 0} 
 const materialCountLabel = computed(() => `${dailyPacket.value?.study_materials?.length || 0} items`)
 const exerciseCountLabel = computed(() => `${dailyPacket.value?.exercises?.length || 0} items`)
 const reviewItemCountLabel = computed(() => `${dailyPacket.value?.review_items?.length || 0} items`)
+const reviewPromptPath = computed(() => dailyPacket.value?.correction?.prompt_file || "")
+const showSubmissionNextStep = computed(() => ["submitted", "reviewed"].includes(dailyPacket.value?.status))
+const confusingPointsText = computed(() => selfAssessmentDraft.value.confusing_points.join("\n"))
 
 const hasDraftChanges = computed(() => {
   if (!dailyPacket.value) return false
@@ -247,6 +362,7 @@ const hasDraftChanges = computed(() => {
 })
 
 const isSaveDisabled = computed(() => !dailyPacket.value || isLoading.value || isSaving.value || !hasDraftChanges.value)
+const isSubmitDisabled = computed(() => !dailyPacket.value || isLoading.value || isSaving.value || isSubmitting.value)
 
 const buildAnswerDrafts = (packet) => {
   const nextAnswers = { ...(packet?.answers || {}) }
@@ -260,11 +376,24 @@ const buildAnswerDrafts = (packet) => {
   return nextAnswers
 }
 
+const buildSelfAssessmentDraft = (packet) => ({
+  difficulty: packet?.self_assessment?.difficulty || "",
+  uncertain_exercise_ids: Array.isArray(packet?.self_assessment?.uncertain_exercise_ids)
+    ? [...packet.self_assessment.uncertain_exercise_ids]
+    : [],
+  confusing_points: Array.isArray(packet?.self_assessment?.confusing_points)
+    ? [...packet.self_assessment.confusing_points]
+    : [],
+  pace: packet?.self_assessment?.pace || "",
+  note: packet?.self_assessment?.note || ""
+})
+
 const applyWorkspacePayload = (payload) => {
   indexDocument.value = payload?.index || null
   dailyPacket.value = payload?.dailyPacket || null
   reviewResult.value = payload?.reviewResult || null
   answerDrafts.value = buildAnswerDrafts(payload?.dailyPacket)
+  selfAssessmentDraft.value = buildSelfAssessmentDraft(payload?.dailyPacket)
 }
 
 const getAnswerValue = (exerciseId) => answerDrafts.value?.[exerciseId] || ""
@@ -280,8 +409,51 @@ const updateAnswer = (exerciseId, value) => {
     ...answerDrafts.value,
     [exerciseId]: typeof value === "string" ? value : ""
   }
+  submitMessage.value = ""
   saveMessage.value = ""
+  submitError.value = ""
   saveError.value = ""
+}
+
+const updateAssessmentField = (field, value) => {
+  selfAssessmentDraft.value = {
+    ...selfAssessmentDraft.value,
+    [field]: typeof value === "string" ? value : ""
+  }
+  submitMessage.value = ""
+  submitError.value = ""
+}
+
+const updateDifficulty = (value) => {
+  updateAssessmentField("difficulty", value || "")
+}
+
+const updateConfusingPoints = (value) => {
+  selfAssessmentDraft.value = {
+    ...selfAssessmentDraft.value,
+    confusing_points: String(value || "")
+      .split(/\r?\n/)
+      .map((item) => item.trim())
+      .filter(Boolean)
+  }
+  submitMessage.value = ""
+  submitError.value = ""
+}
+
+const toggleUncertainExercise = (exerciseId, checked) => {
+  const nextIds = new Set(selfAssessmentDraft.value.uncertain_exercise_ids)
+  if (checked) {
+    nextIds.add(exerciseId)
+  } else {
+    nextIds.delete(exerciseId)
+  }
+
+  selfAssessmentDraft.value = {
+    ...selfAssessmentDraft.value,
+    uncertain_exercise_ids: [...nextIds]
+  }
+  submitMessage.value = ""
+  submitError.value = ""
 }
 
 const loadWorkspace = async () => {
@@ -298,24 +470,32 @@ const loadWorkspace = async () => {
   }
 }
 
-const buildDraftPacket = () => {
+const buildWritablePacket = (statusOverride = null) => {
   const currentPacket = dailyPacket.value
   if (!currentPacket) return null
 
   const nextStatus =
-    currentPacket.status === "planned" || currentPacket.status === "learning"
+    statusOverride ||
+    (currentPacket.status === "planned" || currentPacket.status === "learning"
       ? "answering"
-      : currentPacket.status
+      : currentPacket.status)
 
   return {
     ...currentPacket,
     status: nextStatus,
-    answers: { ...answerDrafts.value }
+    answers: { ...answerDrafts.value },
+    self_assessment: {
+      difficulty: selfAssessmentDraft.value.difficulty || null,
+      uncertain_exercise_ids: [...selfAssessmentDraft.value.uncertain_exercise_ids],
+      confusing_points: [...selfAssessmentDraft.value.confusing_points],
+      pace: selfAssessmentDraft.value.pace,
+      note: selfAssessmentDraft.value.note
+    }
   }
 }
 
 const saveDraft = async () => {
-  const nextPacket = buildDraftPacket()
+  const nextPacket = buildWritablePacket()
   if (!nextPacket) return
 
   isSaving.value = true
@@ -339,6 +519,38 @@ const saveDraft = async () => {
     }
   } finally {
     isSaving.value = false
+  }
+}
+
+const submitPacket = async () => {
+  const nextPacket = buildWritablePacket("submitted")
+  if (!nextPacket) return
+
+  isSubmitting.value = true
+  submitError.value = ""
+  submitMessage.value = ""
+  saveError.value = ""
+
+  try {
+    const result = await client.value.submitDailyPacket({
+      dailyPacket: nextPacket
+    })
+
+    dailyPacket.value = result?.dailyPacket || nextPacket
+    answerDrafts.value = buildAnswerDrafts(dailyPacket.value)
+    selfAssessmentDraft.value = buildSelfAssessmentDraft(dailyPacket.value)
+    submitMessage.value =
+      "The packet is now submitted. The next step is to hand the review prompt to Codex for correction."
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    if (/revision|conflict/i.test(message)) {
+      submitError.value =
+        "Submit hit a revision conflict. Please refresh to load the latest packet before submitting again."
+    } else {
+      submitError.value = message
+    }
+  } finally {
+    isSubmitting.value = false
   }
 }
 
@@ -521,6 +733,52 @@ onMounted(() => {
   margin-top: 14px;
 }
 
+.assessment-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.assessment-input {
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #0f172a;
+  box-sizing: border-box;
+  font: inherit;
+}
+
+.assessment-textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.uncertain-block {
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.uncertain-title {
+  margin: 0;
+  font-size: 13px;
+  color: #475569;
+}
+
+.uncertain-item {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  color: #334155;
+}
+
+.next-step-band strong {
+  color: #0f172a;
+}
+
 .answer-field span {
   font-size: 13px;
   color: #475569;
@@ -543,7 +801,8 @@ onMounted(() => {
   .agent-study-header,
   .agent-study-overview,
   .overview-meta,
-  .review-summary {
+  .review-summary,
+  .assessment-grid {
     grid-template-columns: 1fr;
   }
 
