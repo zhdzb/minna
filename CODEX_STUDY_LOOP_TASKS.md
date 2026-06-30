@@ -315,7 +315,7 @@ Completion record:
 
 ## Step 06: 生成 next-agent-context 工具
 
-状态：pending
+状态：blocked
 
 目标：
 
@@ -339,9 +339,13 @@ Completion record:
 - context 包含 latest daily、mastery、review queue 路径。
 - `npm run verify` 通过。
 
+阻塞说明：
+- 阻塞原因：`src/server/agentStudy/contextWriter.js`、`tests/agentStudyContextWriter.test.js` 和 `study/context/next-agent-context.md` 已完成，且 `npx vitest run tests/agentStudyContextWriter.test.js` 通过；但按规则执行 `npm run verify` 时，Vitest 在 2026-06-29 的当前本机环境里出现 fork worker `spawn UNKNOWN` / out-of-memory 问题，导致全量 verify 无法通过。
+- 需要提供：请确认下一步是接受当前代码结果并允许我用串行测试结果继续提交，还是要我先单独处理仓库级 `npm run verify` 稳定性问题（这将超出本 Step 原范围）。
+
 ## Step 07: 新建本地 agent-study API handlers
 
-状态：pending
+状态：done
 
 目标：
 
@@ -365,6 +369,12 @@ Completion record:
 - handlers 可单元测试。
 - submit 会写 event log。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Added store-backed local agent-study API handlers for loading the latest study payload, saving daily drafts, submitting daily packets, and loading the latest review, all without depending on Vite request/response objects.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/server/agentStudy/routes.js`, `tests/agentStudyRoutes.test.js`.
+- Verification: `npx vitest run tests/agentStudyRoutes.test.js` passed, and `npm run verify` passed.
+- Follow-up: By current task status, the next executable pending step is `Step 08`, which should wire these handlers into the Vite dev API. `Step 06` remains marked `blocked` in the task file and can be revisited separately if needed.
 
 ## Step 08: 接入 Vite dev API
 
