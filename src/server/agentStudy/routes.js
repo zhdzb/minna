@@ -39,6 +39,23 @@ const handleGetLatestAgentStudy = async ({ fileStore = createAgentStudyFileStore
 const handleGetLatestReview = async ({ fileStore = createAgentStudyFileStore() } = {}) =>
   fileStore.loadLatestReview()
 
+const handleGetPromptFile = async (
+  payload,
+  { fileStore = createAgentStudyFileStore() } = {}
+) => {
+  const normalized = assertJsonObject(payload, 'agent study prompt route')
+  if (typeof normalized.path !== 'string' || normalized.path.trim() === '') {
+    throw new Error('agent study prompt route requires a prompt path')
+  }
+
+  const promptPath = normalized.path.trim()
+
+  return {
+    path: promptPath,
+    content: fileStore.readStudyText(promptPath)
+  }
+}
+
 const handleSaveDailyPacket = async (
   payload,
   {
@@ -93,6 +110,7 @@ const handleSubmitDailyPacket = async (
 
 export {
   handleGetLatestAgentStudy,
+  handleGetPromptFile,
   handleGetLatestReview,
   handleSaveDailyPacket,
   handleSubmitDailyPacket

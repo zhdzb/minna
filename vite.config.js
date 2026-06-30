@@ -14,6 +14,7 @@ import {
 } from './src/server/routes/studyStateRoute.js'
 import {
   handleGetLatestAgentStudy,
+  handleGetPromptFile,
   handleGetLatestReview,
   handleSaveDailyPacket,
   handleSubmitDailyPacket
@@ -342,6 +343,26 @@ const agentStudyRoutePlugin = () => {
 
         try {
           const result = await handleGetLatestReview()
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/prompt', async (req, res) => {
+        if (req.method !== 'GET') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const requestUrl = new URL(req.url || '/', 'http://127.0.0.1')
+          const result = await handleGetPromptFile({
+            path: requestUrl.searchParams.get('path') || ''
+          })
           writeJson(res, 200, { success: true, data: result })
         } catch (error) {
           writeJson(res, 400, {

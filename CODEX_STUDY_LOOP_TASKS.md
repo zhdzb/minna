@@ -537,7 +537,7 @@ Completion record:
 
 ## Step 13: 实现复制批改提示词
 
-状态：pending
+状态：done
 
 目标：
 
@@ -559,6 +559,12 @@ Completion record:
 
 - 用户提交后能获得下一步 Codex 批改提示。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Added prompt-file loading for Agent Study, exposed a local `/api/agent-study/prompt` read route, and updated `AgentStudyWorkspace` to show the linked review prompt path, copy prompt content directly for Codex, preview loaded prompt text, and show a clear missing-prompt hint when no generated file is linked.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/components/AgentStudyWorkspace.vue`, `src/server/agentStudy/fileStore.js`, `src/server/agentStudy/routes.js`, `src/utils/agentStudyClient.js`, `vite.config.js`, `tests/agentStudyClient.test.js`, `tests/agentStudyFileStore.test.js`, `tests/agentStudyRoutes.test.js`, `tests/agentStudyWorkspace.test.js`.
+- Verification: `npx vitest run tests/agentStudyClient.test.js tests/agentStudyRoutes.test.js tests/agentStudyFileStore.test.js tests/agentStudyWorkspace.test.js` passed, `npm run verify` passed, and a local Vite dev server returned `200` for `http://127.0.0.1:8080/agent-study`, `http://127.0.0.1:8080/api/agent-study/latest`, and `http://127.0.0.1:8080/api/agent-study/prompt?path=study/prompts/templates/review-submitted-packet.md`.
+- Follow-up: Next is `Step 14`, which should add a real review result sample, link it into the latest study state, and prepare the frontend for reviewed-packet rendering.
 
 ## Step 14: 定义 review 写回样例
 

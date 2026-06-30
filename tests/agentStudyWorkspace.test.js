@@ -113,12 +113,16 @@ const createClient = (options = {}) => ({
       }
     }),
     targetPath: "study/daily/2026-06-26.json"
+  }),
+  loadPromptFile: vi.fn().mockResolvedValue({
+    path: "study/prompts/generated/2026-06-26-review.md",
+    content: "Review prompt body"
   })
 })
 
-const mountWorkspace = (client) =>
+const mountWorkspace = (client, options = {}) =>
   mount(AgentStudyWorkspace, {
-    props: { client },
+    props: { client, ...(options.props || {}) },
     global: {
       stubs: {
         "el-button": {
@@ -249,6 +253,25 @@ describe("AgentStudyWorkspace", () => {
     expect(wrapper.text()).toContain("study/prompts/generated/2026-06-26-review.md")
   })
 
+  it("loads and copies the review prompt after submission", async () => {
+    const client = createClient()
+    const copyText = vi.fn().mockResolvedValue(undefined)
+    const wrapper = mountWorkspace(client, {
+      props: { copyText }
+    })
+    await flushPromises()
+
+    await wrapper.findAll("button")[2].trigger("click")
+    await flushPromises()
+    await wrapper.findAll("button")[3].trigger("click")
+    await flushPromises()
+
+    expect(client.loadPromptFile).toHaveBeenCalledWith("study/prompts/generated/2026-06-26-review.md")
+    expect(copyText).toHaveBeenCalledWith("Review prompt body")
+    expect(wrapper.text()).toContain("The review prompt was copied")
+    expect(wrapper.text()).toContain("Review prompt body")
+  })
+
   it("shows a refresh prompt when draft save hits a revision conflict", async () => {
     const client = createClient()
     client.saveDailyPacket.mockRejectedValueOnce(new Error("Revision conflict detected"))
@@ -278,6 +301,24 @@ describe("AgentStudyWorkspace", () => {
     expect(wrapper.text()).toContain("Please refresh")
   })
 
+  it("shows a clear prompt hint when no generated review prompt is linked", async () => {
+    const client = createClient({
+      dailyPacket: {
+        status: "submitted",
+        correction: {
+          status: "pending",
+          prompt_file: "",
+          review_file: ""
+        }
+      }
+    })
+
+    const wrapper = mountWorkspace(client)
+    await flushPromises()
+
+    expect(wrapper.text()).toContain("No generated review prompt is linked to this packet yet.")
+  })
+
   it("renders an empty state when there is no daily packet", async () => {
     const client = {
       loadLatestAgentStudy: vi.fn().mockResolvedValue({
@@ -286,7 +327,8 @@ describe("AgentStudyWorkspace", () => {
         reviewResult: null
       }),
       saveDailyPacket: vi.fn(),
-      submitDailyPacket: vi.fn()
+      submitDailyPacket: vi.fn(),
+      loadPromptFile: vi.fn()
     }
 
     const wrapper = mountWorkspace(client)

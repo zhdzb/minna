@@ -255,6 +255,19 @@ describe('agentStudyFileStore', () => {
     expect(store.loadLatestReview().id).toBe('review-2026-06-26')
   })
 
+  it('reads text files inside the study directory', () => {
+    const studyRoot = createTempStudyRoot()
+    fs.writeFileSync(
+      path.join(studyRoot, 'prompts', 'generated', '2026-06-26-review.md'),
+      'Review prompt body',
+      'utf8'
+    )
+
+    const store = createAgentStudyFileStore({ studyRoot })
+
+    expect(store.readStudyText('study/prompts/generated/2026-06-26-review.md')).toBe('Review prompt body')
+  })
+
   it('rejects path traversal outside the study directory', () => {
     const studyRoot = createTempStudyRoot()
 

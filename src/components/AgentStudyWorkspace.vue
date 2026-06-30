@@ -266,13 +266,32 @@
           <h2>Next Step</h2>
           <span>Review handoff</span>
         </div>
-        <p class="item-copy">
-          This packet is submitted. The next review handoff for Codex should use
-          <strong>{{ reviewPromptPath || "the generated review prompt once it is available" }}</strong>.
-        </p>
-        <p class="item-note">
-          Step 13 will add direct copy support for the review prompt. For now, the page keeps the submission status visible.
-        </p>
+        <div v-if="reviewPromptPath" class="prompt-handoff">
+          <p class="item-copy">
+            This packet is submitted. Review it with Codex using
+            <strong>{{ reviewPromptPath }}</strong>.
+          </p>
+          <div class="header-actions prompt-actions">
+            <el-button
+              type="primary"
+              :loading="isCopyingPrompt"
+              @click="copyReviewPrompt"
+            >
+              Copy Review Prompt
+            </el-button>
+          </div>
+        </div>
+        <div v-else class="prompt-missing">
+          <p class="item-copy">
+            No generated review prompt is linked to this packet yet.
+          </p>
+          <p class="item-note">
+            Wait for a generated prompt file or add one to `daily.correction.prompt_file` before handing review work to Codex.
+          </p>
+        </div>
+        <p v-if="promptCopyMessage" class="prompt-feedback success-copy">{{ promptCopyMessage }}</p>
+        <p v-if="promptError" class="prompt-feedback error-copy">{{ promptError }}</p>
+        <pre v-if="promptPreview" class="prompt-preview">{{ promptPreview }}</pre>
       </section>
     </template>
   </div>
@@ -286,17 +305,25 @@ const props = defineProps({
   client: {
     type: Object,
     default: null
+  },
+  copyText: {
+    type: Function,
+    default: null
   }
 })
 
 const isLoading = ref(true)
 const isSaving = ref(false)
 const isSubmitting = ref(false)
+const isCopyingPrompt = ref(false)
 const loadError = ref("")
 const saveError = ref("")
 const saveMessage = ref("")
 const submitError = ref("")
 const submitMessage = ref("")
+const promptError = ref("")
+const promptCopyMessage = ref("")
+const promptPreview = ref("")
 const indexDocument = ref(null)
 const dailyPacket = ref(null)
 const reviewResult = ref(null)
@@ -310,6 +337,20 @@ const selfAssessmentDraft = ref({
 })
 
 const client = computed(() => props.client || createAgentStudyClient())
+
+const resolveCopyText = async (value) => {
+  if (typeof props.copyText === "function") {
+    await props.copyText(value)
+    return
+  }
+
+  if (typeof navigator !== "undefined" && navigator?.clipboard?.writeText) {
+    await navigator.clipboard.writeText(value)
+    return
+  }
+
+  throw new Error("Clipboard support is unavailable in this environment.")
+}
 
 const missionTitle = computed(() => dailyPacket.value?.mission?.title || "Unnamed Study Packet")
 const missionSummary = computed(() => {
@@ -409,6 +450,8 @@ const updateAnswer = (exerciseId, value) => {
     ...answerDrafts.value,
     [exerciseId]: typeof value === "string" ? value : ""
   }
+  promptCopyMessage.value = ""
+  promptError.value = ""
   submitMessage.value = ""
   saveMessage.value = ""
   submitError.value = ""
@@ -420,6 +463,8 @@ const updateAssessmentField = (field, value) => {
     ...selfAssessmentDraft.value,
     [field]: typeof value === "string" ? value : ""
   }
+  promptCopyMessage.value = ""
+  promptError.value = ""
   submitMessage.value = ""
   submitError.value = ""
 }
@@ -436,6 +481,8 @@ const updateConfusingPoints = (value) => {
       .map((item) => item.trim())
       .filter(Boolean)
   }
+  promptCopyMessage.value = ""
+  promptError.value = ""
   submitMessage.value = ""
   submitError.value = ""
 }
@@ -452,6 +499,8 @@ const toggleUncertainExercise = (exerciseId, checked) => {
     ...selfAssessmentDraft.value,
     uncertain_exercise_ids: [...nextIds]
   }
+  promptCopyMessage.value = ""
+  promptError.value = ""
   submitMessage.value = ""
   submitError.value = ""
 }
@@ -551,6 +600,31 @@ const submitPacket = async () => {
     }
   } finally {
     isSubmitting.value = false
+  }
+}
+
+const copyReviewPrompt = async () => {
+  promptError.value = ""
+  promptCopyMessage.value = ""
+
+  if (!reviewPromptPath.value) {
+    promptError.value = "No generated review prompt is linked to this packet yet."
+    return
+  }
+
+  isCopyingPrompt.value = true
+
+  try {
+    const promptResult = await client.value.loadPromptFile(reviewPromptPath.value)
+    const promptContent = String(promptResult?.content || "")
+    promptPreview.value = promptContent
+    await resolveCopyText(promptContent)
+    promptCopyMessage.value = "The review prompt was copied. You can paste it directly into Codex."
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    promptError.value = message
+  } finally {
+    isCopyingPrompt.value = false
   }
 }
 
@@ -777,6 +851,42 @@ onMounted(() => {
 
 .next-step-band strong {
   color: #0f172a;
+}
+
+.prompt-handoff,
+.prompt-missing {
+  display: grid;
+  gap: 12px;
+}
+
+.prompt-actions {
+  justify-content: start;
+}
+
+.prompt-feedback {
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+.success-copy {
+  color: #166534;
+}
+
+.error-copy {
+  color: #b91c1c;
+}
+
+.prompt-preview {
+  margin: 12px 0 0;
+  padding: 14px;
+  border: 1px solid #dbe3f1;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #1e293b;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font: inherit;
+  line-height: 1.6;
 }
 
 .answer-field span {

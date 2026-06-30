@@ -6,6 +6,7 @@ import { createAgentStudyEventLog } from '../src/server/agentStudy/eventLog.js'
 import { createAgentStudyFileStore } from '../src/server/agentStudy/fileStore.js'
 import {
   handleGetLatestAgentStudy,
+  handleGetPromptFile,
   handleGetLatestReview,
   handleSaveDailyPacket,
   handleSubmitDailyPacket
@@ -270,8 +271,26 @@ describe('agentStudyRoutes', () => {
     expect(JSON.parse(logLines[0]).event).toBe('daily_submitted')
   })
 
+  it('reads a generated review prompt file through the prompt handler', async () => {
+    const studyRoot = createTempStudyRoot()
+    const promptPath = path.join(studyRoot, 'prompts', 'generated', '2026-06-30-review.md')
+    fs.writeFileSync(promptPath, 'Review prompt body', 'utf8')
+
+    const fileStore = createAgentStudyFileStore({ studyRoot })
+    const result = await handleGetPromptFile(
+      { path: 'study/prompts/generated/2026-06-30-review.md' },
+      { fileStore }
+    )
+
+    expect(result).toEqual({
+      path: 'study/prompts/generated/2026-06-30-review.md',
+      content: 'Review prompt body'
+    })
+  })
+
   it('rejects invalid payloads before touching storage', async () => {
     await expect(handleSaveDailyPacket(null)).rejects.toThrow(/requires a JSON object payload/)
     await expect(handleSubmitDailyPacket({})).rejects.toThrow(/dailyPacket/)
+    await expect(handleGetPromptFile({ path: '' })).rejects.toThrow(/requires a prompt path/)
   })
 })

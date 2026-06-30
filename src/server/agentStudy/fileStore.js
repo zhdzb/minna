@@ -79,6 +79,11 @@ const createAgentStudyFileStore = ({
     return validator(readJsonFile(fsImpl, absolutePath))
   }
 
+  const readStudyText = (relativePath) => {
+    const absolutePath = resolveStudyPath(studyRoot, relativePath)
+    return fsImpl.readFileSync(absolutePath, 'utf8')
+  }
+
   const loadLatestDaily = () => {
     const indexDocument = loadIndex()
     if (!indexDocument.latest_daily) {
@@ -162,6 +167,7 @@ const createAgentStudyFileStore = ({
     loadLatestDaily,
     loadLatestReview,
     readStudyJson,
+    readStudyText,
     saveDailyDraft,
     submitDailyPacket
   }

@@ -111,6 +111,35 @@ describe('agentStudyClient', () => {
     })
   })
 
+  it('loads a prompt file through the prompt endpoint', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      createJsonResponse({
+        body: {
+          success: true,
+          data: {
+            path: 'study/prompts/generated/2026-06-26-review.md',
+            content: 'Review prompt body'
+          }
+        }
+      })
+    )
+    const client = createAgentStudyClient({ fetchImpl: fetchMock })
+
+    await expect(client.loadPromptFile('study/prompts/generated/2026-06-26-review.md')).resolves.toEqual({
+      path: 'study/prompts/generated/2026-06-26-review.md',
+      content: 'Review prompt body'
+    })
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/agent-study/prompt?path=study%2Fprompts%2Fgenerated%2F2026-06-26-review.md',
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json'
+        }
+      }
+    )
+  })
+
   it('throws a clear error when fetch support is unavailable', async () => {
     const client = createAgentStudyClient({ fetchImpl: null })
 

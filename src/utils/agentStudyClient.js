@@ -81,6 +81,11 @@ const createAgentStudyClient = (options = {}) => {
       method: 'GET'
     })
 
+  const loadPromptFile = async (promptPath) =>
+    request('prompt?path=' + encodeURIComponent(String(promptPath || '').trim()), {
+      method: 'GET'
+    })
+
   const saveDailyPacket = async ({ dailyPacket, targetPath } = {}) =>
     request('daily/save', {
       method: 'POST',
@@ -105,6 +110,7 @@ const createAgentStudyClient = (options = {}) => {
 
   return {
     loadLatestAgentStudy,
+    loadPromptFile,
     loadLatestReview,
     saveDailyPacket,
     submitDailyPacket
