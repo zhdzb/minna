@@ -261,6 +261,127 @@
         <el-empty v-else description="No review hints are available yet." />
       </section>
 
+      <section v-if="reviewResult" class="agent-study-band">
+        <div class="section-heading">
+          <h2>Latest Review</h2>
+          <span>{{ reviewItems.length }} checked</span>
+        </div>
+
+        <div class="review-summary review-overall-grid">
+          <div class="meta-item">
+            <span>Accuracy</span>
+            <strong>{{ reviewAccuracyLabel }}</strong>
+          </div>
+          <div class="meta-item">
+            <span>Promotion</span>
+            <strong>{{ reviewPromotionLabel }}</strong>
+          </div>
+          <div class="meta-item">
+            <span>Review File</span>
+            <strong>{{ reviewFilePath }}</strong>
+          </div>
+          <div class="meta-item">
+            <span>Created</span>
+            <strong>{{ reviewResult.created_at || "--" }}</strong>
+          </div>
+        </div>
+
+        <div class="review-overall-copy">
+          <div>
+            <p class="review-block-label">Summary</p>
+            <p class="item-copy">{{ reviewResult.overall?.summary || "No review summary yet." }}</p>
+          </div>
+          <div>
+            <p class="review-block-label">Next Focus</p>
+            <ul v-if="reviewNextFocus.length" class="review-focus-list">
+              <li v-for="focus in reviewNextFocus" :key="focus">{{ focus }}</li>
+            </ul>
+            <p v-else class="item-note">No next-focus items were recorded.</p>
+          </div>
+          <div>
+            <p class="review-block-label">Promotion Reason</p>
+            <p class="item-copy">{{ reviewResult.promotion_decision?.reason || "No promotion note yet." }}</p>
+          </div>
+        </div>
+
+        <div class="review-item-list">
+          <article
+            v-for="item in reviewItems"
+            :key="item.exercise_id"
+            class="exercise-card review-item-card"
+          >
+            <div class="item-card-top">
+              <div>
+                <h3>{{ reviewExercisePrompt(item) }}</h3>
+                <p class="item-type">{{ item.target_grammar || reviewExerciseType(item.exercise_id) }}</p>
+              </div>
+              <el-tag
+                size="small"
+                :type="item.is_correct ? 'success' : 'danger'"
+                effect="plain"
+              >
+                {{ item.is_correct ? "correct" : "needs retry" }}
+              </el-tag>
+            </div>
+
+            <div class="review-chip-row">
+              <span class="review-chip">Score {{ formatPercent(item.score) }}</span>
+              <span class="review-chip">Confidence {{ formatPercent(item.confidence) }}</span>
+              <span v-if="item.retry_recommended" class="review-chip review-chip-warning">Retry recommended</span>
+              <span v-if="item.needs_user_input" class="review-chip review-chip-warning">Needs user input</span>
+            </div>
+
+            <p v-if="item.error_tags?.length" class="item-note">
+              Tags: {{ item.error_tags.join(", ") }}
+            </p>
+            <p v-else class="item-note">Tags: none</p>
+
+            <div class="review-answer-block">
+              <p class="review-block-label">Your Answer</p>
+              <p class="item-copy">{{ item.user_answer || getAnswerValue(item.exercise_id) || "--" }}</p>
+            </div>
+
+            <div class="review-answer-block">
+              <p class="review-block-label">Correct Answer</p>
+              <p class="item-copy">{{ item.correct_answer || "No reference answer provided." }}</p>
+            </div>
+
+            <div class="review-answer-block">
+              <p class="review-block-label">Explanation</p>
+              <p class="item-copy">{{ item.explanation || "No explanation provided." }}</p>
+            </div>
+
+            <div v-if="item.acceptable_variants?.length" class="review-answer-block">
+              <p class="review-block-label">Acceptable Variants</p>
+              <ul class="review-focus-list">
+                <li v-for="variant in item.acceptable_variants" :key="variant">{{ variant }}</li>
+              </ul>
+            </div>
+
+            <div v-if="item.rubric && Object.keys(item.rubric).length" class="review-answer-block">
+              <p class="review-block-label">Rubric</p>
+              <div class="rubric-grid">
+                <div
+                  v-for="(value, key) in item.rubric"
+                  :key="`${item.exercise_id}-${key}`"
+                  class="rubric-item"
+                >
+                  <span>{{ key }}</span>
+                  <strong>{{ formatPercent(value) }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="review-answer-block">
+              <p class="review-block-label">Manual Override</p>
+              <p class="item-note">
+                {{ formatManualOverride(item.manual_override) }}
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section v-if="showSubmissionNextStep" class="agent-study-band next-step-band">
         <div class="section-heading">
           <h2>Next Step</h2>
@@ -385,6 +506,17 @@ const reviewItemCountLabel = computed(() => `${dailyPacket.value?.review_items?.
 const reviewPromptPath = computed(() => dailyPacket.value?.correction?.prompt_file || "")
 const showSubmissionNextStep = computed(() => ["submitted", "reviewed"].includes(dailyPacket.value?.status))
 const confusingPointsText = computed(() => selfAssessmentDraft.value.confusing_points.join("\n"))
+const reviewItems = computed(() => (Array.isArray(reviewResult.value?.items) ? reviewResult.value.items : []))
+const reviewNextFocus = computed(() =>
+  Array.isArray(reviewResult.value?.overall?.next_focus) ? reviewResult.value.overall.next_focus : []
+)
+const reviewAccuracyLabel = computed(() => formatPercent(reviewResult.value?.overall?.accuracy))
+const reviewPromotionLabel = computed(() =>
+  reviewResult.value?.promotion_decision?.can_advance ? "Ready to advance" : "Hold current lesson"
+)
+const reviewFilePath = computed(
+  () => dailyPacket.value?.correction?.review_file || indexDocument.value?.latest_review || "None yet"
+)
 
 const hasDraftChanges = computed(() => {
   if (!dailyPacket.value) return false
@@ -443,6 +575,33 @@ const answerPlaceholder = (exerciseType) => {
   if (exerciseType === "q_conversation") return "Write a natural reply draft"
   if (exerciseType === "q_translate") return "Write your translation draft"
   return "Write your answer"
+}
+
+const formatPercent = (value) => {
+  if (typeof value !== "number" || Number.isNaN(value)) return "--"
+  return `${Math.round(value * 100)}%`
+}
+
+const findExercise = (exerciseId) =>
+  dailyPacket.value?.exercises?.find((exercise) => exercise.id === exerciseId) || null
+
+const reviewExercisePrompt = (item) => {
+  const exercise = findExercise(item.exercise_id)
+  return exercise?.prompt || item.exercise_id || "Review item"
+}
+
+const reviewExerciseType = (exerciseId) => {
+  const exercise = findExercise(exerciseId)
+  return exercise?.type || "exercise"
+}
+
+const formatManualOverride = (manualOverride) => {
+  if (!manualOverride) return "No manual override recorded."
+  if (typeof manualOverride === "string") return manualOverride
+  if (typeof manualOverride === "object") {
+    return manualOverride.reason || manualOverride.summary || JSON.stringify(manualOverride)
+  }
+  return String(manualOverride)
 }
 
 const updateAnswer = (exerciseId, value) => {
@@ -851,6 +1010,86 @@ onMounted(() => {
 
 .next-step-band strong {
   color: #0f172a;
+}
+
+.review-overall-grid {
+  margin-bottom: 16px;
+}
+
+.review-overall-copy,
+.review-item-list {
+  display: grid;
+  gap: 16px;
+}
+
+.review-item-list {
+  margin-top: 16px;
+}
+
+.review-item-card {
+  display: grid;
+  gap: 12px;
+}
+
+.review-chip-row,
+.rubric-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.review-chip {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 12px;
+}
+
+.review-chip-warning {
+  background: #fff7ed;
+  color: #b45309;
+}
+
+.review-block-label {
+  margin: 0;
+  font-size: 12px;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.review-answer-block {
+  display: grid;
+  gap: 6px;
+}
+
+.review-focus-list {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: #334155;
+  display: grid;
+  gap: 8px;
+}
+
+.rubric-item {
+  min-width: 0;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.rubric-item span {
+  color: #475569;
+  font-size: 12px;
+}
+
+.rubric-item strong {
+  color: #0f172a;
+  font-size: 13px;
 }
 
 .prompt-handoff,

@@ -72,13 +72,71 @@ const createDailyPacket = (overrides = {}) => ({
   ...overrides
 })
 
+const createReviewResult = (overrides = {}) => ({
+  id: "review-2026-06-26",
+  created_at: "2026-06-26T21:00:00+08:00",
+  overall: {
+    accuracy: 0.74,
+    summary: "Core meaning is mostly there, but the means particle is still unstable.",
+    next_focus: ["N de V transport sentences", "More natural short conversation replies"]
+  },
+  items: [
+    {
+      exercise_id: "exercise-fill",
+      is_correct: false,
+      score: 0.25,
+      error_tags: ["particle", "grammar_pattern"],
+      target_grammar: "N de V",
+      user_answer: "ni",
+      correct_answer: "de",
+      explanation: "This sentence needs the means particle de, not ni.",
+      retry_recommended: true,
+      rubric: {
+        target_particle: 0.0,
+        pattern_match: 0.5
+      },
+      confidence: 0.97,
+      needs_user_input: false,
+      acceptable_variants: [],
+      manual_override: null
+    },
+    {
+      exercise_id: "exercise-conversation",
+      is_correct: true,
+      score: 0.68,
+      error_tags: ["naturalness"],
+      target_grammar: "N1 wa N2 ni moraimasu",
+      user_answer: "tomodachi ni moraimashita",
+      correct_answer: "tomodachi ni hon o moraimashita yo",
+      explanation: "The answer is correct, but it sounds a little bare as a conversation reply.",
+      retry_recommended: true,
+      rubric: {
+        context_match: 0.7,
+        politeness: 0.7,
+        naturalness: 0.5
+      },
+      confidence: 0.63,
+      needs_user_input: true,
+      acceptable_variants: ["tomodachi ni hon o moraimashita"],
+      manual_override: {
+        reason: "Teacher accepted this as understandable, but wants a fuller reply next time."
+      }
+    }
+  ],
+  promotion_decision: {
+    can_advance: false,
+    reason: "Lesson 7 output is close, but the means particle still needs another correct cycle before promotion."
+  },
+  ...overrides
+})
+
 const createClient = (options = {}) => ({
   loadLatestAgentStudy: vi.fn().mockResolvedValue({
     index: {
       latest_review: "study/reviews/2026-06-26-review.json"
     },
     dailyPacket: createDailyPacket(options.dailyPacket),
-    reviewResult: null
+    reviewResult: options.reviewResult === undefined ? null : createReviewResult(options.reviewResult)
   }),
   saveDailyPacket: vi.fn().mockResolvedValue({
     dailyPacket: createDailyPacket({
@@ -182,6 +240,34 @@ describe("AgentStudyWorkspace", () => {
     expect(wrapper.text()).toContain("Giving and receiving notes")
     expect(wrapper.text()).toContain("Translate this sentence")
     expect(wrapper.text()).toContain("study/reviews/2026-06-26-review.json")
+  })
+
+  it("renders the latest review summary and per-item feedback when review data exists", async () => {
+    const client = createClient({
+      dailyPacket: {
+        status: "reviewed",
+        correction: {
+          status: "reviewed",
+          prompt_file: "study/prompts/generated/2026-06-26-review.md",
+          review_file: "study/reviews/2026-06-26-review.json"
+        }
+      },
+      reviewResult: {}
+    })
+
+    const wrapper = mountWorkspace(client)
+    await flushPromises()
+
+    expect(wrapper.text()).toContain("Latest Review")
+    expect(wrapper.text()).toContain("74%")
+    expect(wrapper.text()).toContain("Hold current lesson")
+    expect(wrapper.text()).toContain("Core meaning is mostly there")
+    expect(wrapper.text()).toContain("N de V transport sentences")
+    expect(wrapper.text()).toContain("This sentence needs the means particle de, not ni.")
+    expect(wrapper.text()).toContain("Acceptable Variants")
+    expect(wrapper.text()).toContain("Needs user input")
+    expect(wrapper.text()).toContain("Teacher accepted this as understandable")
+    expect(wrapper.text()).toContain("target_particle")
   })
 
   it("updates answers and saves them through the daily save client", async () => {

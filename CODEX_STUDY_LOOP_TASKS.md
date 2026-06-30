@@ -600,7 +600,7 @@ Completion record:
 
 ## Step 15: 展示批改结果
 
-状态：pending
+状态：done
 
 目标：
 
@@ -621,6 +621,12 @@ Completion record:
 
 - review 样例能正确展示。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Rendered the latest review inside `AgentStudyWorkspace`, including overall accuracy, summary, next-focus guidance, promotion status, per-item correctness, error tags, explanation, correct answer, confidence, acceptable variants, rubric scores, and manual-override state.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/components/AgentStudyWorkspace.vue`, `tests/agentStudyWorkspace.test.js`.
+- Verification: `npx vitest run tests/agentStudyWorkspace.test.js` passed, `npm run verify` passed, and a local Vite dev server returned `200` for `http://127.0.0.1:8080/agent-study` and `http://127.0.0.1:8080/api/agent-study/latest`.
+- Follow-up: Next is `Step 16`, which should implement `mastery_updates` writeback so reviewed packets change `study/state/mastery.json` from structured review evidence.
 
 ## Step 16: 实现 mastery 更新工具
 
