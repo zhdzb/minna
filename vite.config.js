@@ -16,8 +16,11 @@ import {
   handleGetAgentProgressReview,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
+  handleGetLatestReviewDrill,
   handleGetLatestReview,
   handleSaveDailyPacket,
+  handleSaveReviewDrill,
+  handleSubmitReviewDrill,
   handleSubmitDailyPacket
 } from './src/server/agentStudy/routes.js'
 
@@ -361,6 +364,59 @@ const agentStudyRoutePlugin = () => {
 
         try {
           const result = await handleGetLatestReview()
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/review-drill/latest', async (req, res) => {
+        if (req.method !== 'GET') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const result = await handleGetLatestReviewDrill()
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/review-drill/save', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handleSaveReviewDrill(payload)
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/review-drill/submit', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handleSubmitReviewDrill(payload)
           writeJson(res, 200, { success: true, data: result })
         } catch (error) {
           writeJson(res, 400, {

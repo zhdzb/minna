@@ -13,6 +13,7 @@
     "review_queue": 1,
     "promotion_rules": 1,
     "daily_packet": 1,
-    "review_result": 1
+    "review_result": 1,
+    "review_drill": 1
   }
 }

@@ -69,6 +69,9 @@ const handleGetAgentProgressReview = async (
 const handleGetLatestReview = async ({ fileStore = createAgentStudyFileStore() } = {}) =>
   fileStore.loadLatestReview()
 
+const handleGetLatestReviewDrill = async ({ fileStore = createAgentStudyFileStore() } = {}) =>
+  fileStore.loadLatestReviewDrill()
+
 const handleGetPromptFile = async (
   payload,
   { fileStore = createAgentStudyFileStore() } = {}
@@ -138,11 +141,90 @@ const handleSubmitDailyPacket = async (
   }
 }
 
+const resolveReviewDrillTargetPath = ({ payload, fileStore }) => {
+  if (typeof payload.targetPath === 'string' && payload.targetPath.trim() !== '') {
+    return payload.targetPath.trim()
+  }
+
+  const latestReviewDrill = fileStore.loadLatestReviewDrill()
+  if (latestReviewDrill?.date) {
+    return 'study/review-drills/' + latestReviewDrill.date + '.json'
+  }
+
+  const reviewDrill = payload.reviewDrill || {}
+  if (typeof reviewDrill.date === 'string' && reviewDrill.date.trim() !== '') {
+    return 'study/review-drills/' + reviewDrill.date.trim() + '.json'
+  }
+
+  throw new Error('agent review drill route requires targetPath or a resolvable drill date')
+}
+
+const handleSaveReviewDrill = async (
+  payload,
+  {
+    fileStore = createAgentStudyFileStore(),
+    eventLog = createAgentStudyEventLog()
+  } = {}
+) => {
+  const normalized = assertJsonObject(payload, 'agent review drill save route')
+  const reviewDrill = assertJsonObject(
+    normalized.reviewDrill,
+    'agent review drill save route reviewDrill'
+  )
+  const targetPath = resolveReviewDrillTargetPath({ payload: normalized, fileStore })
+  const savedReviewDrill = fileStore.saveReviewDrillDraft({ reviewDrill, targetPath })
+
+  eventLog.appendEvent({
+    actor: 'frontend',
+    event: 'review_drill_saved',
+    input_files: [targetPath],
+    output_files: [targetPath],
+    summary: 'Saved review drill draft answers.'
+  })
+
+  return {
+    reviewDrill: savedReviewDrill,
+    targetPath
+  }
+}
+
+const handleSubmitReviewDrill = async (
+  payload,
+  {
+    fileStore = createAgentStudyFileStore(),
+    eventLog = createAgentStudyEventLog()
+  } = {}
+) => {
+  const normalized = assertJsonObject(payload, 'agent review drill submit route')
+  const reviewDrill = assertJsonObject(
+    normalized.reviewDrill,
+    'agent review drill submit route reviewDrill'
+  )
+  const targetPath = resolveReviewDrillTargetPath({ payload: normalized, fileStore })
+  const submittedReviewDrill = fileStore.submitReviewDrill({ reviewDrill, targetPath })
+
+  eventLog.appendEvent({
+    actor: 'frontend',
+    event: 'review_drill_submitted',
+    input_files: [targetPath],
+    output_files: [targetPath, 'study/logs/agent-events.jsonl'],
+    summary: 'Submitted review drill answers.'
+  })
+
+  return {
+    reviewDrill: submittedReviewDrill,
+    targetPath
+  }
+}
+
 export {
   handleGetAgentProgressReview,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
+  handleGetLatestReviewDrill,
   handleGetLatestReview,
   handleSaveDailyPacket,
+  handleSaveReviewDrill,
+  handleSubmitReviewDrill,
   handleSubmitDailyPacket
 }

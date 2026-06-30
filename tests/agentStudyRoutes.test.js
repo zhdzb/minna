@@ -8,8 +8,11 @@ import {
   handleGetAgentProgressReview,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
+  handleGetLatestReviewDrill,
   handleGetLatestReview,
   handleSaveDailyPacket,
+  handleSaveReviewDrill,
+  handleSubmitReviewDrill,
   handleSubmitDailyPacket
 } from '../src/server/agentStudy/routes.js'
 
@@ -21,6 +24,7 @@ const createTempStudyRoot = () => {
   const studyRoot = path.join(tempRoot, 'study')
   fs.mkdirSync(path.join(studyRoot, 'daily'), { recursive: true })
   fs.mkdirSync(path.join(studyRoot, 'reviews'), { recursive: true })
+  fs.mkdirSync(path.join(studyRoot, 'review-drills'), { recursive: true })
   fs.mkdirSync(path.join(studyRoot, 'prompts', 'generated'), { recursive: true })
   fs.mkdirSync(path.join(studyRoot, 'logs'), { recursive: true })
   return studyRoot
@@ -273,6 +277,43 @@ const createReviewQueue = () => ({
   ]
 })
 
+const createReviewDrill = ({ revision = 1, status = 'draft' } = {}) => ({
+  schema_version: 1,
+  revision,
+  updated_at: '2026-06-30T09:00:00+08:00',
+  id: 'review-drill-2026-06-30',
+  date: '2026-06-30',
+  status,
+  created_at: '2026-06-30T09:00:00+08:00',
+  source_review: 'study/reviews/2026-06-30-review.json',
+  summary: {
+    title: 'Lesson 7 weak point refresh',
+    focus: ['means particle', 'morau response'],
+    due_review_queue_ids: ['rq-001']
+  },
+  items: [
+    {
+      id: 'drill-001',
+      review_queue_id: 'rq-001',
+      key: 'lesson-7/tool-means',
+      lesson: 7,
+      target_grammar: 'N de V',
+      weakness_explanation: 'The means particle still slips during controlled output.',
+      error_tags: ['particle'],
+      original_prompt: 'Translate: I go by bus.',
+      variant_prompt: 'Say: I go to the station by taxi today.',
+      answer_reference: 'Kyou wa takushii de eki ni ikimasu.',
+      user_answer: '',
+      hint: 'Keep de attached to the transport phrase.',
+      status: 'pending'
+    }
+  ],
+  submission: {
+    submitted_at: null,
+    note: ''
+  }
+})
+
 afterEach(() => {
   while (tempDirs.length > 0) {
     fs.rmSync(tempDirs.pop(), { recursive: true, force: true })
@@ -300,6 +341,17 @@ describe('agentStudyRoutes', () => {
     expect(latest.dailyPacket.id).toBe('daily-2026-06-30')
     expect(latest.reviewResult.id).toBe('review-2026-06-30')
     expect(latestReview.id).toBe('review-2026-06-30')
+  })
+
+  it('loads the latest review drill packet', async () => {
+    const studyRoot = createTempStudyRoot()
+    writeJson(path.join(studyRoot, 'index.json'), createIndexDocument())
+    writeJson(path.join(studyRoot, 'review-drills', '2026-06-30.json'), createReviewDrill())
+
+    const fileStore = createAgentStudyFileStore({ studyRoot })
+    const latestReviewDrill = await handleGetLatestReviewDrill({ fileStore })
+
+    expect(latestReviewDrill.id).toBe('review-drill-2026-06-30')
   })
 
   it('loads the aggregated progress review payload', async () => {
@@ -435,9 +487,50 @@ describe('agentStudyRoutes', () => {
     })
   })
 
+  it('saves and submits a review drill packet while appending drill events', async () => {
+    const studyRoot = createTempStudyRoot()
+    writeJson(path.join(studyRoot, 'index.json'), createIndexDocument())
+    writeJson(path.join(studyRoot, 'review-drills', '2026-06-30.json'), createReviewDrill())
+
+    const fileStore = createAgentStudyFileStore({
+      studyRoot,
+      now: () => '2026-06-30T12:00:00+08:00'
+    })
+    const eventLog = createAgentStudyEventLog({
+      studyRoot,
+      now: () => '2026-06-30T12:00:00+08:00',
+      createId: (() => {
+        let count = 0
+        return () => 'event-review-drill-' + ++count
+      })()
+    })
+
+    const draft = createReviewDrill()
+    draft.items[0].user_answer = 'Kyou wa takushii de eki ni ikimasu.'
+
+    const saved = await handleSaveReviewDrill({ reviewDrill: draft }, { fileStore, eventLog })
+    expect(saved.reviewDrill.revision).toBe(2)
+    expect(saved.reviewDrill.items[0].user_answer).toContain('takushii')
+
+    const submitted = await handleSubmitReviewDrill(
+      { reviewDrill: saved.reviewDrill },
+      { fileStore, eventLog }
+    )
+    expect(submitted.reviewDrill.status).toBe('submitted')
+
+    const logLines = fs
+      .readFileSync(path.join(studyRoot, 'logs', 'agent-events.jsonl'), 'utf8')
+      .trim()
+      .split(/\r?\n/)
+    expect(logLines).toHaveLength(2)
+    expect(JSON.parse(logLines[0]).event).toBe('review_drill_saved')
+    expect(JSON.parse(logLines[1]).event).toBe('review_drill_submitted')
+  })
+
   it('rejects invalid payloads before touching storage', async () => {
     await expect(handleSaveDailyPacket(null)).rejects.toThrow(/requires a JSON object payload/)
     await expect(handleSubmitDailyPacket({})).rejects.toThrow(/dailyPacket/)
     await expect(handleGetPromptFile({ path: '' })).rejects.toThrow(/requires a prompt path/)
+    await expect(handleSaveReviewDrill({})).rejects.toThrow(/reviewDrill/)
   })
 })

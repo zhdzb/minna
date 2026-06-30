@@ -1,7 +1,15 @@
 import fs from 'fs'
 import path from 'path'
-import { validateDailyPacket, validateIndex, validateReviewResult } from '../../utils/agentStudySchema'
-import { validateDailyPacketContentQuality } from '../../utils/agentStudyContentQuality'
+import {
+  validateDailyPacket,
+  validateIndex,
+  validateReviewDrill,
+  validateReviewResult
+} from '../../utils/agentStudySchema'
+import {
+  validateDailyPacketContentQuality,
+  validateReviewDrillContentQuality
+} from '../../utils/agentStudyContentQuality'
 import { loadAgentStudyIndexWithFallback } from './indexRebuilder'
 
 const clone = (value) => JSON.parse(JSON.stringify(value))
@@ -62,6 +70,33 @@ const resolveStudyPath = (studyRoot, relativePath) => {
 
 const normalizeTimestamp = (timestampFactory) => timestampFactory()
 
+const loadLatestValidatedDocumentFromDirectory = ({
+  studyRoot,
+  fsImpl,
+  directoryPath,
+  validator
+}) => {
+  const absoluteDirectory = resolveStudyPath(studyRoot, directoryPath)
+  if (!fsImpl.existsSync(absoluteDirectory)) {
+    return null
+  }
+
+  const candidateNames = fsImpl
+    .readdirSync(absoluteDirectory, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.json'))
+    .map((entry) => entry.name)
+    .sort()
+    .reverse()
+
+  for (const fileName of candidateNames) {
+    const absolutePath = path.join(absoluteDirectory, fileName)
+    const document = validator(readJsonFile(fsImpl, absolutePath))
+    return document
+  }
+
+  return null
+}
+
 const createAgentStudyFileStore = ({
   studyRoot = path.resolve(process.cwd(), 'study'),
   fsImpl = fs,
@@ -101,6 +136,14 @@ const createAgentStudyFileStore = ({
 
     return readStudyJson(indexDocument.latest_review, validateReviewResult)
   }
+
+  const loadLatestReviewDrill = () =>
+    loadLatestValidatedDocumentFromDirectory({
+      studyRoot,
+      fsImpl,
+      directoryPath: 'study/review-drills',
+      validator: validateReviewDrill
+    })
 
   const writeIndex = (indexDocument) => {
     const indexPath = path.join(studyRoot, 'index.json')
@@ -162,14 +205,76 @@ const createAgentStudyFileStore = ({
       statusOverride: 'submitted'
     })
 
+  const writeReviewDrill = ({ reviewDrill, targetPath, statusOverride = null }) => {
+    const absolutePath = resolveStudyPath(studyRoot, targetPath)
+    const existingDocument = fsImpl.existsSync(absolutePath)
+      ? validateReviewDrill(readJsonFile(fsImpl, absolutePath))
+      : null
+
+    const normalizedReviewDrill = validateReviewDrill(clone(reviewDrill))
+    validateReviewDrillContentQuality(normalizedReviewDrill)
+
+    if (existingDocument && normalizedReviewDrill.revision !== existingDocument.revision) {
+      throw new Error(
+        'Revision conflict for ' +
+          targetPath +
+          ': expected ' +
+          existingDocument.revision +
+          ' but received ' +
+          normalizedReviewDrill.revision
+      )
+    }
+
+    const timestamp = normalizeTimestamp(now)
+    const nextReviewDrill = {
+      ...normalizedReviewDrill,
+      status: statusOverride || normalizedReviewDrill.status,
+      revision: existingDocument ? existingDocument.revision + 1 : normalizedReviewDrill.revision,
+      updated_at: timestamp,
+      submission: {
+        ...normalizedReviewDrill.submission,
+        submitted_at:
+          statusOverride === 'submitted'
+            ? timestamp
+            : normalizedReviewDrill.submission.submitted_at
+      },
+      items: normalizedReviewDrill.items.map((item) => ({
+        ...item,
+        status: statusOverride === 'submitted' ? 'submitted' : item.status
+      }))
+    }
+
+    const validatedNextReviewDrill = validateReviewDrill(nextReviewDrill)
+    validateReviewDrillContentQuality(validatedNextReviewDrill)
+    atomicWriteText(fsImpl, absolutePath, JSON.stringify(validatedNextReviewDrill, null, 2) + '\n')
+
+    return validatedNextReviewDrill
+  }
+
+  const saveReviewDrillDraft = ({ reviewDrill, targetPath }) =>
+    writeReviewDrill({
+      reviewDrill,
+      targetPath
+    })
+
+  const submitReviewDrill = ({ reviewDrill, targetPath }) =>
+    writeReviewDrill({
+      reviewDrill,
+      targetPath,
+      statusOverride: 'submitted'
+    })
+
   return {
     loadIndex,
     loadLatestDaily,
+    loadLatestReviewDrill,
     loadLatestReview,
     readStudyJson,
     readStudyText,
     saveDailyDraft,
-    submitDailyPacket
+    saveReviewDrillDraft,
+    submitDailyPacket,
+    submitReviewDrill
   }
 }
 

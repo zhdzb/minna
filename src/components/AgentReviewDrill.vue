@@ -4,9 +4,16 @@
       <div>
         <p class="drill-eyebrow">Codex Study Loop</p>
         <h1>Agent Review Drill</h1>
-        <p class="drill-subtitle">Work the due review queue first, with light drill placeholders until structured drill packets arrive.</p>
+        <p class="drill-subtitle">
+          Work through structured review variants, keep a draft if needed, then submit the drill
+          packet back to the repo.
+        </p>
       </div>
-      <el-button :loading="isLoading" @click="loadDrill">Refresh</el-button>
+      <div class="header-actions">
+        <el-button :loading="isSaving" @click="saveDrill">Save Draft</el-button>
+        <el-button type="primary" :loading="isSubmitting" @click="submitDrill">Submit Drill</el-button>
+        <el-button :loading="isLoading" @click="loadDrill">Refresh</el-button>
+      </div>
     </header>
 
     <section v-if="isLoading" class="drill-band">
@@ -17,17 +24,17 @@
       <el-alert :closable="false" show-icon title="Load failed" type="error" :description="loadError" />
     </section>
 
-    <template v-else-if="progressPayload">
+    <template v-else-if="reviewDrill">
       <section class="drill-band summary-grid">
         <article class="summary-card">
-          <span>Due Now</span>
-          <strong>{{ dueItems.length }}</strong>
-          <p>{{ totalQueueCount }} total queue items</p>
+          <span>Drill Status</span>
+          <strong>{{ reviewDrill.status }}</strong>
+          <p>{{ reviewDrill.summary.title }}</p>
         </article>
         <article class="summary-card">
-          <span>Current Lesson</span>
-          <strong>{{ progressPayload.current?.current_lesson ?? "--" }}</strong>
-          <p>{{ progressPayload.current?.learning_mode || "No learning mode" }}</p>
+          <span>Focus Items</span>
+          <strong>{{ reviewDrill.items.length }}</strong>
+          <p>{{ reviewDrill.summary.focus.join(" / ") || "No focus tags" }}</p>
         </article>
         <article class="summary-card">
           <span>Latest Review</span>
@@ -36,68 +43,92 @@
         </article>
       </section>
 
+      <section v-if="actionMessage" class="drill-band action-band">
+        <el-alert :closable="false" show-icon title="Review drill updated" type="success" :description="actionMessage" />
+      </section>
+
       <section class="drill-band">
         <div class="section-heading">
-          <h2>Due Review Queue</h2>
-          <span>{{ dueItems.length }} due</span>
+          <h2>Structured Drill Packet</h2>
+          <span>{{ reviewDrill.items.length }} items</span>
         </div>
-        <div v-if="dueItems.length" class="drill-list">
-          <article v-for="item in dueItems" :key="item.id" class="drill-card">
+        <div class="drill-list">
+          <article v-for="item in reviewDrill.items" :key="item.id" class="drill-card">
             <div class="item-head">
               <div>
                 <h3>{{ formatQueueKey(item.key) }}</h3>
-                <p class="item-subtitle">{{ item.kind }} · due {{ item.due_date }}</p>
+                <p class="item-subtitle">
+                  lesson {{ item.lesson }} · {{ item.target_grammar }} · {{ item.status }}
+                </p>
               </div>
-              <el-tag size="small" type="danger" effect="plain">{{ item.last_result }}</el-tag>
-            </div>
-
-            <div class="chip-row">
-              <span class="chip">interval {{ item.interval_days }}d</span>
-              <span class="chip">ease {{ item.ease }}</span>
-              <span class="chip">status {{ item.status }}</span>
+              <el-tag size="small" :type="item.status === 'submitted' ? 'success' : 'warning'" effect="plain">
+                {{ item.review_queue_id }}
+              </el-tag>
             </div>
 
             <div class="detail-block">
-              <p class="block-label">Grammar Point</p>
-              <p class="detail-copy">{{ findGrammarPoint(item.key)?.pattern || item.key }}</p>
+              <p class="block-label">Weakness Explanation</p>
+              <p class="detail-copy">{{ item.weakness_explanation }}</p>
             </div>
 
             <div class="detail-block">
-              <p class="block-label">Recent Error Cause</p>
-              <p class="detail-copy">{{ deriveErrorCause(item) }}</p>
+              <p class="block-label">Recent Error Tags</p>
+              <div class="chip-row">
+                <span v-for="tag in item.error_tags" :key="tag" class="chip chip-warning">{{ tag }}</span>
+              </div>
             </div>
 
             <div class="detail-block">
-              <p class="block-label">Latest Review Hint</p>
-              <p class="detail-copy">{{ deriveReviewHint(item) }}</p>
+              <p class="block-label">Original Prompt</p>
+              <p class="detail-copy">{{ item.original_prompt }}</p>
+            </div>
+
+            <div class="detail-block">
+              <p class="block-label">Variant Drill Prompt</p>
+              <p class="detail-copy detail-copy-strong">{{ item.variant_prompt }}</p>
+            </div>
+
+            <div v-if="item.hint" class="detail-block">
+              <p class="block-label">Hint</p>
+              <p class="detail-copy">{{ item.hint }}</p>
             </div>
 
             <label class="answer-field">
-              <span>Drill Notes / Placeholder Answer</span>
+              <span>Your Review Answer</span>
               <textarea
                 class="draft-input"
-                :value="draftAnswers[item.id] || ''"
+                :value="item.user_answer"
                 rows="4"
-                placeholder="Write a fresh sentence, note the contrast, or leave yourself a retry cue."
-                @input="updateDraft(item.id, $event.target.value)"
+                placeholder="Write a fresh answer for this review variant."
+                @input="updateAnswer(item.id, $event.target.value)"
               />
             </label>
+
+            <div class="detail-block answer-reference-block">
+              <p class="block-label">Answer Reference</p>
+              <p class="detail-copy">{{ item.answer_reference }}</p>
+            </div>
           </article>
         </div>
-        <el-empty v-else description="No due review items are waiting right now." />
       </section>
 
       <section class="drill-band">
         <div class="section-heading">
-          <h2>Recent Error Tags</h2>
-          <span>{{ recentErrorTags.length }} tags</span>
+          <h2>Due Queue Snapshot</h2>
+          <span>{{ dueItems.length }} due</span>
         </div>
-        <div v-if="recentErrorTags.length" class="chip-row">
-          <span v-for="tag in recentErrorTags" :key="tag" class="chip chip-warning">{{ tag }}</span>
+        <div v-if="dueItems.length" class="chip-row">
+          <span v-for="item in dueItems" :key="item.id" class="chip">
+            {{ formatQueueKey(item.key) }} · {{ item.last_result }} · due {{ item.due_date }}
+          </span>
         </div>
-        <el-empty v-else description="No recent error tags are available." />
+        <el-empty v-else description="No due review items are waiting right now." />
       </section>
     </template>
+
+    <section v-else class="drill-band">
+      <el-empty description="No review drill packet is available yet." />
+    </section>
   </div>
 </template>
 
@@ -113,36 +144,58 @@ const props = defineProps({
 })
 
 const isLoading = ref(true)
+const isSaving = ref(false)
+const isSubmitting = ref(false)
 const loadError = ref("")
+const actionMessage = ref("")
 const progressPayload = ref(null)
-const draftAnswers = ref({})
+const reviewDrill = ref(null)
+const reviewDrillPath = ref("")
 
 const client = computed(() => props.client || createAgentStudyClient())
 
-const queueItems = computed(() => progressPayload.value?.reviewQueue?.items || [])
-const dueItems = computed(() => queueItems.value.filter((item) => item.status === "due"))
-const totalQueueCount = computed(() => queueItems.value.length)
-const reviewItems = computed(() => progressPayload.value?.reviewResult?.items || [])
-const grammarPoints = computed(() => progressPayload.value?.mastery?.grammar_points || {})
 const latestReviewId = computed(() => progressPayload.value?.reviewResult?.id || "No review yet")
 const latestReviewAccuracy = computed(() => {
   const value = progressPayload.value?.reviewResult?.overall?.accuracy
   if (typeof value !== "number" || Number.isNaN(value)) return "No review accuracy yet"
   return `accuracy ${Math.round(value * 100)}%`
 })
-const recentErrorTags = computed(() =>
-  [...new Set(reviewItems.value.flatMap((item) => item.error_tags || []))].slice(0, 8)
+const dueItems = computed(() =>
+  (progressPayload.value?.reviewQueue?.items || []).filter((item) => item.status === "due")
 )
+
+const cloneValue = (value) => JSON.parse(JSON.stringify(value))
+
+const hydrateReviewDrill = (payload) => {
+  if (!payload) {
+    reviewDrill.value = null
+    return
+  }
+
+  reviewDrill.value = {
+    ...payload,
+    items: (payload.items || []).map((item) => ({
+      ...item,
+      user_answer: item.user_answer || ""
+    }))
+  }
+}
 
 const loadDrill = async () => {
   isLoading.value = true
   loadError.value = ""
+  actionMessage.value = ""
 
   try {
-    progressPayload.value = await client.value.loadProgressReview()
-    draftAnswers.value = Object.fromEntries(
-      (progressPayload.value?.reviewQueue?.items || []).map((item) => [item.id, draftAnswers.value[item.id] || ""])
-    )
+    const [nextProgressPayload, latestReviewDrill] = await Promise.all([
+      client.value.loadProgressReview(),
+      client.value.loadLatestReviewDrill()
+    ])
+    progressPayload.value = nextProgressPayload
+    hydrateReviewDrill(latestReviewDrill)
+    reviewDrillPath.value = latestReviewDrill?.date
+      ? `study/review-drills/${latestReviewDrill.date}.json`
+      : ""
   } catch (error) {
     loadError.value = error instanceof Error ? error.message : String(error)
   } finally {
@@ -152,45 +205,64 @@ const loadDrill = async () => {
 
 const formatQueueKey = (value) => String(value || "").replaceAll("/", " / ")
 
-const findGrammarPoint = (key) => grammarPoints.value?.[key] || null
+const updateAnswer = (itemId, value) => {
+  if (!reviewDrill.value) return
 
-const updateDraft = (id, value) => {
-  draftAnswers.value = {
-    ...draftAnswers.value,
-    [id]: String(value || "")
+  reviewDrill.value = {
+    ...reviewDrill.value,
+    items: reviewDrill.value.items.map((item) =>
+      item.id === itemId
+        ? {
+            ...item,
+            user_answer: String(value || "")
+          }
+        : item
+    )
   }
 }
 
-const deriveMatchingReviewItems = (queueItem) => {
-  const grammarPoint = findGrammarPoint(queueItem.key)
-  const lesson = grammarPoint?.lesson
-  const pattern = grammarPoint?.pattern
+const persistDrill = async (mode) => {
+  if (!reviewDrill.value) return
 
-  return reviewItems.value.filter((item) => {
-    if (pattern && item.target_grammar === pattern) return true
-    if (lesson != null && item.target_grammar?.includes(String(lesson))) return true
-    return item.retry_recommended || !item.is_correct
-  })
-}
-
-const deriveErrorCause = (queueItem) => {
-  const matches = deriveMatchingReviewItems(queueItem)
-  const tags = [...new Set(matches.flatMap((item) => item.error_tags || []))]
-
-  if (tags.length > 0) {
-    return tags.join(", ")
+  const requestPayload = {
+    reviewDrill: cloneValue(reviewDrill.value),
+    targetPath: reviewDrillPath.value
   }
 
-  return `Last result was ${queueItem.last_result}.`
+  if (mode === "save") {
+    isSaving.value = true
+  } else {
+    isSubmitting.value = true
+  }
+  loadError.value = ""
+  actionMessage.value = ""
+
+  try {
+    const result =
+      mode === "save"
+        ? await client.value.saveReviewDrill(requestPayload)
+        : await client.value.submitReviewDrill(requestPayload)
+
+    hydrateReviewDrill(result.reviewDrill)
+    reviewDrillPath.value = result.targetPath || reviewDrillPath.value
+    actionMessage.value =
+      mode === "save"
+        ? "Draft answers were saved to the review drill packet."
+        : "Review drill answers were submitted successfully."
+  } catch (error) {
+    loadError.value = error instanceof Error ? error.message : String(error)
+  } finally {
+    isSaving.value = false
+    isSubmitting.value = false
+  }
 }
 
-const deriveReviewHint = (queueItem) => {
-  const match = deriveMatchingReviewItems(queueItem)[0]
-  if (!match) {
-    return "No direct review hint is available yet."
-  }
+const saveDrill = async () => {
+  await persistDrill("save")
+}
 
-  return match.explanation || match.correct_answer || "Retry with a fresh variation."
+const submitDrill = async () => {
+  await persistDrill("submit")
 }
 
 onMounted(() => {
@@ -213,6 +285,12 @@ onMounted(() => {
   justify-content: space-between;
   align-items: end;
   gap: 16px;
+}
+
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .drill-header h1,
@@ -238,6 +316,7 @@ onMounted(() => {
 .drill-subtitle {
   margin-top: 6px;
   color: #475569;
+  max-width: 720px;
 }
 
 .drill-band {
@@ -343,6 +422,11 @@ onMounted(() => {
   line-height: 1.6;
 }
 
+.detail-copy-strong {
+  color: #0f172a;
+  font-weight: 600;
+}
+
 .answer-field {
   display: grid;
   gap: 8px;
@@ -367,11 +451,20 @@ onMounted(() => {
   resize: vertical;
 }
 
+.answer-reference-block {
+  padding-top: 12px;
+  border-top: 1px dashed #dbe3f1;
+}
+
 @media (max-width: 900px) {
   .drill-header,
   .summary-grid {
     grid-template-columns: 1fr;
     display: grid;
+  }
+
+  .header-actions {
+    width: 100%;
   }
 }
 </style>

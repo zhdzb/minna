@@ -16,6 +16,7 @@ const createTempStudyRoot = () => {
   const studyRoot = path.join(tempRoot, 'study')
   fs.mkdirSync(path.join(studyRoot, 'daily'), { recursive: true })
   fs.mkdirSync(path.join(studyRoot, 'reviews'), { recursive: true })
+  fs.mkdirSync(path.join(studyRoot, 'review-drills'), { recursive: true })
   fs.mkdirSync(path.join(studyRoot, 'prompts', 'generated'), { recursive: true })
   return studyRoot
 }
@@ -169,6 +170,43 @@ const createReviewResult = ({ date = '2026-06-26' } = {}) => ({
   }
 })
 
+const createReviewDrill = ({ date = '2026-06-30', revision = 1, status = 'draft' } = {}) => ({
+  schema_version: 1,
+  revision,
+  updated_at: date + 'T09:00:00+08:00',
+  id: 'review-drill-' + date,
+  date,
+  status,
+  created_at: date + 'T09:00:00+08:00',
+  source_review: 'study/reviews/2026-06-26-review.json',
+  summary: {
+    title: 'Lesson 7 weak point refresh',
+    focus: ['means particle', 'morau response'],
+    due_review_queue_ids: ['rq-lesson-7-tool-means']
+  },
+  items: [
+    {
+      id: 'drill-001',
+      review_queue_id: 'rq-lesson-7-tool-means',
+      key: 'lesson-7/tool-means',
+      lesson: 7,
+      target_grammar: 'N de V',
+      weakness_explanation: 'The means particle still slips during production.',
+      error_tags: ['particle'],
+      original_prompt: 'Translate: I go by bus.',
+      variant_prompt: 'Say: I go to school by bus every morning.',
+      answer_reference: 'Maiasa basu de gakkou ni ikimasu.',
+      user_answer: '',
+      hint: 'Keep de with the transport method.',
+      status: 'pending'
+    }
+  ],
+  submission: {
+    submitted_at: null,
+    note: ''
+  }
+})
+
 afterEach(() => {
   while (tempDirs.length > 0) {
     fs.rmSync(tempDirs.pop(), { recursive: true, force: true })
@@ -183,6 +221,7 @@ describe('agentStudyFileStore', () => {
     expect(store.loadIndex().latest_review).toBe('study/reviews/2026-06-26-review.json')
     expect(store.loadLatestDaily().id).toBe(readStudyJson('study/daily/2026-06-26.json').id)
     expect(store.loadLatestReview().id).toBe('review-2026-06-26')
+    expect(store.loadLatestReviewDrill().id).toBe('review-drill-2026-06-30')
   })
 
   it('writes a daily packet copy with atomic replacement and updates index', () => {
@@ -267,6 +306,38 @@ describe('agentStudyFileStore', () => {
     const store = createAgentStudyFileStore({ studyRoot })
 
     expect(store.readStudyText('study/prompts/generated/2026-06-26-review.md')).toBe('Review prompt body')
+  })
+
+  it('writes and submits a review drill packet without touching daily history', () => {
+    const studyRoot = createTempStudyRoot()
+    writeJson(path.join(studyRoot, 'index.json'), createIndexDocument())
+    writeJson(path.join(studyRoot, 'review-drills', '2026-06-30.json'), createReviewDrill())
+
+    const store = createAgentStudyFileStore({
+      studyRoot,
+      now: () => '2026-06-30T12:00:00+08:00'
+    })
+
+    const draft = createReviewDrill()
+    draft.items[0].user_answer = 'Basu de gakkou ni ikimasu.'
+
+    const saved = store.saveReviewDrillDraft({
+      reviewDrill: draft,
+      targetPath: 'study/review-drills/2026-06-30.json'
+    })
+
+    expect(saved.revision).toBe(2)
+    expect(saved.items[0].user_answer).toBe('Basu de gakkou ni ikimasu.')
+    expect(store.loadLatestReviewDrill().items[0].user_answer).toBe('Basu de gakkou ni ikimasu.')
+
+    const submitted = store.submitReviewDrill({
+      reviewDrill: saved,
+      targetPath: 'study/review-drills/2026-06-30.json'
+    })
+
+    expect(submitted.status).toBe('submitted')
+    expect(submitted.submission.submitted_at).toBe('2026-06-30T12:00:00+08:00')
+    expect(submitted.items[0].status).toBe('submitted')
   })
 
   it('rejects path traversal outside the study directory', () => {

@@ -376,6 +376,55 @@ const validateReviewResult = (value) => {
   return doc
 }
 
+const validateReviewDrill = (value) => {
+  const doc = validateBaseDocument(value, 'reviewDrill')
+  doc.id = assertNonEmptyString(doc.id, 'reviewDrill.id')
+  doc.date = assertNonEmptyString(doc.date, 'reviewDrill.date')
+  doc.status = assertNonEmptyString(doc.status, 'reviewDrill.status')
+  doc.created_at = assertNonEmptyString(doc.created_at, 'reviewDrill.created_at')
+  doc.source_review = assertOptionalString(doc.source_review, 'reviewDrill.source_review')
+  doc.summary = assertPlainObject(doc.summary, 'reviewDrill.summary')
+  doc.summary.title = assertNonEmptyString(doc.summary.title, 'reviewDrill.summary.title')
+  doc.summary.focus = normalizeStringArray(doc.summary.focus, 'reviewDrill.summary.focus')
+  doc.summary.due_review_queue_ids = assertArray(
+    doc.summary.due_review_queue_ids,
+    'reviewDrill.summary.due_review_queue_ids'
+  ).map((id, index) =>
+    assertNonEmptyString(id, 'reviewDrill.summary.due_review_queue_ids[' + index + ']')
+  )
+  doc.items = assertArray(doc.items, 'reviewDrill.items').map((item, index) => {
+    const label = 'reviewDrill.items[' + index + ']'
+    const drillItem = assertPlainObject(item, label)
+    return {
+      id: assertNonEmptyString(drillItem.id, label + '.id'),
+      review_queue_id: assertNonEmptyString(drillItem.review_queue_id, label + '.review_queue_id'),
+      key: assertNonEmptyString(drillItem.key, label + '.key'),
+      lesson: assertInteger(drillItem.lesson, label + '.lesson'),
+      target_grammar: assertNonEmptyString(drillItem.target_grammar, label + '.target_grammar'),
+      weakness_explanation: assertNonEmptyString(
+        drillItem.weakness_explanation,
+        label + '.weakness_explanation'
+      ),
+      error_tags: normalizeStringArray(drillItem.error_tags, label + '.error_tags'),
+      original_prompt: assertNonEmptyString(drillItem.original_prompt, label + '.original_prompt'),
+      variant_prompt: assertNonEmptyString(drillItem.variant_prompt, label + '.variant_prompt'),
+      answer_reference: assertNonEmptyString(drillItem.answer_reference, label + '.answer_reference'),
+      user_answer: typeof drillItem.user_answer === 'string' ? drillItem.user_answer : '',
+      hint: assertOptionalString(drillItem.hint, label + '.hint'),
+      status: assertNonEmptyString(drillItem.status, label + '.status')
+    }
+  })
+  doc.submission = assertPlainObject(doc.submission, 'reviewDrill.submission')
+  doc.submission.submitted_at =
+    doc.submission.submitted_at === null
+      ? null
+      : assertNonEmptyString(doc.submission.submitted_at, 'reviewDrill.submission.submitted_at')
+  if (typeof doc.submission.note !== 'string') {
+    throw new Error('reviewDrill.submission.note must be a string')
+  }
+  return doc
+}
+
 const validators = {
   index: validateIndex,
   profile: validateProfile,
@@ -384,7 +433,8 @@ const validators = {
   reviewQueue: validateReviewQueue,
   promotionRules: validatePromotionRules,
   dailyPacket: validateDailyPacket,
-  reviewResult: validateReviewResult
+  reviewResult: validateReviewResult,
+  reviewDrill: validateReviewDrill
 }
 
 const validateAgentStudyDocument = (type, value) => {
@@ -405,5 +455,6 @@ export {
   validateProfile,
   validatePromotionRules,
   validateReviewQueue,
+  validateReviewDrill,
   validateReviewResult
 }

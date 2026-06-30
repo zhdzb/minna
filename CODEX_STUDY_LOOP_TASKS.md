@@ -801,7 +801,7 @@ Completion record:
 
 ## Step 21: 支持复习 drill packet
 
-状态：pending
+状态：done
 
 目标：
 
@@ -823,6 +823,12 @@ Completion record:
 
 - 能完成一次复习 drill 的保存和提交。
 - `npm run verify` 通过。
+
+完成记录：
+- 完成内容：为复习流程补齐结构化 `review drill` packet，新增 seed drill 数据、schema 校验、文件存储、开发期 API、前端保存/提交流程，并将 `AgentReviewDrill` 页面升级为可填写弱点变体题、保存草稿、提交答案的完整闭环。
+- 修改文件：`CODEX_STUDY_LOOP_TASKS.md`、`study/review-drills/2026-06-30.json`、`study/index.json`、`src/utils/agentStudySchema.js`、`src/server/agentStudy/fileStore.js`、`src/server/agentStudy/routes.js`、`src/utils/agentStudyClient.js`、`src/components/AgentReviewDrill.vue`、`vite.config.js`、`tests/agentStudySchema.test.js`、`tests/agentStudyFileStore.test.js`、`tests/agentStudyRoutes.test.js`、`tests/agentStudyClient.test.js`、`tests/agentReviewDrill.test.js`
+- 验证结果：`npx vitest run tests/agentStudySchema.test.js tests/agentStudyFileStore.test.js tests/agentStudyRoutes.test.js tests/agentStudyClient.test.js tests/agentReviewDrill.test.js` 通过；`npm run verify` 通过；本地 Vite 页面在 `http://127.0.0.1:8082/#/agent-review-drill` 验证，`/`、`/#/agent-review-drill` 和 `/api/agent-study/review-drill/latest` 均返回 `200`
+- 后续注意事项：下一步执行 `Step 22`，实现 `compress_context` 工具，并继续保持不覆盖历史 `daily/review/log`
 
 ## Step 22: 实现 compress_context 工具
 

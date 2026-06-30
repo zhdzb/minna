@@ -10,6 +10,7 @@ import {
   validateMastery,
   validateProfile,
   validatePromotionRules,
+  validateReviewDrill,
   validateReviewQueue,
   validateReviewResult
 } from '../src/utils/agentStudySchema'
@@ -29,6 +30,7 @@ describe('agentStudySchema', () => {
     expect(validatePromotionRules(readStudyJson('study/state/promotion-rules.json')).lesson_gate.min_recent_sessions).toBe(2)
     expect(validateDailyPacket(readStudyJson('study/daily/2026-06-26.json')).mission.focus_lessons).toEqual([7])
     expect(validateReviewResult(readStudyJson('study/reviews/2026-06-26-review.json')).daily_id).toBe('daily-2026-06-26')
+    expect(validateReviewDrill(readStudyJson('study/review-drills/2026-06-30.json')).items).toHaveLength(2)
   })
 
   it('dispatches through the generic validator', () => {
@@ -126,5 +128,46 @@ describe('agentStudySchema', () => {
 
     expect(validateReviewResult(reviewResult).items[0].confidence).toBe(0.82)
     expect(validateReviewResult(reviewResult).items[0].rubric.grammar).toBe(0.4)
+  })
+
+  it('validates review drills with structured weakness explanations and answers', () => {
+    const reviewDrill = {
+      schema_version: 1,
+      revision: 1,
+      updated_at: '2026-06-30T09:00:00+08:00',
+      id: 'review-drill-2026-06-30',
+      date: '2026-06-30',
+      status: 'draft',
+      created_at: '2026-06-30T09:00:00+08:00',
+      source_review: 'study/reviews/2026-06-26-review.json',
+      summary: {
+        title: 'Lesson 7 weak points refresh',
+        focus: ['means particle', 'morau reply shape'],
+        due_review_queue_ids: ['rq-lesson-7-tool-means', 'rq-lesson-7-ageru-morau']
+      },
+      items: [
+        {
+          id: 'drill-001',
+          review_queue_id: 'rq-lesson-7-tool-means',
+          key: 'lesson-7/tool-means',
+          lesson: 7,
+          target_grammar: 'N de V',
+          weakness_explanation: 'The means particle still collapses under output pressure.',
+          error_tags: ['particle'],
+          original_prompt: 'Translate: I go by bus.',
+          variant_prompt: 'Say: I go to the station by taxi today.',
+          answer_reference: 'Kyou wa takushii de eki ni ikimasu.',
+          user_answer: '',
+          hint: 'Keep the transport phrase attached to de.',
+          status: 'pending'
+        }
+      ],
+      submission: {
+        submitted_at: null,
+        note: ''
+      }
+    }
+
+    expect(validateReviewDrill(reviewDrill).items[0].review_queue_id).toBe('rq-lesson-7-tool-means')
   })
 })

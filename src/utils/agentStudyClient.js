@@ -86,6 +86,11 @@ const createAgentStudyClient = (options = {}) => {
       method: 'GET'
     })
 
+  const loadLatestReviewDrill = async () =>
+    request('review-drill/latest', {
+      method: 'GET'
+    })
+
   const loadPromptFile = async (promptPath) =>
     request('prompt?path=' + encodeURIComponent(String(promptPath || '').trim()), {
       method: 'GET'
@@ -113,12 +118,37 @@ const createAgentStudyClient = (options = {}) => {
       })
     })
 
+  const saveReviewDrill = async ({ reviewDrill, targetPath } = {}) =>
+    request('review-drill/save', {
+      method: 'POST',
+      body: JSON.stringify({
+        reviewDrill,
+        ...(typeof targetPath === 'string' && targetPath.trim() !== ''
+          ? { targetPath: targetPath.trim() }
+          : {})
+      })
+    })
+
+  const submitReviewDrill = async ({ reviewDrill, targetPath } = {}) =>
+    request('review-drill/submit', {
+      method: 'POST',
+      body: JSON.stringify({
+        reviewDrill,
+        ...(typeof targetPath === 'string' && targetPath.trim() !== ''
+          ? { targetPath: targetPath.trim() }
+          : {})
+      })
+    })
+
   return {
     loadLatestAgentStudy,
     loadProgressReview,
     loadPromptFile,
+    loadLatestReviewDrill,
     loadLatestReview,
     saveDailyPacket,
+    saveReviewDrill,
+    submitReviewDrill,
     submitDailyPacket
   }
 }

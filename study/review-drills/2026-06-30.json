@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-06-30T09:00:00+08:00",
+  "id": "review-drill-2026-06-30",
+  "date": "2026-06-30",
+  "status": "draft",
+  "created_at": "2026-06-30T09:00:00+08:00",
+  "source_review": "study/reviews/2026-06-26-review.json",
+  "summary": {
+    "title": "Lesson 7 weak point refresh",
+    "focus": [
+      "means particle transport sentences",
+      "morau short reply naturalness"
+    ],
+    "due_review_queue_ids": [
+      "rq-lesson-7-tool-means",
+      "rq-lesson-7-ageru-morau"
+    ]
+  },
+  "items": [
+    {
+      "id": "drill-001",
+      "review_queue_id": "rq-lesson-7-tool-means",
+      "key": "lesson-7/tool-means",
+      "lesson": 7,
+      "target_grammar": "N de V",
+      "weakness_explanation": "The latest review still shows confusion between the means particle and other particles in transport sentences.",
+      "error_tags": [
+        "particle",
+        "grammar_pattern"
+      ],
+      "original_prompt": "Translate: I go by bus.",
+      "variant_prompt": "Say in Japanese: I go to the station by taxi today.",
+      "answer_reference": "Kyou wa takushii de eki ni ikimasu.",
+      "user_answer": "",
+      "hint": "Attach de to the transport method, then finish the movement sentence normally.",
+      "status": "pending"
+    },
+    {
+      "id": "drill-002",
+      "review_queue_id": "rq-lesson-7-ageru-morau",
+      "key": "lesson-7/ageru-morau",
+      "lesson": 7,
+      "target_grammar": "N1 wa N2 ni V-te moraimashita",
+      "weakness_explanation": "The review answer was acceptable, but the reply still sounded thin; this variant asks for a fuller short response.",
+      "error_tags": [
+        "naturalness"
+      ],
+      "original_prompt": "Reply: I received a book from my friend.",
+      "variant_prompt": "Answer naturally: Yes, yesterday I received a dictionary from my friend.",
+      "answer_reference": "Hai, kinou tomodachi ni jisho o moraimashita.",
+      "user_answer": "",
+      "hint": "Keep the giver with ni and add a light conversation opener.",
+      "status": "pending"
+    }
+  ],
+  "submission": {
+    "submitted_at": null,
+    "note": ""
+  }
+}

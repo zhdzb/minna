@@ -111,6 +111,30 @@ describe('agentStudyClient', () => {
     })
   })
 
+  it('loads the latest review drill packet', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      createJsonResponse({
+        body: {
+          success: true,
+          data: {
+            id: 'review-drill-2026-06-30'
+          }
+        }
+      })
+    )
+    const client = createAgentStudyClient({ fetchImpl: fetchMock })
+
+    await expect(client.loadLatestReviewDrill()).resolves.toEqual({
+      id: 'review-drill-2026-06-30'
+    })
+    expect(fetchMock).toHaveBeenCalledWith('/api/agent-study/review-drill/latest', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+  })
+
   it('loads the progress review payload through the progress endpoint', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
       createJsonResponse({
@@ -164,6 +188,73 @@ describe('agentStudyClient', () => {
         }
       }
     )
+  })
+
+  it('sends review drill saves and submits through the review-drill endpoints', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        createJsonResponse({
+          body: {
+            success: true,
+            data: {
+              targetPath: 'study/review-drills/2026-06-30.json'
+            }
+          }
+        })
+      )
+      .mockResolvedValueOnce(
+        createJsonResponse({
+          body: {
+            success: true,
+            data: {
+              reviewDrill: {
+                status: 'submitted'
+              }
+            }
+          }
+        })
+      )
+    const client = createAgentStudyClient({ fetchImpl: fetchMock })
+    const reviewDrill = { id: 'review-drill-2026-06-30', revision: 2 }
+
+    await expect(
+      client.saveReviewDrill({
+        reviewDrill,
+        targetPath: ' study/review-drills/2026-06-30.json '
+      })
+    ).resolves.toEqual({
+      targetPath: 'study/review-drills/2026-06-30.json'
+    })
+
+    await expect(client.submitReviewDrill({ reviewDrill })).resolves.toEqual({
+      reviewDrill: {
+        status: 'submitted'
+      }
+    })
+
+    expect(fetchMock).toHaveBeenNthCalledWith(1, '/api/agent-study/review-drill/save', {
+      method: 'POST',
+      body: JSON.stringify({
+        reviewDrill,
+        targetPath: 'study/review-drills/2026-06-30.json'
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+
+    expect(fetchMock).toHaveBeenNthCalledWith(2, '/api/agent-study/review-drill/submit', {
+      method: 'POST',
+      body: JSON.stringify({
+        reviewDrill
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
   })
 
   it('throws a clear error when fetch support is unavailable', async () => {
