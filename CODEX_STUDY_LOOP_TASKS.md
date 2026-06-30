@@ -409,7 +409,7 @@ Completion record:
 
 ## Step 09: 新建 Agent Study 前端数据客户端
 
-状态：pending
+状态：done
 
 目标：
 
@@ -432,6 +432,12 @@ Completion record:
 
 - 客户端能处理成功和失败响应。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Added a frontend Agent Study API client with shared request handling for latest study, latest review, daily draft save, and daily submit, including injectable `fetchImpl` support for tests and alternate runtimes.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/utils/agentStudyClient.js`, `tests/agentStudyClient.test.js`.
+- Verification: `npx vitest run tests/agentStudyClient.test.js` passed, and `npm run verify` passed.
+- Follow-up: Next is `Step 10`, which should create the initial `AgentStudyWorkspace` page and render the seed daily packet through this client.
 
 ## Step 10: 新建 AgentStudyWorkspace 页面骨架
 

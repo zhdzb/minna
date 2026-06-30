@@ -1,0 +1,124 @@
+import { describe, expect, it, vi } from 'vitest'
+import {
+  DEFAULT_AGENT_STUDY_API_BASE,
+  buildAgentStudyUrl,
+  createAgentStudyClient
+} from '../src/utils/agentStudyClient'
+
+const createJsonResponse = ({ ok = true, status = 200, body = null } = {}) => ({
+  ok,
+  status,
+  text: vi.fn().mockResolvedValue(body === null ? '' : JSON.stringify(body))
+})
+
+describe('agentStudyClient', () => {
+  it('loads the latest agent study payload through the shared API shape', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      createJsonResponse({
+        body: {
+          success: true,
+          data: {
+            dailyPacket: { id: 'daily-2026-06-26' }
+          }
+        }
+      })
+    )
+    const client = createAgentStudyClient({ fetchImpl: fetchMock })
+
+    await expect(client.loadLatestAgentStudy()).resolves.toEqual({
+      dailyPacket: { id: 'daily-2026-06-26' }
+    })
+    expect(fetchMock).toHaveBeenCalledWith('/api/agent-study/latest', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+  })
+
+  it('sends daily packet saves through the save endpoint with optional targetPath', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      createJsonResponse({
+        body: {
+          success: true,
+          data: {
+            targetPath: 'study/daily/2026-06-26.json'
+          }
+        }
+      })
+    )
+    const client = createAgentStudyClient({ fetchImpl: fetchMock })
+    const dailyPacket = { id: 'daily-2026-06-26', revision: 3 }
+
+    await expect(
+      client.saveDailyPacket({
+        dailyPacket,
+        targetPath: ' study/daily/2026-06-26.json '
+      })
+    ).resolves.toEqual({
+      targetPath: 'study/daily/2026-06-26.json'
+    })
+
+    expect(fetchMock).toHaveBeenCalledWith('/api/agent-study/daily/save', {
+      method: 'POST',
+      body: JSON.stringify({
+        dailyPacket,
+        targetPath: 'study/daily/2026-06-26.json'
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+  })
+
+  it('throws API error messages for non-success JSON responses', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      createJsonResponse({
+        ok: false,
+        status: 409,
+        body: {
+          success: false,
+          error: 'Revision conflict detected'
+        }
+      })
+    )
+    const client = createAgentStudyClient({ fetchImpl: fetchMock })
+
+    await expect(client.submitDailyPacket({ dailyPacket: { id: 'daily-2026-06-26' } })).rejects.toMatchObject({
+      message: 'Revision conflict detected',
+      status: 409
+    })
+  })
+
+  it('loads latest review and returns null when the API data payload is null', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      createJsonResponse({
+        body: {
+          success: true,
+          data: null
+        }
+      })
+    )
+    const client = createAgentStudyClient({ fetchImpl: fetchMock, baseUrl: '/custom-agent-study/' })
+
+    await expect(client.loadLatestReview()).resolves.toBe(null)
+    expect(fetchMock).toHaveBeenCalledWith('/custom-agent-study/review/latest', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+  })
+
+  it('throws a clear error when fetch support is unavailable', async () => {
+    const client = createAgentStudyClient({ fetchImpl: null })
+
+    await expect(client.loadLatestAgentStudy()).rejects.toThrow(/requires fetch support/)
+  })
+
+  it('builds normalized endpoint URLs from the default API base', () => {
+    expect(DEFAULT_AGENT_STUDY_API_BASE).toBe('/api/agent-study')
+    expect(buildAgentStudyUrl('/api/agent-study/', '/daily/save')).toBe('/api/agent-study/daily/save')
+  })
+})
