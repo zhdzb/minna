@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-06-26T21:00:00+08:00",
+  "id": "review-2026-06-26",
+  "daily_id": "daily-2026-06-26",
+  "created_at": "2026-06-26T21:00:00+08:00",
+  "overall": {
+    "accuracy": 0.74,
+    "can_advance": false,
+    "summary": "Core lesson 7 meaning is mostly intact, but the means particle and receiving direction still need another controlled pass.",
+    "next_focus": [
+      "N で V transport sentences",
+      "Choosing に correctly with もらいます",
+      "More natural short conversation replies"
+    ]
+  },
+  "items": [
+    {
+      "exercise_id": "ex-001",
+      "is_correct": false,
+      "score": 0.25,
+      "error_tags": ["particle", "grammar_pattern"],
+      "target_grammar": "N で V",
+      "user_answer": "に",
+      "correct_answer": "で",
+      "explanation": "This sentence needs the means particle で, not に.",
+      "retry_recommended": true,
+      "rubric": {
+        "target_particle": 0.0,
+        "pattern_match": 0.5
+      },
+      "confidence": 0.97,
+      "needs_user_input": false,
+      "acceptable_variants": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "ex-002",
+      "is_correct": true,
+      "score": 0.9,
+      "error_tags": [],
+      "target_grammar": "N1 は N2 に あげます",
+      "user_answer": "わたしは 先生に 本を あげました。",
+      "correct_answer": "わたしは 先生に 本を あげました。",
+      "explanation": "The sentence uses the target grammar correctly and sounds natural.",
+      "retry_recommended": false,
+      "rubric": {
+        "meaning": 1.0,
+        "target_grammar": 0.9,
+        "particles": 0.9,
+        "naturalness": 0.8
+      },
+      "confidence": 0.88,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "先生に 本を あげました。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "ex-003",
+      "is_correct": true,
+      "score": 0.68,
+      "error_tags": ["naturalness"],
+      "target_grammar": "N1 は N2 に もらいます",
+      "user_answer": "友だちに 本を もらいました。",
+      "correct_answer": "友だちに 本を もらいました。",
+      "explanation": "The answer is correct, but it is a little bare as a conversation reply and could sound more complete with a fuller phrase.",
+      "retry_recommended": true,
+      "rubric": {
+        "context_match": 0.7,
+        "politeness": 0.7,
+        "intent": 0.8,
+        "naturalness": 0.5
+      },
+      "confidence": 0.63,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "友だちに 本を もらいましたよ。"
+      ],
+      "manual_override": null
+    }
+  ],
+  "mastery_updates": [
+    {
+      "scope": "grammar_point",
+      "key": "lesson-7/means-particle",
+      "from_status": "learning",
+      "to_status": "weak",
+      "evidence": ["ex-001 wrong particle"]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-7/ageru",
+      "from_status": "learning",
+      "to_status": "stabilizing",
+      "evidence": ["ex-002 correct output"]
+    }
+  ],
+  "review_queue_updates": [
+    {
+      "review_queue_id": "rq-lesson-7-tool-means",
+      "action": "due_soon",
+      "interval_days": 1,
+      "last_result": "wrong"
+    },
+    {
+      "review_queue_id": "rq-lesson-7-ageru-morau",
+      "action": "keep_active",
+      "interval_days": 2,
+      "last_result": "good"
+    }
+  ],
+  "promotion_decision": {
+    "can_advance": false,
+    "reason": "Lesson 7 output is close, but the means particle still needs another correct cycle before promotion."
+  }
+}

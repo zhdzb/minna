@@ -180,8 +180,9 @@ describe('agentStudyFileStore', () => {
     const store = createAgentStudyFileStore()
 
     expect(store.loadIndex().latest_daily).toBe('study/daily/2026-06-26.json')
+    expect(store.loadIndex().latest_review).toBe('study/reviews/2026-06-26-review.json')
     expect(store.loadLatestDaily().id).toBe(readStudyJson('study/daily/2026-06-26.json').id)
-    expect(store.loadLatestReview()).toBe(null)
+    expect(store.loadLatestReview().id).toBe('review-2026-06-26')
   })
 
   it('writes a daily packet copy with atomic replacement and updates index', () => {

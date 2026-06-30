@@ -112,8 +112,8 @@ describe('agentStudyIndexRebuilder', () => {
 
     expect(validateIndex(rebuilt)).toEqual(rebuilt)
     expect(rebuilt.latest_daily).toBe('study/daily/2026-06-26.json')
-    expect(rebuilt.latest_review).toBe(null)
-    expect(rebuilt.latest_prompt).toBe(null)
+    expect(rebuilt.latest_review).toBe('study/reviews/2026-06-26-review.json')
+    expect(rebuilt.latest_prompt).toBe('study/prompts/generated/2026-06-26-review.md')
   })
 
   it('falls back to rebuilding and writing index when index.json is missing or corrupted', () => {

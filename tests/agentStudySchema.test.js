@@ -28,6 +28,7 @@ describe('agentStudySchema', () => {
     expect(validateReviewQueue(readStudyJson('study/state/review-queue.json')).items).toHaveLength(2)
     expect(validatePromotionRules(readStudyJson('study/state/promotion-rules.json')).lesson_gate.min_recent_sessions).toBe(2)
     expect(validateDailyPacket(readStudyJson('study/daily/2026-06-26.json')).mission.focus_lessons).toEqual([7])
+    expect(validateReviewResult(readStudyJson('study/reviews/2026-06-26-review.json')).daily_id).toBe('daily-2026-06-26')
   })
 
   it('dispatches through the generic validator', () => {
@@ -104,6 +105,11 @@ describe('agentStudySchema', () => {
           correct_answer: '?',
           explanation: 'The sentence needs the means particle.',
           retry_recommended: true,
+          rubric: {
+            grammar: 0.4,
+            particles: 0.2,
+            naturalness: 0.6
+          },
           confidence: 0.82,
           needs_user_input: false,
           acceptable_variants: ['?'],
@@ -119,5 +125,6 @@ describe('agentStudySchema', () => {
     }
 
     expect(validateReviewResult(reviewResult).items[0].confidence).toBe(0.82)
+    expect(validateReviewResult(reviewResult).items[0].rubric.grammar).toBe(0.4)
   })
 })

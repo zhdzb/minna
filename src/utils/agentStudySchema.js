@@ -344,6 +344,12 @@ const validateReviewResult = (value) => {
   doc.items = assertArray(doc.items, 'reviewResult.items').map((item, index) => {
     const label = 'reviewResult.items[' + index + ']'
     const reviewItem = assertPlainObject(item, label)
+    const rubric = reviewItem.rubric == null ? null : assertPlainObject(reviewItem.rubric, label + '.rubric')
+    if (rubric) {
+      for (const [rubricKey, rubricScore] of Object.entries(rubric)) {
+        assertNumber(rubricScore, label + '.rubric.' + rubricKey)
+      }
+    }
     const normalized = {
       exercise_id: assertNonEmptyString(reviewItem.exercise_id, label + '.exercise_id'),
       is_correct: assertBoolean(reviewItem.is_correct, label + '.is_correct'),
@@ -354,6 +360,7 @@ const validateReviewResult = (value) => {
       correct_answer: assertNonEmptyString(reviewItem.correct_answer, label + '.correct_answer'),
       explanation: assertNonEmptyString(reviewItem.explanation, label + '.explanation'),
       retry_recommended: assertBoolean(reviewItem.retry_recommended, label + '.retry_recommended'),
+      rubric,
       confidence: reviewItem.confidence == null ? null : assertNumber(reviewItem.confidence, label + '.confidence'),
       needs_user_input: reviewItem.needs_user_input == null ? false : assertBoolean(reviewItem.needs_user_input, label + '.needs_user_input'),
       acceptable_variants: reviewItem.acceptable_variants == null ? [] : normalizeStringArray(reviewItem.acceptable_variants, label + '.acceptable_variants'),

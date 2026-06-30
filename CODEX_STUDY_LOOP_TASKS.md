@@ -568,7 +568,7 @@ Completion record:
 
 ## Step 14: 定义 review 写回样例
 
-状态：pending
+状态：done
 
 目标：
 
@@ -591,6 +591,12 @@ Completion record:
 
 - review JSON 可校验。
 - `/api/agent-study/review/latest` 可读取。
+
+Completion record:
+- Completed: Added a real lesson 7 review sample under `study/reviews/`, linked it into the seed study index and daily packet as the latest reviewed session, added a generated review prompt sample, and extended review-result schema validation so item-level `rubric` scores are preserved alongside confidence and override metadata.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/utils/agentStudySchema.js`, `tests/agentStudySchema.test.js`, `tests/agentStudyFileStore.test.js`, `tests/agentStudyIndexRebuilder.test.js`, `study/index.json`, `study/daily/2026-06-26.json`, `study/reviews/2026-06-26-review.json`, `study/prompts/generated/2026-06-26-review.md`.
+- Verification: `npx vitest run tests/agentStudySchema.test.js tests/agentStudyFileStore.test.js` passed, `npx vitest run tests/agentStudyIndexRebuilder.test.js` passed after updating the rebuilt-index expectation, `npm run verify` passed, and a local Vite dev server returned `200` for `http://127.0.0.1:8080/agent-study`, `http://127.0.0.1:8080/api/agent-study/latest`, and `http://127.0.0.1:8080/api/agent-study/review/latest` with the latest review payload including `rubric`.
+- Follow-up: Next is `Step 15`, which should render this latest review sample inside `AgentStudyWorkspace`, including overall summary, per-item results, confidence, acceptable variants, and explanation details.
 
 ## Step 15: 展示批改结果
 
