@@ -378,7 +378,7 @@ Completion record:
 
 ## Step 08: 接入 Vite dev API
 
-状态：pending
+状态：done
 
 目标：
 
@@ -400,6 +400,12 @@ Completion record:
 - API 调用能返回 JSON。
 - 业务逻辑仍在 `src/server/agentStudy/`。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Wired the Agent Study dev API into Vite middleware for latest study, latest review, daily draft save, and daily submit, while keeping business logic in `src/server/agentStudy/routes.js`.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `vite.config.js`.
+- Verification: `npm run verify` passed. Also started the Vite dev server on `http://127.0.0.1:8080` and confirmed `GET /api/agent-study/latest` and `GET /api/agent-study/review/latest` return JSON; `POST /api/agent-study/daily/save` and `POST /api/agent-study/daily/submit` also return JSON error payloads on invalid input without mutating study data.
+- Follow-up: Next is `Step 09`, which should add a frontend `agentStudyClient` wrapper for these local API endpoints.
 
 ## Step 09: 新建 Agent Study 前端数据客户端
 

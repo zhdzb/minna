@@ -12,6 +12,12 @@ import {
   handlePatchStudyState,
   handleSaveStudyState
 } from './src/server/routes/studyStateRoute.js'
+import {
+  handleGetLatestAgentStudy,
+  handleGetLatestReview,
+  handleSaveDailyPacket,
+  handleSubmitDailyPacket
+} from './src/server/agentStudy/routes.js'
 
 // Custom Vite plugin to handle local data.json saving automatically
 const saveLocalDataPlugin = () => {
@@ -271,12 +277,96 @@ const stateRoutePlugin = (runtimeEnv) => {
   }
 }
 
+const agentStudyRoutePlugin = () => {
+  return {
+    name: 'agent-study-routes',
+    configureServer(server) {
+      server.middlewares.use('/api/agent-study/latest', async (req, res) => {
+        if (req.method !== 'GET') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const result = await handleGetLatestAgentStudy()
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/daily/save', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handleSaveDailyPacket(payload)
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/daily/submit', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handleSubmitDailyPacket(payload)
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/review/latest', async (req, res) => {
+        if (req.method !== 'GET') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const result = await handleGetLatestReview()
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+    }
+  }
+}
+
 export default defineConfig(({ mode }) => {
   const fileEnv = loadEnv(mode, process.cwd(), '')
   const runtimeEnv = { ...process.env, ...fileEnv }
 
   return {
-    plugins: [vue(), saveLocalDataPlugin(), llmProxyPlugin(), aiRoutePlugin(runtimeEnv), stateRoutePlugin(runtimeEnv)],
+    plugins: [
+      vue(),
+      saveLocalDataPlugin(),
+      llmProxyPlugin(),
+      aiRoutePlugin(runtimeEnv),
+      stateRoutePlugin(runtimeEnv),
+      agentStudyRoutePlugin()
+    ],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src')
