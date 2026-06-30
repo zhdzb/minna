@@ -4,9 +4,19 @@
       <div>
         <p class="agent-study-eyebrow">Codex Study Loop</p>
         <h1>Agent Study Workspace</h1>
-        <p class="agent-study-subtitle">今天的学习包、材料和练习都会在这里展开。</p>
+        <p class="agent-study-subtitle">Today's packet, materials, and draft answers live here.</p>
       </div>
-      <el-button :loading="isLoading" type="primary" @click="loadWorkspace">刷新</el-button>
+      <div class="header-actions">
+        <el-button :loading="isLoading" @click="loadWorkspace">Refresh</el-button>
+        <el-button
+          type="primary"
+          :loading="isSaving"
+          :disabled="isSaveDisabled"
+          @click="saveDraft"
+        >
+          Save Draft
+        </el-button>
+      </div>
     </header>
 
     <section v-if="isLoading" class="agent-study-band">
@@ -14,131 +24,161 @@
     </section>
 
     <section v-else-if="loadError" class="agent-study-band">
-      <el-alert :closable="false" show-icon title="加载失败" type="error" :description="loadError" />
+      <el-alert :closable="false" show-icon title="Load failed" type="error" :description="loadError" />
     </section>
 
     <section v-else-if="!dailyPacket" class="agent-study-band">
-      <el-empty description="当前还没有可用的学习包。" />
+      <el-empty description="No daily packet is available right now." />
     </section>
 
     <template v-else>
       <section class="agent-study-band agent-study-overview">
         <div class="overview-copy">
-          <p class="agent-study-eyebrow">今日任务</p>
+          <p class="agent-study-eyebrow">Today's Mission</p>
           <h2>{{ missionTitle }}</h2>
           <p>{{ missionSummary }}</p>
         </div>
         <div class="overview-meta">
           <div class="meta-item">
-            <span>日期</span>
-            <strong>{{ dailyPacket.date || '--' }}</strong>
+            <span>Date</span>
+            <strong>{{ dailyPacket.date || "--" }}</strong>
           </div>
           <div class="meta-item">
-            <span>状态</span>
-            <el-tag :type="statusTagType" effect="plain">{{ dailyPacket.status || 'unknown' }}</el-tag>
+            <span>Status</span>
+            <el-tag :type="statusTagType" effect="plain">{{ dailyPacket.status || "unknown" }}</el-tag>
           </div>
           <div class="meta-item">
-            <span>计划时长</span>
+            <span>Planned Time</span>
             <strong>{{ availableMinutesLabel }}</strong>
           </div>
           <div class="meta-item">
-            <span>聚焦课次</span>
+            <span>Focus Lessons</span>
             <strong>{{ focusLessonsLabel }}</strong>
           </div>
         </div>
       </section>
 
+      <section v-if="saveError" class="agent-study-band">
+        <el-alert :closable="false" show-icon title="Draft save failed" type="error" :description="saveError" />
+      </section>
+
+      <section v-else-if="saveMessage" class="agent-study-band">
+        <el-alert :closable="false" show-icon title="Draft saved" type="success" :description="saveMessage" />
+      </section>
+
       <section class="agent-study-band">
         <div class="section-heading">
-          <h2>任务清单</h2>
+          <h2>Task List</h2>
           <span>{{ taskCountLabel }}</span>
         </div>
         <div v-if="dailyPacket.tasks?.length" class="item-grid">
           <article v-for="task in dailyPacket.tasks" :key="task.id" class="item-card">
             <div class="item-card-top">
               <h3>{{ task.title || task.id }}</h3>
-              <el-tag size="small" effect="plain">{{ task.status || 'pending' }}</el-tag>
+              <el-tag size="small" effect="plain">{{ task.status || "pending" }}</el-tag>
             </div>
-            <p class="item-type">{{ task.type || 'task' }}</p>
-            <p class="item-note">{{ task.minutes ? `${task.minutes} 分钟` : '时长待定' }}</p>
+            <p class="item-type">{{ task.type || "task" }}</p>
+            <p class="item-note">{{ task.minutes ? `${task.minutes} min` : "Time TBD" }}</p>
           </article>
         </div>
-        <el-empty v-else description="今天还没有任务项。" />
+        <el-empty v-else description="No tasks are listed for today." />
       </section>
 
       <section class="agent-study-band">
         <div class="section-heading">
-          <h2>学习材料</h2>
+          <h2>Study Materials</h2>
           <span>{{ materialCountLabel }}</span>
         </div>
         <div v-if="dailyPacket.study_materials?.length" class="item-grid">
           <article v-for="material in dailyPacket.study_materials" :key="material.id" class="item-card">
             <div class="item-card-top">
               <h3>{{ material.title || material.id }}</h3>
-              <el-tag size="small" effect="plain">{{ material.type || 'material' }}</el-tag>
+              <el-tag size="small" effect="plain">{{ material.type || "material" }}</el-tag>
             </div>
-            <p class="item-type">Lesson {{ material.lesson ?? '--' }}</p>
-            <p class="item-copy">{{ material.content || '暂无材料说明。' }}</p>
+            <p class="item-type">Lesson {{ material.lesson ?? "--" }}</p>
+            <p class="item-copy">{{ material.content || "No material summary yet." }}</p>
             <ul v-if="material.examples?.length" class="example-list">
               <li v-for="(example, index) in material.examples" :key="`${material.id}-${index}`">
-                <strong>{{ example.ja || '例句' }}</strong>
-                <span>{{ example.zh || example.note || '' }}</span>
+                <strong>{{ example.ja || "Example" }}</strong>
+                <span>{{ example.zh || example.note || "" }}</span>
               </li>
             </ul>
           </article>
         </div>
-        <el-empty v-else description="今天还没有学习材料。" />
+        <el-empty v-else description="No study materials are available yet." />
       </section>
 
       <section class="agent-study-band">
         <div class="section-heading">
-          <h2>练习列表</h2>
+          <h2>Exercises</h2>
           <span>{{ exerciseCountLabel }}</span>
         </div>
-        <div v-if="dailyPacket.exercises?.length" class="item-grid">
-          <article v-for="exercise in dailyPacket.exercises" :key="exercise.id" class="item-card">
+        <div v-if="dailyPacket.exercises?.length" class="exercise-list">
+          <article v-for="exercise in dailyPacket.exercises" :key="exercise.id" class="exercise-card">
             <div class="item-card-top">
-              <h3>{{ exercise.prompt || exercise.id }}</h3>
-              <el-tag size="small" type="success" effect="plain">{{ exercise.type || 'exercise' }}</el-tag>
+              <div>
+                <h3>{{ exercise.prompt || exercise.id }}</h3>
+                <p class="item-type">{{ exercise.target_grammar || "No grammar label" }}</p>
+              </div>
+              <el-tag size="small" type="success" effect="plain">{{ exercise.type || "exercise" }}</el-tag>
             </div>
-            <p class="item-type">{{ exercise.target_grammar || '未标注语法点' }}</p>
-            <p class="item-note">Lesson {{ exercise.lesson ?? '--' }} · {{ exercise.metadata?.skill || 'skill 未标注' }}</p>
-            <p v-if="exercise.vocab_hints?.length" class="item-copy">
-              提示：{{ exercise.vocab_hints.join(' / ') }}
+            <p class="item-note">
+              Lesson {{ exercise.lesson ?? "--" }} · {{ exercise.metadata?.skill || "unlabeled skill" }}
             </p>
+            <p v-if="exercise.vocab_hints?.length" class="item-copy">
+              Hints: {{ exercise.vocab_hints.join(" / ") }}
+            </p>
+
+            <label class="answer-field">
+              <span>Draft Answer</span>
+              <el-input
+                v-if="exercise.type === 'q_fill'"
+                :model-value="getAnswerValue(exercise.id)"
+                placeholder="Type a short answer"
+                @update:model-value="updateAnswer(exercise.id, $event)"
+              />
+              <el-input
+                v-else
+                type="textarea"
+                :rows="exercise.type === 'q_conversation' ? 4 : 3"
+                :model-value="getAnswerValue(exercise.id)"
+                :placeholder="answerPlaceholder(exercise.type)"
+                @update:model-value="updateAnswer(exercise.id, $event)"
+              />
+            </label>
           </article>
         </div>
-        <el-empty v-else description="今天还没有练习题。" />
+        <el-empty v-else description="No exercises are available yet." />
       </section>
 
       <section class="agent-study-band">
         <div class="section-heading">
-          <h2>复习线索</h2>
+          <h2>Review Hints</h2>
           <span>{{ reviewItemCountLabel }}</span>
         </div>
         <div v-if="dailyPacket.review_items?.length || indexDocument?.latest_review || reviewResult" class="review-summary">
           <div class="meta-item">
-            <span>待复习项目</span>
+            <span>Queued Review Items</span>
             <strong>{{ reviewItemCountLabel }}</strong>
           </div>
           <div class="meta-item">
-            <span>最新 review</span>
-            <strong>{{ indexDocument?.latest_review || '暂无' }}</strong>
+            <span>Latest Review</span>
+            <strong>{{ indexDocument?.latest_review || "None yet" }}</strong>
           </div>
           <div class="meta-item">
-            <span>当前 correction 状态</span>
-            <strong>{{ dailyPacket.correction?.status || 'pending' }}</strong>
+            <span>Correction Status</span>
+            <strong>{{ dailyPacket.correction?.status || "pending" }}</strong>
           </div>
         </div>
-        <el-empty v-else description="当前没有复习结果或复习线索。" />
+        <el-empty v-else description="No review hints are available yet." />
       </section>
     </template>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import { createAgentStudyClient } from '@/utils/agentStudyClient'
+import { computed, onMounted, ref } from "vue"
+import { createAgentStudyClient } from "@/utils/agentStudyClient"
 
 const props = defineProps({
   client: {
@@ -148,57 +188,157 @@ const props = defineProps({
 })
 
 const isLoading = ref(true)
-const loadError = ref('')
+const isSaving = ref(false)
+const loadError = ref("")
+const saveError = ref("")
+const saveMessage = ref("")
 const indexDocument = ref(null)
 const dailyPacket = ref(null)
 const reviewResult = ref(null)
+const answerDrafts = ref({})
 
 const client = computed(() => props.client || createAgentStudyClient())
 
-const missionTitle = computed(() => dailyPacket.value?.mission?.title || '未命名学习包')
+const missionTitle = computed(() => dailyPacket.value?.mission?.title || "Unnamed Study Packet")
 const missionSummary = computed(() => {
   const mission = dailyPacket.value?.mission
-  if (!mission) return '还没有可展示的学习任务。'
+  if (!mission) return "No study mission is available yet."
 
   const goals = Array.isArray(mission.goals) ? mission.goals.filter(Boolean) : []
-  return goals.length ? goals.join(' · ') : '今天先把基础计划和材料整理出来。'
+  return goals.length ? goals.join(" | ") : "Start with the packet and build momentum from there."
 })
 
 const availableMinutesLabel = computed(() => {
   const minutes = dailyPacket.value?.mission?.available_minutes
-  return typeof minutes === 'number' ? `${minutes} 分钟` : '--'
+  return typeof minutes === "number" ? `${minutes} min` : "--"
 })
 
 const focusLessonsLabel = computed(() => {
   const lessons = dailyPacket.value?.mission?.focus_lessons
-  return Array.isArray(lessons) && lessons.length ? lessons.join(', ') : '--'
+  return Array.isArray(lessons) && lessons.length ? lessons.join(", ") : "--"
 })
 
 const statusTagType = computed(() => {
   const status = dailyPacket.value?.status
-  if (status === 'submitted' || status === 'reviewed') return 'success'
-  if (status === 'answering' || status === 'learning') return 'warning'
-  return 'info'
+  if (status === "submitted" || status === "reviewed") return "success"
+  if (status === "answering" || status === "learning") return "warning"
+  return "info"
 })
 
-const taskCountLabel = computed(() => `${dailyPacket.value?.tasks?.length || 0} 项`)
-const materialCountLabel = computed(() => `${dailyPacket.value?.study_materials?.length || 0} 份`)
-const exerciseCountLabel = computed(() => `${dailyPacket.value?.exercises?.length || 0} 题`)
-const reviewItemCountLabel = computed(() => `${dailyPacket.value?.review_items?.length || 0} 条`)
+const taskCountLabel = computed(() => `${dailyPacket.value?.tasks?.length || 0} items`)
+const materialCountLabel = computed(() => `${dailyPacket.value?.study_materials?.length || 0} items`)
+const exerciseCountLabel = computed(() => `${dailyPacket.value?.exercises?.length || 0} items`)
+const reviewItemCountLabel = computed(() => `${dailyPacket.value?.review_items?.length || 0} items`)
+
+const hasDraftChanges = computed(() => {
+  if (!dailyPacket.value) return false
+
+  const originalAnswers = dailyPacket.value.answers || {}
+  const draftAnswers = answerDrafts.value || {}
+  const keys = new Set([...Object.keys(originalAnswers), ...Object.keys(draftAnswers)])
+
+  for (const key of keys) {
+    if (String(originalAnswers[key] || "") !== String(draftAnswers[key] || "")) {
+      return true
+    }
+  }
+
+  return false
+})
+
+const isSaveDisabled = computed(() => !dailyPacket.value || isLoading.value || isSaving.value || !hasDraftChanges.value)
+
+const buildAnswerDrafts = (packet) => {
+  const nextAnswers = { ...(packet?.answers || {}) }
+
+  for (const exercise of packet?.exercises || []) {
+    if (typeof nextAnswers[exercise.id] !== "string") {
+      nextAnswers[exercise.id] = ""
+    }
+  }
+
+  return nextAnswers
+}
+
+const applyWorkspacePayload = (payload) => {
+  indexDocument.value = payload?.index || null
+  dailyPacket.value = payload?.dailyPacket || null
+  reviewResult.value = payload?.reviewResult || null
+  answerDrafts.value = buildAnswerDrafts(payload?.dailyPacket)
+}
+
+const getAnswerValue = (exerciseId) => answerDrafts.value?.[exerciseId] || ""
+
+const answerPlaceholder = (exerciseType) => {
+  if (exerciseType === "q_conversation") return "Write a natural reply draft"
+  if (exerciseType === "q_translate") return "Write your translation draft"
+  return "Write your answer"
+}
+
+const updateAnswer = (exerciseId, value) => {
+  answerDrafts.value = {
+    ...answerDrafts.value,
+    [exerciseId]: typeof value === "string" ? value : ""
+  }
+  saveMessage.value = ""
+  saveError.value = ""
+}
 
 const loadWorkspace = async () => {
   isLoading.value = true
-  loadError.value = ''
+  loadError.value = ""
 
   try {
     const payload = await client.value.loadLatestAgentStudy()
-    indexDocument.value = payload?.index || null
-    dailyPacket.value = payload?.dailyPacket || null
-    reviewResult.value = payload?.reviewResult || null
+    applyWorkspacePayload(payload)
   } catch (error) {
     loadError.value = error instanceof Error ? error.message : String(error)
   } finally {
     isLoading.value = false
+  }
+}
+
+const buildDraftPacket = () => {
+  const currentPacket = dailyPacket.value
+  if (!currentPacket) return null
+
+  const nextStatus =
+    currentPacket.status === "planned" || currentPacket.status === "learning"
+      ? "answering"
+      : currentPacket.status
+
+  return {
+    ...currentPacket,
+    status: nextStatus,
+    answers: { ...answerDrafts.value }
+  }
+}
+
+const saveDraft = async () => {
+  const nextPacket = buildDraftPacket()
+  if (!nextPacket) return
+
+  isSaving.value = true
+  saveError.value = ""
+  saveMessage.value = ""
+
+  try {
+    const result = await client.value.saveDailyPacket({
+      dailyPacket: nextPacket
+    })
+
+    dailyPacket.value = result?.dailyPacket || nextPacket
+    answerDrafts.value = buildAnswerDrafts(dailyPacket.value)
+    saveMessage.value = "Draft answers were saved. Refresh is available if you want to confirm the latest copy."
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    if (/revision|conflict/i.test(message)) {
+      saveError.value = "Draft save hit a revision conflict. Please refresh to load the latest packet before saving again."
+    } else {
+      saveError.value = message
+    }
+  } finally {
+    isSaving.value = false
   }
 }
 
@@ -231,10 +371,18 @@ onMounted(() => {
   align-items: end;
 }
 
+.header-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: end;
+}
+
 .agent-study-header h1,
 .section-heading h2,
 .overview-copy h2,
-.item-card h3 {
+.item-card h3,
+.exercise-card h3 {
   margin: 0;
 }
 
@@ -322,12 +470,18 @@ onMounted(() => {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
-.item-card {
+.item-card,
+.exercise-card {
   min-width: 0;
   padding: 16px;
   background: #fbfdff;
   border: 1px solid #dbe3f1;
   border-radius: 8px;
+}
+
+.exercise-list {
+  display: grid;
+  gap: 16px;
 }
 
 .item-card-top {
@@ -337,7 +491,8 @@ onMounted(() => {
   gap: 12px;
 }
 
-.item-card h3 {
+.item-card h3,
+.exercise-card h3 {
   font-size: 16px;
   line-height: 1.5;
 }
@@ -360,6 +515,17 @@ onMounted(() => {
   line-height: 1.6;
 }
 
+.answer-field {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.answer-field span {
+  font-size: 13px;
+  color: #475569;
+}
+
 .example-list {
   margin: 12px 0 0;
   padding-left: 18px;
@@ -379,6 +545,10 @@ onMounted(() => {
   .overview-meta,
   .review-summary {
     grid-template-columns: 1fr;
+  }
+
+  .header-actions {
+    justify-content: start;
   }
 }
 </style>

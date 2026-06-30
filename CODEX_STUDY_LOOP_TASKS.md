@@ -473,7 +473,7 @@ Completion record:
 
 ## Step 11: 实现 AgentStudyWorkspace 答题草稿
 
-状态：pending
+状态：done
 
 目标：
 
@@ -495,6 +495,12 @@ Completion record:
 - 输入答案后可保存。
 - 刷新后能看到保存的答案。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Added minimal draft-answer inputs for `q_fill`, `q_translate`, and `q_conversation`, stored draft values in `daily.answers`, and wired `Save Draft` to `/api/agent-study/daily/save` with revision-carrying packet payloads plus a refresh prompt for revision conflicts.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/components/AgentStudyWorkspace.vue`, `tests/agentStudyWorkspace.test.js`.
+- Verification: `npx vitest run tests/agentStudyWorkspace.test.js` passed, `npm run verify` passed, and a local Vite dev server returned `200` for both `http://127.0.0.1:8080/` and `http://127.0.0.1:8080/api/agent-study/latest`.
+- Follow-up: Next is `Step 12`, which should submit the daily packet from `AgentStudyWorkspace` and transition it into `submitted`.
 
 ## Step 12: 实现提交到仓库
 
