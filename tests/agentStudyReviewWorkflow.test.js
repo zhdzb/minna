@@ -56,6 +56,8 @@ describe('agentStudyReviewWorkflow', () => {
     const studyRoot = createTempStudyRoot()
     const dailyPacket = prepareSubmittedDaily(studyRoot)
     preparePreReviewMastery(studyRoot)
+    const startingCurrentRevision = readJson(path.join(studyRoot, 'state', 'current.json')).revision
+    const startingReviewQueueRevision = readJson(path.join(studyRoot, 'state', 'review-queue.json')).revision
     const reviewResult = readJson(path.join(studyRoot, 'reviews', '2026-06-26-review.json'))
     writeJson(path.join(studyRoot, 'index.json'), {
       ...readJson(path.join(studyRoot, 'index.json')),
@@ -103,10 +105,10 @@ describe('agentStudyReviewWorkflow', () => {
     expect(updatedMastery.revision).toBe(2)
     expect(updatedMastery.grammar_points['lesson-7/tool-means'].status).toBe('weak')
     expect(updatedMastery.lesson_states['lesson-7'].last_reviewed_at).toBe('2026-06-26T21:00:00+08:00')
-    expect(updatedReviewQueue.revision).toBe(2)
+    expect(updatedReviewQueue.revision).toBe(startingReviewQueueRevision + 1)
     expect(updatedReviewQueue.items.find((item) => item.id === 'rq-lesson-7-tool-means')?.status).toBe('due')
     expect(updatedReviewQueue.items.find((item) => item.id === 'rq-lesson-7-ageru-morau')?.status).toBe('scheduled')
-    expect(updatedCurrent.revision).toBe(2)
+    expect(updatedCurrent.revision).toBe(startingCurrentRevision + 1)
     expect(updatedCurrent.learning_mode).toBe('foundation_rebuild')
     expect(updatedCurrent.next_recommendation.plan_type).toBe('review_then_output')
     expect(updatedCurrent.weakness_summary[0].key).toBe('ex-001')

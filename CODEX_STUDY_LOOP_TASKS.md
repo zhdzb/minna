@@ -864,7 +864,7 @@ Completion record:
 
 ## Step 23: 迁移 data.json 历史数据
 
-状态：pending
+状态：done
 
 目标：
 
@@ -887,6 +887,12 @@ Completion record:
 
 - 可从当前 data.json 生成 study state。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Added a legacy `data.json` migration utility that lifts `current_lesson`, `lesson_stats`, `pattern_mastery`, and grouped `mistakes_book` history into normalized Agent Study state, then refreshed the seed `current/mastery/review-queue` documents with real historical learning data.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/server/agentStudy/migrateLegacyData.js`, `tests/agentStudyMigration.test.js`, `tests/agentStudySchema.test.js`, `tests/agentStudyReviewWorkflow.test.js`, `study/state/current.json`, `study/state/mastery.json`, `study/state/review-queue.json`.
+- Verification: `npm run verify` passed. The new migration test also validates the current repo `data.json` can generate schema-valid study state documents.
+- Follow-up: Next is `Step 24`, which should clean up the old frontend entry points so the app defaults to the three Agent Study pages instead of the legacy dashboard/training flow.
 
 ## Step 24: 清理旧前端入口
 

@@ -26,7 +26,7 @@ describe('agentStudySchema', () => {
     expect(validateProfile(readStudyJson('study/state/profile.json')).material_scope.current_focus_lessons).toEqual([7])
     expect(validateCurrent(readStudyJson('study/state/current.json')).current_lesson).toBe(7)
     expect(validateMastery(readStudyJson('study/state/mastery.json')).current_gate).toBe('lesson-7-foundation')
-    expect(validateReviewQueue(readStudyJson('study/state/review-queue.json')).items).toHaveLength(2)
+    expect(validateReviewQueue(readStudyJson('study/state/review-queue.json')).items).toHaveLength(7)
     expect(validatePromotionRules(readStudyJson('study/state/promotion-rules.json')).lesson_gate.min_recent_sessions).toBe(2)
     expect(validateDailyPacket(readStudyJson('study/daily/2026-06-26.json')).mission.focus_lessons).toEqual([7])
     expect(validateReviewResult(readStudyJson('study/reviews/2026-06-26-review.json')).daily_id).toBe('daily-2026-06-26')

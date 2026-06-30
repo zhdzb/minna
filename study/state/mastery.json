@@ -1,27 +1,159 @@
 {
   "schema_version": 1,
-  "revision": 1,
-  "updated_at": "2026-06-26T00:00:00+08:00",
+  "revision": 2,
+  "updated_at": "2026-06-30T10:00:00+08:00",
   "current_gate": "lesson-7-foundation",
   "lesson_states": {
-    "lesson-7": {
-      "lesson": 7,
+    "lesson-1": {
+      "lesson": 1,
       "status": "learning",
       "skill_scores": {
-        "grammar": 0.22,
-        "listening": 0.18,
-        "speaking": 0.16,
+        "grammar": 0.6,
+        "listening": 0.48,
+        "speaking": 0.45,
+        "reading": 0.65
+      },
+      "last_reviewed_at": "2026-03-10T14:57:48.396Z"
+    },
+    "lesson-2": {
+      "lesson": 2,
+      "status": "learning",
+      "skill_scores": {
+        "grammar": 0.5,
+        "listening": 0.38,
+        "speaking": 0.35,
+        "reading": 0.5
+      },
+      "last_reviewed_at": "2026-03-10T15:37:13.128Z"
+    },
+    "lesson-3": {
+      "lesson": 3,
+      "status": "learning",
+      "skill_scores": {
+        "grammar": 0.6,
+        "listening": 0.48,
+        "speaking": 0.45,
+        "reading": 0.65
+      },
+      "last_reviewed_at": "2026-03-10T17:16:22.849Z"
+    },
+    "lesson-4": {
+      "lesson": 4,
+      "status": "learning",
+      "skill_scores": {
+        "grammar": 0.6,
+        "listening": 0.48,
+        "speaking": 0.45,
+        "reading": 0.65
+      },
+      "last_reviewed_at": "2026-03-11T16:34:36.642Z"
+    },
+    "lesson-5": {
+      "lesson": 5,
+      "status": "learning",
+      "skill_scores": {
+        "grammar": 0.6667,
+        "listening": 0.5467,
+        "speaking": 0.5167,
+        "reading": 0.7167
+      },
+      "last_reviewed_at": "2026-03-15T15:06:32.59Z"
+    },
+    "lesson-6": {
+      "lesson": 6,
+      "status": "learning",
+      "skill_scores": {
+        "grammar": 0.5625,
+        "listening": 0.4425,
+        "speaking": 0.4125,
+        "reading": 0.6125
+      },
+      "last_reviewed_at": "2026-03-17T16:03:26.863Z"
+    },
+    "lesson-7": {
+      "lesson": 7,
+      "status": "weak",
+      "skill_scores": {
+        "grammar": 0,
+        "listening": 0,
+        "speaking": 0,
+        "reading": 0
+      },
+      "last_reviewed_at": "2026-04-22T16:52:01.727Z"
+    },
+    "lesson-14": {
+      "lesson": 14,
+      "status": "weak",
+      "skill_scores": {
+        "grammar": 0,
+        "listening": 0,
+        "speaking": 0,
+        "reading": 0
+      },
+      "last_reviewed_at": "2026-04-06T09:33:04.49Z"
+    },
+    "lesson-15": {
+      "lesson": 15,
+      "status": "weak",
+      "skill_scores": {
+        "grammar": 0.35,
+        "listening": 0.23,
+        "speaking": 0.2,
         "reading": 0.35
       },
-      "last_reviewed_at": "2026-05-28T11:19:44.738Z"
+      "last_reviewed_at": "2026-04-06T13:50:09.244Z"
+    },
+    "lesson-17": {
+      "lesson": 17,
+      "status": "weak",
+      "skill_scores": {
+        "grammar": 0.2,
+        "listening": 0.08,
+        "speaking": 0.05,
+        "reading": 0.2
+      },
+      "last_reviewed_at": "2026-04-12T13:23:45.33Z"
+    },
+    "lesson-18": {
+      "lesson": 18,
+      "status": "weak",
+      "skill_scores": {
+        "grammar": 0.4,
+        "listening": 0.28,
+        "speaking": 0.25,
+        "reading": 0.4
+      },
+      "last_reviewed_at": "2026-04-13T18:18:33.334Z"
+    },
+    "lesson-19": {
+      "lesson": 19,
+      "status": "weak",
+      "skill_scores": {
+        "grammar": 0.2,
+        "listening": 0.08,
+        "speaking": 0.05,
+        "reading": 0.2
+      },
+      "last_reviewed_at": "2026-04-27T12:08:15.396Z"
+    },
+    "lesson-20": {
+      "lesson": 20,
+      "status": "weak",
+      "skill_scores": {
+        "grammar": 0.2222,
+        "listening": 0.1022,
+        "speaking": 0.0722,
+        "reading": 0.2222
+      },
+      "last_reviewed_at": "2026-04-28T12:37:46.293Z"
     }
   },
   "grammar_points": {
     "lesson-7/tool-means": {
       "lesson": 7,
-      "pattern": "N ? V",
+      "pattern": "N(工具/手段) で V (使用某种工具做某事)",
       "status": "weak",
-      "recognition": 0.3,
+      "recognition": 0,
       "controlled_output": 0.02,
       "free_output": 0,
       "last_practiced_at": "2026-05-28T11:19:44.738Z"
@@ -43,6 +175,15 @@
       "controlled_output": 0.08,
       "free_output": 0,
       "last_practiced_at": "2026-05-28T11:19:44.738Z"
+    },
+    "lesson-17/nakereba-narimasen": {
+      "lesson": 17,
+      "pattern": "Vなければ なりません (必须做某事)",
+      "status": "weak",
+      "recognition": 0.4,
+      "controlled_output": 0.17,
+      "free_output": 0.12,
+      "last_practiced_at": "2026-04-12T13:24:06.364Z"
     }
   }
 }

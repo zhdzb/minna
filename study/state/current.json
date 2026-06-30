@@ -1,39 +1,68 @@
 {
   "schema_version": 1,
-  "revision": 1,
-  "updated_at": "2026-06-26T00:00:00+08:00",
+  "revision": 2,
+  "updated_at": "2026-06-30T10:00:00+08:00",
   "current_lesson": 7,
   "learning_mode": "foundation_rebuild",
   "active_goals": [
-    "??? 7 ?????",
-    "??????"
+    "重建第 7 课输出能力",
+    "回收历史错题复习队列"
   ],
   "weakness_summary": [
     {
       "scope": "lesson",
       "key": "7",
-      "problem": "???? lesson 7 ?????????????????????",
+      "problem": "最近一次第 7 课练习正确率只有 0%，需要先重建基础输出。",
       "evidence": [
-        "data.json:daily_plan.focus_lessons[0]",
-        "data.json:pattern_mastery.lesson-7-foundation"
+        "data.json:progress.lesson_stats.7"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-7/tool-means",
+      "problem": "第 7 课句型「N(工具/手段) で V (使用某种工具做某事)」输出分接近 0，需要重新做替换和造句训练。",
+      "evidence": [
+        "data.json:pattern_mastery.N(工具/手段) で V (使用某种工具做某事)"
+      ]
+    },
+    {
+      "scope": "legacy_mistake",
+      "key": "lesson-1/q-translate",
+      "problem": "历史错题中第 1 课「q_translate」累计出错 9 次，需要回收复习。",
+      "evidence": [
+        "data.json:mistakes_book#1772980745621",
+        "data.json:mistakes_book@2026-03-08T14:39:05.621Z"
+      ]
+    },
+    {
+      "scope": "legacy_mistake",
+      "key": "lesson-1/q-conversation",
+      "problem": "历史错题中第 1 课「q_conversation」累计出错 3 次，需要回收复习。",
+      "evidence": [
+        "data.json:mistakes_book#1772978537278",
+        "data.json:mistakes_book@2026-03-08T14:02:17.278Z"
       ]
     }
   ],
   "recent_focus": {
     "grammar": [
+      "N(工具/手段) で V (使用某种工具做某事)",
+      "Vなければ なりません (必须做某事)",
       "N ? V",
       "N1 ? N2 ? ????",
       "N1 ? N2 ? ?????"
     ],
     "listening": [
+      "第 7 课关键句听辨",
       "lesson 7 key phrase listening"
     ],
     "speaking": [
+      "第 7 课句型替换造句",
       "controlled output with lesson 7 patterns"
     ]
   },
   "next_recommendation": {
-    "date": "2026-06-26",
+    "date": "2026-06-30",
     "plan_type": "review_then_output",
     "minutes": 60
   }

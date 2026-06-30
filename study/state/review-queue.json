@@ -1,16 +1,56 @@
 {
   "schema_version": 1,
-  "revision": 1,
-  "updated_at": "2026-06-26T00:00:00+08:00",
+  "revision": 2,
+  "updated_at": "2026-06-30T10:00:00+08:00",
   "items": [
+    {
+      "id": "rq-lesson-1-q-conversation",
+      "kind": "legacy_mistake",
+      "key": "lesson-1/q-conversation",
+      "status": "due",
+      "due_date": "2026-06-30",
+      "interval_days": 1,
+      "ease": 1.7,
+      "last_result": "wrong"
+    },
+    {
+      "id": "rq-lesson-1-q-fill",
+      "kind": "legacy_mistake",
+      "key": "lesson-1/q-fill",
+      "status": "due",
+      "due_date": "2026-06-30",
+      "interval_days": 1,
+      "ease": 1.9,
+      "last_result": "wrong"
+    },
+    {
+      "id": "rq-lesson-1-q-translate",
+      "kind": "legacy_mistake",
+      "key": "lesson-1/q-translate",
+      "status": "due",
+      "due_date": "2026-06-30",
+      "interval_days": 1,
+      "ease": 1.7,
+      "last_result": "wrong"
+    },
+    {
+      "id": "rq-lesson-3-q-translate",
+      "kind": "legacy_mistake",
+      "key": "lesson-3/q-translate",
+      "status": "due",
+      "due_date": "2026-06-30",
+      "interval_days": 1,
+      "ease": 1.9,
+      "last_result": "wrong"
+    },
     {
       "id": "rq-lesson-7-tool-means",
       "kind": "grammar_point",
       "key": "lesson-7/tool-means",
       "status": "due",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "interval_days": 1,
-      "ease": 2.1,
+      "ease": 2,
       "last_result": "wrong"
     },
     {
@@ -22,6 +62,16 @@
       "interval_days": 1,
       "ease": 2.2,
       "last_result": "hard"
+    },
+    {
+      "id": "rq-lesson-17-nakereba-narimasen",
+      "kind": "grammar_point",
+      "key": "lesson-17/nakereba-narimasen",
+      "status": "due",
+      "due_date": "2026-06-30",
+      "interval_days": 1,
+      "ease": 1.9,
+      "last_result": "wrong"
     }
   ]
 }
