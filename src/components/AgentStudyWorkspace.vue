@@ -351,7 +351,7 @@
         </div>
         <div v-if="reviewPromptPath" class="prompt-handoff">
           <p class="item-copy">
-            学习包已经提交，请将下面这份提示词交给 Codex 继续批改：
+            学习包已经提交，请把下面这份提示词交给 Codex 继续批改：
             <strong>{{ reviewPromptPath }}</strong>
           </p>
           <div class="header-actions prompt-actions">
@@ -377,6 +377,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { createAgentStudyClient } from '@/utils/agentStudyClient'
+import { toKanaInput } from '@/utils/wanakanaInput'
 
 const props = defineProps({
   client: {
@@ -542,8 +543,8 @@ const mapStatusLabel = (status) => statusLabelMap[status || 'unknown'] || String
 const getAnswerValue = (exerciseId) => answerDrafts.value?.[exerciseId] || ''
 
 const answerPlaceholder = (exerciseType) => {
-  if (exerciseType === 'q_conversation') return '请输入自然的对话回复'
-  if (exerciseType === 'q_translate') return '请输入你的翻译草稿'
+  if (exerciseType === 'q_conversation') return '请输入自然的日语对话回复'
+  if (exerciseType === 'q_translate') return '请输入你的日语翻译草稿'
   return '请输入答案'
 }
 
@@ -586,7 +587,7 @@ const resetTransientMessages = () => {
 const updateAnswer = (exerciseId, value) => {
   answerDrafts.value = {
     ...answerDrafts.value,
-    [exerciseId]: typeof value === 'string' ? value : ''
+    [exerciseId]: typeof value === 'string' ? toKanaInput(value) : ''
   }
   resetTransientMessages()
 }

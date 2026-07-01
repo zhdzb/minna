@@ -1,27 +1,30 @@
 {
   "schema_version": 1,
-  "revision": 2,
-  "updated_at": "2026-07-01T10:00:00+08:00",
+  "revision": 1,
+  "updated_at": "2026-07-01T12:00:00+08:00",
   "learner_id": "local-default",
   "goals": [
-    "重建第 7 课核心输出能力",
-    "把历史错题重新纳入复习闭环"
+    "从第 1 课重新建立可部署版 Study Loop 的学习基线",
+    "以中文提示词和日语输出练习为默认工作流"
   ],
   "daily_time_budget_minutes": 60,
   "pace_preference": "steady",
   "input_preferences": {
-    "allow_romaji": false,
+    "allow_romaji": true,
     "prefer_kana_first": true,
     "practice_kanji": true,
     "ui_language": "zh-CN"
   },
   "material_scope": {
     "series": "大家的日本语",
-    "current_focus_lessons": [7],
-    "allow_new_lessons": false
+    "current_focus_lessons": [
+      1
+    ],
+    "allow_new_lessons": true
   },
   "notes": [
-    "当前以第 7 课为主，不推进新课。",
-    "批改与复习提示词默认使用中文，降低切换成本。"
+    "重构后运行态数据已清零，不再沿用旧的 daily、review、review-drill 记录。",
+    "答题区默认支持罗马音自动转假名。",
+    "Agent 提示词和工作台文案默认使用中文。"
   ]
 }

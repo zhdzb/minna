@@ -130,6 +130,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { createAgentStudyClient } from '@/utils/agentStudyClient'
+import { toKanaInput } from '@/utils/wanakanaInput'
 
 const props = defineProps({
   client: {
@@ -205,7 +206,7 @@ const updateAnswer = (itemId, value) => {
       item.id === itemId
         ? {
             ...item,
-            user_answer: String(value || '')
+            user_answer: toKanaInput(value)
           }
         : item
     )

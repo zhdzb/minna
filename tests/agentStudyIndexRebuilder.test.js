@@ -82,7 +82,7 @@ const createReviewResult = ({ date, revision = 1 } = {}) => ({
       error_tags: ['particle'],
       target_grammar: 'N で V',
       user_answer: '',
-      correct_answer: 'で',
+      correct_answer: 'バスで いきます。',
       explanation: 'Means particle is missing.',
       retry_recommended: true
     }
@@ -102,18 +102,18 @@ afterEach(() => {
 })
 
 describe('agentStudyIndexRebuilder', () => {
-  it('rebuilds the seed study index from on-disk facts', () => {
+  it('rebuilds the reset seed study index from on-disk facts', () => {
     const studyRoot = path.resolve(process.cwd(), 'study')
 
     const rebuilt = buildRebuiltIndex({
       studyRoot,
-      updatedAt: '2026-06-26T12:00:00+08:00'
+      updatedAt: '2026-07-01T12:00:00+08:00'
     })
 
     expect(validateIndex(rebuilt)).toEqual(rebuilt)
-    expect(rebuilt.latest_daily).toBe('study/daily/2026-06-26.json')
-    expect(rebuilt.latest_review).toBe('study/reviews/2026-06-26-review.json')
-    expect(rebuilt.latest_prompt).toBe('study/prompts/generated/2026-06-26-review.md')
+    expect(rebuilt.latest_daily).toBeNull()
+    expect(rebuilt.latest_review).toBeNull()
+    expect(rebuilt.latest_prompt).toBeNull()
   })
 
   it('falls back to rebuilding and writing index when index.json is missing or corrupted', () => {

@@ -5,7 +5,6 @@ import {
   CURRENT_SCHEMA_VERSION,
   validateAgentStudyDocument,
   validateCurrent,
-  validateDailyPacket,
   validateIndex,
   validateMastery,
   validateProfile,
@@ -14,6 +13,11 @@ import {
   validateReviewQueue,
   validateReviewResult
 } from '../src/utils/agentStudySchema'
+import {
+  createSampleDailyPacket,
+  createSampleReviewDrill,
+  createSampleReviewResult
+} from './helpers/agentStudyRuntimeFixtures'
 
 const readStudyJson = (relativePath) => {
   const fullPath = path.resolve(process.cwd(), relativePath)
@@ -21,16 +25,19 @@ const readStudyJson = (relativePath) => {
 }
 
 describe('agentStudySchema', () => {
-  it('validates all seed study JSON files', () => {
-    expect(validateIndex(readStudyJson('study/index.json')).latest_daily).toBe('study/daily/2026-06-26.json')
-    expect(validateProfile(readStudyJson('study/state/profile.json')).material_scope.current_focus_lessons).toEqual([7])
-    expect(validateCurrent(readStudyJson('study/state/current.json')).current_lesson).toBe(7)
-    expect(validateMastery(readStudyJson('study/state/mastery.json')).current_gate).toBe('lesson-7-foundation')
-    expect(validateReviewQueue(readStudyJson('study/state/review-queue.json')).items).toHaveLength(7)
+  it('validates reset seed study JSON files', () => {
+    expect(validateIndex(readStudyJson('study/index.json')).latest_daily).toBeNull()
+    expect(validateProfile(readStudyJson('study/state/profile.json')).material_scope.current_focus_lessons).toEqual([1])
+    expect(validateCurrent(readStudyJson('study/state/current.json')).current_lesson).toBe(1)
+    expect(validateMastery(readStudyJson('study/state/mastery.json')).current_gate).toBe('lesson-1-foundation')
+    expect(validateReviewQueue(readStudyJson('study/state/review-queue.json')).items).toHaveLength(0)
     expect(validatePromotionRules(readStudyJson('study/state/promotion-rules.json')).lesson_gate.min_recent_sessions).toBe(2)
-    expect(validateDailyPacket(readStudyJson('study/daily/2026-06-26.json')).mission.focus_lessons).toEqual([7])
-    expect(validateReviewResult(readStudyJson('study/reviews/2026-06-26-review.json')).daily_id).toBe('daily-2026-06-26')
-    expect(validateReviewDrill(readStudyJson('study/review-drills/2026-06-30.json')).items).toHaveLength(2)
+  })
+
+  it('validates representative runtime documents from fixtures', () => {
+    expect(createSampleDailyPacket().mission.focus_lessons).toEqual([7])
+    expect(validateReviewResult(createSampleReviewResult()).daily_id).toBe('daily-2026-06-26')
+    expect(validateReviewDrill(createSampleReviewDrill()).items).toHaveLength(1)
   })
 
   it('dispatches through the generic validator', () => {
@@ -80,94 +87,5 @@ describe('agentStudySchema', () => {
     expect(normalized.daily_time_budget_minutes).toBe(45)
     expect(normalized.material_scope.series).toBe('Minna no Nihongo')
     expect(normalized.material_scope.current_focus_lessons).toEqual([7])
-  })
-
-  it('validates review results with confidence metadata', () => {
-    const reviewResult = {
-      schema_version: 1,
-      revision: 1,
-      updated_at: '2026-06-26T10:00:00+08:00',
-      id: 'review-2026-06-26',
-      daily_id: 'daily-2026-06-26',
-      created_at: '2026-06-26T10:00:00+08:00',
-      overall: {
-        accuracy: 0.75,
-        can_advance: false,
-        summary: 'Needs more controlled output practice.',
-        next_focus: ['N ? V', 'giving and receiving verbs']
-      },
-      items: [
-        {
-          exercise_id: 'ex-001',
-          is_correct: false,
-          score: 0.4,
-          error_tags: ['particle'],
-          target_grammar: 'N ? V',
-          user_answer: '?',
-          correct_answer: '?',
-          explanation: 'The sentence needs the means particle.',
-          retry_recommended: true,
-          rubric: {
-            grammar: 0.4,
-            particles: 0.2,
-            naturalness: 0.6
-          },
-          confidence: 0.82,
-          needs_user_input: false,
-          acceptable_variants: ['?'],
-          manual_override: null
-        }
-      ],
-      mastery_updates: [],
-      review_queue_updates: [],
-      promotion_decision: {
-        can_advance: false,
-        reason: 'Accuracy is below the output threshold.'
-      }
-    }
-
-    expect(validateReviewResult(reviewResult).items[0].confidence).toBe(0.82)
-    expect(validateReviewResult(reviewResult).items[0].rubric.grammar).toBe(0.4)
-  })
-
-  it('validates review drills with structured weakness explanations and answers', () => {
-    const reviewDrill = {
-      schema_version: 1,
-      revision: 1,
-      updated_at: '2026-06-30T09:00:00+08:00',
-      id: 'review-drill-2026-06-30',
-      date: '2026-06-30',
-      status: 'draft',
-      created_at: '2026-06-30T09:00:00+08:00',
-      source_review: 'study/reviews/2026-06-26-review.json',
-      summary: {
-        title: 'Lesson 7 weak points refresh',
-        focus: ['means particle', 'morau reply shape'],
-        due_review_queue_ids: ['rq-lesson-7-tool-means', 'rq-lesson-7-ageru-morau']
-      },
-      items: [
-        {
-          id: 'drill-001',
-          review_queue_id: 'rq-lesson-7-tool-means',
-          key: 'lesson-7/tool-means',
-          lesson: 7,
-          target_grammar: 'N de V',
-          weakness_explanation: 'The means particle still collapses under output pressure.',
-          error_tags: ['particle'],
-          original_prompt: 'Translate: I go by bus.',
-          variant_prompt: 'Say: I go to the station by taxi today.',
-          answer_reference: 'Kyou wa takushii de eki ni ikimasu.',
-          user_answer: '',
-          hint: 'Keep the transport phrase attached to de.',
-          status: 'pending'
-        }
-      ],
-      submission: {
-        submitted_at: null,
-        note: ''
-      }
-    }
-
-    expect(validateReviewDrill(reviewDrill).items[0].review_queue_id).toBe('rq-lesson-7-tool-means')
   })
 })

@@ -2,14 +2,14 @@ import { describe, expect, it, vi } from 'vitest'
 import { handleExerciseGeneration } from '../src/server/routes/exerciseGenerationRoute'
 
 describe('exerciseGenerationRoute', () => {
-  it('returns validated generated exercises', async () => {
+  it('returns validated generated exercises and forwards richer lesson context into the prompt', async () => {
     const requestLlm = vi.fn(async () =>
       JSON.stringify({
         exercises: [
           {
             id: 'q1',
             type: 'q_fill',
-            target_grammar: 'ています',
+            target_grammar: '〜ています',
             question: 'いま、わたしは ____。',
             options: ['たべています', 'たべます'],
             answer: 'たべています'
@@ -17,7 +17,7 @@ describe('exerciseGenerationRoute', () => {
           {
             id: 'q2',
             type: 'q_translate',
-            target_grammar: 'ています',
+            target_grammar: '〜ています',
             chinese_prompt: '我现在在学习。',
             answer: 'いま、べんきょうしています。',
             vocab_hints: []
@@ -29,7 +29,13 @@ describe('exerciseGenerationRoute', () => {
     const result = await handleExerciseGeneration(
       {
         lesson: 22,
-        grammar_points: ['ています'],
+        lesson_theme: '修饰句与正在进行的表达',
+        grammar_points: ['〜ています'],
+        sentence_patterns: ['いま でんわして います。'],
+        hidden_knowledge: ['注意进行体和状态体的区别。'],
+        core_vocabulary: [
+          { word: 'でんわします', kana: 'でんわします', meaning: '打电话', usage: '正在进行' }
+        ],
         config: { questionType: 'ALL', questionCount: 2 }
       },
       { requestLlm }
@@ -38,6 +44,9 @@ describe('exerciseGenerationRoute', () => {
     expect(result.exercises).toHaveLength(2)
     expect(requestLlm).toHaveBeenCalledTimes(1)
     expect(requestLlm.mock.calls[0][0].taskName).toBe('exercise')
+    expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('修饰句与正在进行的表达')
+    expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('いま でんわして います。')
+    expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('でんわします')
   })
 
   it('rejects invalid payload before calling LLM', async () => {

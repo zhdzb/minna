@@ -28,12 +28,12 @@ afterEach(() => {
 })
 
 describe('agentStudyContextWriter', () => {
-  it('generates next-agent-context from the seed study state', () => {
+  it('generates next-agent-context from the reset seed study state', () => {
     const writer = createAgentStudyContextWriter()
     const result = writer.writeNextAgentContext()
 
     expect(result.path).toBe('study/context/next-agent-context.md')
-    expect(result.content).toContain('最新 daily：study/daily/2026-06-26.json')
+    expect(result.content).toContain('最新 daily：none')
     expect(result.content).toContain('study/state/mastery.json')
     expect(result.content).toContain('study/state/review-queue.json')
     expect(result.content).toContain('## 接下来先读')

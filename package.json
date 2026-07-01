@@ -3,7 +3,7 @@
     "dev": "vite",
     "build": "vite build",
     "start": "vite",
-    "test": "vitest run",
+    "test": "vitest run --maxWorkers=1",
     "verify": "npm run build && npm run test"
   },
   "devDependencies": {

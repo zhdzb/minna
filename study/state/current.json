@@ -1,57 +1,32 @@
 {
   "schema_version": 1,
-  "revision": 3,
-  "updated_at": "2026-07-01T10:00:00+08:00",
-  "current_lesson": 7,
-  "learning_mode": "foundation_rebuild",
+  "revision": 1,
+  "updated_at": "2026-07-01T12:00:00+08:00",
+  "current_lesson": 1,
+  "learning_mode": "foundation_reset",
   "active_goals": [
-    "重建第 7 课输出能力",
-    "回收历史错题复习队列"
+    "从第 1 课重新开始",
+    "先建立每课知识点驱动的练习生成"
   ],
-  "weakness_summary": [
-    {
-      "scope": "lesson",
-      "key": "7",
-      "problem": "第 7 课近期输出稳定性不足，需要先回到受控输出再恢复自由表达。",
-      "evidence": [
-        "study/reviews/2026-06-26-review.json"
-      ]
-    },
-    {
-      "scope": "grammar_point",
-      "key": "lesson-7/tool-means",
-      "problem": "交通工具或手段用法里的「で」仍然容易和其他助词混淆。",
-      "evidence": [
-        "study/reviews/2026-06-26-review.json#ex-001"
-      ]
-    },
-    {
-      "scope": "grammar_point",
-      "key": "lesson-7/morau",
-      "problem": "「もらう」句型语义正确，但在简短对话里还不够自然。",
-      "evidence": [
-        "study/reviews/2026-06-26-review.json#ex-003"
-      ]
-    }
-  ],
+  "weakness_summary": [],
   "recent_focus": {
     "grammar": [
-      "N で V",
-      "N1 は N2 に あげます",
-      "N1 は N2 に もらいます"
+      "N1 は N2 です",
+      "N1 は N2 じゃありません",
+      "N1 の N2"
     ],
     "listening": [
-      "第 7 课交通方式问答",
-      "第 7 课授受关系短对话"
+      "课堂自我介绍",
+      "初次见面寒暄"
     ],
     "speaking": [
-      "第 7 课句型替换造句",
-      "使用 もらう 做自然短回复"
+      "姓名、国籍、职业自我介绍",
+      "礼貌确认与回应"
     ]
   },
   "next_recommendation": {
     "date": "2026-07-01",
-    "plan_type": "review_then_output",
+    "plan_type": "lesson-foundation",
     "minutes": 60
   }
 }

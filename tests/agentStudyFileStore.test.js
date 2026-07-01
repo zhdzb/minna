@@ -214,14 +214,14 @@ afterEach(() => {
 })
 
 describe('agentStudyFileStore', () => {
-  it('reads the seed index and latest daily packet', () => {
+  it('reads the reset seed index and returns null for cleared runtime files', () => {
     const store = createAgentStudyFileStore()
 
-    expect(store.loadIndex().latest_daily).toBe('study/daily/2026-06-26.json')
-    expect(store.loadIndex().latest_review).toBe('study/reviews/2026-06-26-review.json')
-    expect(store.loadLatestDaily().id).toBe(readStudyJson('study/daily/2026-06-26.json').id)
-    expect(store.loadLatestReview().id).toBe('review-2026-06-26')
-    expect(store.loadLatestReviewDrill().id).toBe('review-drill-2026-06-30')
+    expect(store.loadIndex().latest_daily).toBeNull()
+    expect(store.loadIndex().latest_review).toBeNull()
+    expect(store.loadLatestDaily()).toBeNull()
+    expect(store.loadLatestReview()).toBeNull()
+    expect(store.loadLatestReviewDrill()).toBeNull()
   })
 
   it('writes a daily packet copy with atomic replacement and updates index', () => {
