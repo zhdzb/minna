@@ -4,31 +4,33 @@
 
 This repository is being refactored from a local-only Japanese study tool into a deployable study execution system with daily planning, cloud-ready persistence, and server-side LLM routing.
 
+The active product flow is now the Agent Study workflow:
+
+- `/agent-study`
+- `/agent-review-drill`
+- `/agent-progress-review`
+
 ## Working Rules
 
 - Keep local mode working while the migration is in progress.
 - Treat deployed mode as a separate runtime path with stricter rules.
 - Do not remove `data.json` import/export support until the cloud persistence flow is implemented and verified.
+- Do not overwrite historical files under `study/daily/`, `study/reviews/`, or `study/logs/` unless a task explicitly calls for generating new records there.
 
 ## Codebase Patterns
 
-- `src/store/mainStore.js` is the main state normalization and persistence entry point.
-- `src/store/trainingStore.js` owns active training session state and should stay focused on session flow.
-- `src/utils/llmProvider.js` currently contains frontend-side provider behavior. Migrate to server-side routing incrementally, not in one sweeping rewrite.
-- `src/utils/planRules.js` should stay as a pure rule module so plan generation can be tested independently from Pinia state and AI calls.
-- Server-side provider modules should separate full internal config from a secret-free public status payload.
-- Adapters that depend on runtime globals like `fetch` or `localStorage` should resolve them lazily so tests and alternate runtimes can override them after module import.
-- Server-side helpers such as LLM request utilities and context snapshot builders should stay store-agnostic and accept plain data inputs.
-- Dev-only API endpoints in `vite.config.js` should delegate into reusable modules under `src/server/` so deployed handlers can reuse the same route logic later.
-- Exercise-generation and evaluation routes should reuse `src/utils/aiPayloadValidators.js` so server and frontend apply the same output validation contract.
-- Summary-style routes should return a strict normalized JSON shape (not raw model text) so dashboard/report UIs stay stable across providers.
-- Persistence API routes should go through `src/server/persistence/serverPersistenceAdapter.js` so runtime storage strategy (local file vs deployed memory/cloud) is switched in one place.
-- Frontend persistence should use `createRuntimePersistenceAdapter()` so local mode keeps `data.json` compatibility while deployed mode targets `/api/state/*` contracts.
+- `src/store/mainStore.js` is still the main persistence-facing frontend store.
+- `src/store/trainingStore.js` is legacy session state. Do not expand it as the main Agent Study flow.
+- `src/utils/planRules.js` should stay pure so planning rules can be tested independently.
+- `src/server/agentStudy/` is the main home for file-backed study workflows, event logging, context generation, and writeback logic.
+- `src/utils/agentStudySchema.js` and related validators should remain the shared contract for study documents.
+- Server-side helpers such as request utilities, provider config, and context builders should stay store-agnostic and accept plain data inputs.
+- Dev-only API endpoints in `vite.config.js` should delegate into reusable modules under `src/server/`.
+- Persistence API routes should go through `src/server/persistence/serverPersistenceAdapter.js` so runtime storage strategy can switch in one place.
+- Frontend persistence should use `createRuntimePersistenceAdapter()` so local mode keeps `data.json` compatibility while deployed mode can move to `/api/state/*`.
 - Backup import/export flows should validate payload shape with `src/utils/backupPayload.js` before mutating store state.
-- Dashboard mission workflows should treat rule-based plan creation as the baseline and AI enhancement as optional best-effort with graceful fallback.
-- Skill-mode pages under `src/components/*Mode.vue` should update mastery via `mainStore` actions, while launch entry points stay in dashboard task cards.
-- Scenario speaking mode should consume `/api/ai/exercise-generate` and `/api/ai/exercise-evaluate` routes directly and save final evaluations through `addReviewItem`.
-- `vite.config.js` contains development-only middleware for `/api/save-progress` and `/api/llm`; do not mistake these for production-ready runtime APIs.
+- Exercise-generation and evaluation routes should reuse `src/utils/aiPayloadValidators.js` so server and frontend apply the same output validation contract.
+- Summary-style routes should return normalized JSON shapes rather than raw model text.
 - New schema-like state additions should be normalized with backward compatibility for existing local data.
 
 ## Quality Checks

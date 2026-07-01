@@ -53,7 +53,7 @@
             }"
           >
             <p :style="{ color: isAcgDark ? '#b3aebd' : '#666', fontSize: '0.8rem', marginBottom: '10px' }">
-              当前进度：第 {{ store.progress.current_lesson }} 课
+              Current lesson: {{ store.progress.current_lesson }}
             </p>
             <el-button
               type="warning"
@@ -62,7 +62,7 @@
               @click="createBackup"
               style="width: 100%; margin-bottom: 10px;"
             >
-              保存本地存档
+              Save Snapshot
             </el-button>
             <el-button
               type="info"
@@ -71,7 +71,7 @@
               @click="exportData"
               style="width: 100%; margin-bottom: 10px;"
             >
-              导出备份
+              Export Backup
             </el-button>
             <el-button
               type="success"
@@ -79,7 +79,7 @@
               @click="fileInput?.click()"
               style="width: 100%; margin: 0;"
             >
-              导入备份
+              Import Backup
             </el-button>
             <input type="file" ref="fileInput" accept=".json" style="display: none;" @change="importData" />
           </div>
@@ -97,8 +97,8 @@
           v-model="isAcgDark"
           inline-prompt
           style="--el-switch-on-color: #8b5cf6; --el-switch-off-color: #4b5563"
-          active-text="沉浸"
-          inactive-text="简洁"
+          active-text="Focus"
+          inactive-text="Plain"
           @change="toggleTheme"
         />
       </div>
@@ -178,14 +178,14 @@ watch(
   () => store.meta?.last_persistence_error,
   (value, previous) => {
     if (value && value !== previous) {
-      ElMessage.error(`数据保存失败：${value}`)
+      ElMessage.error(`Save failed: ${value}`)
     }
   }
 )
 
 const createBackup = () => {
   store.createBackupSnapshot('manual')
-  ElMessage.success('已保存一份本地学习存档。')
+  ElMessage.success('Local snapshot saved.')
 }
 
 const exportData = () => {
@@ -199,7 +199,7 @@ const exportData = () => {
   anchor.click()
   document.body.removeChild(anchor)
   URL.revokeObjectURL(url)
-  ElMessage.success('备份文件已导出。')
+  ElMessage.success('Backup exported.')
 }
 
 const importData = async (event) => {
@@ -211,22 +211,22 @@ const importData = async (event) => {
     const data = validateBackupPayloadShape(JSON.parse(text))
 
     await ElMessageBox.confirm(
-      '导入会覆盖当前学习进度。建议先导出一份当前备份。是否继续？',
-      '确认导入备份',
+      'Importing will overwrite the current study progress. Export a backup first if needed. Continue?',
+      'Confirm Import',
       {
-        confirmButtonText: '继续导入',
-        cancelButtonText: '取消',
+        confirmButtonText: 'Import',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }
     )
 
     store.overwriteState(data)
-    ElMessage.success('备份导入完成。')
+    ElMessage.success('Backup imported.')
   } catch (error) {
     if (error === 'cancel' || error === 'close') {
-      ElMessage.info('已取消导入。')
+      ElMessage.info('Import canceled.')
     } else {
-      ElMessage.error(`导入失败: ${error.message}`)
+      ElMessage.error(`Import failed: ${error.message}`)
     }
   }
 

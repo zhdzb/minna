@@ -962,7 +962,7 @@ Completion record:
 
 ## Step 26: 编码和文档清理
 
-状态：pending
+状态：done
 
 目标：
 
@@ -986,6 +986,12 @@ Completion record:
 - 新贡献者能从 README/开发文档知道下一步。
 - 文档明确旧项目只作为可复用资产来源，新三页面是唯一主流程。
 - `npm run verify` 通过。
+
+完成记录：
+- 完成内容：重写 README、开发文档和 AGENTS 仓库说明，统一指向 Agent Study 三页主流程；同时清理了 `index.html` 标题和 `App.vue` 壳层里的乱码/过时文案。
+- 修改文件：`CODEX_STUDY_LOOP_TASKS.md`、`README.md`、`CODEX_STUDY_LOOP_DEVELOPMENT.md`、`AGENTS.md`、`index.html`、`src/App.vue`
+- 验证结果：`npm run verify` 通过；本地启动 Vite 后确认 `http://127.0.0.1:8090/` 和 `http://127.0.0.1:8090/#/agent-study` 均返回 `200`，页面标题为 `Codex Study Loop`。
+- 后续注意事项：下一步执行 `Step 27`，按任务文档走一遍完整本地闭环，重点检查提交、批改回写、progress 变化和 manual override 事件链。
 
 ## Step 27: 端到端本地闭环验证
 
