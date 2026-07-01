@@ -130,7 +130,28 @@
               <el-tag size="small" type="success" effect="plain">{{ exercise.type || '练习' }}</el-tag>
             </div>
             <p class="item-note">第 {{ exercise.lesson ?? '--' }} 课 · {{ exercise.metadata?.skill || '未标注技能' }}</p>
-            <p v-if="exercise.vocab_hints?.length" class="item-copy">提示：{{ exercise.vocab_hints.join(' / ') }}</p>
+            <div class="exercise-detail-list">
+              <p v-if="exercise.instruction" class="item-copy"><strong>作答要求：</strong>{{ exercise.instruction }}</p>
+              <p v-if="exercise.context_note" class="item-copy"><strong>场景说明：</strong>{{ exercise.context_note }}</p>
+              <p v-if="exercise.answer_format" class="item-copy"><strong>回答格式：</strong>{{ exercise.answer_format }}</p>
+            </div>
+
+            <div v-if="exercise.supporting_lines?.length" class="supporting-lines">
+              <p class="supporting-title">对话上下文</p>
+              <ul class="supporting-list">
+                <li v-for="(line, index) in exercise.supporting_lines" :key="`${exercise.id}-line-${index}`">
+                  {{ line }}
+                </li>
+              </ul>
+            </div>
+
+            <div v-if="exercise.choices?.length" class="choice-row">
+              <span v-for="choice in exercise.choices" :key="`${exercise.id}-${choice}`" class="choice-chip">
+                {{ choice }}
+              </span>
+            </div>
+
+            <p v-if="exercise.vocab_hints?.length" class="item-copy">可用词：{{ exercise.vocab_hints.join(' / ') }}</p>
 
             <label class="answer-field">
               <span>作答草稿</span>
@@ -951,6 +972,43 @@ onMounted(() => {
   display: grid;
   gap: 8px;
   margin-top: 14px;
+}
+
+.exercise-detail-list,
+.supporting-lines {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.supporting-title {
+  margin: 0;
+  font-size: 13px;
+  color: var(--app-text-soft);
+}
+
+.supporting-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--app-text-muted);
+  display: grid;
+  gap: 6px;
+}
+
+.choice-row {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.choice-chip {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--app-soft-bg);
+  border: 1px solid var(--app-border);
+  color: var(--app-text);
+  font-size: 12px;
 }
 
 .assessment-grid {

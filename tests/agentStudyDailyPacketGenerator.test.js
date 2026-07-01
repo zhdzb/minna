@@ -149,6 +149,11 @@ describe('agentStudyDailyPacketGenerator', () => {
     expect(result.dailyPacket.mission.focus_lessons).toEqual([1])
     expect(result.dailyPacket.study_materials.length).toBeGreaterThanOrEqual(3)
     expect(result.dailyPacket.exercises.length).toBeGreaterThanOrEqual(3)
+    expect(result.dailyPacket.exercises[0].instruction).toBeTruthy()
+    expect(result.dailyPacket.exercises[0].answer_format).toBeTruthy()
+    expect(result.dailyPacket.exercises[0].choices?.length || 0).toBeGreaterThanOrEqual(2)
+    expect(result.dailyPacket.exercises[2].supporting_lines?.length || 0).toBeGreaterThanOrEqual(2)
+    expect(result.dailyPacket.exercises[0].vocab_hints).not.toEqual(result.dailyPacket.exercises[1].vocab_hints)
 
     const writtenDaily = JSON.parse(fs.readFileSync(path.join(studyRoot, 'daily', '2026-07-01.json'), 'utf8'))
     const writtenIndex = JSON.parse(fs.readFileSync(path.join(studyRoot, 'index.json'), 'utf8'))
@@ -218,6 +223,11 @@ describe('agentStudyDailyPacketGenerator', () => {
           lesson: 1,
           target_grammar: 'N1 は N2 です',
           prompt: '请翻译',
+          instruction: '把“我是学生”说成日语。',
+          context_note: '请使用完整句子。',
+          answer_format: '写 1 句完整、自然的日语句子。',
+          choices: [],
+          supporting_lines: [],
           vocab_hints: [],
           answer_reference: 'わたし は がくせい です。',
           metadata: { source: 'test', difficulty: 'foundation', skill: 'output' }

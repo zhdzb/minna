@@ -29,28 +29,39 @@ const createDailyPacket = (overrides = {}) => ({
   exercises: [
     {
       id: 'exercise-fill',
-      prompt: '补全缺失助词',
+      prompt: '第 1 题：按要求完成句型填空',
       type: 'q_fill',
       lesson: 7,
       target_grammar: 'N に V',
+      instruction: '请补全句子：せんせい ___ ほんを あげます。',
+      context_note: '请只填写一个最合适的助词。',
+      answer_format: '只填写一个选项，不要写完整句子。',
+      choices: ['に', 'で', 'を', 'と'],
       metadata: { skill: 'grammar' },
       vocab_hints: ['に']
     },
     {
       id: 'exercise-translate',
-      prompt: '把句子翻译成日语',
+      prompt: '第 2 题：把中文意思说成日语',
       type: 'q_translate',
       lesson: 7,
       target_grammar: 'N1 は N2 に あげます',
+      instruction: '把“我给老师发资料”说成日语。',
+      context_note: '请用完整句子表达，明确谁给谁什么。',
+      answer_format: '写 1 句完整、自然的日语句子。',
       metadata: { skill: 'output' },
       vocab_hints: ['老师', '书']
     },
     {
       id: 'exercise-conversation',
-      prompt: '请用一句短句回答',
+      prompt: '第 3 题：根据情境完成你的回应',
       type: 'q_conversation',
       lesson: 7,
       target_grammar: 'N1 は N2 に もらいます',
+      instruction: '你是 B，请回答“那本书是谁给你的？”',
+      context_note: '只需要补 B 的一句回答，不要扩写成长段落。',
+      answer_format: '只写你这一轮的回答，1 句即可。',
+      supporting_lines: ['A：その ほんは だれに もらいましたか。', 'B：（此处由你作答）'],
       metadata: { skill: 'conversation' },
       vocab_hints: ['朋友']
     }
@@ -249,7 +260,9 @@ describe('AgentStudyWorkspace', () => {
     expect(wrapper.text()).toContain('第 7 课基础重建')
     expect(wrapper.text()).toContain('复习语法')
     expect(wrapper.text()).toContain('授受动词笔记')
-    expect(wrapper.text()).toContain('把句子翻译成日语')
+    expect(wrapper.text()).toContain('把“我给老师发资料”说成日语')
+    expect(wrapper.text()).toContain('对话上下文')
+    expect(wrapper.text()).toContain('A：その ほんは だれに もらいましたか。')
     expect(wrapper.text()).toContain('study/reviews/2026-06-26-review.json')
   })
 

@@ -27,6 +27,11 @@ const assertOptionalString = (value, label) => {
   return value
 }
 
+const normalizeOptionalStringArray = (value, label) => {
+  if (value == null) return []
+  return normalizeStringArray(value, label)
+}
+
 const assertBoolean = (value, label) => {
   if (typeof value !== 'boolean') {
     throw new Error(label + ' must be a boolean')
@@ -261,6 +266,11 @@ const validateExercise = (item, index) => {
   exercise.lesson = assertInteger(exercise.lesson, label + '.lesson')
   exercise.target_grammar = assertNonEmptyString(exercise.target_grammar, label + '.target_grammar')
   exercise.prompt = assertNonEmptyString(exercise.prompt, label + '.prompt')
+  exercise.instruction = assertOptionalString(exercise.instruction, label + '.instruction')
+  exercise.context_note = assertOptionalString(exercise.context_note, label + '.context_note')
+  exercise.answer_format = assertOptionalString(exercise.answer_format, label + '.answer_format')
+  exercise.choices = normalizeOptionalStringArray(exercise.choices, label + '.choices')
+  exercise.supporting_lines = normalizeOptionalStringArray(exercise.supporting_lines, label + '.supporting_lines')
   exercise.vocab_hints = assertArray(exercise.vocab_hints, label + '.vocab_hints')
   exercise.answer_reference = assertNonEmptyString(exercise.answer_reference, label + '.answer_reference')
   exercise.metadata = assertPlainObject(exercise.metadata, label + '.metadata')

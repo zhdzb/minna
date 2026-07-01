@@ -72,6 +72,223 @@ const summarizeVocabulary = (items) =>
     return segments.join('，')
   })
 
+const QUESTION_TYPE_ORDER = ['q_fill', 'q_translate', 'q_conversation']
+
+const createVocabularyLookup = (items) =>
+  new Map(
+    items.flatMap((item) => {
+      const keys = [item.word, item.kana]
+        .map((value) => String(value || '').trim())
+        .filter(Boolean)
+      return keys.map((key) => [key, item])
+    })
+  )
+
+const extractVocabularyForText = (text, vocabularyLookup, fallbackItems = [], limit = 3) => {
+  const content = String(text || '')
+  const matched = []
+  const seen = new Set()
+
+  for (const [key, item] of vocabularyLookup.entries()) {
+    if (content.includes(key) && !seen.has(item.word)) {
+      matched.push(item)
+      seen.add(item.word)
+    }
+  }
+
+  for (const item of fallbackItems) {
+    if (matched.length >= limit) break
+    if (item?.word && !seen.has(item.word)) {
+      matched.push(item)
+      seen.add(item.word)
+    }
+  }
+
+  return matched.slice(0, limit)
+}
+
+const buildConversationTurns = ({ lesson, pattern, targetGrammar, vocabulary }) => {
+  const vocabA = vocabulary[0]?.word || 'わたし'
+  const vocabB = vocabulary[1]?.word || 'がくせい'
+  const vocabC = vocabulary[2]?.word || 'にほん'
+
+  if (targetGrammar.includes('N1 の N2')) {
+    return [
+      { speaker: 'A', content: 'こちらは どなたですか。' },
+      { speaker: 'B', content: `わたしの ${vocabB} です。` }
+    ]
+  }
+
+  if (targetGrammar.includes('じゃありません')) {
+    return [
+      { speaker: 'A', content: `ミラーさんは ${vocabB} ですか。` },
+      { speaker: 'B', content: `${vocabA} は ${vocabB} じゃありません。` }
+    ]
+  }
+
+  if (targetGrammar.includes('ですか')) {
+    return [
+      { speaker: 'A', content: `${vocabA} は ${vocabB} ですか。` },
+      { speaker: 'B', content: `はい、${vocabA} は ${vocabB} です。` }
+    ]
+  }
+
+  if (targetGrammar.includes('〜さん')) {
+    return [
+      { speaker: 'A', content: 'こちらは たなかさんです。' },
+      { speaker: 'B', content: 'はじめまして。どうぞ よろしく おねがいします。' }
+    ]
+  }
+
+  if (targetGrammar.includes('あげます')) {
+    return [
+      { speaker: 'A', content: `${vocabA} は せんせいに なにを あげましたか。` },
+      { speaker: 'B', content: `${vocabA} は せんせいに ${vocabB} を あげました。` }
+    ]
+  }
+
+  if (targetGrammar.includes('もらいます')) {
+    return [
+      { speaker: 'A', content: 'その ほんは だれに もらいましたか。' },
+      { speaker: 'B', content: `${vocabA} は ともだちに ほんを もらいました。` }
+    ]
+  }
+
+  if (targetGrammar.includes('なんですか')) {
+    return [
+      { speaker: 'A', content: `${pattern || 'この ことば'} は にほんごで なんですか。` },
+      { speaker: 'B', content: `${vocabC} です。` }
+    ]
+  }
+
+  return [
+    { speaker: 'A', content: sentencePatternsFallback(lesson, pattern) },
+    { speaker: 'B', content: `${vocabA} は ${vocabB} です。` }
+  ]
+}
+
+function sentencePatternsFallback (lesson, pattern) {
+  return pattern || `${lesson.title} の 場面です。`
+}
+
+const buildFallbackExerciseDraft = ({
+  lesson,
+  targetGrammar,
+  pattern,
+  vocabulary,
+  vocabularyLookup,
+  index
+}) => {
+  const type = QUESTION_TYPE_ORDER[index % QUESTION_TYPE_ORDER.length]
+  const vocabItems = extractVocabularyForText(
+    [targetGrammar, pattern, lesson.theme].filter(Boolean).join(' '),
+    vocabularyLookup,
+    vocabulary.slice(index % Math.max(vocabulary.length, 1)).concat(vocabulary),
+    4
+  )
+  const vocabHints = vocabItems.map(buildVocabularyHint)
+  const vocabA = vocabItems[0]?.word || 'わたし'
+  const vocabB = vocabItems[1]?.word || 'がくせい'
+  const vocabC = vocabItems[2]?.word || 'にほん'
+
+  if (type === 'q_fill') {
+    const choices = targetGrammar.includes('じゃありません')
+      ? ['です', 'じゃありません', 'ですか', 'の']
+      : targetGrammar.includes('ですか')
+        ? ['です', 'ですか', 'じゃありません', 'の']
+        : targetGrammar.includes('N1 の N2')
+          ? ['は', 'の', 'を', 'に']
+          : ['は', 'です', 'の', 'か']
+
+    const answer = targetGrammar.includes('N1 の N2')
+      ? 'の'
+      : targetGrammar.includes('ですか')
+        ? 'ですか'
+        : targetGrammar.includes('じゃありません')
+          ? 'じゃありません'
+          : targetGrammar.includes('です')
+            ? 'です'
+            : choices[0]
+
+    const question = targetGrammar.includes('N1 の N2')
+      ? `请补全句子：${vocabA} ___ ${vocabB}`
+      : targetGrammar.includes('ですか')
+        ? `请把下面句子补成问句：${vocabA} は ${vocabB} ___`
+        : targetGrammar.includes('じゃありません')
+          ? `请把下面句子补成否定句：${vocabA} は ${vocabB} ___`
+          : `请补全这句自我介绍：${vocabA} は ${vocabB} ___`
+
+    return {
+      type,
+      prompt: `第 ${index + 1} 题：按要求完成句型填空`,
+      instruction: question,
+      context_note: `场景：${lesson.theme}。请只补一个最合适的词，重点关注「${targetGrammar}」的句尾形式。`,
+      answer_format: '只填写一个选项，不要写完整句子。',
+      choices,
+      vocab_hints: vocabHints,
+      answer_reference: answer,
+      metadata: {
+        source: 'rule-based',
+        difficulty: 'foundation',
+        skill: 'grammar'
+      }
+    }
+  }
+
+  if (type === 'q_translate') {
+    const translationPrompt = targetGrammar.includes('じゃありません')
+      ? `把“我不是${vocabB}，我是${vocabC}人”说成自然日语。`
+      : targetGrammar.includes('ですか')
+        ? `把“你是${vocabB}吗？”说成自然日语。`
+        : targetGrammar.includes('N1 の N2')
+          ? `把“这是我的${vocabB}”说成自然日语。`
+          : `在“${lesson.theme}”场景里，用「${targetGrammar}」完成一句自然表达。`
+
+    const answerPattern = targetGrammar.includes('N1 の N2')
+      ? `${vocabA} の ${vocabB} です。`
+      : targetGrammar.includes('ですか')
+        ? `${vocabA} は ${vocabB} ですか。`
+        : targetGrammar.includes('じゃありません')
+          ? `${vocabA} は ${vocabB} じゃありません。`
+          : `${vocabA} は ${vocabB} です。`
+
+    return {
+      type,
+      prompt: `第 ${index + 1} 题：把中文意思说成日语`,
+      instruction: translationPrompt,
+      context_note: `请至少使用目标句型「${targetGrammar}」，不要只写寒暄语。`,
+      answer_format: '写 1 句完整、自然的日语句子。',
+      vocab_hints: vocabHints,
+      answer_reference: answerPattern,
+      metadata: {
+        source: 'rule-based',
+        difficulty: 'foundation',
+        skill: 'output'
+      }
+    }
+  }
+
+  const turns = buildConversationTurns({ lesson, pattern, targetGrammar, vocabulary: vocabItems })
+  const supportingLines = turns.map((turn) => `${turn.speaker}：${turn.content}`)
+  const conversationAnswer = turns[1]?.content || `${vocabA} は ${vocabB} です。`
+
+  return {
+    type,
+    prompt: `第 ${index + 1} 题：根据情境完成你的回应`,
+    instruction: `你是对话中的 B。请用「${targetGrammar}」回答一句自然日语。`,
+    context_note: `不要自由发挥成长段落；只需要补出当前这一轮回应。场景主题：${lesson.theme}。`,
+    answer_format: '只写 B 的一句回答，不要重复 A 的台词。',
+    supporting_lines: supportingLines,
+    vocab_hints: vocabHints,
+    answer_reference: conversationAnswer,
+    metadata: {
+      source: 'rule-based',
+      difficulty: 'foundation',
+      skill: 'conversation'
+    }
+  }
+}
+
 const buildReviewItems = ({ reviewQueue, mastery, lessonId }) => {
   const dueItems = Array.isArray(reviewQueue?.items)
     ? reviewQueue.items.filter((item) => item.status === 'due').slice(0, 3)
@@ -269,32 +486,35 @@ const buildStudyMaterials = ({ lesson, focusGrammar, vocabulary }) => {
 const createFallbackGeneratedExercises = ({ lesson, focusGrammar, vocabulary, reviewItems, questionCount }) => {
   const grammar = focusGrammar.length ? focusGrammar : (lesson.grammar_points || []).slice(0, 3)
   const sentencePatterns = Array.isArray(lesson?.sentence_patterns) ? lesson.sentence_patterns : []
-  const hints = vocabulary.slice(0, 3).map(buildVocabularyHint)
   const reviewMap = new Map(reviewItems.map((item) => [item.target_grammar, item.review_queue_id]))
+  const vocabularyLookup = createVocabularyLookup(vocabulary)
   const items = []
 
   for (let index = 0; index < questionCount; index += 1) {
     const targetGrammar = grammar[index % Math.max(grammar.length, 1)] || `${lesson.title} 重点文法`
-    const type = index % 3 === 0 ? 'q_fill' : index % 3 === 1 ? 'q_translate' : 'q_conversation'
     const pattern = sentencePatterns[index % Math.max(sentencePatterns.length, 1)] || `${lesson.title} の 例文です。`
+    const draft = buildFallbackExerciseDraft({
+      lesson,
+      targetGrammar,
+      pattern,
+      vocabulary,
+      vocabularyLookup,
+      index
+    })
     items.push({
       id: `generated-${lesson.id}-${index + 1}`,
-      type,
+      type: draft.type,
       lesson: lesson.id,
       target_grammar: targetGrammar,
-      prompt:
-        type === 'q_fill'
-          ? `第 ${index + 1} 题：补全句子，使其符合「${targetGrammar}」：${pattern}`
-          : type === 'q_translate'
-            ? `第 ${index + 1} 题：用「${targetGrammar}」把下面意思说成日语：${lesson.theme}`
-            : `第 ${index + 1} 题：请用「${targetGrammar}」在“${lesson.theme}”场景里回答一句话`,
-      vocab_hints: hints,
-      answer_reference: pattern,
-      metadata: {
-        source: 'rule-based',
-        difficulty: 'foundation',
-        skill: type === 'q_conversation' ? 'conversation' : 'output'
-      },
+      prompt: draft.prompt,
+      instruction: draft.instruction,
+      context_note: draft.context_note,
+      answer_format: draft.answer_format,
+      choices: draft.choices || [],
+      supporting_lines: draft.supporting_lines || [],
+      vocab_hints: draft.vocab_hints,
+      answer_reference: draft.answer_reference,
+      metadata: draft.metadata,
       ...(reviewMap.has(targetGrammar) ? { review_queue_id: reviewMap.get(targetGrammar) } : {})
     })
   }
@@ -310,11 +530,14 @@ const toDailyExercises = ({ generatedExercises, lesson, reviewItems }) => {
     lesson: lesson.id,
     target_grammar: exercise.target_grammar,
     prompt:
-      exercise.type === 'q_fill'
-        ? exercise.question || exercise.prompt || `请完成关于「${exercise.target_grammar}」的填空`
-        : exercise.type === 'q_translate'
-          ? exercise.chinese_prompt || exercise.prompt || `请用日语表达本课句意`
-          : exercise.scene_description || exercise.prompt || `请完成一轮情境对话`,
+      normalizeExercisePrompt(exercise, index),
+    instruction: normalizeExerciseInstruction(exercise),
+    context_note: normalizeExerciseContext(exercise),
+    answer_format: normalizeExerciseAnswerFormat(exercise),
+    choices: Array.isArray(exercise.options)
+      ? exercise.options.map((item) => String(item || '').trim()).filter(Boolean)
+      : [],
+    supporting_lines: normalizeExerciseSupportingLines(exercise),
     vocab_hints: Array.isArray(exercise.vocab_hints)
       ? exercise.vocab_hints.map((item) =>
           typeof item === 'string' ? item : [item.word, item.kana, item.cn].filter(Boolean).join(' / ')
@@ -341,6 +564,47 @@ const toDailyExercises = ({ generatedExercises, lesson, reviewItems }) => {
       ? { review_queue_id: reviewMap.get(exercise.target_grammar) }
       : {})
   }))
+}
+
+const normalizeExercisePrompt = (exercise, index) => {
+  if (exercise.type === 'q_fill') return `第 ${index + 1} 题：按要求完成句型填空`
+  if (exercise.type === 'q_translate') return `第 ${index + 1} 题：把中文意思说成日语`
+  return `第 ${index + 1} 题：根据情境完成你的回应`
+}
+
+const normalizeExerciseInstruction = (exercise) => {
+  if (exercise.type === 'q_fill') {
+    return exercise.question || exercise.prompt || `请完成关于「${exercise.target_grammar}」的填空`
+  }
+  if (exercise.type === 'q_translate') {
+    return exercise.chinese_prompt || exercise.prompt || `请用日语表达本课句意`
+  }
+  return exercise.scene_description || exercise.prompt || `请完成一轮情境对话`
+}
+
+const normalizeExerciseContext = (exercise) => {
+  if (exercise.type === 'q_fill') {
+    return `请只填写最合适的一个选项，重点使用「${exercise.target_grammar}」。`
+  }
+  if (exercise.type === 'q_translate') {
+    return `请写成完整自然的日语句子，并明确用到「${exercise.target_grammar}」。`
+  }
+  return '你只需要补当前这一轮的回答，不必续写整段对话。'
+}
+
+const normalizeExerciseAnswerFormat = (exercise) => {
+  if (exercise.type === 'q_fill') return '只填写一个选项，不要写完整句子。'
+  if (exercise.type === 'q_translate') return '写 1 句完整、自然的日语句子。'
+  return '只写你这一轮的回答，1 句即可。'
+}
+
+const normalizeExerciseSupportingLines = (exercise) => {
+  if (!Array.isArray(exercise.turns)) return []
+  return exercise.turns.map((turn, index) => {
+    const speaker = String(turn?.speaker || `角色${index + 1}`).trim()
+    const content = String(turn?.content || '').trim()
+    return `${speaker}：${content || '（此处由你作答）'}`
+  })
 }
 
 const generateExercises = async ({
