@@ -4,14 +4,14 @@
 - 当前课程：1
 - 学习模式：foundation_reset
 - 当前目标：从第 1 课重新开始, 先建立每课知识点驱动的练习生成
-- 最新 daily：none
+- 最新 daily：study/daily/2026-07-01.json
 - 最新 review：none
-- 最新 prompt：none
+- 最新 prompt：study/prompts/generated/2026-07-01-review.md
 - 当前 gate：lesson-1-foundation
 - 重点语法：N1 は N2 です, N1 は N2 じゃありません, N1 の N2
 - 薄弱语法摘要：当前没有特别标记的薄弱语法点。
 - 到期复习队列：当前没有到期的复习队列项目。
-- 最近事件：2026-07-01T12:00:00+08:00 runtime_reset
+- 最近事件：2026-07-01T12:00:00+08:00 runtime_reset | 2026-07-01T07:27:16.273Z daily_packet_created
 
 ## 下一步动作
 - 先读最新的 daily packet，确认下一步是创建新包、继续提交后的跟进，还是继续批改后的跟进。
@@ -24,4 +24,5 @@
 - study/state/mastery.json
 - study/state/review-queue.json
 - study/state/profile.json
+- study/daily/2026-07-01.json
 - study/logs/agent-events.jsonl
