@@ -36,34 +36,6 @@ describe('agentStudyClient', () => {
     })
   })
 
-  it('triggers daily packet generation through the generate endpoint', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(
-      createJsonResponse({
-        body: {
-          success: true,
-          data: {
-            dailyPacket: { id: 'daily-2026-07-01' },
-            reused: false
-          }
-        }
-      })
-    )
-    const client = createAgentStudyClient({ fetchImpl: fetchMock })
-
-    await expect(client.generateDailyPacket({ date: '2026-07-01' })).resolves.toEqual({
-      dailyPacket: { id: 'daily-2026-07-01' },
-      reused: false
-    })
-    expect(fetchMock).toHaveBeenCalledWith('/api/agent-study/daily/generate', {
-      method: 'POST',
-      body: JSON.stringify({ date: '2026-07-01' }),
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-  })
-
   it('sends daily packet saves through the save endpoint with optional targetPath', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
       createJsonResponse({

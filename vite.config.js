@@ -13,7 +13,6 @@ import {
   handleSaveStudyState
 } from './src/server/routes/studyStateRoute.js'
 import {
-  handleGenerateDailyPacket,
   handleGetAgentProgressReview,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
@@ -297,24 +296,6 @@ const agentStudyRoutePlugin = () => {
 
         try {
           const result = await handleGetLatestAgentStudy()
-          writeJson(res, 200, { success: true, data: result })
-        } catch (error) {
-          writeJson(res, 400, {
-            success: false,
-            error: error instanceof Error ? error.message : String(error)
-          })
-        }
-      })
-
-      server.middlewares.use('/api/agent-study/daily/generate', async (req, res) => {
-        if (req.method !== 'POST') {
-          writeJson(res, 405, { success: false, error: 'Method not allowed' })
-          return
-        }
-
-        try {
-          const payload = await readJsonBody(req)
-          const result = await handleGenerateDailyPacket(payload)
           writeJson(res, 200, { success: true, data: result })
         } catch (error) {
           writeJson(res, 400, {

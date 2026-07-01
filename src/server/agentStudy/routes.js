@@ -6,7 +6,6 @@ import {
 } from '../../utils/agentStudySchema.js'
 import { createAgentStudyEventLog } from './eventLog.js'
 import { createAgentStudyFileStore } from './fileStore.js'
-import { createAgentStudyDailyPacketGenerator } from './dailyPacketGenerator.js'
 import { createSyllabusStore } from './syllabusStore.js'
 
 const assertJsonObject = (payload, label) => {
@@ -73,16 +72,6 @@ const handleGetLatestReview = async ({ fileStore = createAgentStudyFileStore() }
 
 const handleGetLatestReviewDrill = async ({ fileStore = createAgentStudyFileStore() } = {}) =>
   fileStore.loadLatestReviewDrill()
-
-const handleGenerateDailyPacket = async (
-  payload = {},
-  { generator = createAgentStudyDailyPacketGenerator() } = {}
-) => {
-  const normalized = payload && typeof payload === 'object' && !Array.isArray(payload) ? payload : {}
-  return generator.generate({
-    date: typeof normalized.date === 'string' && normalized.date.trim() !== '' ? normalized.date.trim() : undefined
-  })
-}
 
 const handleGetSyllabus = async ({ syllabusStore = createSyllabusStore() } = {}) =>
   syllabusStore.loadSyllabus()
@@ -246,7 +235,6 @@ export {
   handleGetPromptFile,
   handleGetLatestReviewDrill,
   handleGetLatestReview,
-  handleGenerateDailyPacket,
   handleGetSyllabus,
   handleSaveDailyPacket,
   handleSaveSyllabus,

@@ -5,7 +5,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createAgentStudyEventLog } from '../src/server/agentStudy/eventLog.js'
 import { createAgentStudyFileStore } from '../src/server/agentStudy/fileStore.js'
 import {
-  handleGenerateDailyPacket,
   handleGetAgentProgressReview,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
@@ -355,23 +354,6 @@ describe('agentStudyRoutes', () => {
     const latestReviewDrill = await handleGetLatestReviewDrill({ fileStore })
 
     expect(latestReviewDrill.id).toBe('review-drill-2026-06-30')
-  })
-
-  it('delegates daily packet generation to the generator helper', async () => {
-    const generator = {
-      generate: vi.fn().mockResolvedValue({
-        dailyPacket: { id: 'daily-2026-07-01' },
-        reused: false
-      })
-    }
-
-    await expect(
-      handleGenerateDailyPacket({ date: '2026-07-01' }, { generator })
-    ).resolves.toEqual({
-      dailyPacket: { id: 'daily-2026-07-01' },
-      reused: false
-    })
-    expect(generator.generate).toHaveBeenCalledWith({ date: '2026-07-01' })
   })
 
   it('loads the aggregated progress review payload', async () => {

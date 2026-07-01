@@ -8,7 +8,9 @@
       </div>
       <div class="header-actions">
         <el-button :loading="isLoading" @click="loadWorkspace">刷新</el-button>
-        <el-button :loading="isGenerating" @click="generateDailyPacket">生成今日学习包</el-button>
+        <el-button :loading="isCopyingPrompt" @click="copyCreateDailyPacketPrompt">
+          复制生成学习包提示词
+        </el-button>
         <el-button type="primary" :loading="isSaving" :disabled="isSaveDisabled" @click="saveDraft">
           保存草稿
         </el-button>
@@ -28,6 +30,18 @@
 
     <section v-else-if="!dailyPacket" class="agent-study-band">
       <el-empty description="当前还没有可用的每日学习包。" />
+      <div class="empty-agent-handoff">
+        <p class="item-copy">
+          请先把生成学习包提示词交给编辑器里的 Codex。Codex 会读取项目文件并写入新的
+          daily packet，之后刷新本页即可开始学习。
+        </p>
+        <el-button type="primary" :loading="isCopyingPrompt" @click="copyCreateDailyPacketPrompt">
+          复制生成学习包提示词
+        </el-button>
+      </div>
+      <p v-if="promptCopyMessage" class="prompt-feedback success-copy">{{ promptCopyMessage }}</p>
+      <p v-if="promptError" class="prompt-feedback error-copy">{{ promptError }}</p>
+      <pre v-if="promptPreview" class="prompt-preview">{{ promptPreview }}</pre>
     </section>
 
     <template v-else>
@@ -71,6 +85,11 @@
 
       <section v-else-if="submitMessage" class="agent-study-band">
         <el-alert :closable="false" show-icon title="学习包已提交" type="success" :description="submitMessage" />
+      </section>
+
+      <section v-if="promptCopyMessage || promptError" class="agent-study-band prompt-status-band">
+        <p v-if="promptCopyMessage" class="prompt-feedback success-copy">{{ promptCopyMessage }}</p>
+        <p v-if="promptError" class="prompt-feedback error-copy">{{ promptError }}</p>
       </section>
 
       <section class="agent-study-band">
@@ -368,29 +387,37 @@
 
       <section v-if="showSubmissionNextStep" class="agent-study-band next-step-band">
         <div class="section-heading">
-          <h2>下一步</h2>
+          <h2>交给 Codex 批改</h2>
           <span>批改交接</span>
         </div>
-        <div v-if="reviewPromptPath" class="prompt-handoff">
+        <div class="prompt-handoff">
           <p class="item-copy">
-            学习包已经提交，请把下面这份提示词交给 Codex 继续批改：
-            <strong>{{ reviewPromptPath }}</strong>
+            学习包已经提交。请复制下面的完整提示词，回到编辑器交给 Codex；Codex 会读取本次提交、
+            写入批改结果，并更新下一步学习状态。
           </p>
+          <div class="handoff-meta">
+            <div class="meta-item">
+              <span>Daily</span>
+              <strong>{{ submittedDailyPath }}</strong>
+            </div>
+            <div class="meta-item">
+              <span>Prompt</span>
+              <strong>{{ submittedReviewPromptPath }}</strong>
+            </div>
+          </div>
+          <div class="answer-summary-block">
+            <p class="review-block-label">本次答案摘要</p>
+            <pre class="answer-summary-preview">{{ submittedAnswerSummary }}</pre>
+          </div>
           <div class="header-actions prompt-actions">
             <el-button type="primary" :loading="isCopyingPrompt" @click="copyReviewPrompt">
               复制批改提示词
             </el-button>
           </div>
         </div>
-        <div v-else class="prompt-missing">
-          <p class="item-copy">当前学习包还没有关联生成好的批改提示词。</p>
-          <p class="item-note">
-            请先等待生成提示词文件，或在 `daily.correction.prompt_file` 中补全路径，再交给 Codex 批改。
-          </p>
-        </div>
         <p v-if="promptCopyMessage" class="prompt-feedback success-copy">{{ promptCopyMessage }}</p>
         <p v-if="promptError" class="prompt-feedback error-copy">{{ promptError }}</p>
-        <pre v-if="promptPreview" class="prompt-preview">{{ promptPreview }}</pre>
+        <pre class="prompt-preview">{{ reviewHandoffPrompt }}</pre>
       </section>
     </template>
   </div>
@@ -399,6 +426,11 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { createAgentStudyClient } from '@/utils/agentStudyClient'
+import {
+  buildAnswerSummary,
+  buildCreateDailyPacketPrompt,
+  buildReviewSubmittedPacketPrompt
+} from '@/utils/agentStudyPromptText'
 import { toKanaInput } from '@/utils/wanakanaInput'
 
 const props = defineProps({
@@ -415,7 +447,6 @@ const props = defineProps({
 const isLoading = ref(true)
 const isSaving = ref(false)
 const isSubmitting = ref(false)
-const isGenerating = ref(false)
 const isCopyingPrompt = ref(false)
 const loadError = ref('')
 const saveError = ref('')
@@ -496,7 +527,6 @@ const taskCountLabel = computed(() => `${dailyPacket.value?.tasks?.length || 0} 
 const materialCountLabel = computed(() => `${dailyPacket.value?.study_materials?.length || 0} 项`)
 const exerciseCountLabel = computed(() => `${dailyPacket.value?.exercises?.length || 0} 题`)
 const reviewItemCountLabel = computed(() => `${dailyPacket.value?.review_items?.length || 0} 项`)
-const reviewPromptPath = computed(() => dailyPacket.value?.correction?.prompt_file || '')
 const showSubmissionNextStep = computed(() => ['submitted', 'reviewed'].includes(dailyPacket.value?.status))
 const confusingPointsText = computed(() => selfAssessmentDraft.value.confusing_points.join('\n'))
 const reviewItems = computed(() => (Array.isArray(reviewResult.value?.items) ? reviewResult.value.items : []))
@@ -509,6 +539,26 @@ const reviewPromotionLabel = computed(() =>
 )
 const reviewFilePath = computed(
   () => dailyPacket.value?.correction?.review_file || indexDocument.value?.latest_review || '暂无'
+)
+const createDailyPacketPrompt = computed(() => buildCreateDailyPacketPrompt())
+const submittedDailyPath = computed(() =>
+  indexDocument.value?.latest_daily || (dailyPacket.value?.date ? `study/daily/${dailyPacket.value.date}.json` : 'study/daily/YYYY-MM-DD.json')
+)
+const submittedReviewPromptPath = computed(() =>
+  dailyPacket.value?.correction?.prompt_file ||
+  indexDocument.value?.latest_prompt ||
+  'study/prompts/generated/YYYY-MM-DD-review.md'
+)
+const submittedAnswerSummary = computed(() => buildAnswerSummary(dailyPacket.value))
+const reviewHandoffPrompt = computed(() =>
+  buildReviewSubmittedPacketPrompt({
+    dailyPacket: dailyPacket.value,
+    indexDocument: {
+      ...(indexDocument.value || {}),
+      latest_daily: submittedDailyPath.value,
+      latest_prompt: submittedReviewPromptPath.value
+    }
+  })
 )
 
 const hasDraftChanges = computed(() => {
@@ -667,27 +717,6 @@ const loadWorkspace = async () => {
   }
 }
 
-const generateDailyPacket = async () => {
-  isGenerating.value = true
-  loadError.value = ''
-  saveError.value = ''
-  submitError.value = ''
-  promptError.value = ''
-
-  try {
-    const result = await client.value.generateDailyPacket()
-    const payload = await client.value.loadLatestAgentStudy()
-    applyWorkspacePayload(payload)
-    submitMessage.value = result?.reused
-      ? '今天的学习包已经存在，已为你加载当前版本。'
-      : '已生成新的今日学习包，可以直接开始学习。'
-  } catch (error) {
-    loadError.value = error instanceof Error ? error.message : String(error)
-  } finally {
-    isGenerating.value = false
-  }
-}
-
 const buildWritablePacket = (statusOverride = null) => {
   const currentPacket = dailyPacket.value
   if (!currentPacket) return null
@@ -755,7 +784,7 @@ const submitPacket = async () => {
     dailyPacket.value = result?.dailyPacket || nextPacket
     answerDrafts.value = buildAnswerDrafts(dailyPacket.value)
     selfAssessmentDraft.value = buildSelfAssessmentDraft(dailyPacket.value)
-    submitMessage.value = '学习包已提交，下一步请复制批改提示词并交给 Codex 继续批改。'
+    submitMessage.value = '学习包已提交。下方已经生成批改提示词，请复制给编辑器里的 Codex。'
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     if (/revision|conflict/i.test(message)) {
@@ -768,29 +797,34 @@ const submitPacket = async () => {
   }
 }
 
-const copyReviewPrompt = async () => {
+const copyPromptText = async (content, successMessage) => {
   promptError.value = ''
   promptCopyMessage.value = ''
-
-  if (!reviewPromptPath.value) {
-    promptError.value = '当前学习包还没有关联生成好的批改提示词。'
-    return
-  }
-
   isCopyingPrompt.value = true
 
   try {
-    const promptResult = await client.value.loadPromptFile(reviewPromptPath.value)
-    const promptContent = String(promptResult?.content || '')
-    promptPreview.value = promptContent
-    await resolveCopyText(promptContent)
-    promptCopyMessage.value = '批改提示词已复制，可以直接粘贴给 Codex。'
+    promptPreview.value = content
+    await resolveCopyText(content)
+    promptCopyMessage.value = successMessage
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error)
-    promptError.value = message
+    promptError.value = error instanceof Error ? error.message : String(error)
   } finally {
     isCopyingPrompt.value = false
   }
+}
+
+const copyCreateDailyPacketPrompt = async () => {
+  await copyPromptText(
+    createDailyPacketPrompt.value,
+    '生成学习包提示词已复制。请回到编辑器交给 Codex。'
+  )
+}
+
+const copyReviewPrompt = async () => {
+  await copyPromptText(
+    reviewHandoffPrompt.value,
+    '批改提示词已复制。请回到编辑器交给 Codex。'
+  )
 }
 
 onMounted(() => {
@@ -1131,9 +1165,38 @@ onMounted(() => {
 }
 
 .prompt-handoff,
-.prompt-missing {
+.empty-agent-handoff {
   display: grid;
   gap: 12px;
+}
+
+.empty-agent-handoff {
+  margin-top: 16px;
+  justify-items: start;
+}
+
+.handoff-meta {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.answer-summary-block {
+  display: grid;
+  gap: 8px;
+}
+
+.answer-summary-preview {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  background: var(--app-soft-bg);
+  color: var(--app-text-muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font: inherit;
+  line-height: 1.6;
 }
 
 .prompt-actions {
@@ -1141,8 +1204,13 @@ onMounted(() => {
 }
 
 .prompt-feedback {
-  margin-top: 12px;
+  margin: 0;
   font-size: 13px;
+}
+
+.prompt-status-band {
+  padding-top: 14px;
+  padding-bottom: 14px;
 }
 
 .success-copy {
@@ -1189,6 +1257,7 @@ onMounted(() => {
   .agent-study-overview,
   .overview-meta,
   .review-summary,
+  .handoff-meta,
   .assessment-grid {
     grid-template-columns: 1fr;
   }

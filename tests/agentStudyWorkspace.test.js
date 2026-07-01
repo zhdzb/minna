@@ -183,17 +183,6 @@ const createClient = (options = {}) => ({
     }),
     targetPath: 'study/daily/2026-06-26.json'
   }),
-  generateDailyPacket: vi.fn().mockResolvedValue({
-    dailyPacket: createDailyPacket({
-      status: 'planned',
-      correction: {
-        status: 'pending',
-        prompt_file: 'study/prompts/generated/2026-06-26-review.md',
-        review_file: ''
-      }
-    }),
-    reused: false
-  }),
   loadPromptFile: vi.fn().mockResolvedValue({
     path: 'study/prompts/generated/2026-06-26-review.md',
     content: '批改提示词正文'
@@ -294,17 +283,21 @@ describe('AgentStudyWorkspace', () => {
     expect(wrapper.text()).toContain('target_particle')
   })
 
-  it('generates today packet through the workspace action and reloads the latest payload', async () => {
+  it('copies the create-daily prompt instead of generating a packet in the browser', async () => {
     const client = createClient()
-    const wrapper = mountWorkspace(client)
+    const copyText = vi.fn().mockResolvedValue(undefined)
+    const wrapper = mountWorkspace(client, {
+      props: { copyText }
+    })
     await flushPromises()
 
     await wrapper.findAll('button')[1].trigger('click')
     await flushPromises()
 
-    expect(client.generateDailyPacket).toHaveBeenCalledTimes(1)
-    expect(client.loadLatestAgentStudy).toHaveBeenCalledTimes(2)
-    expect(wrapper.text()).toContain('已生成新的今日学习包')
+    expect(client.loadLatestAgentStudy).toHaveBeenCalledTimes(1)
+    expect(copyText).toHaveBeenCalledWith(expect.stringContaining('生成今日学习包'))
+    expect(copyText).toHaveBeenCalledWith(expect.stringContaining('不要调用前端 LLM 出题逻辑'))
+    expect(wrapper.text()).toContain('生成学习包提示词已复制')
   })
 
   it('updates answers and saves them through the daily save client', async () => {
@@ -374,9 +367,11 @@ describe('AgentStudyWorkspace', () => {
     })
     expect(wrapper.text()).toContain('学习包已提交')
     expect(wrapper.text()).toContain('study/prompts/generated/2026-06-26-review.md')
+    expect(wrapper.text()).toContain('交给 Codex 批改')
+    expect(wrapper.text()).toContain('本次答案摘要')
   })
 
-  it('loads and copies the review prompt after submission', async () => {
+  it('builds and copies the review handoff prompt after submission', async () => {
     const client = createClient()
     const copyText = vi.fn().mockResolvedValue(undefined)
     const wrapper = mountWorkspace(client, {
@@ -389,10 +384,12 @@ describe('AgentStudyWorkspace', () => {
     await wrapper.findAll('button')[4].trigger('click')
     await flushPromises()
 
-    expect(client.loadPromptFile).toHaveBeenCalledWith('study/prompts/generated/2026-06-26-review.md')
-    expect(copyText).toHaveBeenCalledWith('批改提示词正文')
+    expect(client.loadPromptFile).not.toHaveBeenCalled()
+    expect(copyText).toHaveBeenCalledWith(expect.stringContaining('批改已提交学习包'))
+    expect(copyText).toHaveBeenCalledWith(expect.stringContaining('study/daily/2026-06-26.json'))
+    expect(copyText).toHaveBeenCalledWith(expect.stringContaining('わたしは せんせいに ほんを あげます'))
     expect(wrapper.text()).toContain('批改提示词已复制')
-    expect(wrapper.text()).toContain('批改提示词正文')
+    expect(wrapper.text()).toContain('批改已提交学习包')
   })
 
   it('shows a refresh prompt when draft save hits a revision conflict', async () => {
@@ -424,7 +421,7 @@ describe('AgentStudyWorkspace', () => {
     expect(wrapper.text()).toContain('请先刷新')
   })
 
-  it('shows a clear prompt hint when no generated review prompt is linked', async () => {
+  it('shows a review handoff even when no generated review prompt is linked', async () => {
     const client = createClient({
       dailyPacket: {
         status: 'submitted',
@@ -439,10 +436,11 @@ describe('AgentStudyWorkspace', () => {
     const wrapper = mountWorkspace(client)
     await flushPromises()
 
-    expect(wrapper.text()).toContain('当前学习包还没有关联生成好的批改提示词。')
+    expect(wrapper.text()).toContain('交给 Codex 批改')
+    expect(wrapper.text()).toContain('study/prompts/generated/YYYY-MM-DD-review.md')
   })
 
-  it('renders an empty state when there is no daily packet', async () => {
+  it('renders an empty state with a Codex create prompt when there is no daily packet', async () => {
     const client = {
       loadLatestAgentStudy: vi.fn().mockResolvedValue({
         index: null,
@@ -453,10 +451,18 @@ describe('AgentStudyWorkspace', () => {
       submitDailyPacket: vi.fn(),
       loadPromptFile: vi.fn()
     }
+    const copyText = vi.fn().mockResolvedValue(undefined)
 
-    const wrapper = mountWorkspace(client)
+    const wrapper = mountWorkspace(client, {
+      props: { copyText }
+    })
     await flushPromises()
 
     expect(wrapper.text()).toContain('当前还没有可用的每日学习包。')
+    expect(wrapper.text()).toContain('复制生成学习包提示词')
+    await wrapper.findAll('button')[1].trigger('click')
+    await flushPromises()
+
+    expect(copyText).toHaveBeenCalledWith(expect.stringContaining('生成今日学习包'))
   })
 })
