@@ -8,6 +8,7 @@
       </div>
       <div class="header-actions">
         <el-button :loading="isLoading" @click="loadWorkspace">刷新</el-button>
+        <el-button :loading="isGenerating" @click="generateDailyPacket">生成今日学习包</el-button>
         <el-button type="primary" :loading="isSaving" :disabled="isSaveDisabled" @click="saveDraft">
           保存草稿
         </el-button>
@@ -393,6 +394,7 @@ const props = defineProps({
 const isLoading = ref(true)
 const isSaving = ref(false)
 const isSubmitting = ref(false)
+const isGenerating = ref(false)
 const isCopyingPrompt = ref(false)
 const loadError = ref('')
 const saveError = ref('')
@@ -641,6 +643,27 @@ const loadWorkspace = async () => {
     loadError.value = error instanceof Error ? error.message : String(error)
   } finally {
     isLoading.value = false
+  }
+}
+
+const generateDailyPacket = async () => {
+  isGenerating.value = true
+  loadError.value = ''
+  saveError.value = ''
+  submitError.value = ''
+  promptError.value = ''
+
+  try {
+    const result = await client.value.generateDailyPacket()
+    const payload = await client.value.loadLatestAgentStudy()
+    applyWorkspacePayload(payload)
+    submitMessage.value = result?.reused
+      ? '今天的学习包已经存在，已为你加载当前版本。'
+      : '已生成新的今日学习包，可以直接开始学习。'
+  } catch (error) {
+    loadError.value = error instanceof Error ? error.message : String(error)
+  } finally {
+    isGenerating.value = false
   }
 }
 

@@ -76,6 +76,14 @@ const createAgentStudyClient = (options = {}) => {
       method: 'GET'
     })
 
+  const generateDailyPacket = async ({ date } = {}) =>
+    request('daily/generate', {
+      method: 'POST',
+      body: JSON.stringify({
+        ...(typeof date === 'string' && date.trim() !== '' ? { date: date.trim() } : {})
+      })
+    })
+
   const loadProgressReview = async () =>
     request('progress', {
       method: 'GET'
@@ -94,6 +102,17 @@ const createAgentStudyClient = (options = {}) => {
   const loadPromptFile = async (promptPath) =>
     request('prompt?path=' + encodeURIComponent(String(promptPath || '').trim()), {
       method: 'GET'
+    })
+
+  const loadSyllabus = async () =>
+    request('syllabus', {
+      method: 'GET'
+    })
+
+  const saveSyllabus = async (syllabus) =>
+    request('syllabus', {
+      method: 'POST',
+      body: JSON.stringify(syllabus)
     })
 
   const saveDailyPacket = async ({ dailyPacket, targetPath } = {}) =>
@@ -142,11 +161,14 @@ const createAgentStudyClient = (options = {}) => {
 
   return {
     loadLatestAgentStudy,
+    generateDailyPacket,
     loadProgressReview,
     loadPromptFile,
     loadLatestReviewDrill,
     loadLatestReview,
+    loadSyllabus,
     saveDailyPacket,
+    saveSyllabus,
     saveReviewDrill,
     submitReviewDrill,
     submitDailyPacket

@@ -1,151 +1,510 @@
 <template>
-  <div>
-    <el-card shadow="never" style="margin-bottom: 20px;">
-      <template #header>
-        <div style="font-size: 1.2rem; font-weight: bold;">
-          📚 知识大纲与题库字典管理 (Syllabus & Type CRUD)
+  <div class="syllabus-page">
+    <header class="syllabus-header">
+      <div>
+        <p class="syllabus-eyebrow">课程知识点管理</p>
+        <h1>课纲与题型</h1>
+        <p class="syllabus-subtitle">这里维护每日学习包生成所依赖的课文主题、文法、句型、隐藏句式和词汇池。</p>
+      </div>
+      <div class="syllabus-actions">
+        <el-button :loading="isLoading" @click="loadSyllabus">刷新</el-button>
+        <el-button @click="resetCurrentLesson">恢复当前课原始内容</el-button>
+        <el-button type="primary" :loading="isSaving" :disabled="!hasChanges" @click="saveSyllabus">
+          保存课纲
+        </el-button>
+      </div>
+    </header>
+
+    <section v-if="loadError" class="syllabus-band">
+      <el-alert :closable="false" show-icon title="加载失败" type="error" :description="loadError" />
+    </section>
+
+    <section v-else-if="saveMessage" class="syllabus-band">
+      <el-alert :closable="false" show-icon title="已保存" type="success" :description="saveMessage" />
+    </section>
+
+    <section v-else-if="saveError" class="syllabus-band">
+      <el-alert :closable="false" show-icon title="保存失败" type="error" :description="saveError" />
+    </section>
+
+    <div v-if="syllabus" class="syllabus-layout">
+      <aside class="syllabus-sidebar syllabus-band">
+        <div class="section-heading">
+          <h2>题型池</h2>
+          <span>{{ syllabus.question_types.length }} 个</span>
         </div>
-      </template>
-      <p style="color: #666; font-size: 0.9rem;">
-        您可以在此自建独属于您的考点组合。AI 将在出题时严格受到这些准绳的约束。
-      </p>
-    </el-card>
-    
-    <el-row :gutter="20">
-      <!-- 左侧：课程导航 -->
-      <el-col :span="6">
-        <el-card shadow="hover">
-          <template #header>课程目录</template>
-          <div style="max-height: 65vh; overflow-y: auto; padding-right: 5px;" class="custom-scrollbar">
-            <el-menu
-              :default-active="selectedLesson ? selectedLesson.id.toString() : '1'"
-              @select="handleSelectLesson"
-              style="border-right: none;"
-            >
-              <el-menu-item v-for="lesson in syllabus.lessons" :key="lesson.id" :index="lesson.id.toString()">
-                {{ lesson.title }}
-              </el-menu-item>
-            </el-menu>
+        <div class="type-list">
+          <article v-for="type in syllabus.question_types" :key="type.id" class="type-card">
+            <div class="type-card-top">
+              <strong>{{ type.name }}</strong>
+              <span>{{ type.id }}</span>
+            </div>
+            <p>{{ type.desc }}</p>
+            <small>难度 {{ type.difficulty_range[0] }} - {{ type.difficulty_range[1] }}</small>
+          </article>
+        </div>
+
+        <div class="section-heading section-heading-lessons">
+          <h2>课程目录</h2>
+          <span>{{ syllabus.lessons.length }} 课</span>
+        </div>
+        <div class="lesson-list">
+          <button
+            v-for="lesson in syllabus.lessons"
+            :key="lesson.id"
+            class="lesson-button"
+            :class="{ active: lesson.id === selectedLessonId }"
+            @click="selectedLessonId = lesson.id"
+          >
+            <strong>{{ lesson.title }}</strong>
+            <span>{{ lesson.theme }}</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="syllabus-editor syllabus-band" v-if="selectedLesson">
+        <div class="section-heading">
+          <h2>{{ selectedLesson.title }}</h2>
+          <span>用于生成每日学习包与练习题</span>
+        </div>
+
+        <div class="form-grid">
+          <label class="field">
+            <span>课程标题</span>
+            <input v-model="selectedLesson.title" class="field-input" />
+          </label>
+          <label class="field">
+            <span>课程主题</span>
+            <input v-model="selectedLesson.theme" class="field-input" />
+          </label>
+        </div>
+
+        <section class="editor-section">
+          <div class="section-heading">
+            <h3>核心文法</h3>
+            <span>{{ selectedLesson.grammar_points.length }} 条</span>
           </div>
-        </el-card>
-      </el-col>
-
-      <!-- 右侧：当前课时配置表单 -->
-      <el-col :span="18">
-        <el-card shadow="hover" v-if="selectedLesson">
-          <template #header>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span><strong>{{ selectedLesson.title }}</strong> 大纲配置编辑</span>
-              <el-button type="success" size="small" @click="saveSyllabusOverride">💾 保存该课配置</el-button>
+          <div class="list-editor">
+            <div v-for="(item, index) in selectedLesson.grammar_points" :key="`grammar-${index}`" class="list-row">
+              <input v-model="selectedLesson.grammar_points[index]" class="field-input" />
+              <button class="remove-button" @click="removeArrayItem(selectedLesson.grammar_points, index)">删除</button>
             </div>
-          </template>
-          
-          <el-form label-position="top">
-            
-            <el-form-item label="核心语法点 (Grammar Points)：">
-              <div v-for="(point, idx) in selectedLesson.grammar_points" :key="idx" style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
-                <el-input v-model="selectedLesson.grammar_points[idx]" placeholder="如：N1 は N2 です" />
-                <el-button type="danger" text plain @click="selectedLesson.grammar_points.splice(idx, 1)">删除</el-button>
-              </div>
-              <el-button type="primary" plain size="small" @click="selectedLesson.grammar_points.push('')">+ 增加核心语法</el-button>
-            </el-form-item>
+            <button class="add-button" @click="selectedLesson.grammar_points.push('')">新增文法</button>
+          </div>
+        </section>
 
-            <el-divider />
-
-            <el-form-item label="隐性感悟 / 职场语感 (Hidden Knowledge)：">
-              <p style="font-size: 0.8rem; color: #888; margin-top: -10px; margin-bottom: 15px;">AI 将尝试把这些要点融入“职场对话补全”等题型的情境中。</p>
-              <div v-for="(hk, idx) in selectedLesson.hidden_knowledge" :key="idx" style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
-                <el-input v-model="selectedLesson.hidden_knowledge[idx]" placeholder="如：日本职场的初次见面鞠躬寒暄表达" />
-                <el-button type="danger" text plain @click="selectedLesson.hidden_knowledge.splice(idx, 1)">删除</el-button>
-              </div>
-              <el-button type="primary" plain size="small" @click="selectedLesson.hidden_knowledge.push('')">+ 增加语感考查</el-button>
-            </el-form-item>
-
-            <el-divider />
-
-            <el-form-item label="当前课时激活题型集合 (Enabled Types)：">
-              <el-checkbox-group v-model="selectedLesson.enabled_types">
-                 <el-checkbox 
-                    v-for="typeDef in allTypes.pools" 
-                    :key="typeDef.id" 
-                    :label="typeDef.id"
-                 >
-                    {{ typeDef.label }}
-                 </el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
-            
-          </el-form>
-        </el-card>
-
-        <el-card shadow="never" style="margin-top: 20px; border-style: dashed; background-color: #fcfcfc;">
-            <div style="text-align: center; color: #999;">
-                <p>全局字典管理器：您想创造一种全新的题型？ (如: 看日剧截图猜对话)</p>
-                <el-button type="info" size="small" @click="addTypeDialogVisible = true">⚙️ 配置全局题型池 (Types Pool)</el-button>
+        <section class="editor-section">
+          <div class="section-heading">
+            <h3>句型骨架</h3>
+            <span>{{ selectedLesson.sentence_patterns.length }} 条</span>
+          </div>
+          <div class="list-editor">
+            <div v-for="(item, index) in selectedLesson.sentence_patterns" :key="`pattern-${index}`" class="list-row">
+              <input v-model="selectedLesson.sentence_patterns[index]" class="field-input" />
+              <button class="remove-button" @click="removeArrayItem(selectedLesson.sentence_patterns, index)">删除</button>
             </div>
-        </el-card>
-      </el-col>
-    </el-row>
+            <button class="add-button" @click="selectedLesson.sentence_patterns.push('')">新增句型</button>
+          </div>
+        </section>
 
-    <!-- 添加题型弹窗 -->
-    <el-dialog v-model="addTypeDialogVisible" title="创造新题型范式" width="500px">
-      <el-form label-position="top">
-         <el-form-item label="唯一标识符 (ID)：">
-            <el-input v-model="newTypeForm.id" placeholder="如：q_listen_guess" />
-         </el-form-item>
-         <el-form-item label="展示标签 (Label)：">
-            <el-input v-model="newTypeForm.label" placeholder="如：🎧 听音辨意挑战" />
-         </el-form-item>
-         <el-form-item label="AI 识别描述 (Description)：">
-            <el-input type="textarea" v-model="newTypeForm.description" placeholder="系统将把这段话喂给 AI，告诉它这种题怎么出..." />
-         </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="addTypeDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="submitNewType">永久添加至字典池</el-button>
-        </span>
-      </template>
-    </el-dialog>
+        <section class="editor-section">
+          <div class="section-heading">
+            <h3>隐藏知识点 / 特殊句式</h3>
+            <span>{{ selectedLesson.hidden_knowledge.length }} 条</span>
+          </div>
+          <div class="list-editor">
+            <div v-for="(item, index) in selectedLesson.hidden_knowledge" :key="`hidden-${index}`" class="list-row">
+              <textarea v-model="selectedLesson.hidden_knowledge[index]" class="field-input field-textarea" rows="2" />
+              <button class="remove-button" @click="removeArrayItem(selectedLesson.hidden_knowledge, index)">删除</button>
+            </div>
+            <button class="add-button" @click="selectedLesson.hidden_knowledge.push('')">新增提醒</button>
+          </div>
+        </section>
+
+        <section class="editor-section">
+          <div class="section-heading">
+            <h3>核心词汇</h3>
+            <span>{{ selectedLesson.core_vocabulary.length }} 个</span>
+          </div>
+          <div class="vocabulary-list">
+            <article
+              v-for="(item, index) in selectedLesson.core_vocabulary"
+              :key="`vocab-${index}`"
+              class="vocabulary-card"
+            >
+              <div class="form-grid">
+                <label class="field">
+                  <span>词汇</span>
+                  <input v-model="item.word" class="field-input" />
+                </label>
+                <label class="field">
+                  <span>假名</span>
+                  <input v-model="item.kana" class="field-input" />
+                </label>
+                <label class="field">
+                  <span>中文</span>
+                  <input v-model="item.meaning" class="field-input" />
+                </label>
+                <label class="field">
+                  <span>使用场景</span>
+                  <input v-model="item.usage" class="field-input" />
+                </label>
+              </div>
+              <button class="remove-button" @click="removeArrayItem(selectedLesson.core_vocabulary, index)">删除词汇</button>
+            </article>
+            <button class="add-button" @click="addVocabularyItem">新增词汇</button>
+          </div>
+        </section>
+
+        <section class="editor-section">
+          <div class="section-heading">
+            <h3>启用题型</h3>
+            <span>{{ selectedLesson.enabled_question_types.length }} 项</span>
+          </div>
+          <label
+            v-for="type in syllabus.question_types"
+            :key="`enabled-${type.id}`"
+            class="checkbox-row"
+          >
+            <input
+              type="checkbox"
+              :checked="selectedLesson.enabled_question_types.includes(type.id)"
+              @change="toggleQuestionType(type.id, $event.target.checked)"
+            />
+            <span>{{ type.name }}</span>
+            <small>{{ type.id }}</small>
+          </label>
+        </section>
+      </main>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import defaultSyllabus from '@/data/syllabus.json'
-import typesDict from '@/data/types.json'
-import { ElMessage } from 'element-plus'
+import { computed, ref } from 'vue'
+import { createAgentStudyClient } from '@/utils/agentStudyClient'
 
-const syllabus = ref(defaultSyllabus)
-const allTypes = ref(typesDict)
-const selectedLesson = ref(null)
-
-const addTypeDialogVisible = ref(false)
-const newTypeForm = ref({ id: '', label: '', description: '' })
-
-onMounted(() => {
-    if (syllabus.value.lessons.length > 0) {
-        selectedLesson.value = syllabus.value.lessons[0]
-    }
+const props = defineProps({
+  client: {
+    type: Object,
+    default: null
+  }
 })
 
-const handleSelectLesson = (index) => {
-    selectedLesson.value = syllabus.value.lessons.find(l => l.id.toString() === index)
+const syllabus = ref(null)
+const originalSyllabus = ref(null)
+const selectedLessonId = ref(1)
+const isLoading = ref(false)
+const isSaving = ref(false)
+const loadError = ref('')
+const saveError = ref('')
+const saveMessage = ref('')
+
+const client = computed(() => props.client || createAgentStudyClient())
+
+const selectedLesson = computed(() =>
+  syllabus.value?.lessons?.find((lesson) => lesson.id === selectedLessonId.value) || null
+)
+
+const hasChanges = computed(() => {
+  if (!syllabus.value || !originalSyllabus.value) return false
+  return JSON.stringify(syllabus.value) !== JSON.stringify(originalSyllabus.value)
+})
+
+const resetMessages = () => {
+  loadError.value = ''
+  saveError.value = ''
+  saveMessage.value = ''
 }
 
-const saveSyllabusOverride = () => {
-    // Phase 4可持久化写入后端或LocalStorage，此处作内存级演练
-    ElMessage({
-        message: '该课的大纲配置已保存并在本次会话生效。AI 的生成流出题将立即受此约束！',
-        type: 'success',
-        duration: 3000
-    })
+const normalizeLoadedSyllabus = (value) => JSON.parse(JSON.stringify(value))
+
+const loadSyllabus = async () => {
+  isLoading.value = true
+  resetMessages()
+
+  try {
+    const result = await client.value.loadSyllabus()
+    syllabus.value = normalizeLoadedSyllabus(result)
+    originalSyllabus.value = normalizeLoadedSyllabus(result)
+    if (!syllabus.value.lessons.find((lesson) => lesson.id === selectedLessonId.value)) {
+      selectedLessonId.value = syllabus.value.lessons[0]?.id || 1
+    }
+  } catch (error) {
+    loadError.value = error instanceof Error ? error.message : String(error)
+  } finally {
+    isLoading.value = false
+  }
 }
 
-const submitNewType = () => {
-    allTypes.value.pools.push({...newTypeForm.value})
-    ElMessage.success(`全新题型集 ${newTypeForm.value.label} 已熔炼入库！现在可以在上方分配给任意课时了。`)
-    addTypeDialogVisible.value = false
-    newTypeForm.value = { id: '', label: '', description: '' }
+const saveSyllabus = async () => {
+  if (!syllabus.value) return
+
+  isSaving.value = true
+  saveError.value = ''
+  saveMessage.value = ''
+
+  try {
+    const result = await client.value.saveSyllabus(syllabus.value)
+    syllabus.value = normalizeLoadedSyllabus(result)
+    originalSyllabus.value = normalizeLoadedSyllabus(result)
+    saveMessage.value = '课纲已保存，后续每日学习包会直接使用这份最新知识点。'
+  } catch (error) {
+    saveError.value = error instanceof Error ? error.message : String(error)
+  } finally {
+    isSaving.value = false
+  }
 }
+
+const removeArrayItem = (list, index) => {
+  list.splice(index, 1)
+  resetMessages()
+}
+
+const addVocabularyItem = () => {
+  selectedLesson.value?.core_vocabulary.push({
+    word: '',
+    kana: '',
+    meaning: '',
+    usage: ''
+  })
+  resetMessages()
+}
+
+const toggleQuestionType = (typeId, checked) => {
+  if (!selectedLesson.value) return
+  const next = new Set(selectedLesson.value.enabled_question_types)
+  if (checked) {
+    next.add(typeId)
+  } else {
+    next.delete(typeId)
+  }
+  selectedLesson.value.enabled_question_types = [...next]
+  resetMessages()
+}
+
+const resetCurrentLesson = () => {
+  if (!syllabus.value || !originalSyllabus.value || !selectedLesson.value) return
+  const source = originalSyllabus.value.lessons.find((lesson) => lesson.id === selectedLesson.value.id)
+  const targetIndex = syllabus.value.lessons.findIndex((lesson) => lesson.id === selectedLesson.value.id)
+  if (source && targetIndex >= 0) {
+    syllabus.value.lessons[targetIndex] = JSON.parse(JSON.stringify(source))
+    resetMessages()
+  }
+}
+
+loadSyllabus()
 </script>
+
+<style scoped>
+.syllabus-page {
+  min-height: 100%;
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+  color: var(--app-text);
+}
+
+.syllabus-header,
+.syllabus-layout,
+.syllabus-actions,
+.form-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.syllabus-header {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+}
+
+.syllabus-eyebrow {
+  margin: 0;
+  font-size: 12px;
+  color: var(--app-text-soft);
+}
+
+.syllabus-header h1,
+.section-heading h2,
+.section-heading h3 {
+  margin: 0;
+}
+
+.syllabus-subtitle {
+  margin: 8px 0 0;
+  color: var(--app-text-muted);
+  line-height: 1.6;
+}
+
+.syllabus-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+}
+
+.syllabus-layout {
+  grid-template-columns: 320px minmax(0, 1fr);
+  align-items: start;
+}
+
+.syllabus-band {
+  padding: 20px;
+  background: var(--app-panel-bg);
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
+}
+
+.syllabus-sidebar,
+.syllabus-editor,
+.type-list,
+.lesson-list,
+.editor-section,
+.list-editor,
+.vocabulary-list {
+  display: grid;
+  gap: 14px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.section-heading span {
+  color: var(--app-text-soft);
+  font-size: 12px;
+}
+
+.section-heading-lessons {
+  margin-top: 12px;
+}
+
+.type-card,
+.vocabulary-card {
+  padding: 14px;
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  background: var(--app-card-bg);
+}
+
+.type-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--app-text-strong);
+}
+
+.type-card p {
+  margin: 10px 0 8px;
+  color: var(--app-text-muted);
+  line-height: 1.5;
+}
+
+.type-card small {
+  color: var(--app-text-soft);
+}
+
+.lesson-button {
+  width: 100%;
+  display: grid;
+  gap: 6px;
+  text-align: left;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid var(--app-border);
+  background: var(--app-card-bg);
+  color: var(--app-text);
+  cursor: pointer;
+}
+
+.lesson-button.active {
+  border-color: var(--app-accent);
+  box-shadow: inset 0 0 0 1px var(--app-accent);
+}
+
+.lesson-button span {
+  color: var(--app-text-soft);
+  font-size: 12px;
+}
+
+.form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field span {
+  font-size: 13px;
+  color: var(--app-text-muted);
+}
+
+.field-input {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid var(--app-border-strong);
+  border-radius: 8px;
+  background: var(--app-card-bg);
+  color: var(--app-text-strong);
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.field-textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.list-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+}
+
+.checkbox-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  color: var(--app-text-muted);
+}
+
+.checkbox-row small {
+  color: var(--app-text-soft);
+}
+
+.add-button,
+.remove-button {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid var(--app-border);
+  background: var(--app-soft-bg);
+  color: var(--app-text);
+  cursor: pointer;
+}
+
+.remove-button {
+  color: var(--app-danger);
+}
+
+@media (max-width: 1100px) {
+  .syllabus-header,
+  .syllabus-layout,
+  .form-grid,
+  .list-row {
+    grid-template-columns: 1fr;
+  }
+
+  .syllabus-actions {
+    justify-content: start;
+  }
+}
+</style>

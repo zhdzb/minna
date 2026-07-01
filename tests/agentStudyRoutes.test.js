@@ -1,16 +1,19 @@
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createAgentStudyEventLog } from '../src/server/agentStudy/eventLog.js'
 import { createAgentStudyFileStore } from '../src/server/agentStudy/fileStore.js'
 import {
+  handleGenerateDailyPacket,
   handleGetAgentProgressReview,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
   handleGetLatestReviewDrill,
   handleGetLatestReview,
+  handleGetSyllabus,
   handleSaveDailyPacket,
+  handleSaveSyllabus,
   handleSaveReviewDrill,
   handleSubmitReviewDrill,
   handleSubmitDailyPacket
@@ -354,6 +357,23 @@ describe('agentStudyRoutes', () => {
     expect(latestReviewDrill.id).toBe('review-drill-2026-06-30')
   })
 
+  it('delegates daily packet generation to the generator helper', async () => {
+    const generator = {
+      generate: vi.fn().mockResolvedValue({
+        dailyPacket: { id: 'daily-2026-07-01' },
+        reused: false
+      })
+    }
+
+    await expect(
+      handleGenerateDailyPacket({ date: '2026-07-01' }, { generator })
+    ).resolves.toEqual({
+      dailyPacket: { id: 'daily-2026-07-01' },
+      reused: false
+    })
+    expect(generator.generate).toHaveBeenCalledWith({ date: '2026-07-01' })
+  })
+
   it('loads the aggregated progress review payload', async () => {
     const studyRoot = createTempStudyRoot()
     writeJson(path.join(studyRoot, 'daily', '2026-06-30.json'), createDailyPacket())
@@ -485,6 +505,22 @@ describe('agentStudyRoutes', () => {
       path: 'study/prompts/generated/2026-06-30-review.md',
       content: 'Review prompt body'
     })
+  })
+
+  it('loads and saves syllabus documents through the syllabus store', async () => {
+    const syllabusStore = {
+      loadSyllabus: vi.fn().mockReturnValue({ lessons: [], question_types: [] }),
+      saveSyllabus: vi.fn().mockReturnValue({ saved: true })
+    }
+    const payload = {
+      lessons: [{ id: 1 }],
+      question_types: [{ id: 'q_fill' }]
+    }
+
+    await expect(handleGetSyllabus({ syllabusStore })).resolves.toEqual({ lessons: [], question_types: [] })
+    await expect(handleSaveSyllabus(payload, { syllabusStore })).resolves.toEqual({ saved: true })
+    expect(syllabusStore.loadSyllabus).toHaveBeenCalledTimes(1)
+    expect(syllabusStore.saveSyllabus).toHaveBeenCalledWith(payload)
   })
 
   it('saves and submits a review drill packet while appending drill events', async () => {

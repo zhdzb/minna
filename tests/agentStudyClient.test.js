@@ -36,6 +36,34 @@ describe('agentStudyClient', () => {
     })
   })
 
+  it('triggers daily packet generation through the generate endpoint', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      createJsonResponse({
+        body: {
+          success: true,
+          data: {
+            dailyPacket: { id: 'daily-2026-07-01' },
+            reused: false
+          }
+        }
+      })
+    )
+    const client = createAgentStudyClient({ fetchImpl: fetchMock })
+
+    await expect(client.generateDailyPacket({ date: '2026-07-01' })).resolves.toEqual({
+      dailyPacket: { id: 'daily-2026-07-01' },
+      reused: false
+    })
+    expect(fetchMock).toHaveBeenCalledWith('/api/agent-study/daily/generate', {
+      method: 'POST',
+      body: JSON.stringify({ date: '2026-07-01' }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+  })
+
   it('sends daily packet saves through the save endpoint with optional targetPath', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
       createJsonResponse({
@@ -188,6 +216,55 @@ describe('agentStudyClient', () => {
         }
       }
     )
+  })
+
+  it('loads and saves syllabus documents through the syllabus endpoint', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        createJsonResponse({
+          body: {
+            success: true,
+            data: {
+              question_types: [{ id: 'q_fill', name: '填空', desc: 'desc', difficulty_range: [1, 2] }],
+              lessons: [{ id: 1, title: '第1课', theme: '自我介绍', grammar_points: ['A'], sentence_patterns: ['B'], hidden_knowledge: ['C'], core_vocabulary: [], enabled_question_types: ['q_fill'] }]
+            }
+          }
+        })
+      )
+      .mockResolvedValueOnce(
+        createJsonResponse({
+          body: {
+            success: true,
+            data: {
+              saved: true
+            }
+          }
+        })
+      )
+    const client = createAgentStudyClient({ fetchImpl: fetchMock })
+    const syllabus = {
+      question_types: [{ id: 'q_fill', name: '填空', desc: 'desc', difficulty_range: [1, 2] }],
+      lessons: [{ id: 1, title: '第1课', theme: '自我介绍', grammar_points: ['A'], sentence_patterns: ['B'], hidden_knowledge: ['C'], core_vocabulary: [], enabled_question_types: ['q_fill'] }]
+    }
+
+    await expect(client.loadSyllabus()).resolves.toEqual(syllabus)
+    await expect(client.saveSyllabus(syllabus)).resolves.toEqual({ saved: true })
+
+    expect(fetchMock).toHaveBeenNthCalledWith(1, '/api/agent-study/syllabus', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+    expect(fetchMock).toHaveBeenNthCalledWith(2, '/api/agent-study/syllabus', {
+      method: 'POST',
+      body: JSON.stringify(syllabus),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
   })
 
   it('sends review drill saves and submits through the review-drill endpoints', async () => {

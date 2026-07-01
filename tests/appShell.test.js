@@ -92,7 +92,7 @@ afterEach(() => {
 })
 
 describe('App shell', () => {
-  it('shows only the three agent-study primary navigation entries', async () => {
+  it('shows the main agent-study navigation entries and syllabus management', async () => {
     const wrapper = mountApp()
     await nextTick()
 
@@ -101,6 +101,7 @@ describe('App shell', () => {
     expect(wrapper.text()).toContain('学习工作台')
     expect(wrapper.text()).toContain('进度总览')
     expect(wrapper.text()).toContain('复习训练')
+    expect(wrapper.text()).toContain('课纲管理')
     expect(wrapper.text()).toContain('当前课程：第 7 课')
     expect(wrapper.text()).not.toContain('Settings')
     expect(wrapper.text()).not.toContain('Weekly Review')

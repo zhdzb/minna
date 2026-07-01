@@ -13,12 +13,15 @@ import {
   handleSaveStudyState
 } from './src/server/routes/studyStateRoute.js'
 import {
+  handleGenerateDailyPacket,
   handleGetAgentProgressReview,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
   handleGetLatestReviewDrill,
   handleGetLatestReview,
+  handleGetSyllabus,
   handleSaveDailyPacket,
+  handleSaveSyllabus,
   handleSaveReviewDrill,
   handleSubmitReviewDrill,
   handleSubmitDailyPacket
@@ -303,6 +306,24 @@ const agentStudyRoutePlugin = () => {
         }
       })
 
+      server.middlewares.use('/api/agent-study/daily/generate', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handleGenerateDailyPacket(payload)
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
       server.middlewares.use('/api/agent-study/progress', async (req, res) => {
         if (req.method !== 'GET') {
           writeJson(res, 405, { success: false, error: 'Method not allowed' })
@@ -444,6 +465,37 @@ const agentStudyRoutePlugin = () => {
             error: error instanceof Error ? error.message : String(error)
           })
         }
+      })
+
+      server.middlewares.use('/api/agent-study/syllabus', async (req, res) => {
+        if (req.method === 'GET') {
+          try {
+            const result = await handleGetSyllabus()
+            writeJson(res, 200, { success: true, data: result })
+          } catch (error) {
+            writeJson(res, 400, {
+              success: false,
+              error: error instanceof Error ? error.message : String(error)
+            })
+          }
+          return
+        }
+
+        if (req.method === 'POST') {
+          try {
+            const payload = await readJsonBody(req)
+            const result = await handleSaveSyllabus(payload)
+            writeJson(res, 200, { success: true, data: result })
+          } catch (error) {
+            writeJson(res, 400, {
+              success: false,
+              error: error instanceof Error ? error.message : String(error)
+            })
+          }
+          return
+        }
+
+        writeJson(res, 405, { success: false, error: 'Method not allowed' })
       })
     }
   }
