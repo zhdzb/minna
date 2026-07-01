@@ -1,0 +1,23 @@
+import { describe, expect, it } from 'vitest'
+import router from '../src/router/index.js'
+
+describe('router entry cleanup', () => {
+  it('redirects the root path into the new agent-study flow', () => {
+    const rootRoute = router.getRoutes().find((route) => route.path === '/')
+
+    expect(rootRoute).toBeTruthy()
+    expect(rootRoute.redirect).toBe('/agent-study')
+  })
+
+  it('keeps the new agent-study pages as the primary named entry routes', () => {
+    const routeNames = router.getRoutes().map((route) => route.name).filter(Boolean)
+
+    expect(routeNames).toContain('AgentStudyWorkspace')
+    expect(routeNames).toContain('AgentProgressReview')
+    expect(routeNames).toContain('AgentReviewDrill')
+    expect(routeNames).toContain('Dashboard')
+
+    const dashboardRoute = router.getRoutes().find((route) => route.name === 'Dashboard')
+    expect(dashboardRoute?.path).toBe('/dashboard')
+  })
+})

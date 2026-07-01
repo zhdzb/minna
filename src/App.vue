@@ -22,7 +22,7 @@
               borderBottom: isAcgDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #1a252f'
             }"
           >
-            日语学习助手
+            Codex Study Loop
           </div>
 
           <el-menu
@@ -34,9 +34,6 @@
             router
             style="border-right: none; flex: 1;"
           >
-            <el-menu-item index="/">
-              <span>训练面板</span>
-            </el-menu-item>
             <el-menu-item index="/agent-study">
               <span>Agent Study</span>
             </el-menu-item>
@@ -45,18 +42,6 @@
             </el-menu-item>
             <el-menu-item index="/agent-review-drill">
               <span>Review Drill</span>
-            </el-menu-item>
-            <el-menu-item index="/syllabus">
-              <span>知识大纲</span>
-            </el-menu-item>
-            <el-menu-item index="/mistakes">
-              <span>错题与收藏</span>
-            </el-menu-item>
-            <el-menu-item index="/settings">
-              <span>系统设置</span>
-            </el-menu-item>
-            <el-menu-item index="/weekly-review">
-              <span>每周复盘</span>
             </el-menu-item>
           </el-menu>
 
@@ -70,13 +55,30 @@
             <p :style="{ color: isAcgDark ? '#b3aebd' : '#666', fontSize: '0.8rem', marginBottom: '10px' }">
               当前进度：第 {{ store.progress.current_lesson }} 课
             </p>
-            <el-button type="warning" plain size="small" @click="createBackup" style="width: 100%; margin-bottom: 10px;">
+            <el-button
+              type="warning"
+              plain
+              size="small"
+              @click="createBackup"
+              style="width: 100%; margin-bottom: 10px;"
+            >
               保存本地存档
             </el-button>
-            <el-button type="info" plain size="small" @click="exportData" style="width: 100%; margin-bottom: 10px;">
+            <el-button
+              type="info"
+              plain
+              size="small"
+              @click="exportData"
+              style="width: 100%; margin-bottom: 10px;"
+            >
               导出备份
             </el-button>
-            <el-button type="success" size="small" @click="fileInput?.click()" style="width: 100%; margin: 0;">
+            <el-button
+              type="success"
+              size="small"
+              @click="fileInput?.click()"
+              style="width: 100%; margin: 0;"
+            >
               导入备份
             </el-button>
             <input type="file" ref="fileInput" accept=".json" style="display: none;" @change="importData" />
@@ -108,8 +110,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { useMainStore } from '@/store/mainStore'
-import { buildPersistableState } from '@/store/mainStore'
+import { buildPersistableState, useMainStore } from '@/store/mainStore'
 import { validateBackupPayloadShape } from '@/utils/backupPayload'
 
 const store = useMainStore()
@@ -117,7 +118,7 @@ const router = useRouter()
 const fileInput = ref(null)
 const isAcgDark = ref(false)
 
-const activePath = computed(() => router?.currentRoute?.value?.path || '/')
+const activePath = computed(() => router?.currentRoute?.value?.path || '/agent-study')
 
 const toggleTheme = (value) => {
   isAcgDark.value = value

@@ -896,7 +896,7 @@ Completion record:
 
 ## Step 24: 清理旧前端入口
 
-状态：pending
+状态：done
 
 目标：
 
@@ -918,6 +918,12 @@ Completion record:
 
 - 应用打开后能进入新流程。
 - `npm run verify` 通过。
+
+Completion record:
+- Completed: Redirected the app root to `/agent-study`, moved the legacy dashboard off the default `/` path, trimmed the main shell navigation down to `Agent Study`, `Progress Review`, and `Review Drill`, and added coverage for the cleaned entry routing and app shell navigation.
+- Modified files: `CODEX_STUDY_LOOP_TASKS.md`, `src/App.vue`, `src/router/index.js`, `tests/routerEntry.test.js`, `tests/appShell.test.js`.
+- Verification: `npm run verify` passed. Also started a local Vite server and confirmed the app is reachable at `http://127.0.0.1:8084/`, with `/` now served by the new agent-study-first routing setup.
+- Follow-up: Next is `Step 25`, which should remove the remaining legacy frontend LLM skill/provider paths and any stale references to them.
 
 ## Step 25: 删除旧 skills 和前端 LLM 路径
 

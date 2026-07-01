@@ -14,6 +14,10 @@ import WeeklyReview from '@/components/WeeklyReview.vue'
 const routes = [
   {
     path: '/',
+    redirect: '/agent-study'
+  },
+  {
+    path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard
   },
@@ -78,6 +82,10 @@ const routes = [
     path: '/training/scenario-speaking',
     name: 'ScenarioSpeakingMode',
     component: ScenarioSpeakingMode
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/agent-study'
   }
 ]
 
