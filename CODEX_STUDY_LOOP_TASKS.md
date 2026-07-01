@@ -927,7 +927,7 @@ Completion record:
 
 ## Step 25: 删除旧 skills 和前端 LLM 路径
 
-状态：pending
+状态：done
 
 目标：
 
@@ -953,6 +953,12 @@ Completion record:
 
 - `rg "skills|llmProvider|GenerateGrammarExerciseSkill|EvaluateSentenceSkill"` 无不合理引用。
 - `npm run verify` 通过。
+
+完成记录：
+- 完成内容：删除旧前端 LLM provider、旧 `src/skills/*`、旧 `src/app.js`，移除旧 Dashboard/TrainingEngine 及训练模式组件，并从路由中清掉旧训练入口与浏览器侧 provider 配置入口。
+- 修改文件：`CODEX_STUDY_LOOP_TASKS.md`、`src/router/index.js`、`tests/routerEntry.test.js`，删除 `src/utils/llmProvider.js`、`src/skills/generateExercise.js`、`src/skills/evaluateSentence.js`、`src/app.js`、`src/components/Dashboard.vue`、`src/components/TrainingEngine.vue`、`src/components/PatternSubstitutionMode.vue`、`src/components/ListeningKeywordMode.vue`、`src/components/ShadowingMode.vue`、`src/components/ScenarioSpeakingMode.vue`、`tests/generateExercise.test.js`、`tests/evaluateSentence.test.js`。
+- 验证结果：`rg -n "llmProvider|GenerateGrammarExerciseSkill|EvaluateSentenceSkill|@/skills|src/skills" src tests` 无结果；`npm run verify` 通过；本地启动 Vite 后确认 `http://127.0.0.1:8085/` 可访问并仍以 `/agent-study` 为主入口。
+- 后续注意事项：下一步执行 `Step 26`，继续清理文档和乱码说明，并明确仓库只保留 Agent Study 三页作为主流程。
 
 ## Step 26: 编码和文档清理
 
