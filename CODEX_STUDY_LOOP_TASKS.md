@@ -995,7 +995,7 @@ Completion record:
 
 ## Step 27: 端到端本地闭环验证
 
-状态：pending
+状态：done
 
 目标：
 
@@ -1021,6 +1021,12 @@ Completion record:
 - next-agent-context 更新。
 - manual override 流程完整。
 - `npm run verify` 通过。
+
+完成记录：
+- 完成内容：新增一个基于临时 `study/` 副本的本地闭环验证测试，完整覆盖 `/agent-study` 对应的保存、提交、prompt 读取、review 回写、progress 聚合、next-agent-context 刷新，以及带 `manual_override` 的 review 写回链路；同时用本地 Vite 服务确认主页面和关键 Agent Study API 均可访问。
+- 修改文件：`CODEX_STUDY_LOOP_TASKS.md`、`tests/agentStudyLocalLoop.test.js`
+- 验证结果：`npx vitest run tests/agentStudyLocalLoop.test.js` 通过；`npm run verify` 通过；本地 Vite 页面在 `http://127.0.0.1:8091/` 验证，根页面标题包含 `Codex Study Loop`，`/api/agent-study/latest`、`/api/agent-study/progress`、`/api/agent-study/review-drill/latest` 均返回 `200`。
+- 后续注意事项：当前 manual override 的可追踪性是通过 `review_applied` event 指向 review 文件，再由 review 文件里的 `manual_override` 与 `mastery_updates.evidence` 解释状态变化；如果后续希望直接在 UI 里做人工改判，可以单独补一个显式 override 入口与专门事件类型。
 
 ## 完成定义
 
