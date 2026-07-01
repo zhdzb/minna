@@ -318,7 +318,7 @@ describe('agentStudy local loop verification', () => {
     expect(
       eventRecords.find((item) => item.event === 'review_applied')?.output_files || []
     ).toContain('study/reviews/2026-06-26-review.json')
-    expect(contextContent).toContain('Latest review: study/reviews/2026-06-26-review.json')
+    expect(contextContent).toContain('最新 review：study/reviews/2026-06-26-review.json')
     expect(contextContent).toContain('study/state/review-queue.json')
   })
 })

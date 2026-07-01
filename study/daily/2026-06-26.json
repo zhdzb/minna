@@ -7,21 +7,21 @@
   "status": "reviewed",
   "created_at": "2026-06-26T00:00:00+08:00",
   "mission": {
-    "title": "Lesson 7 foundation reset",
+    "title": "第 7 课基础重建",
     "plan_type": "review_then_output",
     "available_minutes": 60,
     "focus_lessons": [7],
     "goals": [
-      "Review the lesson 7 means particle",
-      "Stabilize ageru and morau output",
-      "Finish with one short conversation reply"
+      "复习第 7 课「で」表示手段或交通方式的用法",
+      "稳定「あげます / もらいます」输出",
+      "最后完成一条简短对话回复"
     ]
   },
   "tasks": [
     {
       "id": "task-review-l7",
       "type": "grammar_review",
-      "title": "Review lesson 7 grammar notes",
+      "title": "复习第 7 课语法笔记",
       "minutes": 15,
       "required": true,
       "status": "done"
@@ -29,7 +29,7 @@
     {
       "id": "task-drill-l7",
       "type": "pattern_drill",
-      "title": "Complete controlled output drills",
+      "title": "完成受控输出训练",
       "minutes": 25,
       "required": true,
       "status": "done"
@@ -37,7 +37,7 @@
     {
       "id": "task-listen-l7",
       "type": "listening_shadowing",
-      "title": "Shadow the lesson 7 listening script",
+      "title": "跟读第 7 课听力脚本",
       "minutes": 20,
       "required": true,
       "status": "done"
@@ -48,18 +48,18 @@
       "id": "material-lesson-7-grammar",
       "type": "grammar_note",
       "lesson": 7,
-      "title": "Means particle review",
-      "content": "Use で for tools and means, and contrast あげます with もらいます when ownership direction changes.",
+      "title": "交通方式与授受动词复习",
+      "content": "使用「で」表示交通工具或手段；在授受关系里，用「あげます」表示给出去，用「もらいます」表示从别人那里得到。",
       "examples": [
         {
           "ja": "バスで 行きます。",
-          "zh": "坐公交去。",
-          "note": "で marks the means of transport."
+          "zh": "坐公交车去。",
+          "note": "「で」标记交通方式。"
         },
         {
-          "ja": "わたしは 友だちに 本を あげました。",
-          "zh": "我给了朋友一本书。",
-          "note": "あげました marks giving away from the speaker."
+          "ja": "わたしは 先生に 本を あげました。",
+          "zh": "我给了老师一本书。",
+          "note": "「あげました」表示从说话人这边给出去。"
         }
       ]
     },
@@ -67,18 +67,18 @@
       "id": "material-lesson-7-listening",
       "type": "listening_script",
       "lesson": 7,
-      "title": "Listening script",
+      "title": "第 7 课听力脚本",
       "content": "A: どうやって 行きますか。 B: バスで 行きます。 A: だれに 本を もらいましたか。 B: 先生に もらいました。",
       "examples": [
         {
           "ja": "どうやって 行きますか。",
           "zh": "怎么去？",
-          "note": "Sets up a means-of-transport answer."
+          "note": "引出交通方式回答。"
         },
         {
           "ja": "先生に もらいました。",
-          "zh": "从老师那里收到了。",
-          "note": "に marks the giver with もらいました."
+          "zh": "从老师那里收到的。",
+          "note": "「に」标记授予者。"
         }
       ]
     }
@@ -117,8 +117,8 @@
       "type": "q_translate",
       "lesson": 7,
       "target_grammar": "N1 は N2 に あげます",
-      "prompt": "Translate into Japanese: I gave my teacher a book.",
-      "vocab_hints": ["teacher", "book"],
+      "prompt": "翻译成日语：我给老师一本书。",
+      "vocab_hints": ["老师", "书"],
       "answer_reference": "わたしは 先生に 本を あげました。",
       "metadata": {
         "source": "codex",
@@ -132,7 +132,7 @@
       "lesson": 7,
       "target_grammar": "N1 は N2 に もらいます",
       "prompt": "A: 誕生日に 何を もらいましたか。 B: ___",
-      "vocab_hints": ["friend"],
+      "vocab_hints": ["朋友"],
       "answer_reference": "友だちに 本を もらいました。",
       "metadata": {
         "source": "codex",
@@ -149,9 +149,9 @@
   "self_assessment": {
     "difficulty": "steady",
     "uncertain_exercise_ids": ["ex-001"],
-    "confusing_points": ["Mixing up で and に in transport sentences"],
+    "confusing_points": ["交通方式句子里还会混淆「で」和其他助词"],
     "pace": "steady",
-    "note": "The giving and receiving pair still needs one more review cycle."
+    "note": "授受动词能做出来，但还需要一轮受控复习。"
   },
   "correction": {
     "status": "reviewed",
@@ -161,6 +161,6 @@
   "review_result": {
     "id": "review-2026-06-26",
     "accuracy": 0.74,
-    "summary": "Core meaning is mostly there, but the means particle is still unstable."
+    "summary": "核心意思基本正确，但交通方式里的「で」还不稳定。"
   }
 }

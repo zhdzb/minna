@@ -8,11 +8,11 @@
   "overall": {
     "accuracy": 0.74,
     "can_advance": false,
-    "summary": "Core lesson 7 meaning is mostly intact, but the means particle and receiving direction still need another controlled pass.",
+    "summary": "第 7 课核心意思基本没问题，但交通方式里的「で」以及「もらう」短回复自然度还需要再过一轮。",
     "next_focus": [
-      "N で V transport sentences",
-      "Choosing に correctly with もらいます",
-      "More natural short conversation replies"
+      "N で V 交通方式句",
+      "N1 は N2 に もらいます 的自然短回复",
+      "受控输出后再过渡到自由表达"
     ]
   },
   "items": [
@@ -24,10 +24,10 @@
       "target_grammar": "N で V",
       "user_answer": "に",
       "correct_answer": "で",
-      "explanation": "This sentence needs the means particle で, not に.",
+      "explanation": "这里表示交通工具或手段，应该用「で」，不能用「に」。",
       "retry_recommended": true,
       "rubric": {
-        "target_particle": 0.0,
+        "target_particle": 0,
         "pattern_match": 0.5
       },
       "confidence": 0.97,
@@ -43,10 +43,10 @@
       "target_grammar": "N1 は N2 に あげます",
       "user_answer": "わたしは 先生に 本を あげました。",
       "correct_answer": "わたしは 先生に 本を あげました。",
-      "explanation": "The sentence uses the target grammar correctly and sounds natural.",
+      "explanation": "句型、助词和语义都正确，表达自然。",
       "retry_recommended": false,
       "rubric": {
-        "meaning": 1.0,
+        "meaning": 1,
         "target_grammar": 0.9,
         "particles": 0.9,
         "naturalness": 0.8
@@ -66,7 +66,7 @@
       "target_grammar": "N1 は N2 に もらいます",
       "user_answer": "友だちに 本を もらいました。",
       "correct_answer": "友だちに 本を もらいました。",
-      "explanation": "The answer is correct, but it is a little bare as a conversation reply and could sound more complete with a fuller phrase.",
+      "explanation": "语法和语义都对，但如果是口语对话，可以再补一点上下文，让回复更自然。",
       "retry_recommended": true,
       "rubric": {
         "context_match": 0.7,
@@ -85,17 +85,17 @@
   "mastery_updates": [
     {
       "scope": "grammar_point",
-      "key": "lesson-7/means-particle",
+      "key": "lesson-7/tool-means",
       "from_status": "learning",
       "to_status": "weak",
-      "evidence": ["ex-001 wrong particle"]
+      "evidence": ["ex-001 助词错误"]
     },
     {
       "scope": "grammar_point",
       "key": "lesson-7/ageru",
       "from_status": "learning",
       "to_status": "stabilizing",
-      "evidence": ["ex-002 correct output"]
+      "evidence": ["ex-002 输出正确"]
     }
   ],
   "review_queue_updates": [
@@ -114,6 +114,6 @@
   ],
   "promotion_decision": {
     "can_advance": false,
-    "reason": "Lesson 7 output is close, but the means particle still needs another correct cycle before promotion."
+    "reason": "第 7 课输出接近稳定，但「で」的使用还需要再完成一轮正确输出。"
   }
 }

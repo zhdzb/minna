@@ -57,12 +57,12 @@ describe('agentStudyContextCompressor', () => {
       updated_at: '2026-06-30T09:00:00+08:00',
       current_lesson: 7,
       learning_mode: 'foundation_rebuild',
-      active_goals: ['stabilize lesson 7 output', 'keep review queue moving'],
+      active_goals: ['稳住第 7 课输出', '维持复习队列节奏'],
       weakness_summary: [],
       recent_focus: {
-        grammar: ['N de V', 'N1 wa N2 ni V-te moraimashita'],
-        listening: ['lesson 7 key phrases'],
-        speaking: ['controlled replies']
+        grammar: ['N で V', 'N1 は N2 に V-て もらいました'],
+        listening: ['第 7 课关键词'],
+        speaking: ['受控短回复']
       },
       next_recommendation: {
         date: '2026-06-30',
@@ -91,7 +91,7 @@ describe('agentStudyContextCompressor', () => {
       grammar_points: {
         'lesson-7/tool-means': {
           lesson: 7,
-          pattern: 'N de V',
+          pattern: 'N で V',
           status: 'weak',
           recognition: 0.4,
           controlled_output: 0.15,
@@ -126,11 +126,11 @@ describe('agentStudyContextCompressor', () => {
       status: 'reviewed',
       created_at: '2026-06-30T09:00:00+08:00',
       mission: {
-        title: 'Lesson 7 review',
+        title: '第 7 课复盘',
         plan_type: 'review_then_output',
         available_minutes: 45,
         focus_lessons: [7],
-        goals: ['stabilize lesson 7']
+        goals: ['稳住第 7 课']
       },
       tasks: [],
       study_materials: [],
@@ -161,8 +161,8 @@ describe('agentStudyContextCompressor', () => {
       overall: {
         accuracy: 0.74,
         can_advance: false,
-        summary: 'Means particle still needs another controlled pass.',
-        next_focus: ['N de V', 'morau short replies']
+        summary: '交通方式里的「で」还需要再过一轮。',
+        next_focus: ['N で V', 'もらう 的短回复']
       },
       items: [
         {
@@ -170,10 +170,10 @@ describe('agentStudyContextCompressor', () => {
           is_correct: false,
           score: 0.25,
           error_tags: ['particle'],
-          target_grammar: 'N de V',
+          target_grammar: 'N で V',
           user_answer: '',
-          correct_answer: 'Basu de ikimasu.',
-          explanation: 'The means particle is still unstable.',
+          correct_answer: 'バスで 行きます。',
+          explanation: '表示交通工具时还不稳定。',
           retry_recommended: true,
           rubric: {
             target_particle: 0
@@ -188,30 +188,28 @@ describe('agentStudyContextCompressor', () => {
       review_queue_updates: [],
       promotion_decision: {
         can_advance: false,
-        reason: 'Need one more clean review cycle.'
+        reason: '还需要一次干净的复习循环。'
       }
     })
-    fs.writeFileSync(
-      path.join(studyRoot, 'context', 'next-agent-context.md'),
-      [
-        '# Next Agent Context',
-        '',
-        'This is a deliberately long context block that mentions many details from prior turns.',
-        'It should be compressed into a shorter version that keeps file references and key state.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.'
-      ].join('\n'),
-      'utf8'
-    )
+    const priorContext = [
+      '# 下一次 Agent 上下文',
+      '',
+      '这是一段故意写得比较长的旧上下文，用来测试压缩器是否真的把信息压短。',
+      '它需要保留文件引用和关键状态，但不应该把所有重复叙述都留下来。',
+      '重复信息：第 7 课、review queue、mastery、daily packet、review packet、event log。',
+      '重复信息：第 7 课、review queue、mastery、daily packet、review packet、event log。',
+      '重复信息：第 7 课、review queue、mastery、daily packet、review packet、event log。',
+      '重复信息：第 7 课、review queue、mastery、daily packet、review packet、event log。',
+      '重复信息：第 7 课、review queue、mastery、daily packet、review packet、event log。',
+      '重复信息：第 7 课、review queue、mastery、daily packet、review packet、event log。',
+      '重复信息：第 7 课、review queue、mastery、daily packet、review packet、event log。',
+      '重复信息：第 7 课、review queue、mastery、daily packet、review packet、event log。',
+      '重复信息：第 7 课、review queue、mastery、daily packet、review packet、event log。',
+      '重复信息：第 7 课、review queue、mastery、daily packet、review packet、event log。',
+      '重复信息：第 7 课、review queue、mastery、daily packet、review packet、event log。',
+      '重复信息：第 7 课、review queue、mastery、daily packet、review packet、event log。'
+    ].join('\n')
+    fs.writeFileSync(path.join(studyRoot, 'context', 'next-agent-context.md'), priorContext, 'utf8')
     fs.writeFileSync(
       path.join(studyRoot, 'logs', 'agent-events.jsonl'),
       [
@@ -228,33 +226,15 @@ describe('agentStudyContextCompressor', () => {
     const result = compressor.compressContext()
 
     expect(result.snapshot.path).toBe('study/context/snapshots/2026-W27-context.md')
-    expect(result.snapshot.content).toContain('## Recent Events')
+    expect(result.snapshot.content).toContain('## 最近事件')
     expect(result.nextAgentContext.content).toContain('study/context/snapshots/2026-W27-context.md')
     expect(result.nextAgentContext.content.length).toBeLessThan(
       fs.readFileSync(path.join(studyRoot, 'context', 'snapshots', '2026-W27-context.md'), 'utf8').length
     )
-    expect(result.nextAgentContext.content.length).toBeLessThan(
-      [
-        '# Next Agent Context',
-        '',
-        'This is a deliberately long context block that mentions many details from prior turns.',
-        'It should be compressed into a shorter version that keeps file references and key state.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.',
-        'Repeat detail: lesson 7, review queue, mastery, daily packet, review packet, event log.'
-      ].join('\n').length
+    expect(result.nextAgentContext.content.length).toBeLessThan(priorContext.length)
+    expect(fs.readFileSync(path.join(studyRoot, 'context', 'next-agent-context.md'), 'utf8')).toBe(
+      result.nextAgentContext.content
     )
-    expect(
-      fs.readFileSync(path.join(studyRoot, 'context', 'next-agent-context.md'), 'utf8')
-    ).toBe(result.nextAgentContext.content)
 
     const logLines = fs
       .readFileSync(path.join(studyRoot, 'logs', 'agent-events.jsonl'), 'utf8')
@@ -277,14 +257,14 @@ describe('agentStudyContextCompressor', () => {
       currentState: {
         current_lesson: 7,
         learning_mode: 'foundation_rebuild',
-        active_goals: ['stabilize lesson 7'],
+        active_goals: ['稳住第 7 课'],
         recent_focus: { grammar: [] }
       },
       masteryState: {
         current_gate: 'lesson-7-foundation',
         grammar_points: {
           'lesson-7/tool-means': {
-            pattern: 'N de V',
+            pattern: 'N で V',
             status: 'weak',
             controlled_output: 0.1
           }
@@ -309,6 +289,7 @@ describe('agentStudyContextCompressor', () => {
 
     expect(snapshot).toContain('study/daily/2026-06-26.json')
     expect(snapshot).toContain('study/reviews/2026-06-26-review.json')
+    expect(snapshot).toContain('## 当前课程状态')
     expect(snapshot).not.toContain('"schema_version"')
   })
 })

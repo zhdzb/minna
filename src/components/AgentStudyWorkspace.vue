@@ -3,26 +3,16 @@
     <header class="agent-study-header">
       <div>
         <p class="agent-study-eyebrow">Codex Study Loop</p>
-        <h1>Agent Study Workspace</h1>
-        <p class="agent-study-subtitle">Today's packet, materials, and draft answers live here.</p>
+        <h1>学习工作台</h1>
+        <p class="agent-study-subtitle">今天的学习包、资料、作答草稿和最近批改结果都集中在这里。</p>
       </div>
       <div class="header-actions">
-        <el-button :loading="isLoading" @click="loadWorkspace">Refresh</el-button>
-        <el-button
-          type="primary"
-          :loading="isSaving"
-          :disabled="isSaveDisabled"
-          @click="saveDraft"
-        >
-          Save Draft
+        <el-button :loading="isLoading" @click="loadWorkspace">刷新</el-button>
+        <el-button type="primary" :loading="isSaving" :disabled="isSaveDisabled" @click="saveDraft">
+          保存草稿
         </el-button>
-        <el-button
-          type="success"
-          :loading="isSubmitting"
-          :disabled="isSubmitDisabled"
-          @click="submitPacket"
-        >
-          Submit Packet
+        <el-button type="success" :loading="isSubmitting" :disabled="isSubmitDisabled" @click="submitPacket">
+          提交学习包
         </el-button>
       </div>
     </header>
@@ -32,101 +22,101 @@
     </section>
 
     <section v-else-if="loadError" class="agent-study-band">
-      <el-alert :closable="false" show-icon title="Load failed" type="error" :description="loadError" />
+      <el-alert :closable="false" show-icon title="加载失败" type="error" :description="loadError" />
     </section>
 
     <section v-else-if="!dailyPacket" class="agent-study-band">
-      <el-empty description="No daily packet is available right now." />
+      <el-empty description="当前还没有可用的每日学习包。" />
     </section>
 
     <template v-else>
       <section class="agent-study-band agent-study-overview">
         <div class="overview-copy">
-          <p class="agent-study-eyebrow">Today's Mission</p>
+          <p class="agent-study-eyebrow">今日任务</p>
           <h2>{{ missionTitle }}</h2>
           <p>{{ missionSummary }}</p>
         </div>
         <div class="overview-meta">
           <div class="meta-item">
-            <span>Date</span>
-            <strong>{{ dailyPacket.date || "--" }}</strong>
+            <span>日期</span>
+            <strong>{{ dailyPacket.date || '--' }}</strong>
           </div>
           <div class="meta-item">
-            <span>Status</span>
-            <el-tag :type="statusTagType" effect="plain">{{ dailyPacket.status || "unknown" }}</el-tag>
+            <span>状态</span>
+            <el-tag :type="statusTagType" effect="plain">{{ statusText }}</el-tag>
           </div>
           <div class="meta-item">
-            <span>Planned Time</span>
+            <span>计划时长</span>
             <strong>{{ availableMinutesLabel }}</strong>
           </div>
           <div class="meta-item">
-            <span>Focus Lessons</span>
+            <span>聚焦课程</span>
             <strong>{{ focusLessonsLabel }}</strong>
           </div>
         </div>
       </section>
 
       <section v-if="saveError" class="agent-study-band">
-        <el-alert :closable="false" show-icon title="Draft save failed" type="error" :description="saveError" />
+        <el-alert :closable="false" show-icon title="草稿保存失败" type="error" :description="saveError" />
       </section>
 
       <section v-else-if="saveMessage" class="agent-study-band">
-        <el-alert :closable="false" show-icon title="Draft saved" type="success" :description="saveMessage" />
+        <el-alert :closable="false" show-icon title="草稿已保存" type="success" :description="saveMessage" />
       </section>
 
       <section v-if="submitError" class="agent-study-band">
-        <el-alert :closable="false" show-icon title="Submit failed" type="error" :description="submitError" />
+        <el-alert :closable="false" show-icon title="提交失败" type="error" :description="submitError" />
       </section>
 
       <section v-else-if="submitMessage" class="agent-study-band">
-        <el-alert :closable="false" show-icon title="Packet submitted" type="success" :description="submitMessage" />
+        <el-alert :closable="false" show-icon title="学习包已提交" type="success" :description="submitMessage" />
       </section>
 
       <section class="agent-study-band">
         <div class="section-heading">
-          <h2>Task List</h2>
+          <h2>任务清单</h2>
           <span>{{ taskCountLabel }}</span>
         </div>
         <div v-if="dailyPacket.tasks?.length" class="item-grid">
           <article v-for="task in dailyPacket.tasks" :key="task.id" class="item-card">
             <div class="item-card-top">
               <h3>{{ task.title || task.id }}</h3>
-              <el-tag size="small" effect="plain">{{ task.status || "pending" }}</el-tag>
+              <el-tag size="small" effect="plain">{{ mapStatusLabel(task.status) }}</el-tag>
             </div>
-            <p class="item-type">{{ task.type || "task" }}</p>
-            <p class="item-note">{{ task.minutes ? `${task.minutes} min` : "Time TBD" }}</p>
+            <p class="item-type">{{ task.type || '任务' }}</p>
+            <p class="item-note">{{ task.minutes ? `${task.minutes} 分钟` : '时长待定' }}</p>
           </article>
         </div>
-        <el-empty v-else description="No tasks are listed for today." />
+        <el-empty v-else description="今天还没有安排任务。" />
       </section>
 
       <section class="agent-study-band">
         <div class="section-heading">
-          <h2>Study Materials</h2>
+          <h2>学习资料</h2>
           <span>{{ materialCountLabel }}</span>
         </div>
         <div v-if="dailyPacket.study_materials?.length" class="item-grid">
           <article v-for="material in dailyPacket.study_materials" :key="material.id" class="item-card">
             <div class="item-card-top">
               <h3>{{ material.title || material.id }}</h3>
-              <el-tag size="small" effect="plain">{{ material.type || "material" }}</el-tag>
+              <el-tag size="small" effect="plain">{{ material.type || '资料' }}</el-tag>
             </div>
-            <p class="item-type">Lesson {{ material.lesson ?? "--" }}</p>
-            <p class="item-copy">{{ material.content || "No material summary yet." }}</p>
+            <p class="item-type">第 {{ material.lesson ?? '--' }} 课</p>
+            <p class="item-copy">{{ material.content || '暂时还没有资料摘要。' }}</p>
             <ul v-if="material.examples?.length" class="example-list">
               <li v-for="(example, index) in material.examples" :key="`${material.id}-${index}`">
-                <strong>{{ example.ja || "Example" }}</strong>
-                <span>{{ example.zh || example.note || "" }}</span>
+                <strong>{{ example.ja || '例句' }}</strong>
+                <span>{{ example.zh || example.note || '' }}</span>
               </li>
             </ul>
           </article>
         </div>
-        <el-empty v-else description="No study materials are available yet." />
+        <el-empty v-else description="当前还没有可用学习资料。" />
       </section>
 
       <section class="agent-study-band">
         <div class="section-heading">
-          <h2>Exercises</h2>
+          <h2>练习题</h2>
           <span>{{ exerciseCountLabel }}</span>
         </div>
         <div v-if="dailyPacket.exercises?.length" class="exercise-list">
@@ -134,23 +124,19 @@
             <div class="item-card-top">
               <div>
                 <h3>{{ exercise.prompt || exercise.id }}</h3>
-                <p class="item-type">{{ exercise.target_grammar || "No grammar label" }}</p>
+                <p class="item-type">{{ exercise.target_grammar || '未标注语法点' }}</p>
               </div>
-              <el-tag size="small" type="success" effect="plain">{{ exercise.type || "exercise" }}</el-tag>
+              <el-tag size="small" type="success" effect="plain">{{ exercise.type || '练习' }}</el-tag>
             </div>
-            <p class="item-note">
-              Lesson {{ exercise.lesson ?? "--" }} · {{ exercise.metadata?.skill || "unlabeled skill" }}
-            </p>
-            <p v-if="exercise.vocab_hints?.length" class="item-copy">
-              Hints: {{ exercise.vocab_hints.join(" / ") }}
-            </p>
+            <p class="item-note">第 {{ exercise.lesson ?? '--' }} 课 · {{ exercise.metadata?.skill || '未标注技能' }}</p>
+            <p v-if="exercise.vocab_hints?.length" class="item-copy">提示：{{ exercise.vocab_hints.join(' / ') }}</p>
 
             <label class="answer-field">
-              <span>Draft Answer</span>
+              <span>作答草稿</span>
               <el-input
                 v-if="exercise.type === 'q_fill'"
                 :model-value="getAnswerValue(exercise.id)"
-                placeholder="Type a short answer"
+                placeholder="请输入简短答案"
                 @update:model-value="updateAnswer(exercise.id, $event)"
               />
               <el-input
@@ -164,35 +150,31 @@
             </label>
           </article>
         </div>
-        <el-empty v-else description="No exercises are available yet." />
+        <el-empty v-else description="当前还没有可用练习题。" />
       </section>
 
       <section class="agent-study-band">
         <div class="section-heading">
-          <h2>Self Assessment</h2>
-          <span>Required for submission</span>
+          <h2>自我评估</h2>
+          <span>提交前必填</span>
         </div>
         <div class="assessment-grid">
           <label class="answer-field">
-            <span>Difficulty</span>
-            <select
-              class="assessment-input"
-              :value="selfAssessmentDraft.difficulty"
-              @change="updateDifficulty($event.target.value)"
-            >
-              <option value="">Choose one</option>
-              <option value="easy">easy</option>
-              <option value="steady">steady</option>
-              <option value="hard">hard</option>
+            <span>难度感受</span>
+            <select class="assessment-input" :value="selfAssessmentDraft.difficulty" @change="updateDifficulty($event.target.value)">
+              <option value="">请选择</option>
+              <option value="easy">轻松</option>
+              <option value="steady">适中</option>
+              <option value="hard">吃力</option>
             </select>
           </label>
 
           <label class="answer-field">
-            <span>Pace</span>
+            <span>节奏</span>
             <input
               class="assessment-input"
               :value="selfAssessmentDraft.pace"
-              placeholder="For example: steady, rushed, slow"
+              placeholder="例如：适中、偏快、偏慢"
               @input="updateAssessmentField('pace', $event.target.value)"
             />
           </label>
@@ -200,35 +182,31 @@
 
         <div class="assessment-grid">
           <label class="answer-field">
-            <span>Confusing Points</span>
+            <span>困惑点</span>
             <textarea
               class="assessment-input assessment-textarea"
               :value="confusingPointsText"
               rows="3"
-              placeholder="One confusing point per line"
+              placeholder="每行填写一个困惑点"
               @input="updateConfusingPoints($event.target.value)"
             />
           </label>
 
           <label class="answer-field">
-            <span>Note</span>
+            <span>补充说明</span>
             <textarea
               class="assessment-input assessment-textarea"
               :value="selfAssessmentDraft.note"
               rows="3"
-              placeholder="Anything you want Codex to know before review"
+              placeholder="填写你希望 Codex 批改前知道的内容"
               @input="updateAssessmentField('note', $event.target.value)"
             />
           </label>
         </div>
 
         <div v-if="dailyPacket.exercises?.length" class="uncertain-block">
-          <p class="uncertain-title">Mark exercises that still feel uncertain</p>
-          <label
-            v-for="exercise in dailyPacket.exercises"
-            :key="`uncertain-${exercise.id}`"
-            class="uncertain-item"
-          >
+          <p class="uncertain-title">勾选你仍然不确定的题目</p>
+          <label v-for="exercise in dailyPacket.exercises" :key="`uncertain-${exercise.id}`" class="uncertain-item">
             <input
               type="checkbox"
               :checked="selfAssessmentDraft.uncertain_exercise_ids.includes(exercise.id)"
@@ -241,131 +219,117 @@
 
       <section class="agent-study-band">
         <div class="section-heading">
-          <h2>Review Hints</h2>
+          <h2>批改提示</h2>
           <span>{{ reviewItemCountLabel }}</span>
         </div>
         <div v-if="dailyPacket.review_items?.length || indexDocument?.latest_review || reviewResult" class="review-summary">
           <div class="meta-item">
-            <span>Queued Review Items</span>
+            <span>待批改项目</span>
             <strong>{{ reviewItemCountLabel }}</strong>
           </div>
           <div class="meta-item">
-            <span>Latest Review</span>
-            <strong>{{ indexDocument?.latest_review || "None yet" }}</strong>
+            <span>最近批改</span>
+            <strong>{{ indexDocument?.latest_review || '暂无' }}</strong>
           </div>
           <div class="meta-item">
-            <span>Correction Status</span>
-            <strong>{{ dailyPacket.correction?.status || "pending" }}</strong>
+            <span>批改状态</span>
+            <strong>{{ mapStatusLabel(dailyPacket.correction?.status) }}</strong>
           </div>
         </div>
-        <el-empty v-else description="No review hints are available yet." />
+        <el-empty v-else description="当前还没有批改提示。" />
       </section>
 
       <section v-if="reviewResult" class="agent-study-band">
         <div class="section-heading">
-          <h2>Latest Review</h2>
-          <span>{{ reviewItems.length }} checked</span>
+          <h2>最近批改结果</h2>
+          <span>共检查 {{ reviewItems.length }} 题</span>
         </div>
 
         <div class="review-summary review-overall-grid">
           <div class="meta-item">
-            <span>Accuracy</span>
+            <span>正确率</span>
             <strong>{{ reviewAccuracyLabel }}</strong>
           </div>
           <div class="meta-item">
-            <span>Promotion</span>
+            <span>推进建议</span>
             <strong>{{ reviewPromotionLabel }}</strong>
           </div>
           <div class="meta-item">
-            <span>Review File</span>
+            <span>批改文件</span>
             <strong>{{ reviewFilePath }}</strong>
           </div>
           <div class="meta-item">
-            <span>Created</span>
-            <strong>{{ reviewResult.created_at || "--" }}</strong>
+            <span>生成时间</span>
+            <strong>{{ reviewResult.created_at || '--' }}</strong>
           </div>
         </div>
 
         <div class="review-overall-copy">
           <div>
-            <p class="review-block-label">Summary</p>
-            <p class="item-copy">{{ reviewResult.overall?.summary || "No review summary yet." }}</p>
+            <p class="review-block-label">总结</p>
+            <p class="item-copy">{{ reviewResult.overall?.summary || '暂时还没有批改总结。' }}</p>
           </div>
           <div>
-            <p class="review-block-label">Next Focus</p>
+            <p class="review-block-label">下一步重点</p>
             <ul v-if="reviewNextFocus.length" class="review-focus-list">
               <li v-for="focus in reviewNextFocus" :key="focus">{{ focus }}</li>
             </ul>
-            <p v-else class="item-note">No next-focus items were recorded.</p>
+            <p v-else class="item-note">暂时没有记录下一步重点。</p>
           </div>
           <div>
-            <p class="review-block-label">Promotion Reason</p>
-            <p class="item-copy">{{ reviewResult.promotion_decision?.reason || "No promotion note yet." }}</p>
+            <p class="review-block-label">推进原因</p>
+            <p class="item-copy">{{ reviewResult.promotion_decision?.reason || '暂时还没有推进说明。' }}</p>
           </div>
         </div>
 
         <div class="review-item-list">
-          <article
-            v-for="item in reviewItems"
-            :key="item.exercise_id"
-            class="exercise-card review-item-card"
-          >
+          <article v-for="item in reviewItems" :key="item.exercise_id" class="exercise-card review-item-card">
             <div class="item-card-top">
               <div>
                 <h3>{{ reviewExercisePrompt(item) }}</h3>
                 <p class="item-type">{{ item.target_grammar || reviewExerciseType(item.exercise_id) }}</p>
               </div>
-              <el-tag
-                size="small"
-                :type="item.is_correct ? 'success' : 'danger'"
-                effect="plain"
-              >
-                {{ item.is_correct ? "correct" : "needs retry" }}
+              <el-tag size="small" :type="item.is_correct ? 'success' : 'danger'" effect="plain">
+                {{ item.is_correct ? '正确' : '需重做' }}
               </el-tag>
             </div>
 
             <div class="review-chip-row">
-              <span class="review-chip">Score {{ formatPercent(item.score) }}</span>
-              <span class="review-chip">Confidence {{ formatPercent(item.confidence) }}</span>
-              <span v-if="item.retry_recommended" class="review-chip review-chip-warning">Retry recommended</span>
-              <span v-if="item.needs_user_input" class="review-chip review-chip-warning">Needs user input</span>
+              <span class="review-chip">得分 {{ formatPercent(item.score) }}</span>
+              <span class="review-chip">置信度 {{ formatPercent(item.confidence) }}</span>
+              <span v-if="item.retry_recommended" class="review-chip review-chip-warning">建议重做</span>
+              <span v-if="item.needs_user_input" class="review-chip review-chip-warning">需要补充信息</span>
             </div>
 
-            <p v-if="item.error_tags?.length" class="item-note">
-              Tags: {{ item.error_tags.join(", ") }}
-            </p>
-            <p v-else class="item-note">Tags: none</p>
+            <p v-if="item.error_tags?.length" class="item-note">标签：{{ item.error_tags.join(', ') }}</p>
+            <p v-else class="item-note">标签：无</p>
 
             <div class="review-answer-block">
-              <p class="review-block-label">Your Answer</p>
-              <p class="item-copy">{{ item.user_answer || getAnswerValue(item.exercise_id) || "--" }}</p>
-            </div>
-
-            <div class="review-answer-block">
-              <p class="review-block-label">Correct Answer</p>
-              <p class="item-copy">{{ item.correct_answer || "No reference answer provided." }}</p>
+              <p class="review-block-label">你的答案</p>
+              <p class="item-copy">{{ item.user_answer || getAnswerValue(item.exercise_id) || '--' }}</p>
             </div>
 
             <div class="review-answer-block">
-              <p class="review-block-label">Explanation</p>
-              <p class="item-copy">{{ item.explanation || "No explanation provided." }}</p>
+              <p class="review-block-label">参考答案</p>
+              <p class="item-copy">{{ item.correct_answer || '暂无参考答案。' }}</p>
+            </div>
+
+            <div class="review-answer-block">
+              <p class="review-block-label">说明</p>
+              <p class="item-copy">{{ item.explanation || '暂无说明。' }}</p>
             </div>
 
             <div v-if="item.acceptable_variants?.length" class="review-answer-block">
-              <p class="review-block-label">Acceptable Variants</p>
+              <p class="review-block-label">可接受变体</p>
               <ul class="review-focus-list">
                 <li v-for="variant in item.acceptable_variants" :key="variant">{{ variant }}</li>
               </ul>
             </div>
 
             <div v-if="item.rubric && Object.keys(item.rubric).length" class="review-answer-block">
-              <p class="review-block-label">Rubric</p>
+              <p class="review-block-label">评分维度</p>
               <div class="rubric-grid">
-                <div
-                  v-for="(value, key) in item.rubric"
-                  :key="`${item.exercise_id}-${key}`"
-                  class="rubric-item"
-                >
+                <div v-for="(value, key) in item.rubric" :key="`${item.exercise_id}-${key}`" class="rubric-item">
                   <span>{{ key }}</span>
                   <strong>{{ formatPercent(value) }}</strong>
                 </div>
@@ -373,10 +337,8 @@
             </div>
 
             <div class="review-answer-block">
-              <p class="review-block-label">Manual Override</p>
-              <p class="item-note">
-                {{ formatManualOverride(item.manual_override) }}
-              </p>
+              <p class="review-block-label">人工覆盖</p>
+              <p class="item-note">{{ formatManualOverride(item.manual_override) }}</p>
             </div>
           </article>
         </div>
@@ -384,30 +346,24 @@
 
       <section v-if="showSubmissionNextStep" class="agent-study-band next-step-band">
         <div class="section-heading">
-          <h2>Next Step</h2>
-          <span>Review handoff</span>
+          <h2>下一步</h2>
+          <span>批改交接</span>
         </div>
         <div v-if="reviewPromptPath" class="prompt-handoff">
           <p class="item-copy">
-            This packet is submitted. Review it with Codex using
-            <strong>{{ reviewPromptPath }}</strong>.
+            学习包已经提交，请将下面这份提示词交给 Codex 继续批改：
+            <strong>{{ reviewPromptPath }}</strong>
           </p>
           <div class="header-actions prompt-actions">
-            <el-button
-              type="primary"
-              :loading="isCopyingPrompt"
-              @click="copyReviewPrompt"
-            >
-              Copy Review Prompt
+            <el-button type="primary" :loading="isCopyingPrompt" @click="copyReviewPrompt">
+              复制批改提示词
             </el-button>
           </div>
         </div>
         <div v-else class="prompt-missing">
-          <p class="item-copy">
-            No generated review prompt is linked to this packet yet.
-          </p>
+          <p class="item-copy">当前学习包还没有关联生成好的批改提示词。</p>
           <p class="item-note">
-            Wait for a generated prompt file or add one to `daily.correction.prompt_file` before handing review work to Codex.
+            请先等待生成提示词文件，或在 `daily.correction.prompt_file` 中补全路径，再交给 Codex 批改。
           </p>
         </div>
         <p v-if="promptCopyMessage" class="prompt-feedback success-copy">{{ promptCopyMessage }}</p>
@@ -419,8 +375,8 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue"
-import { createAgentStudyClient } from "@/utils/agentStudyClient"
+import { computed, onMounted, ref } from 'vue'
+import { createAgentStudyClient } from '@/utils/agentStudyClient'
 
 const props = defineProps({
   client: {
@@ -437,85 +393,98 @@ const isLoading = ref(true)
 const isSaving = ref(false)
 const isSubmitting = ref(false)
 const isCopyingPrompt = ref(false)
-const loadError = ref("")
-const saveError = ref("")
-const saveMessage = ref("")
-const submitError = ref("")
-const submitMessage = ref("")
-const promptError = ref("")
-const promptCopyMessage = ref("")
-const promptPreview = ref("")
+const loadError = ref('')
+const saveError = ref('')
+const saveMessage = ref('')
+const submitError = ref('')
+const submitMessage = ref('')
+const promptError = ref('')
+const promptCopyMessage = ref('')
+const promptPreview = ref('')
 const indexDocument = ref(null)
 const dailyPacket = ref(null)
 const reviewResult = ref(null)
 const answerDrafts = ref({})
 const selfAssessmentDraft = ref({
-  difficulty: "",
+  difficulty: '',
   uncertain_exercise_ids: [],
   confusing_points: [],
-  pace: "",
-  note: ""
+  pace: '',
+  note: ''
 })
 
 const client = computed(() => props.client || createAgentStudyClient())
 
+const statusLabelMap = {
+  planned: '已计划',
+  learning: '学习中',
+  answering: '作答中',
+  submitted: '已提交',
+  reviewed: '已批改',
+  pending: '待处理',
+  done: '已完成',
+  draft: '草稿',
+  unknown: '未知'
+}
+
 const resolveCopyText = async (value) => {
-  if (typeof props.copyText === "function") {
+  if (typeof props.copyText === 'function') {
     await props.copyText(value)
     return
   }
 
-  if (typeof navigator !== "undefined" && navigator?.clipboard?.writeText) {
+  if (typeof navigator !== 'undefined' && navigator?.clipboard?.writeText) {
     await navigator.clipboard.writeText(value)
     return
   }
 
-  throw new Error("Clipboard support is unavailable in this environment.")
+  throw new Error('当前环境不支持剪贴板写入。')
 }
 
-const missionTitle = computed(() => dailyPacket.value?.mission?.title || "Unnamed Study Packet")
+const missionTitle = computed(() => dailyPacket.value?.mission?.title || '未命名学习包')
 const missionSummary = computed(() => {
   const mission = dailyPacket.value?.mission
-  if (!mission) return "No study mission is available yet."
+  if (!mission) return '当前还没有学习任务说明。'
 
   const goals = Array.isArray(mission.goals) ? mission.goals.filter(Boolean) : []
-  return goals.length ? goals.join(" | ") : "Start with the packet and build momentum from there."
+  return goals.length ? goals.join(' | ') : '先从当前学习包开始，逐步进入状态。'
 })
 
 const availableMinutesLabel = computed(() => {
   const minutes = dailyPacket.value?.mission?.available_minutes
-  return typeof minutes === "number" ? `${minutes} min` : "--"
+  return typeof minutes === 'number' ? `${minutes} 分钟` : '--'
 })
 
 const focusLessonsLabel = computed(() => {
   const lessons = dailyPacket.value?.mission?.focus_lessons
-  return Array.isArray(lessons) && lessons.length ? lessons.join(", ") : "--"
+  return Array.isArray(lessons) && lessons.length ? lessons.join(', ') : '--'
 })
 
 const statusTagType = computed(() => {
   const status = dailyPacket.value?.status
-  if (status === "submitted" || status === "reviewed") return "success"
-  if (status === "answering" || status === "learning") return "warning"
-  return "info"
+  if (status === 'submitted' || status === 'reviewed') return 'success'
+  if (status === 'answering' || status === 'learning') return 'warning'
+  return 'info'
 })
 
-const taskCountLabel = computed(() => `${dailyPacket.value?.tasks?.length || 0} items`)
-const materialCountLabel = computed(() => `${dailyPacket.value?.study_materials?.length || 0} items`)
-const exerciseCountLabel = computed(() => `${dailyPacket.value?.exercises?.length || 0} items`)
-const reviewItemCountLabel = computed(() => `${dailyPacket.value?.review_items?.length || 0} items`)
-const reviewPromptPath = computed(() => dailyPacket.value?.correction?.prompt_file || "")
-const showSubmissionNextStep = computed(() => ["submitted", "reviewed"].includes(dailyPacket.value?.status))
-const confusingPointsText = computed(() => selfAssessmentDraft.value.confusing_points.join("\n"))
+const statusText = computed(() => mapStatusLabel(dailyPacket.value?.status))
+const taskCountLabel = computed(() => `${dailyPacket.value?.tasks?.length || 0} 项`)
+const materialCountLabel = computed(() => `${dailyPacket.value?.study_materials?.length || 0} 项`)
+const exerciseCountLabel = computed(() => `${dailyPacket.value?.exercises?.length || 0} 题`)
+const reviewItemCountLabel = computed(() => `${dailyPacket.value?.review_items?.length || 0} 项`)
+const reviewPromptPath = computed(() => dailyPacket.value?.correction?.prompt_file || '')
+const showSubmissionNextStep = computed(() => ['submitted', 'reviewed'].includes(dailyPacket.value?.status))
+const confusingPointsText = computed(() => selfAssessmentDraft.value.confusing_points.join('\n'))
 const reviewItems = computed(() => (Array.isArray(reviewResult.value?.items) ? reviewResult.value.items : []))
 const reviewNextFocus = computed(() =>
   Array.isArray(reviewResult.value?.overall?.next_focus) ? reviewResult.value.overall.next_focus : []
 )
 const reviewAccuracyLabel = computed(() => formatPercent(reviewResult.value?.overall?.accuracy))
 const reviewPromotionLabel = computed(() =>
-  reviewResult.value?.promotion_decision?.can_advance ? "Ready to advance" : "Hold current lesson"
+  reviewResult.value?.promotion_decision?.can_advance ? '可以推进' : '暂不推进'
 )
 const reviewFilePath = computed(
-  () => dailyPacket.value?.correction?.review_file || indexDocument.value?.latest_review || "None yet"
+  () => dailyPacket.value?.correction?.review_file || indexDocument.value?.latest_review || '暂无'
 )
 
 const hasDraftChanges = computed(() => {
@@ -526,7 +495,7 @@ const hasDraftChanges = computed(() => {
   const keys = new Set([...Object.keys(originalAnswers), ...Object.keys(draftAnswers)])
 
   for (const key of keys) {
-    if (String(originalAnswers[key] || "") !== String(draftAnswers[key] || "")) {
+    if (String(originalAnswers[key] || '') !== String(draftAnswers[key] || '')) {
       return true
     }
   }
@@ -541,8 +510,8 @@ const buildAnswerDrafts = (packet) => {
   const nextAnswers = { ...(packet?.answers || {}) }
 
   for (const exercise of packet?.exercises || []) {
-    if (typeof nextAnswers[exercise.id] !== "string") {
-      nextAnswers[exercise.id] = ""
+    if (typeof nextAnswers[exercise.id] !== 'string') {
+      nextAnswers[exercise.id] = ''
     }
   }
 
@@ -550,15 +519,15 @@ const buildAnswerDrafts = (packet) => {
 }
 
 const buildSelfAssessmentDraft = (packet) => ({
-  difficulty: packet?.self_assessment?.difficulty || "",
+  difficulty: packet?.self_assessment?.difficulty || '',
   uncertain_exercise_ids: Array.isArray(packet?.self_assessment?.uncertain_exercise_ids)
     ? [...packet.self_assessment.uncertain_exercise_ids]
     : [],
   confusing_points: Array.isArray(packet?.self_assessment?.confusing_points)
     ? [...packet.self_assessment.confusing_points]
     : [],
-  pace: packet?.self_assessment?.pace || "",
-  note: packet?.self_assessment?.note || ""
+  pace: packet?.self_assessment?.pace || '',
+  note: packet?.self_assessment?.note || ''
 })
 
 const applyWorkspacePayload = (payload) => {
@@ -569,16 +538,17 @@ const applyWorkspacePayload = (payload) => {
   selfAssessmentDraft.value = buildSelfAssessmentDraft(payload?.dailyPacket)
 }
 
-const getAnswerValue = (exerciseId) => answerDrafts.value?.[exerciseId] || ""
+const mapStatusLabel = (status) => statusLabelMap[status || 'unknown'] || String(status || '未知')
+const getAnswerValue = (exerciseId) => answerDrafts.value?.[exerciseId] || ''
 
 const answerPlaceholder = (exerciseType) => {
-  if (exerciseType === "q_conversation") return "Write a natural reply draft"
-  if (exerciseType === "q_translate") return "Write your translation draft"
-  return "Write your answer"
+  if (exerciseType === 'q_conversation') return '请输入自然的对话回复'
+  if (exerciseType === 'q_translate') return '请输入你的翻译草稿'
+  return '请输入答案'
 }
 
 const formatPercent = (value) => {
-  if (typeof value !== "number" || Number.isNaN(value)) return "--"
+  if (typeof value !== 'number' || Number.isNaN(value)) return '--'
   return `${Math.round(value * 100)}%`
 }
 
@@ -587,63 +557,61 @@ const findExercise = (exerciseId) =>
 
 const reviewExercisePrompt = (item) => {
   const exercise = findExercise(item.exercise_id)
-  return exercise?.prompt || item.exercise_id || "Review item"
+  return exercise?.prompt || item.exercise_id || '批改项目'
 }
 
 const reviewExerciseType = (exerciseId) => {
   const exercise = findExercise(exerciseId)
-  return exercise?.type || "exercise"
+  return exercise?.type || '练习'
 }
 
 const formatManualOverride = (manualOverride) => {
-  if (!manualOverride) return "No manual override recorded."
-  if (typeof manualOverride === "string") return manualOverride
-  if (typeof manualOverride === "object") {
+  if (!manualOverride) return '暂无人工覆盖记录。'
+  if (typeof manualOverride === 'string') return manualOverride
+  if (typeof manualOverride === 'object') {
     return manualOverride.reason || manualOverride.summary || JSON.stringify(manualOverride)
   }
   return String(manualOverride)
 }
 
+const resetTransientMessages = () => {
+  promptCopyMessage.value = ''
+  promptError.value = ''
+  submitMessage.value = ''
+  saveMessage.value = ''
+  submitError.value = ''
+  saveError.value = ''
+}
+
 const updateAnswer = (exerciseId, value) => {
   answerDrafts.value = {
     ...answerDrafts.value,
-    [exerciseId]: typeof value === "string" ? value : ""
+    [exerciseId]: typeof value === 'string' ? value : ''
   }
-  promptCopyMessage.value = ""
-  promptError.value = ""
-  submitMessage.value = ""
-  saveMessage.value = ""
-  submitError.value = ""
-  saveError.value = ""
+  resetTransientMessages()
 }
 
 const updateAssessmentField = (field, value) => {
   selfAssessmentDraft.value = {
     ...selfAssessmentDraft.value,
-    [field]: typeof value === "string" ? value : ""
+    [field]: typeof value === 'string' ? value : ''
   }
-  promptCopyMessage.value = ""
-  promptError.value = ""
-  submitMessage.value = ""
-  submitError.value = ""
+  resetTransientMessages()
 }
 
 const updateDifficulty = (value) => {
-  updateAssessmentField("difficulty", value || "")
+  updateAssessmentField('difficulty', value || '')
 }
 
 const updateConfusingPoints = (value) => {
   selfAssessmentDraft.value = {
     ...selfAssessmentDraft.value,
-    confusing_points: String(value || "")
+    confusing_points: String(value || '')
       .split(/\r?\n/)
       .map((item) => item.trim())
       .filter(Boolean)
   }
-  promptCopyMessage.value = ""
-  promptError.value = ""
-  submitMessage.value = ""
-  submitError.value = ""
+  resetTransientMessages()
 }
 
 const toggleUncertainExercise = (exerciseId, checked) => {
@@ -658,15 +626,12 @@ const toggleUncertainExercise = (exerciseId, checked) => {
     ...selfAssessmentDraft.value,
     uncertain_exercise_ids: [...nextIds]
   }
-  promptCopyMessage.value = ""
-  promptError.value = ""
-  submitMessage.value = ""
-  submitError.value = ""
+  resetTransientMessages()
 }
 
 const loadWorkspace = async () => {
   isLoading.value = true
-  loadError.value = ""
+  loadError.value = ''
 
   try {
     const payload = await client.value.loadLatestAgentStudy()
@@ -684,9 +649,7 @@ const buildWritablePacket = (statusOverride = null) => {
 
   const nextStatus =
     statusOverride ||
-    (currentPacket.status === "planned" || currentPacket.status === "learning"
-      ? "answering"
-      : currentPacket.status)
+    (currentPacket.status === 'planned' || currentPacket.status === 'learning' ? 'answering' : currentPacket.status)
 
   return {
     ...currentPacket,
@@ -707,8 +670,8 @@ const saveDraft = async () => {
   if (!nextPacket) return
 
   isSaving.value = true
-  saveError.value = ""
-  saveMessage.value = ""
+  saveError.value = ''
+  saveMessage.value = ''
 
   try {
     const result = await client.value.saveDailyPacket({
@@ -717,11 +680,11 @@ const saveDraft = async () => {
 
     dailyPacket.value = result?.dailyPacket || nextPacket
     answerDrafts.value = buildAnswerDrafts(dailyPacket.value)
-    saveMessage.value = "Draft answers were saved. Refresh is available if you want to confirm the latest copy."
+    saveMessage.value = '作答草稿已保存；如果想确认最新版本，可以再刷新一次。'
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     if (/revision|conflict/i.test(message)) {
-      saveError.value = "Draft save hit a revision conflict. Please refresh to load the latest packet before saving again."
+      saveError.value = '保存时遇到版本冲突，请先刷新加载最新学习包后再重试。'
     } else {
       saveError.value = message
     }
@@ -731,13 +694,13 @@ const saveDraft = async () => {
 }
 
 const submitPacket = async () => {
-  const nextPacket = buildWritablePacket("submitted")
+  const nextPacket = buildWritablePacket('submitted')
   if (!nextPacket) return
 
   isSubmitting.value = true
-  submitError.value = ""
-  submitMessage.value = ""
-  saveError.value = ""
+  submitError.value = ''
+  submitMessage.value = ''
+  saveError.value = ''
 
   try {
     const result = await client.value.submitDailyPacket({
@@ -747,13 +710,11 @@ const submitPacket = async () => {
     dailyPacket.value = result?.dailyPacket || nextPacket
     answerDrafts.value = buildAnswerDrafts(dailyPacket.value)
     selfAssessmentDraft.value = buildSelfAssessmentDraft(dailyPacket.value)
-    submitMessage.value =
-      "The packet is now submitted. The next step is to hand the review prompt to Codex for correction."
+    submitMessage.value = '学习包已提交，下一步请复制批改提示词并交给 Codex 继续批改。'
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     if (/revision|conflict/i.test(message)) {
-      submitError.value =
-        "Submit hit a revision conflict. Please refresh to load the latest packet before submitting again."
+      submitError.value = '提交时遇到版本冲突，请先刷新加载最新学习包后再重试。'
     } else {
       submitError.value = message
     }
@@ -763,11 +724,11 @@ const submitPacket = async () => {
 }
 
 const copyReviewPrompt = async () => {
-  promptError.value = ""
-  promptCopyMessage.value = ""
+  promptError.value = ''
+  promptCopyMessage.value = ''
 
   if (!reviewPromptPath.value) {
-    promptError.value = "No generated review prompt is linked to this packet yet."
+    promptError.value = '当前学习包还没有关联生成好的批改提示词。'
     return
   }
 
@@ -775,10 +736,10 @@ const copyReviewPrompt = async () => {
 
   try {
     const promptResult = await client.value.loadPromptFile(reviewPromptPath.value)
-    const promptContent = String(promptResult?.content || "")
+    const promptContent = String(promptResult?.content || '')
     promptPreview.value = promptContent
     await resolveCopyText(promptContent)
-    promptCopyMessage.value = "The review prompt was copied. You can paste it directly into Codex."
+    promptCopyMessage.value = '批改提示词已复制，可以直接粘贴给 Codex。'
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     promptError.value = message
@@ -799,8 +760,8 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: #f5f7fb;
-  color: #1f2937;
+  background: transparent;
+  color: var(--app-text);
 }
 
 .agent-study-header,
@@ -839,22 +800,24 @@ onMounted(() => {
   margin: 0;
 }
 
-.agent-study-eyebrow {
+.agent-study-eyebrow,
+.review-block-label {
   font-size: 12px;
-  color: #64748b;
-  text-transform: uppercase;
+  color: var(--app-text-soft);
 }
 
 .agent-study-subtitle {
   margin-top: 6px;
-  color: #475569;
+  color: var(--app-text-muted);
 }
 
 .agent-study-band {
   padding: 20px;
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid #dbe3f1;
+  background: var(--app-panel-bg);
+  border: 1px solid var(--app-border);
   border-radius: 8px;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(12px);
 }
 
 .agent-study-overview {
@@ -869,7 +832,7 @@ onMounted(() => {
 
 .overview-copy p:last-child {
   margin-top: 10px;
-  color: #475569;
+  color: var(--app-text-muted);
   line-height: 1.6;
 }
 
@@ -883,19 +846,19 @@ onMounted(() => {
   flex-direction: column;
   gap: 6px;
   padding: 14px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--app-soft-bg);
+  border: 1px solid var(--app-border);
   border-radius: 8px;
 }
 
 .meta-item span {
   font-size: 12px;
-  color: #64748b;
+  color: var(--app-text-soft);
 }
 
 .meta-item strong {
   font-size: 15px;
-  color: #0f172a;
+  color: var(--app-text-strong);
 }
 
 .section-heading {
@@ -907,7 +870,7 @@ onMounted(() => {
 }
 
 .section-heading span {
-  color: #64748b;
+  color: var(--app-text-soft);
   font-size: 13px;
 }
 
@@ -919,8 +882,8 @@ onMounted(() => {
 .exercise-card {
   min-width: 0;
   padding: 16px;
-  background: #fbfdff;
-  border: 1px solid #dbe3f1;
+  background: var(--app-card-bg);
+  border: 1px solid var(--app-border);
   border-radius: 8px;
 }
 
@@ -944,19 +907,19 @@ onMounted(() => {
 
 .item-type {
   margin-top: 10px;
-  color: #4f46e5;
+  color: var(--app-accent);
   font-size: 13px;
 }
 
 .item-note {
   margin-top: 6px;
-  color: #64748b;
+  color: var(--app-text-soft);
   font-size: 13px;
 }
 
 .item-copy {
   margin-top: 10px;
-  color: #334155;
+  color: var(--app-text-muted);
   line-height: 1.6;
 }
 
@@ -976,10 +939,10 @@ onMounted(() => {
   width: 100%;
   min-height: 40px;
   padding: 10px 12px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--app-border-strong);
   border-radius: 8px;
-  background: #fff;
-  color: #0f172a;
+  background: var(--app-card-bg);
+  color: var(--app-text-strong);
   box-sizing: border-box;
   font: inherit;
 }
@@ -998,18 +961,18 @@ onMounted(() => {
 .uncertain-title {
   margin: 0;
   font-size: 13px;
-  color: #475569;
+  color: var(--app-text-muted);
 }
 
 .uncertain-item {
   display: flex;
   align-items: start;
   gap: 10px;
-  color: #334155;
+  color: var(--app-text-muted);
 }
 
 .next-step-band strong {
-  color: #0f172a;
+  color: var(--app-text-strong);
 }
 
 .review-overall-grid {
@@ -1041,21 +1004,14 @@ onMounted(() => {
 .review-chip {
   padding: 6px 10px;
   border-radius: 999px;
-  background: #eef2ff;
-  color: #3730a3;
+  background: var(--app-chip-bg);
+  color: var(--app-chip-text);
   font-size: 12px;
 }
 
 .review-chip-warning {
-  background: #fff7ed;
-  color: #b45309;
-}
-
-.review-block-label {
-  margin: 0;
-  font-size: 12px;
-  color: #64748b;
-  text-transform: uppercase;
+  background: var(--app-chip-warn-bg);
+  color: var(--app-chip-warn-text);
 }
 
 .review-answer-block {
@@ -1066,7 +1022,7 @@ onMounted(() => {
 .review-focus-list {
   margin: 8px 0 0;
   padding-left: 18px;
-  color: #334155;
+  color: var(--app-text-muted);
   display: grid;
   gap: 8px;
 }
@@ -1074,8 +1030,8 @@ onMounted(() => {
 .rubric-item {
   min-width: 0;
   padding: 10px 12px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--app-soft-bg);
+  border: 1px solid var(--app-border);
   border-radius: 8px;
   display: flex;
   gap: 12px;
@@ -1083,12 +1039,12 @@ onMounted(() => {
 }
 
 .rubric-item span {
-  color: #475569;
+  color: var(--app-text-muted);
   font-size: 12px;
 }
 
 .rubric-item strong {
-  color: #0f172a;
+  color: var(--app-text-strong);
   font-size: 13px;
 }
 
@@ -1108,20 +1064,20 @@ onMounted(() => {
 }
 
 .success-copy {
-  color: #166534;
+  color: var(--app-success);
 }
 
 .error-copy {
-  color: #b91c1c;
+  color: var(--app-danger);
 }
 
 .prompt-preview {
   margin: 12px 0 0;
   padding: 14px;
-  border: 1px solid #dbe3f1;
+  border: 1px solid var(--app-border);
   border-radius: 8px;
-  background: #f8fafc;
-  color: #1e293b;
+  background: var(--app-soft-bg);
+  color: var(--app-text);
   white-space: pre-wrap;
   word-break: break-word;
   font: inherit;
@@ -1130,13 +1086,13 @@ onMounted(() => {
 
 .answer-field span {
   font-size: 13px;
-  color: #475569;
+  color: var(--app-text-muted);
 }
 
 .example-list {
   margin: 12px 0 0;
   padding-left: 18px;
-  color: #475569;
+  color: var(--app-text-muted);
   display: grid;
   gap: 8px;
 }

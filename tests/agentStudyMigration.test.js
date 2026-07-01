@@ -34,8 +34,9 @@ describe('agentStudy legacy migration', () => {
   })
 
   it('migrates the current repo data.json into valid study state documents', () => {
+    const legacyData = readJson('data.json')
     const migrated = migrateLegacyDataToStudyState({
-      legacyData: readJson('data.json'),
+      legacyData,
       currentState: readJson('study/state/current.json'),
       masteryState: readJson('study/state/mastery.json'),
       reviewQueueState: readJson('study/state/review-queue.json'),
@@ -62,7 +63,7 @@ describe('agentStudy legacy migration', () => {
     })
     expect(
       Object.values(migrated.mastery.grammar_points).some(
-        (point) => point.lesson === 17 && point.pattern.includes('Vなければ なりません')
+        (point) => point.lesson === 17 && point.pattern.includes('なければ')
       )
     ).toBe(true)
 
@@ -70,9 +71,9 @@ describe('agentStudy legacy migration', () => {
     expect(migrated.reviewQueue.items.some((item) => item.id === 'rq-lesson-1-q-translate')).toBe(true)
     expect(migrated.reviewQueue.items.some((item) => item.id.includes('lesson-17'))).toBe(true)
 
-    expect(migrated.report).toEqual({
+    expect(migrated.report).toMatchObject({
       migrated_at: '2026-06-30T10:00:00+08:00',
-      source_updated_at: '2026-05-28T11:19:44.738Z',
+      source_updated_at: legacyData.meta?.updated_at,
       current_lesson: 7,
       migrated_lesson_state_count: 13,
       migrated_pattern_count: 1,

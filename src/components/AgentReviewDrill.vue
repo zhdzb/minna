@@ -3,16 +3,13 @@
     <header class="drill-header">
       <div>
         <p class="drill-eyebrow">Codex Study Loop</p>
-        <h1>Agent Review Drill</h1>
-        <p class="drill-subtitle">
-          Work through structured review variants, keep a draft if needed, then submit the drill
-          packet back to the repo.
-        </p>
+        <h1>复习训练</h1>
+        <p class="drill-subtitle">在这里完成结构化复习变体题，需要时先保存草稿，确认后再提交回仓库。</p>
       </div>
       <div class="header-actions">
-        <el-button :loading="isSaving" @click="saveDrill">Save Draft</el-button>
-        <el-button type="primary" :loading="isSubmitting" @click="submitDrill">Submit Drill</el-button>
-        <el-button :loading="isLoading" @click="loadDrill">Refresh</el-button>
+        <el-button :loading="isSaving" @click="saveDrill">保存草稿</el-button>
+        <el-button type="primary" :loading="isSubmitting" @click="submitDrill">提交训练</el-button>
+        <el-button :loading="isLoading" @click="loadDrill">刷新</el-button>
       </div>
     </header>
 
@@ -21,45 +18,43 @@
     </section>
 
     <section v-else-if="loadError" class="drill-band">
-      <el-alert :closable="false" show-icon title="Load failed" type="error" :description="loadError" />
+      <el-alert :closable="false" show-icon title="加载失败" type="error" :description="loadError" />
     </section>
 
     <template v-else-if="reviewDrill">
       <section class="drill-band summary-grid">
         <article class="summary-card">
-          <span>Drill Status</span>
+          <span>训练状态</span>
           <strong>{{ reviewDrill.status }}</strong>
           <p>{{ reviewDrill.summary.title }}</p>
         </article>
         <article class="summary-card">
-          <span>Focus Items</span>
+          <span>聚焦项目</span>
           <strong>{{ reviewDrill.items.length }}</strong>
-          <p>{{ reviewDrill.summary.focus.join(" / ") || "No focus tags" }}</p>
+          <p>{{ reviewDrill.summary.focus.join(' / ') || '暂无重点标签' }}</p>
         </article>
         <article class="summary-card">
-          <span>Latest Review</span>
+          <span>最近批改</span>
           <strong>{{ latestReviewId }}</strong>
           <p>{{ latestReviewAccuracy }}</p>
         </article>
       </section>
 
       <section v-if="actionMessage" class="drill-band action-band">
-        <el-alert :closable="false" show-icon title="Review drill updated" type="success" :description="actionMessage" />
+        <el-alert :closable="false" show-icon title="复习训练已更新" type="success" :description="actionMessage" />
       </section>
 
       <section class="drill-band">
         <div class="section-heading">
-          <h2>Structured Drill Packet</h2>
-          <span>{{ reviewDrill.items.length }} items</span>
+          <h2>结构化训练包</h2>
+          <span>{{ reviewDrill.items.length }} 题</span>
         </div>
         <div class="drill-list">
           <article v-for="item in reviewDrill.items" :key="item.id" class="drill-card">
             <div class="item-head">
               <div>
                 <h3>{{ formatQueueKey(item.key) }}</h3>
-                <p class="item-subtitle">
-                  lesson {{ item.lesson }} · {{ item.target_grammar }} · {{ item.status }}
-                </p>
+                <p class="item-subtitle">第 {{ item.lesson }} 课 · {{ item.target_grammar }} · {{ item.status }}</p>
               </div>
               <el-tag size="small" :type="item.status === 'submitted' ? 'success' : 'warning'" effect="plain">
                 {{ item.review_queue_id }}
@@ -67,45 +62,45 @@
             </div>
 
             <div class="detail-block">
-              <p class="block-label">Weakness Explanation</p>
+              <p class="block-label">薄弱点说明</p>
               <p class="detail-copy">{{ item.weakness_explanation }}</p>
             </div>
 
             <div class="detail-block">
-              <p class="block-label">Recent Error Tags</p>
+              <p class="block-label">最近错误标签</p>
               <div class="chip-row">
                 <span v-for="tag in item.error_tags" :key="tag" class="chip chip-warning">{{ tag }}</span>
               </div>
             </div>
 
             <div class="detail-block">
-              <p class="block-label">Original Prompt</p>
+              <p class="block-label">原题</p>
               <p class="detail-copy">{{ item.original_prompt }}</p>
             </div>
 
             <div class="detail-block">
-              <p class="block-label">Variant Drill Prompt</p>
+              <p class="block-label">变体训练题</p>
               <p class="detail-copy detail-copy-strong">{{ item.variant_prompt }}</p>
             </div>
 
             <div v-if="item.hint" class="detail-block">
-              <p class="block-label">Hint</p>
+              <p class="block-label">提示</p>
               <p class="detail-copy">{{ item.hint }}</p>
             </div>
 
             <label class="answer-field">
-              <span>Your Review Answer</span>
+              <span>你的复习答案</span>
               <textarea
                 class="draft-input"
                 :value="item.user_answer"
                 rows="4"
-                placeholder="Write a fresh answer for this review variant."
+                placeholder="请为这道复习变体题重新作答。"
                 @input="updateAnswer(item.id, $event.target.value)"
               />
             </label>
 
             <div class="detail-block answer-reference-block">
-              <p class="block-label">Answer Reference</p>
+              <p class="block-label">参考答案</p>
               <p class="detail-copy">{{ item.answer_reference }}</p>
             </div>
           </article>
@@ -114,27 +109,27 @@
 
       <section class="drill-band">
         <div class="section-heading">
-          <h2>Due Queue Snapshot</h2>
-          <span>{{ dueItems.length }} due</span>
+          <h2>到期队列快照</h2>
+          <span>{{ dueItems.length }} 项到期</span>
         </div>
         <div v-if="dueItems.length" class="chip-row">
           <span v-for="item in dueItems" :key="item.id" class="chip">
-            {{ formatQueueKey(item.key) }} · {{ item.last_result }} · due {{ item.due_date }}
+            {{ formatQueueKey(item.key) }} · {{ item.last_result }} · 到期 {{ item.due_date }}
           </span>
         </div>
-        <el-empty v-else description="No due review items are waiting right now." />
+        <el-empty v-else description="当前没有待处理的到期复习项目。" />
       </section>
     </template>
 
     <section v-else class="drill-band">
-      <el-empty description="No review drill packet is available yet." />
+      <el-empty description="当前还没有可用的复习训练包。" />
     </section>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue"
-import { createAgentStudyClient } from "@/utils/agentStudyClient"
+import { computed, onMounted, ref } from 'vue'
+import { createAgentStudyClient } from '@/utils/agentStudyClient'
 
 const props = defineProps({
   client: {
@@ -146,23 +141,21 @@ const props = defineProps({
 const isLoading = ref(true)
 const isSaving = ref(false)
 const isSubmitting = ref(false)
-const loadError = ref("")
-const actionMessage = ref("")
+const loadError = ref('')
+const actionMessage = ref('')
 const progressPayload = ref(null)
 const reviewDrill = ref(null)
-const reviewDrillPath = ref("")
+const reviewDrillPath = ref('')
 
 const client = computed(() => props.client || createAgentStudyClient())
 
-const latestReviewId = computed(() => progressPayload.value?.reviewResult?.id || "No review yet")
+const latestReviewId = computed(() => progressPayload.value?.reviewResult?.id || '暂无批改')
 const latestReviewAccuracy = computed(() => {
   const value = progressPayload.value?.reviewResult?.overall?.accuracy
-  if (typeof value !== "number" || Number.isNaN(value)) return "No review accuracy yet"
-  return `accuracy ${Math.round(value * 100)}%`
+  if (typeof value !== 'number' || Number.isNaN(value)) return '暂无批改正确率'
+  return `正确率 ${Math.round(value * 100)}%`
 })
-const dueItems = computed(() =>
-  (progressPayload.value?.reviewQueue?.items || []).filter((item) => item.status === "due")
-)
+const dueItems = computed(() => (progressPayload.value?.reviewQueue?.items || []).filter((item) => item.status === 'due'))
 
 const cloneValue = (value) => JSON.parse(JSON.stringify(value))
 
@@ -176,15 +169,15 @@ const hydrateReviewDrill = (payload) => {
     ...payload,
     items: (payload.items || []).map((item) => ({
       ...item,
-      user_answer: item.user_answer || ""
+      user_answer: item.user_answer || ''
     }))
   }
 }
 
 const loadDrill = async () => {
   isLoading.value = true
-  loadError.value = ""
-  actionMessage.value = ""
+  loadError.value = ''
+  actionMessage.value = ''
 
   try {
     const [nextProgressPayload, latestReviewDrill] = await Promise.all([
@@ -193,9 +186,7 @@ const loadDrill = async () => {
     ])
     progressPayload.value = nextProgressPayload
     hydrateReviewDrill(latestReviewDrill)
-    reviewDrillPath.value = latestReviewDrill?.date
-      ? `study/review-drills/${latestReviewDrill.date}.json`
-      : ""
+    reviewDrillPath.value = latestReviewDrill?.date ? `study/review-drills/${latestReviewDrill.date}.json` : ''
   } catch (error) {
     loadError.value = error instanceof Error ? error.message : String(error)
   } finally {
@@ -203,7 +194,7 @@ const loadDrill = async () => {
   }
 }
 
-const formatQueueKey = (value) => String(value || "").replaceAll("/", " / ")
+const formatQueueKey = (value) => String(value || '').replaceAll('/', ' / ')
 
 const updateAnswer = (itemId, value) => {
   if (!reviewDrill.value) return
@@ -214,7 +205,7 @@ const updateAnswer = (itemId, value) => {
       item.id === itemId
         ? {
             ...item,
-            user_answer: String(value || "")
+            user_answer: String(value || '')
           }
         : item
     )
@@ -229,26 +220,23 @@ const persistDrill = async (mode) => {
     targetPath: reviewDrillPath.value
   }
 
-  if (mode === "save") {
+  if (mode === 'save') {
     isSaving.value = true
   } else {
     isSubmitting.value = true
   }
-  loadError.value = ""
-  actionMessage.value = ""
+  loadError.value = ''
+  actionMessage.value = ''
 
   try {
     const result =
-      mode === "save"
+      mode === 'save'
         ? await client.value.saveReviewDrill(requestPayload)
         : await client.value.submitReviewDrill(requestPayload)
 
     hydrateReviewDrill(result.reviewDrill)
     reviewDrillPath.value = result.targetPath || reviewDrillPath.value
-    actionMessage.value =
-      mode === "save"
-        ? "Draft answers were saved to the review drill packet."
-        : "Review drill answers were submitted successfully."
+    actionMessage.value = mode === 'save' ? '复习训练草稿已保存。' : '复习训练答案已成功提交。'
   } catch (error) {
     loadError.value = error instanceof Error ? error.message : String(error)
   } finally {
@@ -258,11 +246,11 @@ const persistDrill = async (mode) => {
 }
 
 const saveDrill = async () => {
-  await persistDrill("save")
+  await persistDrill('save')
 }
 
 const submitDrill = async () => {
-  await persistDrill("submit")
+  await persistDrill('submit')
 }
 
 onMounted(() => {
@@ -276,8 +264,8 @@ onMounted(() => {
   padding: 24px;
   display: grid;
   gap: 16px;
-  background: #f5f7fb;
-  color: #1f2937;
+  background: transparent;
+  color: var(--app-text);
 }
 
 .drill-header {
@@ -309,21 +297,22 @@ onMounted(() => {
 
 .drill-eyebrow {
   font-size: 12px;
-  text-transform: uppercase;
-  color: #64748b;
+  color: var(--app-text-soft);
 }
 
 .drill-subtitle {
   margin-top: 6px;
-  color: #475569;
+  color: var(--app-text-muted);
   max-width: 720px;
 }
 
 .drill-band {
   padding: 20px;
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid #dbe3f1;
+  background: var(--app-panel-bg);
+  border: 1px solid var(--app-border);
   border-radius: 8px;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(12px);
 }
 
 .summary-grid {
@@ -336,27 +325,27 @@ onMounted(() => {
 .drill-card {
   min-width: 0;
   padding: 16px;
-  background: #fbfdff;
-  border: 1px solid #dbe3f1;
+  background: var(--app-card-bg);
+  border: 1px solid var(--app-border);
   border-radius: 8px;
 }
 
 .summary-card span,
 .block-label {
   font-size: 12px;
-  color: #64748b;
+  color: var(--app-text-soft);
 }
 
 .summary-card strong {
   display: block;
   margin-top: 6px;
   font-size: 24px;
-  color: #0f172a;
+  color: var(--app-text-strong);
 }
 
 .summary-card p {
   margin: 8px 0 0;
-  color: #475569;
+  color: var(--app-text-muted);
   line-height: 1.5;
 }
 
@@ -369,7 +358,7 @@ onMounted(() => {
 }
 
 .section-heading span {
-  color: #64748b;
+  color: var(--app-text-soft);
   font-size: 13px;
 }
 
@@ -387,7 +376,7 @@ onMounted(() => {
 
 .item-subtitle {
   margin-top: 8px;
-  color: #64748b;
+  color: var(--app-text-soft);
   font-size: 13px;
 }
 
@@ -401,14 +390,14 @@ onMounted(() => {
 .chip {
   padding: 6px 10px;
   border-radius: 999px;
-  background: #eef2ff;
-  color: #3730a3;
+  background: var(--app-chip-bg);
+  color: var(--app-chip-text);
   font-size: 12px;
 }
 
 .chip-warning {
-  background: #fff7ed;
-  color: #b45309;
+  background: var(--app-chip-warn-bg);
+  color: var(--app-chip-warn-text);
 }
 
 .detail-block {
@@ -418,12 +407,12 @@ onMounted(() => {
 }
 
 .detail-copy {
-  color: #334155;
+  color: var(--app-text-muted);
   line-height: 1.6;
 }
 
 .detail-copy-strong {
-  color: #0f172a;
+  color: var(--app-text-strong);
   font-weight: 600;
 }
 
@@ -435,17 +424,17 @@ onMounted(() => {
 
 .answer-field span {
   font-size: 13px;
-  color: #475569;
+  color: var(--app-text-muted);
 }
 
 .draft-input {
   width: 100%;
   min-height: 96px;
   padding: 12px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--app-border-strong);
   border-radius: 8px;
-  background: #fff;
-  color: #0f172a;
+  background: var(--app-card-bg);
+  color: var(--app-text-strong);
   box-sizing: border-box;
   font: inherit;
   resize: vertical;
@@ -453,7 +442,7 @@ onMounted(() => {
 
 .answer-reference-block {
   padding-top: 12px;
-  border-top: 1px dashed #dbe3f1;
+  border-top: 1px dashed var(--app-border);
 }
 
 @media (max-width: 900px) {

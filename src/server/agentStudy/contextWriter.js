@@ -10,7 +10,7 @@ const unique = (values) => Array.from(new Set(values.filter(Boolean)))
 const summarizeDueReviewItems = (reviewQueue) => {
   const dueItems = reviewQueue.items.filter((item) => item.status === 'due')
   if (dueItems.length === 0) {
-    return 'No due review queue items right now.'
+    return '当前没有到期的复习队列项目。'
   }
 
   const summary = dueItems
@@ -18,7 +18,7 @@ const summarizeDueReviewItems = (reviewQueue) => {
     .map((item) => item.key + ' (' + item.last_result + ', due ' + item.due_date + ')')
     .join('; ')
 
-  return dueItems.length > 3 ? summary + '; +' + (dueItems.length - 3) + ' more.' : summary + '.'
+  return dueItems.length > 3 ? summary + '；另外还有 ' + (dueItems.length - 3) + ' 项。' : summary + '。'
 }
 
 const summarizeWeakGrammarPoints = (mastery) => {
@@ -28,12 +28,12 @@ const summarizeWeakGrammarPoints = (mastery) => {
     .slice(0, 3)
     .map((point) => point.pattern + ' [' + point.status + ']')
 
-  return weakPoints.length > 0 ? weakPoints.join(', ') : 'No weak grammar points highlighted.'
+  return weakPoints.length > 0 ? weakPoints.join('、') : '当前没有特别标记的薄弱语法点。'
 }
 
 const summarizeRecentEvents = (recentEvents) => {
   if (recentEvents.length === 0) {
-    return 'No recent event log entries.'
+    return '当前没有最近事件记录。'
   }
 
   return recentEvents
@@ -69,27 +69,27 @@ const buildNextAgentContext = ({
   const focusGrammar = currentState.recent_focus.grammar.join(', ')
 
   return [
-    '# Next Agent Context',
+    '# 下一次 Agent 上下文',
     '',
-    '## Current Snapshot',
-    '- Current lesson: ' + currentState.current_lesson,
-    '- Learning mode: ' + currentState.learning_mode,
-    '- Active goals: ' + activeGoals,
-    '- Latest daily: ' + latestDailyPath,
-    '- Latest review: ' + latestReviewPath,
-    '- Latest prompt: ' + latestPromptPath,
-    '- Current gate: ' + masteryState.current_gate,
-    '- Focus grammar: ' + focusGrammar,
-    '- Weak grammar summary: ' + summarizeWeakGrammarPoints(masteryState),
-    '- Due review queue: ' + summarizeDueReviewItems(reviewQueueState),
-    '- Recent events: ' + summarizeRecentEvents(recentEvents),
+    '## 当前快照',
+    '- 当前课程：' + currentState.current_lesson,
+    '- 学习模式：' + currentState.learning_mode,
+    '- 当前目标：' + activeGoals,
+    '- 最新 daily：' + latestDailyPath,
+    '- 最新 review：' + latestReviewPath,
+    '- 最新 prompt：' + latestPromptPath,
+    '- 当前 gate：' + masteryState.current_gate,
+    '- 重点语法：' + focusGrammar,
+    '- 薄弱语法摘要：' + summarizeWeakGrammarPoints(masteryState),
+    '- 到期复习队列：' + summarizeDueReviewItems(reviewQueueState),
+    '- 最近事件：' + summarizeRecentEvents(recentEvents),
     '',
-    '## Next Action',
-    '- Read the latest daily packet first and confirm whether the next move is create, submit follow-up, or review follow-up.',
-    '- Re-check mastery and review queue before generating any new packet or advancing lesson state.',
-    '- Keep outputs path-oriented and avoid copying full historical daily/review content into context.',
+    '## 下一步动作',
+    '- 先读最新的 daily packet，确认下一步是创建新包、继续提交后的跟进，还是继续批改后的跟进。',
+    '- 生成任何新 packet 或推进课程状态前，重新检查 mastery 和 review queue。',
+    '- 上下文只保留路径和摘要，不要把历史 daily/review 全文复制进来。',
     '',
-    '## Read Next',
+    '## 接下来先读',
     ...nextFiles.map((filePath) => '- ' + filePath)
   ].join('\n') + '\n'
 }

@@ -100,7 +100,7 @@ describe('agentStudyReviewWorkflow', () => {
       id: 'review-2026-06-26',
       accuracy: 0.74,
       summary:
-        'Core lesson 7 meaning is mostly intact, but the means particle and receiving direction still need another controlled pass.'
+        '第 7 课核心意思基本没问题，但交通方式里的「で」以及「もらう」短回复自然度还需要再过一轮。'
     })
     expect(updatedMastery.revision).toBe(2)
     expect(updatedMastery.grammar_points['lesson-7/tool-means'].status).toBe('weak')
@@ -115,7 +115,7 @@ describe('agentStudyReviewWorkflow', () => {
     expect(updatedIndex.latest_review).toBe('study/reviews/2026-06-26-review.json')
     expect(updatedIndex.latest_daily).toBe('study/daily/2026-06-26.json')
     expect(updatedIndex.revision).toBe(2)
-    expect(contextContent).toContain('Latest review: study/reviews/2026-06-26-review.json')
+    expect(contextContent).toContain('最新 review：study/reviews/2026-06-26-review.json')
     expect(contextContent).toContain('study/state/review-queue.json')
     expect(eventLines).toHaveLength(1)
     expect(JSON.parse(eventLines[0]).event).toBe('review_applied')

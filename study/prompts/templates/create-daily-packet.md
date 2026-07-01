@@ -1,10 +1,10 @@
-# Codex Study Loop Prompt: create_daily_packet
+# Codex Study Loop 提示词：create_daily_packet
 
-## Goal
+## 目标
 
-Create one new daily study packet for the current study date, plus the next generated review prompt if needed by the workflow, while keeping the study state stable and auditable.
+为当前学习日期创建一份新的每日学习包；如果流程需要，也一并准备下一份批改提示词，同时保持学习状态稳定、可追踪、可审计。
 
-## Read These Files First
+## 先读这些文件
 
 - `study/index.json`
 - `study/state/profile.json`
@@ -13,11 +13,11 @@ Create one new daily study packet for the current study date, plus the next gene
 - `study/state/review-queue.json`
 - `study/state/promotion-rules.json`
 - `src/data/syllabus.json`
-- latest daily packet from `study/index.json` when present
-- latest review result from `study/index.json` when present
+- `study/index.json` 中指向的最新 daily（如果存在）
+- `study/index.json` 中指向的最新 review（如果存在）
 - `study/logs/agent-events.jsonl`
 
-## Allowed Writes
+## 允许写入
 
 - `study/daily/YYYY-MM-DD.json`
 - `study/prompts/generated/YYYY-MM-DD-review.md`
@@ -25,58 +25,58 @@ Create one new daily study packet for the current study date, plus the next gene
 - `study/logs/agent-events.jsonl`
 - `study/index.json`
 
-## Hard Rules
+## 硬规则
 
-- Never overwrite or delete historical files under `study/daily/`, `study/reviews/`, or `study/logs/`.
-- Only create a new daily packet for the target date; if a packet for that date already exists, stop and report the conflict.
-- Keep all JSON parseable and aligned with the current schema requirements.
-- Treat `study/` as the source of truth; do not mutate `data.json`.
-- Preserve the workflow order: review weak points first, then focused study, then controlled output, then freer output.
-- If the source data is incomplete or ambiguous, write the uncertainty into the packet/context instead of guessing.
+- 绝对不要覆盖或删除 `study/daily/`、`study/reviews/`、`study/logs/` 下的历史文件。
+- 只为目标日期创建新 daily packet；如果当天文件已存在，停止并报告冲突。
+- 所有 JSON 都必须可解析，并符合当前 schema。
+- 以 `study/` 为事实来源，不要改动 `data.json`。
+- 保持流程顺序：先复习薄弱点，再聚焦学习，再受控输出，最后自由输出。
+- 如果源数据不完整或有歧义，把不确定性写进 packet/context，不要擅自脑补。
 
-## Daily Packet Schema Requirements
+## Daily Packet Schema 要求
 
-The new daily packet must satisfy the current `dailyPacket` schema:
+新的 daily packet 必须满足当前 `dailyPacket` schema：
 
-- include `schema_version`, `revision`, `updated_at`, `id`, `date`, `status`, `created_at`
-- include `mission`, `tasks`, `study_materials`, `review_items`, `exercises`, `answers`, `self_assessment`, `correction`, `review_result`
-- start with a non-reviewed state such as `planned`, `learning`, or `answering`
-- keep `correction.status` as `pending` until a review is written
+- 包含 `schema_version`、`revision`、`updated_at`、`id`、`date`、`status`、`created_at`
+- 包含 `mission`、`tasks`、`study_materials`、`review_items`、`exercises`、`answers`、`self_assessment`、`correction`、`review_result`
+- 初始状态必须是未批改状态，例如 `planned`、`learning` 或 `answering`
+- 在 review 写入前，`correction.status` 保持 `pending`
 
-## Content Quality Requirements
+## 内容质量要求
 
-- Do not assign more exercises than the available daily plan can realistically finish.
-- Every exercise must bind to a lesson, skill, and target grammar or review queue item.
-- Do not create duplicate exercises for the same target grammar and prompt.
-- Every new grammar explanation must include at least 2 example sentences.
-- Output exercises must include an `answer_reference` or scoring rubric.
-- Listening or shadowing tasks must include script support in `study_materials`.
-- Review drills must be variants, not identical repeats of prior prompts.
+- 不要分配超出当日可完成范围的练习量。
+- 每道题都必须绑定 lesson、skill、target grammar 或 review queue item。
+- 不要为同一个目标语法重复生成相同题目。
+- 每条新语法说明至少给 2 个例句。
+- 输出题必须包含 `answer_reference` 或评分 rubric。
+- 听力/跟读任务必须在 `study_materials` 里附带脚本。
+- review drill 必须是变体题，不能只是把旧题原样再来一遍。
 
-## Output Expectations
+## 输出预期
 
-When writing `study/daily/YYYY-MM-DD.json`:
+写入 `study/daily/YYYY-MM-DD.json` 时：
 
-- use the learner profile and current weak points to choose scope
-- pull due items from `study/state/review-queue.json` before adding new material
-- respect the learner time budget and lesson boundaries
-- populate `answers` with empty strings keyed by exercise id
-- leave `review_result` as `null`
+- 根据 learner profile 和当前薄弱点决定范围
+- 在引入新材料前，优先消费 `study/state/review-queue.json` 中已经到期的项目
+- 尊重学习者的时间预算和课程边界
+- `answers` 先填入以 exercise id 为键的空字符串
+- `review_result` 保持为 `null`
 
-When writing `study/prompts/generated/YYYY-MM-DD-review.md`:
+写入 `study/prompts/generated/YYYY-MM-DD-review.md` 时：
 
-- prepare the next review instruction for the submitted-packet stage
-- reference the exact daily packet path and the review schema expectations
+- 为“已提交学习包批改”阶段准备下一条提示词
+- 明确引用 daily packet 路径与 review schema 要求
 
-When writing `study/context/next-agent-context.md`:
+写入 `study/context/next-agent-context.md` 时：
 
-- summarize the new daily packet
-- list the next files Codex should read
-- keep it short and path-oriented; do not paste full packet contents
+- 摘要新 daily packet 的要点
+- 列出下一次 Codex 应优先读取的文件
+- 保持简短、以路径为中心；不要粘贴整份 packet 全文
 
-## Event Log Requirement
+## 事件日志要求
 
-Append one JSONL event to `study/logs/agent-events.jsonl` after successful writes. The event must include:
+所有成功写入完成后，向 `study/logs/agent-events.jsonl` 追加一条 JSONL 事件，至少包含：
 
 - `event_id`
 - `time`
@@ -86,17 +86,17 @@ Append one JSONL event to `study/logs/agent-events.jsonl` after successful write
 - `output_files`
 - `summary`
 
-Use an event such as `daily_packet_created` or `daily_packet_regenerated`.
+事件类型可使用 `daily_packet_created` 或 `daily_packet_regenerated`。
 
-## Index Update Requirement
+## Index 更新要求
 
-Update `study/index.json` last, after the daily packet, generated prompt, context, and event log are all written successfully.
+最后一步再更新 `study/index.json`；确保 daily packet、生成提示词、context、event log 都已经成功落盘。
 
-## Final Check
+## 最终检查
 
-Before finishing:
+完成前确认：
 
-1. confirm the new daily packet path is unique
-2. confirm all writes stay under `study/`
-3. confirm no historical daily/review/log file was overwritten
-4. confirm the packet is ready for frontend rendering and later structured review
+1. 新 daily packet 路径唯一
+2. 所有写入都停留在 `study/` 内
+3. 没有覆盖任何历史 daily/review/log 文件
+4. 输出结果可直接供前端渲染，并可进入后续结构化批改流程

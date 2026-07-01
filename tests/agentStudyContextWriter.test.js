@@ -33,9 +33,10 @@ describe('agentStudyContextWriter', () => {
     const result = writer.writeNextAgentContext()
 
     expect(result.path).toBe('study/context/next-agent-context.md')
-    expect(result.content).toContain('Latest daily: study/daily/2026-06-26.json')
+    expect(result.content).toContain('最新 daily：study/daily/2026-06-26.json')
     expect(result.content).toContain('study/state/mastery.json')
     expect(result.content).toContain('study/state/review-queue.json')
+    expect(result.content).toContain('## 接下来先读')
     expect(result.content).not.toContain('"mission"')
   })
 
@@ -65,12 +66,12 @@ describe('agentStudyContextWriter', () => {
       updated_at: '2026-06-29T09:00:00+08:00',
       current_lesson: 7,
       learning_mode: 'foundation_rebuild',
-      active_goals: ['stabilize lesson 7', 'prepare controlled output'],
+      active_goals: ['稳住第 7 课', '为受控输出做准备'],
       weakness_summary: [],
       recent_focus: {
         grammar: ['N で V'],
-        listening: ['lesson 7 key phrase listening'],
-        speaking: ['controlled output']
+        listening: ['第 7 课关键词听辨'],
+        speaking: ['受控短句输出']
       },
       next_recommendation: {
         date: '2026-06-29',
@@ -139,6 +140,6 @@ describe('agentStudyContextWriter', () => {
     expect(written).toContain('study/daily/2026-06-29.json')
     expect(written).toContain('study/reviews/2026-06-28-review.json')
     expect(written).toContain('lesson-7/tool-means')
-    expect(written).toContain('## Read Next')
+    expect(written).toContain('## 接下来先读')
   })
 })

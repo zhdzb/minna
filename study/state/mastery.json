@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": 2,
-  "updated_at": "2026-06-30T10:00:00+08:00",
+  "revision": 3,
+  "updated_at": "2026-07-01T10:00:00+08:00",
   "current_gate": "lesson-7-foundation",
   "lesson_states": {
     "lesson-1": {
@@ -74,12 +74,12 @@
       "lesson": 7,
       "status": "weak",
       "skill_scores": {
-        "grammar": 0,
-        "listening": 0,
-        "speaking": 0,
-        "reading": 0
+        "grammar": 0.32,
+        "listening": 0.28,
+        "speaking": 0.18,
+        "reading": 0.41
       },
-      "last_reviewed_at": "2026-04-22T16:52:01.727Z"
+      "last_reviewed_at": "2026-06-26T21:00:00+08:00"
     },
     "lesson-14": {
       "lesson": 14,
@@ -151,34 +151,34 @@
   "grammar_points": {
     "lesson-7/tool-means": {
       "lesson": 7,
-      "pattern": "N(工具/手段) で V (使用某种工具做某事)",
+      "pattern": "N で V",
       "status": "weak",
-      "recognition": 0,
-      "controlled_output": 0.02,
-      "free_output": 0,
-      "last_practiced_at": "2026-05-28T11:19:44.738Z"
+      "recognition": 0.42,
+      "controlled_output": 0.18,
+      "free_output": 0.08,
+      "last_practiced_at": "2026-06-26T21:00:00+08:00"
     },
     "lesson-7/ageru": {
       "lesson": 7,
-      "pattern": "N1 ? N2 ? ????",
+      "pattern": "N1 は N2 に あげます",
       "status": "learning",
-      "recognition": 0.35,
-      "controlled_output": 0.1,
-      "free_output": 0,
-      "last_practiced_at": "2026-05-28T11:19:44.738Z"
+      "recognition": 0.58,
+      "controlled_output": 0.36,
+      "free_output": 0.18,
+      "last_practiced_at": "2026-06-26T21:00:00+08:00"
     },
     "lesson-7/morau": {
       "lesson": 7,
-      "pattern": "N1 ? N2 ? ?????",
+      "pattern": "N1 は N2 に もらいます",
       "status": "learning",
-      "recognition": 0.32,
-      "controlled_output": 0.08,
-      "free_output": 0,
-      "last_practiced_at": "2026-05-28T11:19:44.738Z"
+      "recognition": 0.55,
+      "controlled_output": 0.28,
+      "free_output": 0.14,
+      "last_practiced_at": "2026-06-26T21:00:00+08:00"
     },
     "lesson-17/nakereba-narimasen": {
       "lesson": 17,
-      "pattern": "Vなければ なりません (必须做某事)",
+      "pattern": "V なければ なりません",
       "status": "weak",
       "recognition": 0.4,
       "controlled_output": 0.17,

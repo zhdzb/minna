@@ -37,56 +37,56 @@ const summarizeWeakGrammarPoints = (mastery) => {
     .filter(([, point]) => point.status === 'weak' || point.status === 'learning')
     .sort((left, right) => left[1].controlled_output - right[1].controlled_output)
     .slice(0, 4)
-    .map(([key, point]) => key + ' -> ' + point.pattern + ' [' + point.status + ']')
+    .map(([key, point]) => `${key} -> ${point.pattern} [${point.status}]`)
 
-  return weakPoints.length > 0 ? weakPoints : ['No weak grammar points are active right now.']
+  return weakPoints.length > 0 ? weakPoints : ['当前没有激活的薄弱语法点。']
 }
 
 const summarizeDueReviewItems = (reviewQueue) => {
   const dueItems = (reviewQueue.items || [])
     .filter((item) => item.status === 'due')
     .slice(0, 4)
-    .map((item) => item.key + ' (' + item.last_result + ', due ' + item.due_date + ')')
+    .map((item) => `${item.key} (${item.last_result}, due ${item.due_date})`)
 
-  return dueItems.length > 0 ? dueItems : ['No due review queue items right now.']
+  return dueItems.length > 0 ? dueItems : ['当前没有到期的复习队列项目。']
 }
 
 const summarizeReviewOutcome = (reviewResult) => {
   if (!reviewResult) {
-    return ['No latest review result is linked in the current index.']
+    return ['当前 index 里还没有关联最新批改结果。']
   }
 
   return [
-    'Accuracy: ' + Math.round(reviewResult.overall.accuracy * 100) + '%',
-    'Summary: ' + reviewResult.overall.summary,
-    'Next focus: ' + (reviewResult.overall.next_focus || []).join(', '),
-    'Retry items: ' + reviewResult.items.filter((item) => item.retry_recommended).length
+    `正确率：${Math.round(reviewResult.overall.accuracy * 100)}%`,
+    `总结：${reviewResult.overall.summary}`,
+    `下一步重点：${(reviewResult.overall.next_focus || []).join('、')}`,
+    `建议重做题数：${reviewResult.items.filter((item) => item.retry_recommended).length}`
   ]
 }
 
 const summarizeDailyPacket = (dailyPacket) => {
   if (!dailyPacket) {
-    return ['No latest daily packet is linked in the current index.']
+    return ['当前 index 里还没有关联最新学习包。']
   }
 
   return [
-    'Daily id: ' + dailyPacket.id,
-    'Status: ' + dailyPacket.status,
-    'Mission: ' + dailyPacket.mission.title,
-    'Focus lessons: ' + dailyPacket.mission.focus_lessons.join(', '),
-    'Exercises: ' + dailyPacket.exercises.length
+    `Daily ID：${dailyPacket.id}`,
+    `状态：${dailyPacket.status}`,
+    `任务主题：${dailyPacket.mission.title}`,
+    `聚焦课程：${dailyPacket.mission.focus_lessons.join(', ')}`,
+    `练习题数：${dailyPacket.exercises.length}`
   ]
 }
 
 const summarizeEvents = (recentEvents) => {
   if (!recentEvents.length) {
-    return ['No recent event log entries.']
+    return ['当前没有最近事件记录。']
   }
 
   return recentEvents.slice(-6).map((event) => {
     const inputCount = event.input_files.length
     const outputCount = event.output_files.length
-    return event.time + ' ' + event.event + ' (' + inputCount + ' in / ' + outputCount + ' out)'
+    return `${event.time} ${event.event}（输入 ${inputCount} / 输出 ${outputCount}）`
   })
 }
 
@@ -118,37 +118,37 @@ const buildSnapshotContent = ({
   const previousContextLength = typeof previousContext === 'string' ? previousContext.length : 0
 
   return [
-    '# Context Snapshot',
+    '# 上下文快照',
     '',
-    '- Generated at: ' + now,
-    '- Snapshot path: ' + snapshotPath,
-    '- Previous next-agent-context length: ' + previousContextLength + ' chars',
-    '- Latest daily path: ' + (indexDocument.latest_daily || 'none'),
-    '- Latest review path: ' + (indexDocument.latest_review || 'none'),
-    '- Latest prompt path: ' + (indexDocument.latest_prompt || 'none'),
+    `- 生成时间：${now}`,
+    `- 快照路径：${snapshotPath}`,
+    `- 旧 next-agent-context 长度：${previousContextLength} 字符`,
+    `- 最新 daily 路径：${indexDocument.latest_daily || 'none'}`,
+    `- 最新 review 路径：${indexDocument.latest_review || 'none'}`,
+    `- 最新 prompt 路径：${indexDocument.latest_prompt || 'none'}`,
     '',
-    '## Current Lesson State',
-    '- Current lesson: ' + currentState.current_lesson,
-    '- Learning mode: ' + currentState.learning_mode,
-    '- Active goals: ' + currentState.active_goals.join(', '),
-    '- Current gate: ' + masteryState.current_gate,
+    '## 当前课程状态',
+    `- 当前课程：${currentState.current_lesson}`,
+    `- 学习模式：${currentState.learning_mode}`,
+    `- 当前目标：${currentState.active_goals.join('、')}`,
+    `- 当前 gate：${masteryState.current_gate}`,
     '',
-    '## Weak Points',
+    '## 薄弱点',
     ...summarizeWeakGrammarPoints(masteryState).map((line) => '- ' + line),
     '',
-    '## Due Review Queue',
+    '## 到期复习队列',
     ...summarizeDueReviewItems(reviewQueueState).map((line) => '- ' + line),
     '',
-    '## Latest Daily',
+    '## 最新 Daily',
     ...summarizeDailyPacket(dailyPacket).map((line) => '- ' + line),
     '',
-    '## Latest Review',
+    '## 最新 Review',
     ...summarizeReviewOutcome(reviewResult).map((line) => '- ' + line),
     '',
-    '## Recent Events',
+    '## 最近事件',
     ...summarizeEvents(recentEvents).map((line) => '- ' + line),
     '',
-    '## Read Forward',
+    '## 后续优先读取',
     ...buildReadNextFiles({ indexDocument, snapshotPath }).map((filePath) => '- ' + filePath)
   ].join('\n') + '\n'
 }
@@ -162,30 +162,25 @@ const buildCompressedContext = ({
   snapshotPath
 }) =>
   [
-    '# Next Agent Context',
+    '# 下一次 Agent 上下文',
     '',
-    '## Snapshot',
+    '## 快照',
     '- ' + snapshotPath,
     '',
-    '## Current',
-    '- L' +
-      currentState.current_lesson +
-      ' · ' +
-      currentState.learning_mode +
-      ' · gate ' +
-      masteryState.current_gate,
-    '- Daily: ' + (indexDocument.latest_daily || 'none'),
-    '- Review: ' + (indexDocument.latest_review || 'none'),
-    '- Weak: ' + summarizeWeakGrammarPoints(masteryState).slice(0, 2).join('; '),
-    '- Due: ' + summarizeDueReviewItems(reviewQueueState).slice(0, 2).join('; '),
-    '- Focus: ' + (reviewResult ? reviewResult.overall.next_focus.slice(0, 3).join(', ') : 'Read latest review'),
+    '## 当前状态',
+    `- 第 ${currentState.current_lesson} 课 · ${currentState.learning_mode} · gate ${masteryState.current_gate}`,
+    `- Daily：${indexDocument.latest_daily || 'none'}`,
+    `- Review：${indexDocument.latest_review || 'none'}`,
+    `- 薄弱点：${summarizeWeakGrammarPoints(masteryState).slice(0, 2).join('；')}`,
+    `- 到期复习：${summarizeDueReviewItems(reviewQueueState).slice(0, 2).join('；')}`,
+    `- 当前重点：${reviewResult ? reviewResult.overall.next_focus.slice(0, 3).join('、') : '先读最新 review'}`,
     '',
-    '## Next',
-    '- Read latest daily + review first.',
-    '- Use snapshot for broader history.',
-    '- Re-check mastery + queue before changing lesson state.',
+    '## 下一步',
+    '- 先读最新 daily 和 review。',
+    '- 更完整的历史请回看 snapshot。',
+    '- 调整课程状态前，重新检查 mastery 和 review queue。',
     '',
-    '## Read',
+    '## 继续读取',
     ...buildReadNextFiles({ indexDocument, snapshotPath }).map((filePath) => '- ' + filePath)
   ].join('\n') + '\n'
 
@@ -262,12 +257,12 @@ const createAgentStudyContextCompressor = ({
     const timestamp = now()
     const loaded = loadInputs()
     const weekParts = getIsoWeekParts(timestamp)
-    const snapshotRelativePath = 'study/context/snapshots/' + weekParts.year + '-W' + weekParts.week + '-context.md'
+    const snapshotRelativePath = `study/context/snapshots/${weekParts.year}-W${weekParts.week}-context.md`
     const snapshotAbsolutePath = path.join(
       studyRoot,
       'context',
       'snapshots',
-      weekParts.year + '-W' + weekParts.week + '-context.md'
+      `${weekParts.year}-W${weekParts.week}-context.md`
     )
     const nextContextAbsolutePath = path.join(studyRoot, 'context', 'next-agent-context.md')
 
@@ -306,12 +301,9 @@ const createAgentStudyContextCompressor = ({
         'study/context/next-agent-context.md',
         'study/logs/agent-events.jsonl'
       ],
-      summary:
-        'Compressed next-agent-context from ' +
-        (loaded.previousContext ? loaded.previousContext.length : 0) +
-        ' chars to ' +
-        compressedContext.length +
-        ' chars.'
+      summary: `Compressed next-agent-context from ${
+        loaded.previousContext ? loaded.previousContext.length : 0
+      } chars to ${compressedContext.length} chars.`
     })
 
     return {

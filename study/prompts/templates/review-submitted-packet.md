@@ -1,26 +1,26 @@
-# Codex Study Loop Prompt: review_submitted_packet
+# Codex Study Loop 提示词：review_submitted_packet
 
-## Goal
+## 目标
 
-Review one submitted daily packet, write a structured review result, update study state only where allowed by the workflow, and leave an auditable trail.
+批改一份已经提交的 daily packet，写入结构化 review 结果，只更新流程允许更新的学习状态，并留下可审计的痕迹。
 
-## Read These Files First
+## 先读这些文件
 
 - `study/index.json`
-- submitted daily packet referenced by `study/index.json` or explicitly provided
+- `study/index.json` 指向的已提交 daily packet，或明确指定给你的那一份
 - `study/state/current.json`
 - `study/state/mastery.json`
 - `study/state/review-queue.json`
 - `study/state/promotion-rules.json`
 - `study/state/profile.json`
 - `src/data/syllabus.json`
-- latest review result from `study/index.json` when present
+- `study/index.json` 指向的最新 review（如果存在）
 - `study/logs/agent-events.jsonl`
 
-## Allowed Writes
+## 允许写入
 
 - `study/reviews/YYYY-MM-DD-review.json`
-- submitted daily packet that is being reviewed
+- 正在被批改的 submitted daily packet
 - `study/state/current.json`
 - `study/state/mastery.json`
 - `study/state/review-queue.json`
@@ -28,27 +28,27 @@ Review one submitted daily packet, write a structured review result, update stud
 - `study/logs/agent-events.jsonl`
 - `study/index.json`
 
-## Hard Rules
+## 硬规则
 
-- Never overwrite or delete historical review files or prior event-log lines.
-- Only review a packet whose status is `submitted`.
-- Do not advance lessons without evidence from the current structured review and `study/state/promotion-rules.json`.
-- If an answer may have multiple valid expressions, use `acceptable_variants` or set `needs_user_input` instead of forcing a guess.
-- If a judgment is uncertain, lower confidence and explain the uncertainty.
-- Keep all state changes traceable through the written review and event log.
+- 不要覆盖或删除历史 review 文件，也不要改写旧的 event-log 行。
+- 只批改状态为 `submitted` 的学习包。
+- 没有来自当前结构化 review 与 `study/state/promotion-rules.json` 的证据时，不要推进课程。
+- 如果答案可能有多个合理表达，优先使用 `acceptable_variants` 或 `needs_user_input`，不要强行猜测。
+- 如果判断不确定，降低 `confidence` 并说明不确定原因。
+- 所有状态变化都必须能通过 review 文件和事件日志追溯。
 
-## Review JSON Requirements
+## Review JSON 要求
 
-The written review file must match the current `reviewResult` schema and include:
+写出的 review 文件必须符合当前 `reviewResult` schema，并包含：
 
-- `schema_version`, `revision`, `updated_at`, `id`, `daily_id`, `created_at`
+- `schema_version`、`revision`、`updated_at`、`id`、`daily_id`、`created_at`
 - `overall`
 - `items`
 - `mastery_updates`
 - `review_queue_updates`
 - `promotion_decision`
 
-For each item, include at least:
+每个 item 至少包含：
 
 - `exercise_id`
 - `is_correct`
@@ -64,9 +64,9 @@ For each item, include at least:
 - `acceptable_variants`
 - `manual_override`
 
-## Required Error-Tag Taxonomy
+## 错误标签 taxonomy
 
-Only use tags from this list unless the schema is expanded later:
+除非 schema 之后扩展，否则只使用下列标签：
 
 - `particle`
 - `conjugation`
@@ -80,40 +80,40 @@ Only use tags from this list unless the schema is expanded later:
 - `meaning_drift`
 - `naturalness`
 
-## Scoring and Feedback Rules
+## 评分与反馈规则
 
-- `q_fill`: use strict answer or option matching
-- `q_translate`: score semantic accuracy, target grammar use, particle choice, conjugation, and naturalness
-- `q_conversation`: score contextual fit, politeness, response intent, and naturalness
-- `q_shadowing`: if direct evaluation is limited, note that it is self-assessment-driven
-- `q_listening_keyword`: score keyword hit rate and mishearing patterns
-- `q_pattern_substitution`: score structure retention and slot replacement accuracy
+- `q_fill`：严格按答案或选项匹配
+- `q_translate`：综合语义、目标语法、助词、变形、自然度评分
+- `q_conversation`：综合上下文贴合度、礼貌程度、回应意图、自然度评分
+- `q_shadowing`：若无法直接评估，明确标记为以自评为主
+- `q_listening_keyword`：根据关键词命中率和误听模式评分
+- `q_pattern_substitution`：根据句型保持和替换位准确性评分
 
-## Promotion and Review-Queue Rules
+## 推进与复习队列规则
 
-Use `study/state/promotion-rules.json` for promotion decisions.
+推进判断使用 `study/state/promotion-rules.json`。
 
-Do not promote unless the evidence satisfies the configured thresholds.
+没有满足阈值时，不得推进。
 
-For review queue updates, align with the simplified SRS rules:
+review queue 更新遵循简化 SRS 规则：
 
-- wrong: interval becomes `1`, status becomes `due`
-- hard: interval becomes `max(1, floor(interval_days * 1.2))`
-- good: interval becomes `ceil(interval_days * 2)`
-- easy: interval becomes `ceil(interval_days * 3)`
-- mastered items still remain eligible for long-term review
+- wrong：间隔变为 `1`，状态变为 `due`
+- hard：间隔变为 `max(1, floor(interval_days * 1.2))`
+- good：间隔变为 `ceil(interval_days * 2)`
+- easy：间隔变为 `ceil(interval_days * 3)`
+- 即使 mastery 很高，也仍要保留长期复习资格
 
-## Daily Packet Update Requirement
+## Daily Packet 更新要求
 
-Update the reviewed daily packet so that:
+被批改的 daily packet 需要同步更新：
 
-- `correction.status` reflects the reviewed state
-- `correction.review_file` points to the new review file
-- `review_result` is stored or linked according to the active workflow design
+- `correction.status` 改成已批改状态
+- `correction.review_file` 指向新的 review 文件
+- `review_result` 按当前流程设计保存或建立引用
 
-## Event Log Requirement
+## 事件日志要求
 
-Append one JSONL event after successful writes. The event must include:
+所有写入成功后，追加一条 JSONL 事件，至少包含：
 
 - `event_id`
 - `time`
@@ -123,18 +123,18 @@ Append one JSONL event after successful writes. The event must include:
 - `output_files`
 - `summary`
 
-Use an event such as `daily_packet_reviewed`.
+事件类型可使用 `daily_packet_reviewed`。
 
-## Index Update Requirement
+## Index 更新要求
 
-Update `study/index.json` last, after the review file, daily packet updates, state updates, context update, and event log write all succeed.
+最后一步再更新 `study/index.json`；确保 review 文件、daily packet 更新、状态回写、context 更新、event log 都已经成功完成。
 
-## Final Check
+## 最终检查
 
-Before finishing:
+完成前确认：
 
-1. confirm the reviewed packet was actually `submitted`
-2. confirm every incorrect answer has an explanation and taxonomy tag
-3. confirm confidence and user-input flags were used honestly
-4. confirm the promotion decision is justified by the current rules
-5. confirm no historical review/log file was overwritten
+1. 被批改的 packet 确实处于 `submitted`
+2. 每个错误答案都有 explanation 和 taxonomy tag
+3. `confidence` 与 `needs_user_input` 的使用是诚实的
+4. 推进决策能被当前规则解释
+5. 没有覆盖任何历史 review/log 文件

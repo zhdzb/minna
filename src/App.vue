@@ -1,94 +1,40 @@
 <template>
   <el-config-provider>
-    <div id="app-container" style="height: 100vh; overflow: hidden;">
-      <el-container style="height: 100%; background: transparent;">
-        <el-aside
-          width="220px"
-          :style="{
-            backgroundColor: isAcgDark ? 'rgba(20, 15, 25, 0.4)' : '#2c3e50',
-            backdropFilter: isAcgDark ? 'blur(10px)' : 'none',
-            display: 'flex',
-            flexDirection: 'column',
-            borderRight: isAcgDark ? '1px solid rgba(255,126,179,0.1)' : 'none'
-          }"
-        >
-          <div
-            :style="{
-              padding: '20px',
-              color: isAcgDark ? '#ff99c4' : 'white',
-              fontWeight: 'bold',
-              textAlign: 'center',
-              fontSize: '1.2rem',
-              borderBottom: isAcgDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #1a252f'
-            }"
-          >
-            Codex Study Loop
-          </div>
+    <div id="app-container" class="app-shell">
+      <el-container class="app-shell-frame">
+        <el-aside class="app-shell-sidebar" width="220px">
+          <div class="app-shell-brand">Codex Study Loop</div>
 
           <el-menu
             :default-active="activePath"
-            class="el-menu-vertical"
-            :background-color="isAcgDark ? 'transparent' : '#2c3e50'"
-            :text-color="isAcgDark ? '#e2d5ec' : '#aeb9c2'"
-            :active-text-color="isAcgDark ? '#ff7eb3' : '#42b983'"
+            class="app-shell-menu"
+            :background-color="isAcgDark ? 'transparent' : '#1f2937'"
+            :text-color="isAcgDark ? '#dbe4ff' : '#cbd5e1'"
+            :active-text-color="isAcgDark ? '#f9a8d4' : '#93c5fd'"
             router
-            style="border-right: none; flex: 1;"
           >
             <el-menu-item index="/agent-study">
-              <span>Agent Study</span>
+              <span>学习工作台</span>
             </el-menu-item>
             <el-menu-item index="/agent-progress-review">
-              <span>Progress Review</span>
+              <span>进度总览</span>
             </el-menu-item>
             <el-menu-item index="/agent-review-drill">
-              <span>Review Drill</span>
+              <span>复习训练</span>
             </el-menu-item>
           </el-menu>
 
-          <div
-            :style="{
-              padding: '20px',
-              textAlign: 'center',
-              borderTop: isAcgDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #1a252f'
-            }"
-          >
-            <p :style="{ color: isAcgDark ? '#b3aebd' : '#666', fontSize: '0.8rem', marginBottom: '10px' }">
-              Current lesson: {{ store.progress.current_lesson }}
-            </p>
-            <el-button
-              type="warning"
-              plain
-              size="small"
-              @click="createBackup"
-              style="width: 100%; margin-bottom: 10px;"
-            >
-              Save Snapshot
-            </el-button>
-            <el-button
-              type="info"
-              plain
-              size="small"
-              @click="exportData"
-              style="width: 100%; margin-bottom: 10px;"
-            >
-              Export Backup
-            </el-button>
-            <el-button
-              type="success"
-              size="small"
-              @click="fileInput?.click()"
-              style="width: 100%; margin: 0;"
-            >
-              Import Backup
-            </el-button>
-            <input type="file" ref="fileInput" accept=".json" style="display: none;" @change="importData" />
+          <div class="app-shell-sidebar-footer">
+            <p class="app-shell-lesson">当前课程：第 {{ store.progress.current_lesson }} 课</p>
+            <el-button type="warning" plain size="small" @click="createBackup">保存快照</el-button>
+            <el-button type="info" plain size="small" @click="exportData">导出备份</el-button>
+            <el-button type="success" size="small" @click="fileInput?.click()">导入备份</el-button>
+            <input type="file" ref="fileInput" accept=".json" hidden @change="importData" />
           </div>
         </el-aside>
 
-        <el-main style="padding: 0; background: transparent;">
-          <el-main class="app-main">
-            <router-view />
-          </el-main>
+        <el-main class="app-shell-main">
+          <router-view />
         </el-main>
       </el-container>
 
@@ -97,8 +43,8 @@
           v-model="isAcgDark"
           inline-prompt
           style="--el-switch-on-color: #8b5cf6; --el-switch-off-color: #4b5563"
-          active-text="Focus"
-          inactive-text="Plain"
+          active-text="暗"
+          inactive-text="亮"
           @change="toggleTheme"
         />
       </div>
@@ -120,15 +66,16 @@ const isAcgDark = ref(false)
 
 const activePath = computed(() => router?.currentRoute?.value?.path || '/agent-study')
 
+const syncThemeClass = (enabled) => {
+  document.documentElement.classList.toggle('dark', enabled)
+  document.documentElement.classList.toggle('acg-theme', enabled)
+  document.body.classList.toggle('dark', enabled)
+  document.body.classList.toggle('acg-theme', enabled)
+}
+
 const toggleTheme = (value) => {
   isAcgDark.value = value
-  document.documentElement.classList.add('dark')
-
-  if (value) {
-    document.documentElement.classList.add('acg-theme')
-  } else {
-    document.documentElement.classList.remove('acg-theme')
-  }
+  syncThemeClass(value)
 }
 
 const handleKeyDown = (event) => {
@@ -178,14 +125,14 @@ watch(
   () => store.meta?.last_persistence_error,
   (value, previous) => {
     if (value && value !== previous) {
-      ElMessage.error(`Save failed: ${value}`)
+      ElMessage.error(`保存失败：${value}`)
     }
   }
 )
 
 const createBackup = () => {
   store.createBackupSnapshot('manual')
-  ElMessage.success('Local snapshot saved.')
+  ElMessage.success('本地快照已保存。')
 }
 
 const exportData = () => {
@@ -199,7 +146,7 @@ const exportData = () => {
   anchor.click()
   document.body.removeChild(anchor)
   URL.revokeObjectURL(url)
-  ElMessage.success('Backup exported.')
+  ElMessage.success('备份已导出。')
 }
 
 const importData = async (event) => {
@@ -211,22 +158,22 @@ const importData = async (event) => {
     const data = validateBackupPayloadShape(JSON.parse(text))
 
     await ElMessageBox.confirm(
-      'Importing will overwrite the current study progress. Export a backup first if needed. Continue?',
-      'Confirm Import',
+      '导入会覆盖当前学习进度。如有需要，请先导出备份。是否继续？',
+      '确认导入',
       {
-        confirmButtonText: 'Import',
-        cancelButtonText: 'Cancel',
+        confirmButtonText: '确认导入',
+        cancelButtonText: '取消',
         type: 'warning'
       }
     )
 
     store.overwriteState(data)
-    ElMessage.success('Backup imported.')
+    ElMessage.success('备份已导入。')
   } catch (error) {
     if (error === 'cancel' || error === 'close') {
-      ElMessage.info('Import canceled.')
+      ElMessage.info('已取消导入。')
     } else {
-      ElMessage.error(`Import failed: ${error.message}`)
+      ElMessage.error(`导入失败：${error.message}`)
     }
   }
 
@@ -235,8 +182,140 @@ const importData = async (event) => {
 </script>
 
 <style>
+:root {
+  color-scheme: light;
+  --app-page-bg: #f3f6fb;
+  --app-page-grad: radial-gradient(circle at top, rgba(129, 140, 248, 0.12), transparent 40%);
+  --app-panel-bg: rgba(255, 255, 255, 0.94);
+  --app-card-bg: #fbfdff;
+  --app-soft-bg: #f8fafc;
+  --app-border: #dbe3f1;
+  --app-border-strong: #cbd5e1;
+  --app-text: #1f2937;
+  --app-text-strong: #0f172a;
+  --app-text-muted: #475569;
+  --app-text-soft: #64748b;
+  --app-accent: #4f46e5;
+  --app-chip-bg: #eef2ff;
+  --app-chip-text: #3730a3;
+  --app-chip-warn-bg: #fff7ed;
+  --app-chip-warn-text: #b45309;
+  --app-success: #166534;
+  --app-danger: #b91c1c;
+  --app-sidebar-bg: #1f2937;
+  --app-sidebar-border: rgba(255, 255, 255, 0.08);
+}
+
+html.dark {
+  color-scheme: dark;
+  --app-page-bg: #08111f;
+  --app-page-grad: radial-gradient(circle at top, rgba(168, 85, 247, 0.18), transparent 42%);
+  --app-panel-bg: rgba(9, 16, 29, 0.86);
+  --app-card-bg: rgba(15, 23, 42, 0.94);
+  --app-soft-bg: rgba(30, 41, 59, 0.92);
+  --app-border: rgba(148, 163, 184, 0.26);
+  --app-border-strong: rgba(148, 163, 184, 0.34);
+  --app-text: #e5eefb;
+  --app-text-strong: #f8fafc;
+  --app-text-muted: #cbd5e1;
+  --app-text-soft: #94a3b8;
+  --app-accent: #c4b5fd;
+  --app-chip-bg: rgba(99, 102, 241, 0.22);
+  --app-chip-text: #dbe4ff;
+  --app-chip-warn-bg: rgba(180, 83, 9, 0.18);
+  --app-chip-warn-text: #fdba74;
+  --app-success: #86efac;
+  --app-danger: #fca5a5;
+  --app-sidebar-bg: rgba(5, 10, 20, 0.88);
+  --app-sidebar-border: rgba(196, 181, 253, 0.16);
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--app-page-grad), var(--app-page-bg);
+  color: var(--app-text);
+}
+
+.app-shell {
+  height: 100vh;
+  overflow: hidden;
+  background: var(--app-page-grad), var(--app-page-bg);
+}
+
+.app-shell-frame {
+  height: 100%;
+  background: transparent;
+}
+
+.app-shell-sidebar {
+  display: flex;
+  flex-direction: column;
+  background: var(--app-sidebar-bg);
+  border-right: 1px solid var(--app-sidebar-border);
+  backdrop-filter: blur(14px);
+}
+
+.app-shell-brand {
+  padding: 20px;
+  color: #f8fafc;
+  font-weight: 700;
+  text-align: center;
+  font-size: 1.1rem;
+  border-bottom: 1px solid var(--app-sidebar-border);
+}
+
+.app-shell-menu {
+  flex: 1;
+  border-right: none;
+}
+
+.app-shell-sidebar-footer {
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+  border-top: 1px solid var(--app-sidebar-border);
+}
+
+.app-shell-lesson {
+  margin: 0 0 4px;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  text-align: center;
+}
+
+.app-shell-main {
+  padding: 0;
+  overflow: auto;
+  background: transparent;
+}
+
+.app-main {
+  min-height: 100%;
+}
+
+.theme-toggle-fab {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 20;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: var(--app-panel-bg);
+  border: 1px solid var(--app-border);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16);
+  backdrop-filter: blur(12px);
+}
+
+@media (max-width: 900px) {
+  .app-shell-sidebar {
+    width: 180px !important;
+  }
 }
 </style>

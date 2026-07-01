@@ -98,9 +98,10 @@ describe('App shell', () => {
 
     expect(hydrateFromDisk).toHaveBeenCalledTimes(1)
     expect(wrapper.text()).toContain('Codex Study Loop')
-    expect(wrapper.text()).toContain('Agent Study')
-    expect(wrapper.text()).toContain('Progress Review')
-    expect(wrapper.text()).toContain('Review Drill')
+    expect(wrapper.text()).toContain('学习工作台')
+    expect(wrapper.text()).toContain('进度总览')
+    expect(wrapper.text()).toContain('复习训练')
+    expect(wrapper.text()).toContain('当前课程：第 7 课')
     expect(wrapper.text()).not.toContain('Settings')
     expect(wrapper.text()).not.toContain('Weekly Review')
   })
