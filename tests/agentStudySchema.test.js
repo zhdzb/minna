@@ -29,10 +29,10 @@ describe('agentStudySchema', () => {
   it('validates seeded study JSON files', () => {
     const indexDocument = validateIndex(readStudyJson('study/index.json'))
 
-    expect(indexDocument.latest_daily).toBe('study/daily/2026-07-10.json')
-    expect(indexDocument.latest_prompt).toBe('study/prompts/generated/2026-07-10-review.md')
+    expect(indexDocument.latest_daily).toBe('study/daily/2026-07-11.json')
+    expect(indexDocument.latest_prompt).toBe('study/prompts/generated/2026-07-11-review.md')
     expect(indexDocument.latest_review).toBe('study/reviews/2026-07-10-review.json')
-    expect(validateDailyPacket(readStudyJson(indexDocument.latest_daily)).id).toBe('daily-2026-07-10')
+    expect(validateDailyPacket(readStudyJson(indexDocument.latest_daily)).id).toBe('daily-2026-07-11')
     expect(validateReviewResult(readStudyJson(indexDocument.latest_review)).id).toBe('review-2026-07-10')
     expect(validateProfile(readStudyJson('study/state/profile.json')).material_scope.current_focus_lessons).toEqual([6, 7, 8, 9, 10])
     expect(validateCurrent(readStudyJson('study/state/current.json')).current_lesson).toBe(6)

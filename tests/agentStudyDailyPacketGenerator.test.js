@@ -135,6 +135,7 @@ afterEach(() => {
 describe('agentStudyDailyPacketGenerator', () => {
   it('allows a 60 minute session to contain 20 exercises', () => {
     expect(buildExerciseCountForMinutes(60)).toBe(20)
+    expect(buildExerciseCountForMinutes(90)).toBe(30)
   })
 
   it('creates a new daily packet, prompt file, context, and index update', async () => {
@@ -160,7 +161,8 @@ describe('agentStudyDailyPacketGenerator', () => {
     expect(result.dailyPacket.exercises[0].answer_format).toBeTruthy()
     expect(result.dailyPacket.exercises[0].choices?.length || 0).toBeGreaterThanOrEqual(2)
     expect(result.dailyPacket.exercises[2].supporting_lines?.length || 0).toBeGreaterThanOrEqual(2)
-    expect(result.dailyPacket.exercises[0].vocab_hints).not.toEqual(result.dailyPacket.exercises[1].vocab_hints)
+    expect(result.dailyPacket.exercises[2].supporting_lines[1]).toBe('B：（这里由你作答）')
+    expect(result.dailyPacket.exercises[2].supporting_lines.join(' ')).not.toContain(result.dailyPacket.exercises[2].answer_reference)
 
     const writtenDaily = JSON.parse(fs.readFileSync(path.join(studyRoot, 'daily', '2026-07-01.json'), 'utf8'))
     const writtenIndex = JSON.parse(fs.readFileSync(path.join(studyRoot, 'index.json'), 'utf8'))

@@ -32,6 +32,7 @@
 - 所有 JSON 都必须可解析，并符合当前 schema。
 - 以 `study/` 为事实来源，不要改动 `data.json`。
 - 保持流程顺序：先复习薄弱点，再聚焦学习，再受控输出，最后自由输出。
+- 题干、instruction、context_note、supporting_lines 和 vocab_hints 不得泄露参考答案、完整标准句或可直接拼出答案的日语词形；答案只能写入 `answer_reference`，供后续批改使用。
 - 如果源数据不完整或有歧义，把不确定性写进 packet/context，不要擅自脑补。
 
 ## Daily Packet Schema 要求

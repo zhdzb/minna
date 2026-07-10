@@ -192,6 +192,9 @@ const buildFallbackExerciseDraft = ({
   const vocabA = vocabItems[0]?.word || 'わたし'
   const vocabB = vocabItems[1]?.word || 'がくせい'
   const vocabC = vocabItems[2]?.word || 'にほん'
+  const meaningA = vocabItems[0]?.meaning || '我'
+  const meaningB = vocabItems[1]?.meaning || '学生'
+  const meaningC = vocabItems[2]?.meaning || '日本'
 
   if (type === 'q_fill') {
     const choices = targetGrammar.includes('じゃありません')
@@ -239,11 +242,11 @@ const buildFallbackExerciseDraft = ({
 
   if (type === 'q_translate') {
     const translationPrompt = targetGrammar.includes('じゃありません')
-      ? `把“我不是${vocabB}，我是${vocabC}人”说成自然日语。`
+      ? `把“我不是${meaningB}，我是${meaningC}人”说成自然日语。`
       : targetGrammar.includes('ですか')
-        ? `把“你是${vocabB}吗？”说成自然日语。`
+        ? `把“你是${meaningB}吗？”说成自然日语。`
         : targetGrammar.includes('N1 の N2')
-          ? `把“这是我的${vocabB}”说成自然日语。`
+          ? `把“这是我的${meaningB}”说成自然日语。`
           : `在“${lesson.theme}”场景里，用「${targetGrammar}」完成一句自然表达。`
 
     const answerPattern = targetGrammar.includes('N1 の N2')
@@ -260,7 +263,7 @@ const buildFallbackExerciseDraft = ({
       instruction: translationPrompt,
       context_note: `请至少使用目标句型「${targetGrammar}」，不要只写寒暄语。`,
       answer_format: '写 1 句完整、自然的日语句子。',
-      vocab_hints: vocabHints,
+      vocab_hints: ['本题不提供日语词形提示，请根据中文语义和本课内容组织表达。'],
       answer_reference: answerPattern,
       metadata: {
         source: 'rule-based',
@@ -271,7 +274,10 @@ const buildFallbackExerciseDraft = ({
   }
 
   const turns = buildConversationTurns({ lesson, pattern, targetGrammar, vocabulary: vocabItems })
-  const supportingLines = turns.map((turn) => `${turn.speaker}：${turn.content}`)
+  const supportingLines = [
+    `${turns[0]?.speaker || 'A'}：${turns[0]?.content || '（请根据题目作答）'}`,
+    'B：（这里由你作答）'
+  ]
   const conversationAnswer = turns[1]?.content || `${vocabA} は ${vocabB} です。`
 
   return {
@@ -281,7 +287,7 @@ const buildFallbackExerciseDraft = ({
     context_note: `不要自由发挥成长段落；只需要补出当前这一轮回应。场景主题：${lesson.theme}。`,
     answer_format: '只写 B 的一句回答，不要重复 A 的台词。',
     supporting_lines: supportingLines,
-    vocab_hints: vocabHints,
+    vocab_hints: ['本题不提供日语词形提示，请根据情境和本课内容回答。'],
     answer_reference: conversationAnswer,
     metadata: {
       source: 'rule-based',
@@ -639,7 +645,7 @@ const generateExercises = async ({
           difficulty: 'foundation',
           questionCount,
           questionType: 'ALL',
-          customPrompt: '请使用中文题干说明，日语答案保持自然，尽量覆盖句型骨架、隐藏句式和本课词汇。'
+          customPrompt: '请使用中文题干说明，日语答案保持自然，尽量覆盖句型骨架、隐藏句式和本课词汇。题干、instruction、context_note、supporting_lines 和 vocab_hints 都不得出现参考答案、完整标准句、目标回答的日语词形或会直接拼出答案的词组；参考答案只能放在 answer_reference。q_fill 的 options 仅提供必要选项，不要在题干解释正确选项。'
         }
       },
       { requestLlm, providerOptions }
