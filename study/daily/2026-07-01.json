@@ -1,0 +1,318 @@
+{
+  "schema_version": 1,
+  "revision": 3,
+  "updated_at": "2026-07-02T12:05:00+08:00",
+  "id": "daily-2026-07-01",
+  "date": "2026-07-01",
+  "status": "reviewed",
+  "created_at": "2026-07-01T12:30:00+08:00",
+  "mission": {
+    "title": "第 1 课基础重建学习包",
+    "plan_type": "lesson-foundation",
+    "available_minutes": 60,
+    "focus_lessons": [
+      1
+    ],
+    "goals": [
+      "围绕自我介绍与身份说明完成第 1 课输入和输出练习",
+      "重点巩固：N1 は N2 です、N1 は N2 じゃありません、N1 は N2 ですか、N1 の N2",
+      "复习队列当前为空，本轮先建立可批改的基础输出记录"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "task-lesson-preview",
+      "type": "grammar_review",
+      "title": "浏览第 1 课核心句型与例句",
+      "minutes": 12,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-shadowing",
+      "type": "listening_shadowing",
+      "title": "跟读自我介绍脚本",
+      "minutes": 12,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-controlled-output",
+      "type": "controlled_output",
+      "title": "完成句型填空与中文提示输出",
+      "minutes": 20,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-free-output",
+      "type": "free_output",
+      "title": "完成情境回应并做自评",
+      "minutes": 16,
+      "required": true,
+      "status": "pending"
+    }
+  ],
+  "study_materials": [
+    {
+      "id": "lesson-1-grammar-note",
+      "type": "grammar_note",
+      "lesson": 1,
+      "title": "第 1 课核心文法",
+      "content": "本轮优先掌握四个句型：1. N1 は N2 です，用来说明身份或属性；2. N1 は N2 じゃありません，用来否定身份或属性；3. N1 は N2 ですか，用来确认对方或第三者的身份；4. N1 の N2，用来表示所属、关系或修饰。注意助词「は」在这里读作 wa。",
+      "examples": [
+        {
+          "ja": "わたしは がくせいです。",
+          "zh": "我是学生。",
+          "note": "用「は」标记主题，用「です」礼貌地说明身份。"
+        },
+        {
+          "ja": "ミラーさんは いしゃじゃありません。",
+          "zh": "米勒先生不是医生。",
+          "note": "否定名词句时，用「じゃありません」保持礼貌。"
+        },
+        {
+          "ja": "ワンさんは かいしゃいんですか。",
+          "zh": "王先生/女士是公司职员吗？",
+          "note": "句尾加「か」构成确认问题。"
+        },
+        {
+          "ja": "わたしの せんせいは やまださんです。",
+          "zh": "我的老师是山田老师。",
+          "note": "「の」连接两个名词，表示关系或所属。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-1-listening-script",
+      "type": "listening_script",
+      "lesson": 1,
+      "title": "第 1 课听读脚本",
+      "content": "A：はじめまして。ワンです。\nB：はじめまして。ミラーです。どうぞよろしくお願いします。\nA：ミラーさんは かいしゃいんですか。\nB：はい、かいしゃいんです。エンジニアです。\nA：わたしは がくせいです。わたしの せんせいは やまださんです。",
+      "examples": [
+        {
+          "ja": "はじめまして。ワンです。",
+          "zh": "初次见面。我是王。",
+          "note": "第一遍只听姓名和句尾「です」。"
+        },
+        {
+          "ja": "どうぞよろしくお願いします。",
+          "zh": "请多关照。",
+          "note": "第二遍跟读寒暄句，注意礼貌语气。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-1-contrast-note",
+      "type": "contrast_note",
+      "lesson": 1,
+      "title": "第 1 课易错提醒",
+      "content": "源课纲文件中的第 1 课日文文本存在编码损坏，本包按第 1 课标准基础句型生成。今天先不要追求复杂表达，优先把身份说明、否定、确认问题和「の」的名词连接说稳定。",
+      "examples": [
+        {
+          "ja": "わたしは にほんじんじゃありません。",
+          "zh": "我不是日本人。",
+          "note": "不要把否定写成「ですじゃありません」。"
+        },
+        {
+          "ja": "こちらは やまださんです。",
+          "zh": "这位是山田先生/女士。",
+          "note": "介绍别人时用「こちら」更自然、更礼貌。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-1-core-vocabulary",
+      "type": "vocabulary_note",
+      "lesson": 1,
+      "title": "第 1 课输出词汇",
+      "content": "わたし：我；あなた：你，初学阶段少直接对人使用；がくせい：学生；かいしゃいん：公司职员；エンジニア：工程师；せんせい：老师；にほんじん：日本人；ちゅうごくじん：中国人；こちら：这位。",
+      "examples": [
+        {
+          "ja": "わたし",
+          "zh": "我",
+          "note": "自我介绍的常用主语。"
+        },
+        {
+          "ja": "かいしゃいん",
+          "zh": "公司职员",
+          "note": "用于职业身份说明。"
+        }
+      ]
+    }
+  ],
+  "review_items": [],
+  "exercises": [
+    {
+      "id": "daily-2026-07-01-ex-1",
+      "type": "q_fill",
+      "lesson": 1,
+      "target_grammar": "N1 は N2 です",
+      "prompt": "第 1 题：补全肯定身份说明",
+      "instruction": "请把句子补成“我是学生”的自然日语：わたしは がくせい ___",
+      "context_note": "只填写一个句尾表达。这里练习用「です」礼貌说明身份。",
+      "answer_format": "只填写一个选项，不要写完整句子。",
+      "choices": [
+        "です",
+        "ですか",
+        "じゃありません",
+        "の"
+      ],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "わたし / 我",
+        "がくせい / 学生"
+      ],
+      "answer_reference": "です",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "grammar"
+      }
+    },
+    {
+      "id": "daily-2026-07-01-ex-2",
+      "type": "q_fill",
+      "lesson": 1,
+      "target_grammar": "N1 は N2 じゃありません",
+      "prompt": "第 2 题：补全否定身份说明",
+      "instruction": "请把句子补成“米勒先生不是医生”的自然日语：ミラーさんは いしゃ ___",
+      "context_note": "只填写一个句尾表达。这里练习名词句的礼貌否定。",
+      "answer_format": "只填写一个选项，不要写完整句子。",
+      "choices": [
+        "です",
+        "ですか",
+        "じゃありません",
+        "の"
+      ],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "ミラーさん / 米勒先生/女士",
+        "いしゃ / 医生"
+      ],
+      "answer_reference": "じゃありません",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "grammar"
+      }
+    },
+    {
+      "id": "daily-2026-07-01-ex-3",
+      "type": "q_translate",
+      "lesson": 1,
+      "target_grammar": "N1 は N2 です",
+      "prompt": "第 3 题：把中文身份说明说成日语",
+      "instruction": "请用自然日语表达：我是中国人。",
+      "context_note": "必须使用「N1 は N2 です」。不要只写词语，要写完整句子。",
+      "answer_format": "写 1 句完整、自然的日语句子。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "わたし / 我",
+        "ちゅうごくじん / 中国人"
+      ],
+      "answer_reference": "わたしは ちゅうごくじんです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-01-ex-4",
+      "type": "q_translate",
+      "lesson": 1,
+      "target_grammar": "N1 は N2 じゃありません",
+      "prompt": "第 4 题：把中文否定说明说成日语",
+      "instruction": "请用自然日语表达：我不是日本人。",
+      "context_note": "必须使用「N1 は N2 じゃありません」。注意不要把「です」和「じゃありません」重复堆在一起。",
+      "answer_format": "写 1 句完整、自然的日语句子。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "わたし / 我",
+        "にほんじん / 日本人"
+      ],
+      "answer_reference": "わたしは にほんじんじゃありません。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-01-ex-5",
+      "type": "q_translate",
+      "lesson": 1,
+      "target_grammar": "N1 の N2",
+      "prompt": "第 5 题：把中文关系说明说成日语",
+      "instruction": "请用自然日语表达：我的老师是山田老师。",
+      "context_note": "必须使用「の」连接“我”和“老师”。这题练习关系说明，不是猜题意。",
+      "answer_format": "写 1 句完整、自然的日语句子。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "わたし / 我",
+        "せんせい / 老师",
+        "やまださん / 山田先生/女士"
+      ],
+      "answer_reference": "わたしの せんせいは やまださんです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-01-ex-6",
+      "type": "q_conversation",
+      "lesson": 1,
+      "target_grammar": "N1 は N2 ですか",
+      "prompt": "第 6 题：根据情境完成确认问答",
+      "instruction": "你是 B。A 在确认你的职业，请用一句自然日语回答“是的，我是公司职员”。",
+      "context_note": "只写 B 的回答。这里练习听懂「ですか」并用名词句自然回应。",
+      "answer_format": "只写 B 的一句回答，不要重复 A 的台词。",
+      "choices": [],
+      "supporting_lines": [
+        "A：ミラーさんは かいしゃいんですか。",
+        "B：（这里由你作答）"
+      ],
+      "vocab_hints": [
+        "はい / 是的",
+        "かいしゃいん / 公司职员"
+      ],
+      "answer_reference": "はい、かいしゃいんです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "conversation"
+      }
+    }
+  ],
+  "answers": {
+    "daily-2026-07-01-ex-1": "です",
+    "daily-2026-07-01-ex-2": "じゃありません   、  でわありませn",
+    "daily-2026-07-01-ex-3": "わたしわちゅうごくじんです",
+    "daily-2026-07-01-ex-4": "わたしわにほんじんでわありません",
+    "daily-2026-07-01-ex-5": "わたしのせんせいわやまださんです",
+    "daily-2026-07-01-ex-6": "はい、わたしわかいしゃいんです"
+  },
+  "self_assessment": {
+    "difficulty": "easy",
+    "uncertain_exercise_ids": [],
+    "confusing_points": [],
+    "pace": "偏慢",
+    "note": "前面的几节课我我应该比较轻松，可以多出写题目，我快速作答后，快速通过"
+  },
+  "correction": {
+    "status": "reviewed",
+    "prompt_file": "study/prompts/generated/2026-07-01-review.md",
+    "review_file": "study/reviews/2026-07-01-review.json"
+  },
+  "review_result": {
+    "id": "review-2026-07-01",
+    "accuracy": 0.7417,
+    "summary": "意思理解基本到位，但「は」写成「わ」和名词句否定形需要复习。"
+  }
+}

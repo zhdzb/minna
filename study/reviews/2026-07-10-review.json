@@ -1,0 +1,592 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-07-10T13:00:00+08:00",
+  "id": "review-2026-07-10",
+  "daily_id": "daily-2026-07-10",
+  "created_at": "2026-07-10T13:00:00+08:00",
+  "overall": {
+    "accuracy": 0.91,
+    "can_advance": false,
+    "summary": "20 题综合输出整体很稳，语义与核心句型大多正确。需要马上修正的是：关系说明句必须落在「です」，填空题按要求只填空格内容，以及「12じ」「おわります」「へ」「にちようびは」这些假名、词汇和助词细节。虽然已完成第 1-5 课的综合题，但当前 mastery 只建有第 1、2 课的状态，且第 2 课技能分仍为 0；缺少第 2-5 课可追溯的 mastery evidence，因此本轮不作正式课程推进。",
+    "next_focus": [
+      "N1 の N2 / N1 は N2 です 的句末断定",
+      "按题型要求作答：q_fill 只填写空格",
+      "12じ、にちようび等时间词的假名",
+      "おわります与移动方向助词へ"
+    ]
+  },
+  "items": [
+    {
+      "exercise_id": "daily-2026-07-10-ex-1",
+      "is_correct": false,
+      "score": 0.75,
+      "error_tags": [
+        "grammar_pattern",
+        "naturalness"
+      ],
+      "target_grammar": "N1 の N2 / N1 は N2 です",
+      "user_answer": "わたしのせんせいはやまださん",
+      "correct_answer": "わたしの せんせいは やまださんです。",
+      "explanation": "「わたしの せんせいは やまださん」前半关系结构正确，但陈述句必须以「です」收束；少了它，句子不完整。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 0.75,
+        "particles": 1,
+        "meaning": 0.9,
+        "naturalness": 0.55
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "わたしの せんせいは やまださんです。",
+        "わたしの先生は山田さんです。",
+        "わたしの せんせいは やまだせんせいです。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-2",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "N1 は N2 ですか / はい、N2 です",
+      "user_answer": "はい、わたしはエンジニアです",
+      "correct_answer": "はい、エンジニアです。",
+      "explanation": "正确。补出「わたしは」完全自然，也完整完成了身份确认的输出目标。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "context_match": 1,
+        "intent": 1,
+        "politeness": 1,
+        "naturalness": 1,
+        "meaning": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "はい、エンジニアです。",
+        "はい、わたしは エンジニアです。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-3",
+      "is_correct": false,
+      "score": 0.85,
+      "error_tags": [
+        "naturalness"
+      ],
+      "target_grammar": "N1 は N2 じゃありません",
+      "user_answer": "ミラーさんはいしゃじゃありません",
+      "correct_answer": "じゃありません",
+      "explanation": "整句的语法和意思正确，但本题是填空且要求只填空格内容；严格按 q_fill 规则，应只提交「じゃありません」。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 1,
+        "particles": 1,
+        "meaning": 1,
+        "naturalness": 0.7
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "じゃありません",
+        "ではありません"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-4",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "N1 は N2 です",
+      "user_answer": "わたしはちゅうごくじんです",
+      "correct_answer": "わたしは ちゅうごくじんです。",
+      "explanation": "正确。主题助词「は」写法、国籍词和礼貌断定都正确。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "particles": 1,
+        "meaning": 1,
+        "naturalness": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "わたしは ちゅうごくじんです。",
+        "わたしは中国人です。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-5",
+      "is_correct": false,
+      "score": 0.85,
+      "error_tags": [
+        "naturalness"
+      ],
+      "target_grammar": "これ / それ / あれ",
+      "user_answer": "これはほんです",
+      "correct_answer": "これ",
+      "explanation": "「これはほんです」本身正确，但本题要求只选择并填写指示词；严格按 q_fill 规则，应只写「これ」。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 1,
+        "meaning": 1,
+        "naturalness": 0.7
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "これ"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-6",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "この N / N1 の N2",
+      "user_answer": "このほんはわたしのほんです",
+      "correct_answer": "この ほんは わたしの ほんです。",
+      "explanation": "正确。「この + 名词」和「わたしの ほん」都使用准确。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "particles": 1,
+        "meaning": 1,
+        "naturalness": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "この ほんは わたしの ほんです。",
+        "この本は私の本です。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-7",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "そうです / そうじゃありません",
+      "user_answer": "いいえ、これはわたしのです",
+      "correct_answer": "いいえ、そうじゃありません。",
+      "explanation": "正确。你补充“这是我的”，与“不是田中先生的伞”不矛盾，且「これは わたしのです」是自然的所属省略表达。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 0.95,
+        "context_match": 1,
+        "intent": 1,
+        "politeness": 1,
+        "naturalness": 1,
+        "meaning": 1
+      },
+      "confidence": 0.96,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "いいえ、そうじゃありません。",
+        "いいえ、これは わたしのです。",
+        "いいえ、わたしの かさです。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-8",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "その N / N1 の N2",
+      "user_answer": "そのかさはミラーさんのです",
+      "correct_answer": "その かさは ミラーさんの かさです。",
+      "explanation": "正确。后面的「かさ」可以省略成「ミラーさんのです」，句子自然。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "particles": 1,
+        "meaning": 1,
+        "naturalness": 1
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "その かさは ミラーさんの かさです。",
+        "その かさは ミラーさんのです。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-9",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "ここ / そこ / あそこ / どこ",
+      "user_answer": "あそこ",
+      "correct_answer": "あそこ",
+      "explanation": "正确。离双方都远的地点用「あそこ」。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "meaning": 1,
+        "naturalness": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "あそこ"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-10",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "N は place です",
+      "user_answer": "かいぎしつはここです",
+      "correct_answer": "かいぎしつは ここです。",
+      "explanation": "正确。地点说明句型和主题助词都正确。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "particles": 1,
+        "meaning": 1,
+        "naturalness": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "かいぎしつは ここです。",
+        "会議室はここです。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-11",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "どちら / こちら / あちら",
+      "user_answer": "あちらです",
+      "correct_answer": "あちらです。",
+      "explanation": "正确。「あちら」符合题目要求的礼貌方向回答。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "context_match": 1,
+        "intent": 1,
+        "politeness": 1,
+        "naturalness": 1,
+        "meaning": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "あちらです。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-12",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "いくらですか",
+      "user_answer": "このとけいはいくらですか",
+      "correct_answer": "この とけいは いくらですか。",
+      "explanation": "正确。物品指示和价格问句都自然。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "particles": 1,
+        "meaning": 1,
+        "naturalness": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "この とけいは いくらですか。",
+        "この時計はいくらですか。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-13",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "time に V",
+      "user_answer": "に",
+      "correct_answer": "に",
+      "explanation": "正确。具体时间点「7じ」后用「に」。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "particles": 1,
+        "meaning": 1,
+        "naturalness": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "に"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-14",
+      "is_correct": false,
+      "score": 0.7,
+      "error_tags": [
+        "kana_kanji",
+        "vocabulary"
+      ],
+      "target_grammar": "N は time から time までです",
+      "user_answer": "ひるやすみはじょうにじからいちじまでです",
+      "correct_answer": "ひるやすみは 12じから 1じまでです。",
+      "explanation": "「から」「まで」和整体语序正确，但 12 点应为「じゅうにじ／12じ」，不是「じょうにじ」。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 0.9,
+        "particles": 1,
+        "meaning": 0.7,
+        "naturalness": 0.65
+      },
+      "confidence": 0.95,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "ひるやすみは 12じから 1じまでです。",
+        "ひるやすみは じゅうにじから いちじまでです。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-15",
+      "is_correct": false,
+      "score": 0.55,
+      "error_tags": [
+        "vocabulary",
+        "kana_kanji"
+      ],
+      "target_grammar": "なんじに Vますか / time に Vます",
+      "user_answer": "ろくじにあわります",
+      "correct_answer": "6じに おわります。",
+      "explanation": "时间助词「に」正确，但“结束”是「おわります」，不能写成「あわります」。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 0.7,
+        "particles": 1,
+        "context_match": 0.55,
+        "intent": 0.45,
+        "naturalness": 0.45,
+        "meaning": 0.45
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "6じに おわります。",
+        "ろくじに おわります。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-16",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "Vません",
+      "user_answer": "きょうはたらきません",
+      "correct_answer": "きょうは はたらきません。",
+      "explanation": "正确。相对时间「きょう」后不加「に」，否定动词也正确。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "particles": 1,
+        "meaning": 1,
+        "naturalness": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "きょうは はたらきません。",
+        "今日は働きません。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-17",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "place へ 行きます",
+      "user_answer": "へ",
+      "correct_answer": "へ",
+      "explanation": "正确。移动目的地方向用「へ」。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "particles": 1,
+        "meaning": 1,
+        "naturalness": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "へ"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-18",
+      "is_correct": false,
+      "score": 0.75,
+      "error_tags": [
+        "particle",
+        "kana_kanji"
+      ],
+      "target_grammar": "vehicle で place へ 行きます",
+      "user_answer": "でんしゃでかいしゃえいきます",
+      "correct_answer": "でんしゃで かいしゃへ いきます。",
+      "explanation": "交通手段「で」用对了；目的地方向助词应写「へ」，不能写成「え」。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 0.8,
+        "particles": 0.65,
+        "meaning": 1,
+        "naturalness": 0.75
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "でんしゃで かいしゃへ いきます。",
+        "電車で会社へ行きます。",
+        "でんしゃで かいしゃに いきます。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-19",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "person と 行きます",
+      "user_answer": "たなかさんといきます",
+      "correct_answer": "たなかさんと いきます。",
+      "explanation": "正确。同行者「たなかさん」后用「と」。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "particles": 1,
+        "context_match": 1,
+        "intent": 1,
+        "naturalness": 1,
+        "meaning": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "たなかさんと いきます。",
+        "田中さんと行きます。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-10-ex-20",
+      "is_correct": false,
+      "score": 0.75,
+      "error_tags": [
+        "kana_kanji",
+        "particle"
+      ],
+      "target_grammar": "どこへも 行きません",
+      "user_answer": "にちよびどこへもいきません",
+      "correct_answer": "にちようびは どこへも いきません。",
+      "explanation": "「どこへも いきません」正确；但“星期天”应写「にちようび」，并需用「は」标记时间主题。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 0.85,
+        "particles": 0.7,
+        "meaning": 0.9,
+        "naturalness": 0.65
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "にちようびは どこへも いきません。",
+        "日曜日はどこへも行きません。"
+      ],
+      "manual_override": null
+    }
+  ],
+  "mastery_updates": [
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/noun-affirmative",
+      "from_status": "stabilizing",
+      "to_status": "stabilizing",
+      "evidence": [
+        "daily-2026-07-10-ex-4 score 1.0: identity statement was fully correct"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/noun-negative",
+      "from_status": "stabilizing",
+      "to_status": "stabilizing",
+      "evidence": [
+        "daily-2026-07-10-ex-3 score 0.85: noun-negative grammar was correct, with only q_fill response-format over-answering"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/topic-particle-wa",
+      "from_status": "stabilizing",
+      "to_status": "stabilizing",
+      "evidence": [
+        "daily-2026-07-10-ex-1 score 0.75: topic particle は was correctly written",
+        "daily-2026-07-10-ex-4 score 1.0: topic particle は was correctly written"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/noun-relationship-no",
+      "from_status": "learning",
+      "to_status": "learning",
+      "evidence": [
+        "daily-2026-07-10-ex-1 score 0.75: N1 の N2 was correct but the sentence lacked final です"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/question-response",
+      "from_status": "learning",
+      "to_status": "stabilizing",
+      "evidence": [
+        "daily-2026-07-10-ex-2 score 1.0: complete identity-confirmation response was correct"
+      ]
+    }
+  ],
+  "review_queue_updates": [
+    {
+      "review_queue_id": "rq-2026-07-10-lesson-1-relationship-name",
+      "action": "rescheduled",
+      "interval_days": 1,
+      "last_result": "wrong"
+    },
+    {
+      "review_queue_id": "rq-2026-07-10-lesson-1-question-response",
+      "action": "scheduled",
+      "interval_days": 2,
+      "last_result": "good"
+    }
+  ],
+  "promotion_decision": {
+    "can_advance": false,
+    "reason": "不推进。虽然本轮 accuracy=0.91 高于 min_output_accuracy=0.75，且第 1 课确认问答已改善，但当前 current_lesson=2 的 lesson-2 skill_scores 仍全为 0，mastery 也没有第 2-5 课的 grammar-point 记录可作为 gate evidence；未满足 required_skill_scores 的可追溯条件。下一轮优先练完整关系说明、严格填空输入、时间读法与第 5 课「へ」书写。"
+  }
+}

@@ -17,7 +17,7 @@ const buildExerciseBudget = (dailyPacket) => {
     ? dailyPacket.mission.available_minutes
     : 0
 
-  return Math.max(3, Math.floor(availableMinutes / 10))
+  return Math.max(3, Math.floor(availableMinutes / 3))
 }
 
 const buildReviewQueueIdSet = (dailyPacket) =>

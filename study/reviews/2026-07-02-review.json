@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-07-10T03:20:00+08:00",
+  "id": "review-2026-07-02",
+  "daily_id": "daily-2026-07-02",
+  "created_at": "2026-07-10T03:20:00+08:00",
+  "overall": {
+    "accuracy": 0.8417,
+    "can_advance": true,
+    "summary": "本轮核心复习点明显改善：助词「は」已经能正确写作，名词句否定也基本稳定。第 4 题有姓名/词汇拼写错误，第 5 题回答过短，没有完成“我是工程师”的输出目标；这些适合放入后续复习。综合表现已满足推进到第 2 课准备阶段的条件。",
+    "next_focus": [
+      "第 2 课物品指示与所属确认",
+      "N1 の N2",
+      "确认问句的完整回应",
+      "人名与さん的拼写"
+    ]
+  },
+  "items": [
+    {
+      "exercise_id": "daily-2026-07-02-ex-1",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "助词 は 读作 wa、写作 は",
+      "user_answer": "は",
+      "correct_answer": "は",
+      "explanation": "完全正确。这里考的是主题助词的写法：读作 wa，但写作「は」。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "particles": 1,
+        "meaning": 1,
+        "naturalness": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "は"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-02-ex-2",
+      "is_correct": true,
+      "score": 0.9,
+      "error_tags": [
+        "kana_kanji"
+      ],
+      "target_grammar": "N1 は N2 じゃありません",
+      "user_answer": "みらーさんはいしゃじゃありません",
+      "correct_answer": "ミラーさんは いしゃじゃありません。",
+      "explanation": "句型和助词都正确，否定也自然。小问题是外来人名通常写作片假名「ミラーさん」，写成「みらーさん」可理解但不够标准。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 0.95,
+        "particles": 1,
+        "meaning": 1,
+        "naturalness": 0.85
+      },
+      "confidence": 0.95,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "ミラーさんは いしゃじゃありません。",
+        "ミラーさんは 医者じゃありません。",
+        "ミラーさんは いしゃではありません。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-02-ex-3",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "助词 は 读作 wa、写作 は",
+      "user_answer": "やまださんはせんせいです",
+      "correct_answer": "やまださんは せんせいです。",
+      "explanation": "正确。主题助词「は」写对了，句子也完整自然；空格不是必须。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "particles": 1,
+        "meaning": 1,
+        "naturalness": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "やまださんは せんせいです。",
+        "山田さんは先生です。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-02-ex-4",
+      "is_correct": false,
+      "score": 0.65,
+      "error_tags": [
+        "vocabulary",
+        "kana_kanji",
+        "naturalness"
+      ],
+      "target_grammar": "N1 の N2",
+      "user_answer": "わんさんのせんせいはやまださせんせいです",
+      "correct_answer": "ワンさんの せんせいは やまださんです。",
+      "explanation": "「ワンさんの せんせいは」这一结构是对的，目标语法「の」和主题助词「は」也用对了。问题在后半句：「やまださせんせい」不是自然的人名表达，应写「やまださんです」或「やまだせんせいです」。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 0.9,
+        "particles": 0.9,
+        "meaning": 0.7,
+        "naturalness": 0.45
+      },
+      "confidence": 0.95,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "ワンさんの せんせいは やまださんです。",
+        "ワンさんの先生は山田さんです。",
+        "ワンさんの せんせいは やまだせんせいです。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-02-ex-5",
+      "is_correct": false,
+      "score": 0.6,
+      "error_tags": [
+        "meaning_drift",
+        "naturalness"
+      ],
+      "target_grammar": "N1 は N2 ですか",
+      "user_answer": "はい",
+      "correct_answer": "はい、エンジニアです。",
+      "explanation": "只回答「はい」在真实对话里可以表示肯定，但这道题明确要求说出“我是工程师”。为了完成输出目标，需要补出身份说明「エンジニアです」。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 0.45,
+        "context_match": 0.75,
+        "intent": 0.7,
+        "naturalness": 0.6,
+        "politeness": 0.8,
+        "meaning": 0.55
+      },
+      "confidence": 0.95,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "はい、エンジニアです。",
+        "はい、わたしは エンジニアです。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-02-ex-6",
+      "is_correct": true,
+      "score": 0.9,
+      "error_tags": [
+        "naturalness"
+      ],
+      "target_grammar": "N1 は N2 じゃありません",
+      "user_answer": "いいえ、わたしはかいしゃいんじゃありません、わたしはがくせいです",
+      "correct_answer": "いいえ、かいしゃいんじゃありません。がくせいです。",
+      "explanation": "核心内容正确：先否定公司职员，再说明学生身份，助词「は」和「じゃありません」都稳定了。更自然的写法是用句号分开，并可省略重复的「わたしは」。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 0.95,
+        "particles": 1,
+        "context_match": 0.95,
+        "intent": 1,
+        "politeness": 0.9,
+        "naturalness": 0.75,
+        "meaning": 1
+      },
+      "confidence": 0.95,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "いいえ、かいしゃいんじゃありません。がくせいです。",
+        "いいえ、わたしは かいしゃいんじゃありません。わたしは がくせいです。",
+        "いいえ、会社員ではありません。学生です。"
+      ],
+      "manual_override": null
+    }
+  ],
+  "mastery_updates": [
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/topic-particle-wa",
+      "from_status": "weak",
+      "to_status": "stabilizing",
+      "evidence": [
+        "daily-2026-07-02-ex-1 score 1.0: selected は correctly",
+        "daily-2026-07-02-ex-3 score 1.0: やまださんは used correctly",
+        "daily-2026-07-02-ex-6 score 0.9: わたしは used correctly in free response"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/noun-negative",
+      "from_status": "weak",
+      "to_status": "stabilizing",
+      "evidence": [
+        "daily-2026-07-02-ex-2 score 0.9: noun-negative sentence was correct",
+        "daily-2026-07-02-ex-6 score 0.9: かいしゃいんじゃありません used correctly in context"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/noun-relationship-no",
+      "from_status": "learning",
+      "to_status": "learning",
+      "evidence": [
+        "daily-2026-07-02-ex-4 score 0.65: N1 の N2 structure was correct, but the answer had a name/title vocabulary error"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/question-response",
+      "from_status": "learning",
+      "to_status": "learning",
+      "evidence": [
+        "daily-2026-07-02-ex-5 score 0.6: はい alone matched the intent but did not complete the required identity output"
+      ]
+    }
+  ],
+  "review_queue_updates": [
+    {
+      "review_queue_id": "rq-2026-07-02-lesson-1-topic-wa",
+      "action": "scheduled",
+      "interval_days": 3,
+      "last_result": "easy"
+    },
+    {
+      "review_queue_id": "rq-2026-07-02-lesson-1-noun-negative",
+      "action": "scheduled",
+      "interval_days": 2,
+      "last_result": "good"
+    },
+    {
+      "review_queue_id": "rq-2026-07-10-lesson-1-relationship-name",
+      "action": "created",
+      "interval_days": 1,
+      "last_result": "hard"
+    },
+    {
+      "review_queue_id": "rq-2026-07-10-lesson-1-question-response",
+      "action": "created",
+      "interval_days": 1,
+      "last_result": "hard"
+    }
+  ],
+  "promotion_decision": {
+    "can_advance": true,
+    "reason": "可以推进到第 2 课准备阶段。已有 2 次已批改 session；本次平均分 0.8417，高于 min_output_accuracy=0.75；第 1 课核心复习点「は」和名词句否定已明显稳定，更新后的 grammar/listening/speaking 分数达到 promotion rules 的最低要求。第 4、5 题的小问题会保留到复习队列，不阻塞进入第 2 课。"
+  }
+}

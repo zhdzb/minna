@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-07-02T12:05:00+08:00",
+  "id": "review-2026-07-01",
+  "daily_id": "daily-2026-07-01",
+  "created_at": "2026-07-02T12:05:00+08:00",
+  "overall": {
+    "accuracy": 0.7417,
+    "can_advance": false,
+    "summary": "意思理解基本到位，肯定句和关系句的骨架已经能搭起来；主要问题是多次把主题助词「は」写成「わ」，并在否定句里把「では/じゃありません」写成「でわありません」。本轮不推进课次，先把助词书写和名词句否定稳定下来。",
+    "next_focus": [
+      "助词 は 的书写与读音区分",
+      "N1 は N2 じゃありません",
+      "N1 は N2 です",
+      "N1 の N2"
+    ]
+  },
+  "items": [
+    {
+      "exercise_id": "daily-2026-07-01-ex-1",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "N1 は N2 です",
+      "user_answer": "です",
+      "correct_answer": "です",
+      "explanation": "完全正确。题目只要求补出句尾，选择「です」可以自然完成“わたしは がくせいです”。",
+      "retry_recommended": false,
+      "rubric": {
+        "target_grammar": 1,
+        "particles": 1,
+        "naturalness": 1,
+        "meaning": 1
+      },
+      "confidence": 1,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "です"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-01-ex-2",
+      "is_correct": false,
+      "score": 0.45,
+      "error_tags": [
+        "grammar_pattern",
+        "kana_kanji"
+      ],
+      "target_grammar": "N1 は N2 じゃありません",
+      "user_answer": "じゃありません   、  でわありませn",
+      "correct_answer": "じゃありません",
+      "explanation": "开头的「じゃありません」本身是正确答案，但后面又追加了「でわありませn」，导致填空答案不再是一个有效选项。这里要只写一个句尾表达；如果用更正式的说法，应写「ではありません」，不是「でわありません」。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 0.5,
+        "particles": 0.4,
+        "naturalness": 0.3,
+        "meaning": 0.7
+      },
+      "confidence": 0.95,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "じゃありません",
+        "ではありません"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-01-ex-3",
+      "is_correct": false,
+      "score": 0.75,
+      "error_tags": [
+        "particle",
+        "kana_kanji"
+      ],
+      "target_grammar": "N1 は N2 です",
+      "user_answer": "わたしわちゅうごくじんです",
+      "correct_answer": "わたしは ちゅうごくじんです。",
+      "explanation": "句意和「です」都对，但主题助词应该写作「は」，读作 wa。写成「わたしわ」会变成拼写错误；正确是「わたしは」。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 0.75,
+        "particles": 0.45,
+        "naturalness": 0.8,
+        "meaning": 0.9
+      },
+      "confidence": 0.95,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "わたしは ちゅうごくじんです。",
+        "私は 中国人です。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-01-ex-4",
+      "is_correct": false,
+      "score": 0.65,
+      "error_tags": [
+        "particle",
+        "kana_kanji",
+        "grammar_pattern"
+      ],
+      "target_grammar": "N1 は N2 じゃありません",
+      "user_answer": "わたしわにほんじんでわありません",
+      "correct_answer": "わたしは にほんじんじゃありません。",
+      "explanation": "句意是对的，但两处写法需要修正：主题助词写「は」，不是「わ」；正式否定写「ではありません」，不是「でわありません」。本课参考答案用较口语的礼貌否定「じゃありません」。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 0.6,
+        "particles": 0.35,
+        "naturalness": 0.65,
+        "meaning": 0.9
+      },
+      "confidence": 0.95,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "わたしは にほんじんじゃありません。",
+        "わたしは にほんじんではありません。",
+        "私は 日本人じゃありません。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-01-ex-5",
+      "is_correct": false,
+      "score": 0.8,
+      "error_tags": [
+        "particle",
+        "kana_kanji"
+      ],
+      "target_grammar": "N1 の N2",
+      "user_answer": "わたしのせんせいわやまださんです",
+      "correct_answer": "わたしの せんせいは やまださんです。",
+      "explanation": "「わたしの せんせい」这一部分很好，目标语法「の」用对了。需要修正的是主题助词：这里写作「は」，读作 wa，所以应写「せんせいは」。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 0.95,
+        "particles": 0.55,
+        "naturalness": 0.8,
+        "meaning": 0.95
+      },
+      "confidence": 0.95,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "わたしの せんせいは やまださんです。",
+        "私の先生は山田さんです。"
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-01-ex-6",
+      "is_correct": false,
+      "score": 0.8,
+      "error_tags": [
+        "particle",
+        "kana_kanji",
+        "naturalness"
+      ],
+      "target_grammar": "N1 は N2 ですか",
+      "user_answer": "はい、わたしわかいしゃいんです",
+      "correct_answer": "はい、かいしゃいんです。",
+      "explanation": "回应意图正确，也能回答 A 的确认问题。更自然的回答是直接说「はい、かいしゃいんです。」；如果加「わたしは」，主题助词仍要写「は」，不是「わ」。",
+      "retry_recommended": true,
+      "rubric": {
+        "target_grammar": 0.85,
+        "particles": 0.55,
+        "naturalness": 0.75,
+        "politeness": 0.9,
+        "context_match": 0.9,
+        "intent": 0.95,
+        "meaning": 0.95
+      },
+      "confidence": 0.95,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "はい、かいしゃいんです。",
+        "はい、わたしは かいしゃいんです。",
+        "はい、会社員です。"
+      ],
+      "manual_override": null
+    }
+  ],
+  "mastery_updates": [
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/noun-affirmative",
+      "from_status": null,
+      "to_status": "learning",
+      "evidence": [
+        "daily-2026-07-01-ex-1 score 1.0: です selected correctly",
+        "daily-2026-07-01-ex-3 score 0.75: meaning correct but は written as わ"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/noun-negative",
+      "from_status": null,
+      "to_status": "weak",
+      "evidence": [
+        "daily-2026-07-01-ex-2 score 0.45: extra invalid negative form after correct option",
+        "daily-2026-07-01-ex-4 score 0.65: でわありません should be ではありません or じゃありません"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/topic-particle-wa",
+      "from_status": null,
+      "to_status": "weak",
+      "evidence": [
+        "daily-2026-07-01-ex-3 score 0.75: わたしわ should be わたしは",
+        "daily-2026-07-01-ex-4 score 0.65: わたしわ should be わたしは",
+        "daily-2026-07-01-ex-5 score 0.8: せんせいわ should be せんせいは",
+        "daily-2026-07-01-ex-6 score 0.8: わたしわ should be わたしは"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/noun-relationship-no",
+      "from_status": null,
+      "to_status": "learning",
+      "evidence": [
+        "daily-2026-07-01-ex-5 score 0.8: N1 の N2 was used correctly, but the sentence still had は written as わ"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-1/question-response",
+      "from_status": null,
+      "to_status": "learning",
+      "evidence": [
+        "daily-2026-07-01-ex-6 score 0.8: confirmation response matched the context, but particle spelling and naturalness need another pass"
+      ]
+    }
+  ],
+  "review_queue_updates": [
+    {
+      "review_queue_id": "rq-2026-07-02-lesson-1-topic-wa",
+      "action": "created",
+      "interval_days": 1,
+      "last_result": "wrong"
+    },
+    {
+      "review_queue_id": "rq-2026-07-02-lesson-1-noun-negative",
+      "action": "created",
+      "interval_days": 1,
+      "last_result": "hard"
+    }
+  ],
+  "promotion_decision": {
+    "can_advance": false,
+    "reason": "不能推进。当前只有 1 次已批改 session，低于规则要求的 min_recent_sessions=2；本次平均输出准确率约 0.7417，低于 0.75 阈值；同时「は」写作和名词句否定在多题中重复出错，lesson-1 grammar score 未达到 0.7。下一轮优先做主题助词「は」和「じゃありません/ではありません」的变体复习。"
+  }
+}

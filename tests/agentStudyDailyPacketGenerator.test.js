@@ -2,7 +2,10 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { createAgentStudyDailyPacketGenerator } from '../src/server/agentStudy/dailyPacketGenerator.js'
+import {
+  buildExerciseCountForMinutes,
+  createAgentStudyDailyPacketGenerator
+} from '../src/server/agentStudy/dailyPacketGenerator.js'
 
 const tempDirs = []
 
@@ -130,6 +133,10 @@ afterEach(() => {
 })
 
 describe('agentStudyDailyPacketGenerator', () => {
+  it('allows a 60 minute session to contain 20 exercises', () => {
+    expect(buildExerciseCountForMinutes(60)).toBe(20)
+  })
+
   it('creates a new daily packet, prompt file, context, and index update', async () => {
     const studyRoot = createTempStudyRoot()
     seedStudyState(studyRoot)

@@ -9,6 +9,7 @@ import {
   validateMastery,
   validateProfile,
   validatePromotionRules,
+  validateDailyPacket,
   validateReviewDrill,
   validateReviewQueue,
   validateReviewResult
@@ -25,12 +26,18 @@ const readStudyJson = (relativePath) => {
 }
 
 describe('agentStudySchema', () => {
-  it('validates reset seed study JSON files', () => {
-    expect(validateIndex(readStudyJson('study/index.json')).latest_daily).toBeNull()
-    expect(validateProfile(readStudyJson('study/state/profile.json')).material_scope.current_focus_lessons).toEqual([1])
-    expect(validateCurrent(readStudyJson('study/state/current.json')).current_lesson).toBe(1)
-    expect(validateMastery(readStudyJson('study/state/mastery.json')).current_gate).toBe('lesson-1-foundation')
-    expect(validateReviewQueue(readStudyJson('study/state/review-queue.json')).items).toHaveLength(0)
+  it('validates seeded study JSON files', () => {
+    const indexDocument = validateIndex(readStudyJson('study/index.json'))
+
+    expect(indexDocument.latest_daily).toBe('study/daily/2026-07-10.json')
+    expect(indexDocument.latest_prompt).toBe('study/prompts/generated/2026-07-10-review.md')
+    expect(indexDocument.latest_review).toBe('study/reviews/2026-07-10-review.json')
+    expect(validateDailyPacket(readStudyJson(indexDocument.latest_daily)).id).toBe('daily-2026-07-10')
+    expect(validateReviewResult(readStudyJson(indexDocument.latest_review)).id).toBe('review-2026-07-10')
+    expect(validateProfile(readStudyJson('study/state/profile.json')).material_scope.current_focus_lessons).toEqual([6, 7, 8, 9, 10])
+    expect(validateCurrent(readStudyJson('study/state/current.json')).current_lesson).toBe(6)
+    expect(validateMastery(readStudyJson('study/state/mastery.json')).current_gate).toBe('lesson-6-foundation')
+    expect(validateReviewQueue(readStudyJson('study/state/review-queue.json')).items).toHaveLength(4)
     expect(validatePromotionRules(readStudyJson('study/state/promotion-rules.json')).lesson_gate.min_recent_sessions).toBe(2)
   })
 

@@ -35,6 +35,8 @@ const unique = (items) => Array.from(new Set(items.filter(Boolean)))
 
 const toReviewPromptPath = (date) => `study/prompts/generated/${date}-review.md`
 const toDailyPath = (date) => `study/daily/${date}.json`
+const buildExerciseCountForMinutes = (availableMinutes) =>
+  Math.max(3, Math.min(Math.floor(Number(availableMinutes || 0) / 3), 30))
 
 const getLessonById = (lessonId) =>
   Array.isArray(syllabusData.lessons)
@@ -802,7 +804,7 @@ const createAgentStudyDailyPacketGenerator = ({
     const vocabulary = pickVocabulary(lesson, 8)
     const tasks = buildTasks({ availableMinutes, reviewItems })
     const studyMaterials = buildStudyMaterials({ lesson, focusGrammar, vocabulary })
-    const exerciseCount = Math.max(3, Math.min(Math.floor(availableMinutes / 10), 6))
+    const exerciseCount = buildExerciseCountForMinutes(availableMinutes)
     const generatedExercises = await generateExercises({
       lesson,
       focusGrammar,
@@ -902,4 +904,4 @@ const createAgentStudyDailyPacketGenerator = ({
   }
 }
 
-export { createAgentStudyDailyPacketGenerator }
+export { buildExerciseCountForMinutes, createAgentStudyDailyPacketGenerator }

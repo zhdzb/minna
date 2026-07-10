@@ -1,0 +1,728 @@
+{
+  "schema_version": 1,
+  "revision": 4,
+  "updated_at": "2026-07-10T13:00:00+08:00",
+  "id": "daily-2026-07-10",
+  "date": "2026-07-10",
+  "status": "reviewed",
+  "created_at": "2026-07-10T12:00:00+08:00",
+  "mission": {
+    "title": "第 1-5 课综合输出学习包",
+    "plan_type": "multi_lesson_output",
+    "available_minutes": 60,
+    "focus_lessons": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "goals": [
+      "一次性覆盖第 1-5 课核心语法，不再按单课小步推进",
+      "用 20 道中文题干触发自然日语输出，集中训练输入理解和句子生成",
+      "顺手复习第 1 课遗留弱点：名词关系句和确认问答完整度"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "task-quick-review",
+      "type": "review_queue",
+      "title": "处理第 1 课遗留复习点",
+      "minutes": 6,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-grammar-map",
+      "type": "grammar_review",
+      "title": "快速扫读第 1-5 课句型地图",
+      "minutes": 8,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-input-shadowing",
+      "type": "listening_shadowing",
+      "title": "跟读位置、时间和移动表达",
+      "minutes": 8,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-controlled-output",
+      "type": "controlled_output",
+      "title": "完成 20 道受控输出题",
+      "minutes": 34,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-self-check",
+      "type": "self_check",
+      "title": "标记不确定题和反复错的助词",
+      "minutes": 4,
+      "required": true,
+      "status": "pending"
+    }
+  ],
+  "study_materials": [
+    {
+      "id": "lesson-1-quick-map-2026-07-10",
+      "type": "grammar_note",
+      "lesson": 1,
+      "title": "第 1 课：身份说明、否定和所属关系",
+      "content": "第 1 课输出重点是 N1 は N2 です、N1 は N2 じゃありません、N1 の N2。助词 は 读作 wa，但写作 は；の 用来连接两个名词，说明所属、关系或属性。",
+      "examples": [
+        {
+          "ja": "わたしは ちゅうごくじんです。",
+          "zh": "我是中国人。",
+          "note": "主题助词写 は，不写 わ。"
+        },
+        {
+          "ja": "わたしの せんせいは やまださんです。",
+          "zh": "我的老师是山田老师。",
+          "note": "わたしの せんせい 整体作主题，再接 は。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-2-quick-map-2026-07-10",
+      "type": "grammar_note",
+      "lesson": 2,
+      "title": "第 2 课：物品指示和所属确认",
+      "content": "第 2 课重点是 これ/それ/あれ、 この/その/あの + 名词、そうです/そうじゃありません，以及物品所属的 N1 の N2。出题会明确距离关系和物品归属，不让学习者猜题意。",
+      "examples": [
+        {
+          "ja": "これは わたしの ほんです。",
+          "zh": "这是我的书。",
+          "note": "これ 可以单独作主题。"
+        },
+        {
+          "ja": "その かさは ミラーさんの かさです。",
+          "zh": "那把伞是米勒先生的伞。",
+          "note": "その 后面必须接名词。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-3-quick-map-2026-07-10",
+      "type": "grammar_note",
+      "lesson": 3,
+      "title": "第 3 课：地点、方向和价格",
+      "content": "第 3 课重点是 ここ/そこ/あそこ/どこ、こちら/そちら/あちら/どちら、N は place です、以及 いくらですか。地点题会说明相对位置或礼貌程度。",
+      "examples": [
+        {
+          "ja": "かいぎしつは ここです。",
+          "zh": "会议室在这里。",
+          "note": "N は place です 用来说明位置。"
+        },
+        {
+          "ja": "エレベーターは あちらです。",
+          "zh": "电梯在那边。",
+          "note": "あちら 比 あそこ 更礼貌，也可表示方向。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-4-quick-map-2026-07-10",
+      "type": "grammar_note",
+      "lesson": 4,
+      "title": "第 4 课：时间、日程和动词ます形",
+      "content": "第 4 课重点是 time に V、から/まで、Vます/Vません。明确时间点常用 に，相对时间如 きょう 通常不接 に。",
+      "examples": [
+        {
+          "ja": "まいあさ 7じに おきます。",
+          "zh": "每天早上 7 点起床。",
+          "note": "具体时间点 7じ 后接 に。"
+        },
+        {
+          "ja": "きょうは はたらきません。",
+          "zh": "今天不工作。",
+          "note": "きょう 这种相对时间通常不加 に。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-5-quick-map-2026-07-10",
+      "type": "grammar_note",
+      "lesson": 5,
+      "title": "第 5 课：移动、交通手段和同行者",
+      "content": "第 5 课重点是 place へ 行きます/来ます/帰ります、vehicle で、person と、どこへも 行きません。へ 表方向，で 表交通手段，と 表同行者。",
+      "examples": [
+        {
+          "ja": "でんしゃで かいしゃへ いきます。",
+          "zh": "坐电车去公司。",
+          "note": "交通手段用 で，目的地用 へ。"
+        },
+        {
+          "ja": "にちようびは どこへも いきません。",
+          "zh": "星期天哪儿也不去。",
+          "note": "どこへも + 否定表示哪儿也不去。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-1-to-5-shadowing-2026-07-10",
+      "type": "listening_script",
+      "lesson": 5,
+      "title": "第 1-5 课综合跟读脚本",
+      "content": "A：これは だれの ほんですか。\nB：わたしの ほんです。\nA：かいぎしつは どこですか。\nB：あちらです。\nA：なんじに いきますか。\nB：9じに いきます。\nA：なにで かいしゃへ いきますか。\nB：でんしゃで いきます。",
+      "examples": [
+        {
+          "ja": "これは だれの ほんですか。",
+          "zh": "这是谁的书？",
+          "note": "第 2 课物品所属确认。"
+        },
+        {
+          "ja": "でんしゃで かいしゃへ いきます。",
+          "zh": "坐电车去公司。",
+          "note": "第 5 课交通手段和方向助词同时出现。"
+        }
+      ]
+    }
+  ],
+  "review_items": [
+    {
+      "review_queue_id": "rq-2026-07-10-lesson-1-relationship-name",
+      "lesson": 1,
+      "skill": "grammar_point",
+      "target_grammar": "N1 の N2 与姓名敬称的关系说明"
+    },
+    {
+      "review_queue_id": "rq-2026-07-10-lesson-1-question-response",
+      "lesson": 1,
+      "skill": "grammar_point",
+      "target_grammar": "确认问句的完整自然回应"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "daily-2026-07-10-ex-1",
+      "type": "q_translate",
+      "lesson": 1,
+      "target_grammar": "N1 の N2 / N1 は N2 です",
+      "prompt": "第 1 题：把中文关系说明说成日语",
+      "instruction": "请用自然日语表达：我的老师是山田老师。",
+      "context_note": "这是复习队列项目。重点是先用 の 连接“我”和“老师”，再用 は 标记整个主题。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "わたし / 我",
+        "せんせい / 老师",
+        "やまださん / 山田老师"
+      ],
+      "answer_reference": "わたしの せんせいは やまださんです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "review",
+        "skill": "output"
+      },
+      "review_queue_id": "rq-2026-07-10-lesson-1-relationship-name"
+    },
+    {
+      "id": "daily-2026-07-10-ex-2",
+      "type": "q_conversation",
+      "lesson": 1,
+      "target_grammar": "N1 は N2 ですか / はい、N2 です",
+      "prompt": "第 2 题：根据确认问题自然回应",
+      "instruction": "你是 B。A 在确认你是不是工程师。请回答：是的，我是工程师。",
+      "context_note": "这是复习队列项目。可以省略 わたしは，但回答不能只写 はい。",
+      "answer_format": "只写 B 的一句回答。",
+      "choices": [],
+      "supporting_lines": [
+        "A：あなたは エンジニアですか。",
+        "B：（这里由你作答）"
+      ],
+      "vocab_hints": [
+        "はい / 是的",
+        "エンジニア / 工程师"
+      ],
+      "answer_reference": "はい、エンジニアです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "review",
+        "skill": "conversation"
+      },
+      "review_queue_id": "rq-2026-07-10-lesson-1-question-response"
+    },
+    {
+      "id": "daily-2026-07-10-ex-3",
+      "type": "q_fill",
+      "lesson": 1,
+      "target_grammar": "N1 は N2 じゃありません",
+      "prompt": "第 3 题：补全名词否定句",
+      "instruction": "请补全“米勒先生不是医生”：ミラーさんは いしゃ ___ 。",
+      "context_note": "只填一个自然的礼貌否定形式。",
+      "answer_format": "只写空格里的内容。",
+      "choices": [
+        "じゃありません",
+        "です",
+        "では",
+        "はありません"
+      ],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "ミラーさん / 米勒先生",
+        "いしゃ / 医生"
+      ],
+      "answer_reference": "じゃありません",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "grammar"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-4",
+      "type": "q_translate",
+      "lesson": 1,
+      "target_grammar": "N1 は N2 です",
+      "prompt": "第 4 题：把中文身份说明说成日语",
+      "instruction": "请用自然日语表达：我是中国人。",
+      "context_note": "重点检查主题助词 は 的写法。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "わたし / 我",
+        "ちゅうごくじん / 中国人"
+      ],
+      "answer_reference": "わたしは ちゅうごくじんです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-5",
+      "type": "q_fill",
+      "lesson": 2,
+      "target_grammar": "これ / それ / あれ",
+      "prompt": "第 5 题：选择正确的物品指示词",
+      "instruction": "说话人手里拿着一本书，要说“这是书”。请补全：___ は ほんです。",
+      "context_note": "物品在说话人近处，用 これ。",
+      "answer_format": "只写空格里的内容。",
+      "choices": [
+        "これ",
+        "それ",
+        "あれ",
+        "どれ"
+      ],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "ほん / 书"
+      ],
+      "answer_reference": "これ",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "input"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-6",
+      "type": "q_translate",
+      "lesson": 2,
+      "target_grammar": "この N / N1 の N2",
+      "prompt": "第 6 题：把中文物品所属说成日语",
+      "instruction": "请用自然日语表达：这本书是我的书。",
+      "context_note": "“这本书”要用 この ほん；“我的书”用 わたしの ほん。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "この / 这个（后接名词）",
+        "ほん / 书",
+        "わたしの / 我的"
+      ],
+      "answer_reference": "この ほんは わたしの ほんです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-7",
+      "type": "q_conversation",
+      "lesson": 2,
+      "target_grammar": "そうです / そうじゃありません",
+      "prompt": "第 7 题：根据物品确认问题否定回答",
+      "instruction": "你是 B。A 问“这是田中先生的伞吗？”，但不是。请回答：不，不是。",
+      "context_note": "只需要否定对方的确认内容，不需要补充真正所有者。",
+      "answer_format": "只写 B 的一句回答。",
+      "choices": [],
+      "supporting_lines": [
+        "A：これは たなかさんの かさですか。",
+        "B：（这里由你作答）"
+      ],
+      "vocab_hints": [
+        "いいえ / 不",
+        "そうじゃありません / 不是那样"
+      ],
+      "answer_reference": "いいえ、そうじゃありません。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "conversation"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-8",
+      "type": "q_translate",
+      "lesson": 2,
+      "target_grammar": "その N / N1 の N2",
+      "prompt": "第 8 题：把中文物品归属说成日语",
+      "instruction": "请用自然日语表达：那把伞是米勒先生的伞。伞在对方附近。",
+      "context_note": "物品在对方附近，用 その かさ。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "その / 那个（在对方附近，后接名词）",
+        "かさ / 伞",
+        "ミラーさん / 米勒先生"
+      ],
+      "answer_reference": "その かさは ミラーさんの かさです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-9",
+      "type": "q_fill",
+      "lesson": 3,
+      "target_grammar": "ここ / そこ / あそこ / どこ",
+      "prompt": "第 9 题：选择正确地点指示词",
+      "instruction": "洗手间离说话人和听话人都远。要说“洗手间在那里”。请补全：トイレは ___ です。",
+      "context_note": "离双方都远，用 あそこ。",
+      "answer_format": "只写空格里的内容。",
+      "choices": [
+        "ここ",
+        "そこ",
+        "あそこ",
+        "どこ"
+      ],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "トイレ / 洗手间"
+      ],
+      "answer_reference": "あそこ",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "input"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-10",
+      "type": "q_translate",
+      "lesson": 3,
+      "target_grammar": "N は place です",
+      "prompt": "第 10 题：把中文地点说明说成日语",
+      "instruction": "请用自然日语表达：会议室在这里。",
+      "context_note": "用 N は place です 说明地点。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "かいぎしつ / 会议室",
+        "ここ / 这里"
+      ],
+      "answer_reference": "かいぎしつは ここです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-11",
+      "type": "q_conversation",
+      "lesson": 3,
+      "target_grammar": "どちら / こちら / あちら",
+      "prompt": "第 11 题：根据方向问题礼貌回答",
+      "instruction": "你是 B。A 问电梯在哪边。电梯在离双方较远的那边。请礼貌回答：在那边。",
+      "context_note": "办公场景中，用 あちら 比 あそこ 更礼貌。",
+      "answer_format": "只写 B 的一句回答。",
+      "choices": [],
+      "supporting_lines": [
+        "A：エレベーターは どちらですか。",
+        "B：（这里由你作答）"
+      ],
+      "vocab_hints": [
+        "エレベーター / 电梯",
+        "あちら / 那边"
+      ],
+      "answer_reference": "あちらです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "conversation"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-12",
+      "type": "q_translate",
+      "lesson": 3,
+      "target_grammar": "いくらですか",
+      "prompt": "第 12 题：把中文价格问题说成日语",
+      "instruction": "请用自然日语表达：这块手表多少钱？",
+      "context_note": "“这块手表”用 この とけい。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "この / 这个（后接名词）",
+        "とけい / 手表、钟表",
+        "いくら / 多少钱"
+      ],
+      "answer_reference": "この とけいは いくらですか。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-13",
+      "type": "q_fill",
+      "lesson": 4,
+      "target_grammar": "time に V",
+      "prompt": "第 13 题：补全具体时间点助词",
+      "instruction": "请补全“每天早上 7 点起床”：まいあさ 7じ ___ おきます。",
+      "context_note": "具体时间点后常用 に。",
+      "answer_format": "只写空格里的内容。",
+      "choices": [
+        "に",
+        "で",
+        "へ",
+        "は"
+      ],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "まいあさ / 每天早上",
+        "おきます / 起床"
+      ],
+      "answer_reference": "に",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "grammar"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-14",
+      "type": "q_translate",
+      "lesson": 4,
+      "target_grammar": "N は time から time までです",
+      "prompt": "第 14 题：把中文时间范围说成日语",
+      "instruction": "请用自然日语表达：午休从 12 点到 1 点。",
+      "context_note": "起点用 から，终点用 まで。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "ひるやすみ / 午休",
+        "12じ / 12 点",
+        "1じ / 1 点"
+      ],
+      "answer_reference": "ひるやすみは 12じから 1じまでです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-15",
+      "type": "q_conversation",
+      "lesson": 4,
+      "target_grammar": "なんじに Vますか / time に Vます",
+      "prompt": "第 15 题：根据时间问题回答",
+      "instruction": "你是 B。A 问“几点结束？”。请回答：6 点结束。",
+      "context_note": "具体时间 6じ 后接 に。",
+      "answer_format": "只写 B 的一句回答。",
+      "choices": [],
+      "supporting_lines": [
+        "A：なんじに おわりますか。",
+        "B：（这里由你作答）"
+      ],
+      "vocab_hints": [
+        "6じ / 6 点",
+        "おわります / 结束"
+      ],
+      "answer_reference": "6じに おわります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "conversation"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-16",
+      "type": "q_translate",
+      "lesson": 4,
+      "target_grammar": "Vません",
+      "prompt": "第 16 题：把中文否定动作说成日语",
+      "instruction": "请用自然日语表达：今天不工作。",
+      "context_note": "きょう 后面通常不需要加 に。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "きょう / 今天",
+        "はたらきます / 工作"
+      ],
+      "answer_reference": "きょうは はたらきません。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-17",
+      "type": "q_fill",
+      "lesson": 5,
+      "target_grammar": "place へ 行きます",
+      "prompt": "第 17 题：补全移动方向助词",
+      "instruction": "请补全“去公司”：かいしゃ ___ いきます。",
+      "context_note": "表示移动目的地或方向时，用 へ。",
+      "answer_format": "只写空格里的内容。",
+      "choices": [
+        "へ",
+        "で",
+        "と",
+        "に"
+      ],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "かいしゃ / 公司",
+        "いきます / 去"
+      ],
+      "answer_reference": "へ",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "grammar"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-18",
+      "type": "q_translate",
+      "lesson": 5,
+      "target_grammar": "vehicle で place へ 行きます",
+      "prompt": "第 18 题：把中文交通移动说成日语",
+      "instruction": "请用自然日语表达：坐电车去公司。",
+      "context_note": "交通手段用 で，目的地用 へ。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "でんしゃ / 电车",
+        "かいしゃ / 公司",
+        "いきます / 去"
+      ],
+      "answer_reference": "でんしゃで かいしゃへ いきます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-19",
+      "type": "q_conversation",
+      "lesson": 5,
+      "target_grammar": "person と 行きます",
+      "prompt": "第 19 题：根据同行者问题回答",
+      "instruction": "你是 B。A 问“和谁去？”。请回答：和田中先生去。",
+      "context_note": "同行者用 と。",
+      "answer_format": "只写 B 的一句回答。",
+      "choices": [],
+      "supporting_lines": [
+        "A：だれと いきますか。",
+        "B：（这里由你作答）"
+      ],
+      "vocab_hints": [
+        "たなかさん / 田中先生",
+        "いきます / 去"
+      ],
+      "answer_reference": "たなかさんと いきます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "conversation"
+      }
+    },
+    {
+      "id": "daily-2026-07-10-ex-20",
+      "type": "q_translate",
+      "lesson": 5,
+      "target_grammar": "どこへも 行きません",
+      "prompt": "第 20 题：把中文全面否定移动说成日语",
+      "instruction": "请用自然日语表达：星期天哪儿也不去。",
+      "context_note": "どこへも 和否定动词搭配，表示哪儿也不去。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "にちようび / 星期天",
+        "どこへも / 哪儿也",
+        "いきません / 不去"
+      ],
+      "answer_reference": "にちようびは どこへも いきません。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    }
+  ],
+  "answers": {
+    "daily-2026-07-10-ex-1": "わたしのせんせいはやまださん",
+    "daily-2026-07-10-ex-2": "はい、わたしはエンジニアです",
+    "daily-2026-07-10-ex-3": "ミラーさんはいしゃじゃありません",
+    "daily-2026-07-10-ex-4": "わたしはちゅうごくじんです",
+    "daily-2026-07-10-ex-5": "これはほんです",
+    "daily-2026-07-10-ex-6": "このほんはわたしのほんです",
+    "daily-2026-07-10-ex-7": "いいえ、これはわたしのです",
+    "daily-2026-07-10-ex-8": "そのかさはミラーさんのです",
+    "daily-2026-07-10-ex-9": "あそこ",
+    "daily-2026-07-10-ex-10": "かいぎしつはここです",
+    "daily-2026-07-10-ex-11": "あちらです",
+    "daily-2026-07-10-ex-12": "このとけいはいくらですか",
+    "daily-2026-07-10-ex-13": "に",
+    "daily-2026-07-10-ex-14": "ひるやすみはじょうにじからいちじまでです",
+    "daily-2026-07-10-ex-15": "ろくじにあわります",
+    "daily-2026-07-10-ex-16": "きょうはたらきません",
+    "daily-2026-07-10-ex-17": "へ",
+    "daily-2026-07-10-ex-18": "でんしゃでかいしゃえいきます",
+    "daily-2026-07-10-ex-19": "たなかさんといきます",
+    "daily-2026-07-10-ex-20": "にちよびどこへもいきません"
+  },
+  "self_assessment": {
+    "difficulty": "easy",
+    "uncertain_exercise_ids": [
+      "daily-2026-07-10-ex-2"
+    ],
+    "confusing_points": [],
+    "pace": "",
+    "note": "你给的提示中基本都快把答案给出来了"
+  },
+  "correction": {
+    "status": "reviewed",
+    "prompt_file": "study/prompts/generated/2026-07-10-review.md",
+    "review_file": "study/reviews/2026-07-10-review.json"
+  },
+  "review_result": {
+    "id": "review-2026-07-10",
+    "accuracy": 0.91,
+    "summary": "20 题综合输出整体很稳，语义与核心句型大多正确。需要马上修正的是：关系说明句必须落在「です」，填空题按要求只填空格内容，以及「12じ」「おわります」「へ」「にちようびは」这些假名、词汇和助词细节。虽然已完成第 1-5 课的综合题，但当前 mastery 只建有第 1、2 课的状态，且第 2 课技能分仍为 0；缺少第 2-5 课可追溯的 mastery evidence，因此本轮不作正式课程推进。"
+  }
+}

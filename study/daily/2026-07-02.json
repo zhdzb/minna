@@ -1,0 +1,337 @@
+{
+  "schema_version": 1,
+  "revision": 4,
+  "updated_at": "2026-07-10T03:20:00+08:00",
+  "id": "daily-2026-07-02",
+  "date": "2026-07-02",
+  "status": "reviewed",
+  "created_at": "2026-07-02T20:05:00+08:00",
+  "mission": {
+    "title": "第 1 课复习后输出学习包",
+    "plan_type": "review_then_output",
+    "available_minutes": 60,
+    "focus_lessons": [
+      1
+    ],
+    "goals": [
+      "先处理到期复习：助词「は」写作和名词句否定",
+      "继续巩固第 1 课身份说明、关系说明和确认回应",
+      "用中文题干触发自然日语输出，不做猜题意练习"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "task-due-review",
+      "type": "review_queue",
+      "title": "先处理到期复习点",
+      "minutes": 14,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-contrast-input",
+      "type": "grammar_review",
+      "title": "重看「は」和否定句对比说明",
+      "minutes": 12,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-shadowing",
+      "type": "listening_shadowing",
+      "title": "跟读第 1 课修正脚本",
+      "minutes": 10,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-controlled-output",
+      "type": "controlled_output",
+      "title": "完成受控输出练习",
+      "minutes": 16,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-free-output",
+      "type": "free_output",
+      "title": "完成情境回应并标记不确定点",
+      "minutes": 8,
+      "required": true,
+      "status": "pending"
+    }
+  ],
+  "study_materials": [
+    {
+      "id": "lesson-1-topic-wa-review",
+      "type": "grammar_note",
+      "lesson": 1,
+      "title": "助词「は」：读 wa，写 は",
+      "content": "上次多题把主题助词写成「わ」。今天要把读音和写法拆开记：作为助词时读 wa，但写作「は」。它前面的名词是句子的主题，后面说明这个主题的身份、关系或状态。",
+      "examples": [
+        {
+          "ja": "わたしは ちゅうごくじんです。",
+          "zh": "我是中国人。",
+          "note": "「は」读作 wa，但不能写成「わたしわ」。"
+        },
+        {
+          "ja": "やまださんは せんせいです。",
+          "zh": "山田先生/女士是老师。",
+          "note": "说明某人的身份时，主题后仍写「は」。"
+        },
+        {
+          "ja": "わたしの せんせいは やまださんです。",
+          "zh": "我的老师是山田老师。",
+          "note": "「の」连接名词后，整个名词短语作主题，后面仍写「は」。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-1-negative-review",
+      "type": "contrast_note",
+      "lesson": 1,
+      "title": "名词句否定：じゃありません / ではありません",
+      "content": "第 1 课优先用「じゃありません」做礼貌否定；「ではありません」也正确，但更正式。注意「では」中的助词仍写「は」，不是「でわ」。填空题只写一个答案，不要把两个形式都塞进同一空。",
+      "examples": [
+        {
+          "ja": "わたしは にほんじんじゃありません。",
+          "zh": "我不是日本人。",
+          "note": "本课优先熟练这个较常见的礼貌否定。"
+        },
+        {
+          "ja": "ミラーさんは いしゃではありません。",
+          "zh": "米勒先生不是医生。",
+          "note": "正式写法是「ではありません」，不是「でわありません」。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-1-shadowing-script-2026-07-02",
+      "type": "listening_script",
+      "lesson": 1,
+      "title": "第 1 课复习跟读脚本",
+      "content": "A：はじめまして。わたしは ワンです。\nB：はじめまして。ミラーです。どうぞ よろしく おねがいします。\nA：ミラーさんは エンジニアですか。\nB：はい、エンジニアです。かいしゃいんです。\nA：わたしは エンジニアじゃありません。がくせいです。\nB：ワンさんの せんせいは どなたですか。\nA：わたしの せんせいは やまださんです。",
+      "examples": [
+        {
+          "ja": "わたしは エンジニアじゃありません。がくせいです。",
+          "zh": "我不是工程师。我是学生。",
+          "note": "跟读时特别看「は」的写法和否定句尾。"
+        },
+        {
+          "ja": "わたしの せんせいは やまださんです。",
+          "zh": "我的老师是山田老师。",
+          "note": "把「の」和「は」分清：一个连接名词，一个标记主题。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-1-vocabulary-review-2026-07-02",
+      "type": "vocabulary_note",
+      "lesson": 1,
+      "title": "今日输出词汇",
+      "content": "わたし：我；ワン：王；ミラー：米勒；やまだ：山田；ちゅうごくじん：中国人；にほんじん：日本人；がくせい：学生；かいしゃいん：公司职员；エンジニア：工程师；せんせい：老师。",
+      "examples": [
+        {
+          "ja": "かいしゃいん",
+          "zh": "公司职员",
+          "note": "确认职业时常用。"
+        },
+        {
+          "ja": "エンジニア",
+          "zh": "工程师",
+          "note": "现代自我介绍场景自然。"
+        }
+      ]
+    }
+  ],
+  "review_items": [
+    {
+      "review_queue_id": "rq-2026-07-02-lesson-1-topic-wa",
+      "lesson": 1,
+      "skill": "grammar_point",
+      "target_grammar": "助词 は 读作 wa、写作 は"
+    },
+    {
+      "review_queue_id": "rq-2026-07-02-lesson-1-noun-negative",
+      "lesson": 1,
+      "skill": "grammar_point",
+      "target_grammar": "N1 は N2 じゃありません"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "daily-2026-07-02-ex-1",
+      "type": "q_fill",
+      "lesson": 1,
+      "target_grammar": "助词 は 读作 wa、写作 は",
+      "prompt": "第 1 题：修正主题助词写法",
+      "instruction": "请把“我是中国人”补成自然日语：わたし ___ ちゅうごくじんです。",
+      "context_note": "这是到期复习项。请选择主题助词的正确写法；它读作 wa，但写作有固定形式。",
+      "answer_format": "只填写一个选项，不要写完整句子。",
+      "choices": [
+        "は",
+        "わ",
+        "の",
+        "です"
+      ],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "わたし / 我",
+        "ちゅうごくじん / 中国人"
+      ],
+      "answer_reference": "は",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "review",
+        "skill": "grammar"
+      },
+      "review_queue_id": "rq-2026-07-02-lesson-1-topic-wa"
+    },
+    {
+      "id": "daily-2026-07-02-ex-2",
+      "type": "q_translate",
+      "lesson": 1,
+      "target_grammar": "N1 は N2 じゃありません",
+      "prompt": "第 2 题：把中文否定句说成日语",
+      "instruction": "请用自然日语表达：米勒先生不是医生。",
+      "context_note": "这是到期复习项。优先使用「じゃありません」；不要写成「でわありません」。",
+      "answer_format": "写 1 句完整、自然的日语句子。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "ミラーさん / 米勒先生/女士",
+        "いしゃ / 医生"
+      ],
+      "answer_reference": "ミラーさんは いしゃじゃありません。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "review",
+        "skill": "output"
+      },
+      "review_queue_id": "rq-2026-07-02-lesson-1-noun-negative"
+    },
+    {
+      "id": "daily-2026-07-02-ex-3",
+      "type": "q_translate",
+      "lesson": 1,
+      "target_grammar": "助词 は 读作 wa、写作 は",
+      "prompt": "第 3 题：用正确主题助词写完整句",
+      "instruction": "请用自然日语表达：山田老师是老师。",
+      "context_note": "这题重点不是词汇难度，而是把「やまださんは」写对。",
+      "answer_format": "写 1 句完整、自然的日语句子。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "やまださん / 山田先生/女士",
+        "せんせい / 老师"
+      ],
+      "answer_reference": "やまださんは せんせいです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "review",
+        "skill": "output"
+      },
+      "review_queue_id": "rq-2026-07-02-lesson-1-topic-wa"
+    },
+    {
+      "id": "daily-2026-07-02-ex-4",
+      "type": "q_translate",
+      "lesson": 1,
+      "target_grammar": "N1 の N2",
+      "prompt": "第 4 题：把关系说明说成日语",
+      "instruction": "请用自然日语表达：王先生/女士的老师是山田老师。",
+      "context_note": "必须使用「の」表示关系，并用「は」标记整个主题。",
+      "answer_format": "写 1 句完整、自然的日语句子。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [
+        "ワンさん / 王先生/女士",
+        "せんせい / 老师",
+        "やまださん / 山田先生/女士"
+      ],
+      "answer_reference": "ワンさんの せんせいは やまださんです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-02-ex-5",
+      "type": "q_conversation",
+      "lesson": 1,
+      "target_grammar": "N1 は N2 ですか",
+      "prompt": "第 5 题：根据确认问题自然回应",
+      "instruction": "你是 B。A 在确认你的职业。请回答“是的，我是工程师”，用一句自然日语。",
+      "context_note": "只写 B 的回答。可以不重复「わたしは」，但如果写出来，助词必须写「は」。",
+      "answer_format": "只写 B 的一句回答，不要重复 A 的台词。",
+      "choices": [],
+      "supporting_lines": [
+        "A：ワンさんは エンジニアですか。",
+        "B：（这里由你作答）"
+      ],
+      "vocab_hints": [
+        "はい / 是的",
+        "エンジニア / 工程师"
+      ],
+      "answer_reference": "はい、エンジニアです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "conversation"
+      }
+    },
+    {
+      "id": "daily-2026-07-02-ex-6",
+      "type": "q_conversation",
+      "lesson": 1,
+      "target_grammar": "N1 は N2 じゃありません",
+      "prompt": "第 6 题：纠正身份误认",
+      "instruction": "你是 B。A 误以为你是公司职员。请礼貌地回答“不是，我不是公司职员。我是学生”。",
+      "context_note": "请写 2 个短句，先否定再说明正确身份。重点练习「は」和「じゃありません」。",
+      "answer_format": "写 B 的回答，2 个短句即可。",
+      "choices": [],
+      "supporting_lines": [
+        "A：ワンさんは かいしゃいんですか。",
+        "B：（这里由你作答）"
+      ],
+      "vocab_hints": [
+        "いいえ / 不、不是",
+        "かいしゃいん / 公司职员",
+        "がくせい / 学生"
+      ],
+      "answer_reference": "いいえ、かいしゃいんじゃありません。がくせいです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "review",
+        "skill": "conversation"
+      },
+      "review_queue_id": "rq-2026-07-02-lesson-1-noun-negative"
+    }
+  ],
+  "answers": {
+    "daily-2026-07-02-ex-1": "は",
+    "daily-2026-07-02-ex-2": "みらーさんはいしゃじゃありません",
+    "daily-2026-07-02-ex-3": "やまださんはせんせいです",
+    "daily-2026-07-02-ex-4": "わんさんのせんせいはやまださせんせいです",
+    "daily-2026-07-02-ex-5": "はい",
+    "daily-2026-07-02-ex-6": "いいえ、わたしはかいしゃいんじゃありません、わたしはがくせいです"
+  },
+  "self_assessment": {
+    "difficulty": null,
+    "uncertain_exercise_ids": [],
+    "confusing_points": [],
+    "pace": "",
+    "note": ""
+  },
+  "correction": {
+    "status": "reviewed",
+    "prompt_file": "study/prompts/generated/2026-07-02-review.md",
+    "review_file": "study/reviews/2026-07-02-review.json"
+  },
+  "review_result": {
+    "id": "review-2026-07-02",
+    "accuracy": 0.8417,
+    "summary": "核心复习点已稳定，可以推进到第 2 课准备阶段；关系句姓名拼写和确认回应完整度保留复习。"
+  }
+}

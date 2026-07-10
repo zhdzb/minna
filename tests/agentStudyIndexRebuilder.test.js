@@ -102,7 +102,7 @@ afterEach(() => {
 })
 
 describe('agentStudyIndexRebuilder', () => {
-  it('rebuilds the reset seed study index from on-disk facts', () => {
+  it('rebuilds the seeded study index from on-disk facts', () => {
     const studyRoot = path.resolve(process.cwd(), 'study')
 
     const rebuilt = buildRebuiltIndex({
@@ -111,9 +111,9 @@ describe('agentStudyIndexRebuilder', () => {
     })
 
     expect(validateIndex(rebuilt)).toEqual(rebuilt)
-    expect(rebuilt.latest_daily).toBeNull()
-    expect(rebuilt.latest_review).toBeNull()
-    expect(rebuilt.latest_prompt).toBeNull()
+    expect(rebuilt.latest_daily).toBe('study/daily/2026-07-10.json')
+    expect(rebuilt.latest_review).toBe('study/reviews/2026-07-10-review.json')
+    expect(rebuilt.latest_prompt).toBe('study/prompts/generated/2026-07-10-review.md')
   })
 
   it('falls back to rebuilding and writing index when index.json is missing or corrupted', () => {

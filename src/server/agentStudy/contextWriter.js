@@ -50,6 +50,7 @@ const buildNextReadFiles = ({ indexDocument }) =>
     'study/state/review-queue.json',
     'study/state/profile.json',
     indexDocument.latest_daily,
+    indexDocument.latest_prompt,
     indexDocument.latest_review,
     'study/logs/agent-events.jsonl'
   ])

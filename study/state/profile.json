@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "revision": 1,
-  "updated_at": "2026-07-01T12:00:00+08:00",
+  "revision": 2,
+  "updated_at": "2026-07-10T13:30:00+08:00",
   "learner_id": "local-default",
   "goals": [
-    "从第 1 课重新建立可部署版 Study Loop 的学习基线",
+    "从第 6 课开始覆盖第 6-10 课的核心句型与输出",
     "以中文提示词和日语输出练习为默认工作流"
   ],
-  "daily_time_budget_minutes": 60,
-  "pace_preference": "steady",
+  "daily_time_budget_minutes": 90,
+  "pace_preference": "intensive",
   "input_preferences": {
     "allow_romaji": true,
     "prefer_kana_first": true,
@@ -18,13 +18,19 @@
   "material_scope": {
     "series": "大家的日本语",
     "current_focus_lessons": [
-      1
+      6,
+      7,
+      8,
+      9,
+      10
     ],
     "allow_new_lessons": true
   },
   "notes": [
     "重构后运行态数据已清零，不再沿用旧的 daily、review、review-drill 记录。",
     "答题区默认支持罗马音自动转假名。",
-    "Agent 提示词和工作台文案默认使用中文。"
+    "Agent 提示词和工作台文案默认使用中文。",
+    "学习者于 2026-07-10 确认第 1-5 课整体进度已通过；历史错题与复习队列继续保留。",
+    "默认学习预算调整为 90 分钟，对应 30 道输出题。"
   ]
 }

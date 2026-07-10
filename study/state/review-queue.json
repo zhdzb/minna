@@ -1,6 +1,47 @@
 {
   "schema_version": 1,
-  "revision": 1,
-  "updated_at": "2026-07-01T12:00:00+08:00",
-  "items": []
+  "revision": 4,
+  "updated_at": "2026-07-10T13:00:00+08:00",
+  "items": [
+    {
+      "id": "rq-2026-07-02-lesson-1-topic-wa",
+      "kind": "grammar_point",
+      "key": "lesson-1/topic-particle-wa",
+      "status": "scheduled",
+      "due_date": "2026-07-13",
+      "interval_days": 3,
+      "ease": 1.95,
+      "last_result": "easy"
+    },
+    {
+      "id": "rq-2026-07-02-lesson-1-noun-negative",
+      "kind": "grammar_point",
+      "key": "lesson-1/noun-negative",
+      "status": "scheduled",
+      "due_date": "2026-07-12",
+      "interval_days": 2,
+      "ease": 2.05,
+      "last_result": "good"
+    },
+    {
+      "id": "rq-2026-07-10-lesson-1-relationship-name",
+      "kind": "grammar_point",
+      "key": "lesson-1/noun-relationship-no",
+      "status": "due",
+      "due_date": "2026-07-10",
+      "interval_days": 1,
+      "ease": 1.8,
+      "last_result": "wrong"
+    },
+    {
+      "id": "rq-2026-07-10-lesson-1-question-response",
+      "kind": "grammar_point",
+      "key": "lesson-1/question-response",
+      "status": "scheduled",
+      "due_date": "2026-07-12",
+      "interval_days": 2,
+      "ease": 2.05,
+      "last_result": "good"
+    }
+  ]
 }

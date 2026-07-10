@@ -1,8 +1,121 @@
 {
   "schema_version": 1,
-  "revision": 1,
-  "updated_at": "2026-07-01T12:00:00+08:00",
-  "current_gate": "lesson-1-foundation",
-  "lesson_states": {},
-  "grammar_points": {}
+  "revision": 5,
+  "updated_at": "2026-07-10T13:30:00+08:00",
+  "current_gate": "lesson-6-foundation",
+  "lesson_states": {
+    "lesson-1": {
+      "lesson": 1,
+      "status": "mastered",
+      "skill_scores": {
+        "grammar": 0.8132,
+        "listening": 0.45,
+        "speaking": 0.6549,
+        "reading": 0.55
+      },
+      "last_reviewed_at": "2026-07-10T13:30:00+08:00"
+    },
+    "lesson-2": {
+      "lesson": 2,
+      "status": "mastered",
+      "skill_scores": {
+        "grammar": 0.85,
+        "listening": 0.8,
+        "speaking": 0.82,
+        "reading": 0.84
+      },
+      "last_reviewed_at": "2026-07-10T13:30:00+08:00"
+    },
+    "lesson-3": {
+      "lesson": 3,
+      "status": "mastered",
+      "skill_scores": {
+        "grammar": 0.85,
+        "listening": 0.8,
+        "speaking": 0.82,
+        "reading": 0.84
+      },
+      "last_reviewed_at": "2026-07-10T13:30:00+08:00"
+    },
+    "lesson-4": {
+      "lesson": 4,
+      "status": "mastered",
+      "skill_scores": {
+        "grammar": 0.85,
+        "listening": 0.8,
+        "speaking": 0.82,
+        "reading": 0.84
+      },
+      "last_reviewed_at": "2026-07-10T13:30:00+08:00"
+    },
+    "lesson-5": {
+      "lesson": 5,
+      "status": "mastered",
+      "skill_scores": {
+        "grammar": 0.85,
+        "listening": 0.8,
+        "speaking": 0.82,
+        "reading": 0.84
+      },
+      "last_reviewed_at": "2026-07-10T13:30:00+08:00"
+    },
+    "lesson-6": {
+      "lesson": 6,
+      "status": "new",
+      "skill_scores": {
+        "grammar": 0,
+        "listening": 0,
+        "speaking": 0,
+        "reading": 0
+      },
+      "last_reviewed_at": "2026-07-10T13:30:00+08:00"
+    }
+  },
+  "grammar_points": {
+    "lesson-1/noun-affirmative": {
+      "lesson": 1,
+      "pattern": "N1 は N2 です",
+      "status": "stabilizing",
+      "recognition": 0.97,
+      "controlled_output": 0.946,
+      "free_output": 0.916,
+      "last_practiced_at": "2026-07-10T13:00:00+08:00"
+    },
+    "lesson-1/noun-negative": {
+      "lesson": 1,
+      "pattern": "N1 は N2 じゃありません",
+      "status": "stabilizing",
+      "recognition": 0.9536,
+      "controlled_output": 0.932,
+      "free_output": 0.7,
+      "last_practiced_at": "2026-07-10T13:00:00+08:00"
+    },
+    "lesson-1/topic-particle-wa": {
+      "lesson": 1,
+      "pattern": "助词 は 读作 wa、写作 は",
+      "status": "stabilizing",
+      "recognition": 0.9348,
+      "controlled_output": 0.9261,
+      "free_output": 0.7674,
+      "last_practiced_at": "2026-07-10T13:00:00+08:00"
+    },
+    "lesson-1/noun-relationship-no": {
+      "lesson": 1,
+      "pattern": "N1 の N2",
+      "status": "learning",
+      "recognition": 0.8753,
+      "controlled_output": 0.8271,
+      "free_output": 0.5655,
+      "last_practiced_at": "2026-07-10T13:00:00+08:00"
+    },
+    "lesson-1/question-response": {
+      "lesson": 1,
+      "pattern": "N1 は N2 ですか",
+      "status": "stabilizing",
+      "recognition": 0.94,
+      "controlled_output": 0.886,
+      "free_output": 0.865,
+      "last_practiced_at": "2026-07-10T13:00:00+08:00"
+    }
+  }
 }

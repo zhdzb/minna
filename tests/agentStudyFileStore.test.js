@@ -214,13 +214,13 @@ afterEach(() => {
 })
 
 describe('agentStudyFileStore', () => {
-  it('reads the reset seed index and returns null for cleared runtime files', () => {
+  it('reads the seeded index and latest daily packet', () => {
     const store = createAgentStudyFileStore()
 
-    expect(store.loadIndex().latest_daily).toBeNull()
-    expect(store.loadIndex().latest_review).toBeNull()
-    expect(store.loadLatestDaily()).toBeNull()
-    expect(store.loadLatestReview()).toBeNull()
+    expect(store.loadIndex().latest_daily).toBe('study/daily/2026-07-10.json')
+    expect(store.loadIndex().latest_review).toBe('study/reviews/2026-07-10-review.json')
+    expect(store.loadLatestDaily().id).toBe('daily-2026-07-10')
+    expect(store.loadLatestReview().id).toBe('review-2026-07-10')
     expect(store.loadLatestReviewDrill()).toBeNull()
   })
 
