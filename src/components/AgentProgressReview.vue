@@ -22,7 +22,7 @@
         <article class="summary-card">
           <span>当前课程</span>
           <strong>{{ progressPayload.current?.current_lesson ?? '--' }}</strong>
-          <p>{{ progressPayload.current?.learning_mode || '暂无学习模式' }}</p>
+          <p>{{ learningModeLabel }}</p>
         </article>
         <article class="summary-card">
           <span>每日预算</span>
@@ -37,7 +37,7 @@
         <article class="summary-card">
           <span>推进状态</span>
           <strong>{{ promotionLabel }}</strong>
-          <p>{{ promotionReasonPreview }}</p>
+          <p>{{ phaseDetails.description }}</p>
         </article>
       </section>
 
@@ -149,14 +149,14 @@
         </div>
         <div class="detail-grid two-up">
           <article class="detail-card">
-            <h3>最近批改</h3>
-            <p class="detail-copy">{{ progressPayload.reviewResult?.overall?.summary || '暂时还没有批改总结。' }}</p>
-            <p class="detail-note">正确率 {{ formatPercent(progressPayload.reviewResult?.overall?.accuracy) }}</p>
+            <h3>{{ progressPayload.reviewResult ? '当前学习包批改' : '历史最近批改' }}</h3>
+            <p class="detail-copy">{{ displayedReview?.overall?.summary || '暂时还没有批改总结。' }}</p>
+            <p class="detail-note">正确率 {{ formatPercent(displayedReview?.overall?.accuracy) }}</p>
           </article>
           <article class="detail-card">
             <h3>当前门槛</h3>
             <p class="detail-copy">
-              {{ progressPayload.reviewResult?.promotion_decision?.reason || '暂时还没有推进判断。' }}
+              {{ progressPayload.reviewResult?.promotion_decision?.reason || `当前处于“${phaseDetails.label}”，提交并批改后才会产生新的推进判断。` }}
             </p>
             <ul v-if="nextFocus.length" class="detail-list">
               <li v-for="focus in nextFocus" :key="focus">{{ focus }}</li>
@@ -165,11 +165,11 @@
         </div>
       </section>
 
-      <section class="progress-band">
-        <div class="section-heading">
-          <h2>最近事件</h2>
+      <details class="progress-band advanced-panel">
+        <summary class="section-heading">
+          <strong>高级信息：最近事件</strong>
           <span>{{ recentEvents.length }} 条</span>
-        </div>
+        </summary>
         <div v-if="recentEvents.length" class="event-list">
           <article v-for="event in recentEvents" :key="event.event_id" class="event-item">
             <div class="item-head">
@@ -180,15 +180,15 @@
           </article>
         </div>
         <el-empty v-else description="当前没有事件日志记录。" />
-      </section>
+      </details>
 
-      <section class="progress-band">
-        <div class="section-heading">
-          <h2>下一次 Agent 上下文</h2>
+      <details class="progress-band advanced-panel">
+        <summary class="section-heading">
+          <strong>高级信息：Agent 上下文</strong>
           <span>{{ progressPayload.nextAgentContext?.path || '--' }}</span>
-        </div>
+        </summary>
         <pre class="context-preview">{{ progressPayload.nextAgentContext?.content || '当前没有 next-agent-context 内容。' }}</pre>
-      </section>
+      </details>
     </template>
   </div>
 </template>
@@ -196,6 +196,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { createAgentStudyClient } from '@/utils/agentStudyClient'
+import { deriveAgentStudyPhase, getAgentStudyPhaseDetails } from '@/utils/agentStudyPhase'
 
 const props = defineProps({
   client: {
@@ -214,7 +215,9 @@ const queueItems = computed(() => progressPayload.value?.reviewQueue?.items || [
 const dueQueueCount = computed(() => queueItems.value.filter((item) => item.status === 'due').length)
 const scheduledQueueCount = computed(() => queueItems.value.filter((item) => item.status !== 'due').length)
 const profileGoals = computed(() => progressPayload.value?.profile?.goals || [])
-const nextFocus = computed(() => progressPayload.value?.reviewResult?.overall?.next_focus || [])
+const nextFocus = computed(() =>
+  progressPayload.value?.reviewResult?.overall?.next_focus || progressPayload.value?.current?.active_goals || []
+)
 const recentEvents = computed(() => progressPayload.value?.recentEvents || [])
 const lessonStates = computed(() =>
   Object.entries(progressPayload.value?.mastery?.lesson_states || {}).map(([key, value]) => ({
@@ -229,13 +232,29 @@ const weakGrammarPoints = computed(() =>
     .sort((left, right) => left.controlled_output - right.controlled_output)
     .slice(0, 6)
 )
-const latestReviewId = computed(() => progressPayload.value?.reviewResult?.id || '暂无批改')
-const promotionLabel = computed(() =>
-  progressPayload.value?.reviewResult?.promotion_decision?.can_advance ? '可推进' : '暂缓'
+const displayedReview = computed(() =>
+  progressPayload.value?.reviewResult || progressPayload.value?.latestReviewResult || null
 )
-const promotionReasonPreview = computed(() => {
-  const reason = progressPayload.value?.reviewResult?.promotion_decision?.reason || '暂时还没有推进信号。'
-  return reason.length > 72 ? `${reason.slice(0, 72)}...` : reason
+const latestReviewId = computed(() => progressPayload.value?.reviewResult?.id || '当前包未批改')
+const phase = computed(() =>
+  progressPayload.value?.phase || deriveAgentStudyPhase({
+    dailyPacket: progressPayload.value?.dailyPacket,
+    reviewResult: progressPayload.value?.reviewResult,
+    reviewQueue: progressPayload.value?.reviewQueue
+  })
+)
+const phaseDetails = computed(() => getAgentStudyPhaseDetails(phase.value))
+const promotionLabel = computed(() => phaseDetails.value.label)
+const learningModeLabel = computed(() => {
+  const labels = {
+    lesson_foundation: '新课学习',
+    promotion_ready: '准备推进',
+    review_then_output: '复习后输出',
+    foundation_rebuild: '基础巩固',
+    foundation_reset: '基础重建'
+  }
+  const value = progressPayload.value?.current?.learning_mode
+  return labels[value] || value || '暂无学习模式'
 })
 const dailyBudgetLabel = computed(() => {
   const value = progressPayload.value?.profile?.daily_time_budget_minutes
@@ -445,6 +464,16 @@ onMounted(() => {
   word-break: break-word;
   font: inherit;
   line-height: 1.6;
+}
+
+.advanced-panel > summary {
+  margin-bottom: 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.advanced-panel[open] > summary {
+  margin-bottom: 16px;
 }
 
 @media (max-width: 1100px) {

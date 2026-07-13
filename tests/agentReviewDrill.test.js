@@ -137,7 +137,8 @@ describe('AgentReviewDrill', () => {
     expect(wrapper.text()).toContain('lesson-7 / tool-means')
     expect(wrapper.text()).toContain('最近一次批改里，交通方式句仍然会把「で」')
     expect(wrapper.text()).toContain('请用日语表达：我今天坐出租车去车站。')
-    expect(wrapper.text()).toContain('きょうは タクシーで 駅へ 行きます。')
+    expect(wrapper.text()).not.toContain('きょうは タクシーで 駅へ 行きます。')
+    expect(wrapper.text()).toContain('提交训练后显示参考答案。')
     expect(wrapper.find('textarea').exists()).toBe(true)
   })
 

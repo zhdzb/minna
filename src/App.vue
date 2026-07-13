@@ -28,7 +28,8 @@
           </el-menu>
 
           <div class="app-shell-sidebar-footer">
-            <p class="app-shell-lesson">当前课程：第 {{ store.progress.current_lesson }} 课</p>
+            <p class="app-shell-lesson">当前课程：第 {{ currentLesson }} 课</p>
+            <p class="app-shell-phase">{{ currentPhaseLabel }}</p>
             <el-button type="warning" plain size="small" @click="createBackup">保存快照</el-button>
             <el-button type="info" plain size="small" @click="exportData">导出备份</el-button>
             <el-button type="success" size="small" @click="fileInput?.click()">导入备份</el-button>
@@ -61,13 +62,22 @@ import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { buildPersistableState, useMainStore } from '@/store/mainStore'
 import { validateBackupPayloadShape } from '@/utils/backupPayload'
+import { createAgentStudyClient } from '@/utils/agentStudyClient'
+import { getAgentStudyPhaseDetails } from '@/utils/agentStudyPhase'
 
 const store = useMainStore()
 const router = useRouter()
 const fileInput = ref(null)
 const isAcgDark = ref(false)
+const agentProgress = ref(null)
 
 const activePath = computed(() => router?.currentRoute?.value?.path || '/agent-study')
+const currentLesson = computed(() => agentProgress.value?.current?.current_lesson || store.progress.current_lesson)
+const currentPhaseLabel = computed(() =>
+  agentProgress.value?.phase
+    ? getAgentStudyPhaseDetails(agentProgress.value.phase).label
+    : 'Agent Study 状态加载中'
+)
 
 const syncThemeClass = (enabled) => {
   document.documentElement.classList.toggle('dark', enabled)
@@ -113,6 +123,11 @@ onMounted(async () => {
   toggleTheme(savedTheme === null ? true : savedTheme === 'true')
 
   await store.hydrateFromDisk()
+  try {
+    agentProgress.value = await createAgentStudyClient().loadProgressReview()
+  } catch (_error) {
+    agentProgress.value = null
+  }
 })
 
 onUnmounted(() => {
@@ -290,6 +305,13 @@ body {
   margin: 0 0 4px;
   font-size: 0.85rem;
   color: #cbd5e1;
+  text-align: center;
+}
+
+.app-shell-phase {
+  margin: -4px 0 4px;
+  color: #94a3b8;
+  font-size: 12px;
   text-align: center;
 }
 

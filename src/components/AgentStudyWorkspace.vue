@@ -7,18 +7,29 @@
         <p class="agent-study-subtitle">今天的学习包、资料、作答草稿和最近批改结果都集中在这里。</p>
       </div>
       <div class="header-actions">
-        <el-button :loading="isLoading" @click="loadWorkspace">刷新</el-button>
-        <el-button :loading="isCopyingPrompt" @click="copyCreateDailyPacketPrompt">
-          复制生成学习包提示词
-        </el-button>
-        <el-button type="primary" :loading="isSaving" :disabled="isSaveDisabled" @click="saveDraft">
+        <el-button data-action="refresh" :loading="isLoading" @click="loadWorkspace">刷新</el-button>
+        <el-button data-action="save-daily" type="primary" :loading="isSaving" :disabled="isSaveDisabled" @click="saveDraft">
           保存草稿
         </el-button>
-        <el-button type="success" :loading="isSubmitting" :disabled="isSubmitDisabled" @click="submitPacket">
+        <el-button data-action="submit-daily" type="success" :loading="isSubmitting" :disabled="isSubmitDisabled" @click="submitPacket">
           提交学习包
         </el-button>
       </div>
     </header>
+
+    <section v-if="!isLoading && !loadError" class="agent-study-band phase-band">
+      <div class="phase-copy">
+        <p class="agent-study-eyebrow">当前阶段 · 第 {{ phaseDetails.step }} / 5 步</p>
+        <h2>{{ phaseDetails.label }}</h2>
+        <p>{{ phaseDescription }}</p>
+      </div>
+      <div class="phase-action">
+        <span v-if="dailyPacket && phase === PHASES.STUDYING">已完成 {{ answeredExerciseCount }} / {{ dailyPacket.exercises?.length || 0 }} 题</span>
+        <el-button data-action="phase-primary" type="primary" :loading="isCopyingPrompt" @click="runPrimaryPhaseAction">
+          {{ phaseDetails.action }}
+        </el-button>
+      </div>
+    </section>
 
     <section v-if="isLoading" class="agent-study-band">
       <el-skeleton :rows="8" animated />
@@ -35,7 +46,7 @@
           请先把生成学习包提示词交给编辑器里的 Codex。Codex 会读取项目文件并写入新的
           daily packet，之后刷新本页即可开始学习。
         </p>
-        <el-button type="primary" :loading="isCopyingPrompt" @click="copyCreateDailyPacketPrompt">
+        <el-button data-action="create-packet" type="primary" :loading="isCopyingPrompt" @click="copyCreateDailyPacketPrompt">
           复制生成学习包提示词
         </el-button>
       </div>
@@ -92,7 +103,7 @@
         <p v-if="promptError" class="prompt-feedback error-copy">{{ promptError }}</p>
       </section>
 
-      <section class="agent-study-band">
+      <section id="exercise-section" class="agent-study-band">
         <div class="section-heading">
           <h2>任务清单</h2>
           <span>{{ taskCountLabel }}</span>
@@ -178,6 +189,7 @@
                 v-if="exercise.type === 'q_fill'"
                 :model-value="getAnswerValue(exercise.id)"
                 placeholder="请输入简短答案"
+                :disabled="!canEditPacket"
                 @update:model-value="updateAnswer(exercise.id, $event)"
               />
               <el-input
@@ -186,6 +198,7 @@
                 :rows="exercise.type === 'q_conversation' ? 4 : 3"
                 :model-value="getAnswerValue(exercise.id)"
                 :placeholder="answerPlaceholder(exercise.type)"
+                :disabled="!canEditPacket"
                 @update:model-value="updateAnswer(exercise.id, $event)"
               />
             </label>
@@ -263,14 +276,14 @@
           <h2>批改提示</h2>
           <span>{{ reviewItemCountLabel }}</span>
         </div>
-        <div v-if="dailyPacket.review_items?.length || indexDocument?.latest_review || reviewResult" class="review-summary">
+        <div v-if="dailyPacket.review_items?.length || reviewResult || dailyPacket.correction?.review_file" class="review-summary">
           <div class="meta-item">
             <span>待批改项目</span>
             <strong>{{ reviewItemCountLabel }}</strong>
           </div>
           <div class="meta-item">
-            <span>最近批改</span>
-            <strong>{{ indexDocument?.latest_review || '暂无' }}</strong>
+            <span>当前包批改</span>
+            <strong>{{ dailyPacket.correction?.review_file || '尚未批改' }}</strong>
           </div>
           <div class="meta-item">
             <span>批改状态</span>
@@ -410,7 +423,7 @@
             <pre class="answer-summary-preview">{{ submittedAnswerSummary }}</pre>
           </div>
           <div class="header-actions prompt-actions">
-            <el-button type="primary" :loading="isCopyingPrompt" @click="copyReviewPrompt">
+            <el-button data-action="copy-review" type="primary" :loading="isCopyingPrompt" @click="copyReviewPrompt">
               复制批改提示词
             </el-button>
           </div>
@@ -426,6 +439,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { createAgentStudyClient } from '@/utils/agentStudyClient'
+import { PHASES, deriveAgentStudyPhase, getAgentStudyPhaseDetails } from '@/utils/agentStudyPhase'
 import {
   buildAnswerSummary,
   buildCreateDailyPacketPrompt,
@@ -459,6 +473,7 @@ const promptPreview = ref('')
 const indexDocument = ref(null)
 const dailyPacket = ref(null)
 const reviewResult = ref(null)
+const serverPhase = ref('')
 const answerDrafts = ref({})
 const selfAssessmentDraft = ref({
   difficulty: '',
@@ -527,7 +542,7 @@ const taskCountLabel = computed(() => `${dailyPacket.value?.tasks?.length || 0} 
 const materialCountLabel = computed(() => `${dailyPacket.value?.study_materials?.length || 0} 项`)
 const exerciseCountLabel = computed(() => `${dailyPacket.value?.exercises?.length || 0} 题`)
 const reviewItemCountLabel = computed(() => `${dailyPacket.value?.review_items?.length || 0} 项`)
-const showSubmissionNextStep = computed(() => ['submitted', 'reviewed'].includes(dailyPacket.value?.status))
+const showSubmissionNextStep = computed(() => dailyPacket.value?.status === 'submitted')
 const confusingPointsText = computed(() => selfAssessmentDraft.value.confusing_points.join('\n'))
 const reviewItems = computed(() => (Array.isArray(reviewResult.value?.items) ? reviewResult.value.items : []))
 const reviewNextFocus = computed(() =>
@@ -538,8 +553,26 @@ const reviewPromotionLabel = computed(() =>
   reviewResult.value?.promotion_decision?.can_advance ? '可以推进' : '暂不推进'
 )
 const reviewFilePath = computed(
-  () => dailyPacket.value?.correction?.review_file || indexDocument.value?.latest_review || '暂无'
+  () => dailyPacket.value?.correction?.review_file || '暂无'
 )
+const phase = computed(() =>
+  serverPhase.value || deriveAgentStudyPhase({ dailyPacket: dailyPacket.value, reviewResult: reviewResult.value })
+)
+const phaseDetails = computed(() => getAgentStudyPhaseDetails(phase.value))
+const answeredExerciseCount = computed(() =>
+  (dailyPacket.value?.exercises || []).filter((exercise) => String(answerDrafts.value?.[exercise.id] || '').trim()).length
+)
+const canEditPacket = computed(() => ['planned', 'learning', 'answering', 'draft'].includes(dailyPacket.value?.status))
+const hasCompleteAnswers = computed(() =>
+  Boolean(dailyPacket.value?.exercises?.length) && answeredExerciseCount.value === dailyPacket.value.exercises.length
+)
+const hasRequiredAssessment = computed(() => Boolean(selfAssessmentDraft.value.difficulty))
+const phaseDescription = computed(() => {
+  if (phase.value === PHASES.STUDYING && dailyPacket.value) {
+    return `当前是第 ${focusLessonsLabel.value} 课学习包。完成全部题目和难度自评后即可提交。`
+  }
+  return phaseDetails.value.description
+})
 const createDailyPacketPrompt = computed(() => buildCreateDailyPacketPrompt())
 const submittedDailyPath = computed(() =>
   indexDocument.value?.latest_daily || (dailyPacket.value?.date ? `study/daily/${dailyPacket.value.date}.json` : 'study/daily/YYYY-MM-DD.json')
@@ -577,8 +610,15 @@ const hasDraftChanges = computed(() => {
   return false
 })
 
-const isSaveDisabled = computed(() => !dailyPacket.value || isLoading.value || isSaving.value || !hasDraftChanges.value)
-const isSubmitDisabled = computed(() => !dailyPacket.value || isLoading.value || isSaving.value || isSubmitting.value)
+const isSaveDisabled = computed(() => !canEditPacket.value || isLoading.value || isSaving.value || !hasDraftChanges.value)
+const isSubmitDisabled = computed(() =>
+  !canEditPacket.value ||
+  !hasCompleteAnswers.value ||
+  !hasRequiredAssessment.value ||
+  isLoading.value ||
+  isSaving.value ||
+  isSubmitting.value
+)
 
 const buildAnswerDrafts = (packet) => {
   const nextAnswers = { ...(packet?.answers || {}) }
@@ -608,6 +648,7 @@ const applyWorkspacePayload = (payload) => {
   indexDocument.value = payload?.index || null
   dailyPacket.value = payload?.dailyPacket || null
   reviewResult.value = payload?.reviewResult || null
+  serverPhase.value = payload?.phase || ''
   answerDrafts.value = buildAnswerDrafts(payload?.dailyPacket)
   selfAssessmentDraft.value = buildSelfAssessmentDraft(payload?.dailyPacket)
 }
@@ -827,6 +868,22 @@ const copyReviewPrompt = async () => {
   )
 }
 
+const runPrimaryPhaseAction = async () => {
+  if (phase.value === PHASES.NEEDS_PACKET || phase.value === PHASES.READY_FOR_NEXT) {
+    await copyCreateDailyPacketPrompt()
+    return
+  }
+  if (phase.value === PHASES.AWAITING_REVIEW) {
+    await copyReviewPrompt()
+    return
+  }
+  if (phase.value === PHASES.REVIEW_DUE) {
+    window.location.hash = '#/agent-review-drill'
+    return
+  }
+  document.querySelector('#exercise-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
 onMounted(() => {
   loadWorkspace()
 })
@@ -854,6 +911,41 @@ onMounted(() => {
 .agent-study-header {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
+}
+
+.phase-band {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-left: 4px solid var(--app-accent);
+}
+
+.phase-copy {
+  min-width: 0;
+}
+
+.phase-copy h2,
+.phase-copy p {
+  margin: 0;
+}
+
+.phase-copy h2 {
+  margin: 4px 0 6px;
+}
+
+.phase-copy > p:last-child {
+  color: var(--app-text-muted);
+  line-height: 1.5;
+}
+
+.phase-action {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+  color: var(--app-text-soft);
+  font-size: 13px;
 }
 
 .header-actions {
@@ -1264,6 +1356,12 @@ onMounted(() => {
 
   .header-actions {
     justify-content: start;
+  }
+
+  .phase-band,
+  .phase-action {
+    align-items: stretch;
+    flex-direction: column;
   }
 }
 </style>

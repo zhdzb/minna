@@ -147,7 +147,8 @@ const createClient = (options = {}) => ({
       latest_review: 'study/reviews/2026-06-26-review.json'
     },
     dailyPacket: createDailyPacket(options.dailyPacket),
-    reviewResult: options.reviewResult === undefined ? null : createReviewResult(options.reviewResult)
+    reviewResult: options.reviewResult === undefined ? null : createReviewResult(options.reviewResult),
+    phase: options.phase
   }),
   saveDailyPacket: vi.fn().mockResolvedValue({
     dailyPacket: createDailyPacket({
@@ -252,7 +253,9 @@ describe('AgentStudyWorkspace', () => {
     expect(wrapper.text()).toContain('把“我给老师发资料”说成日语')
     expect(wrapper.text()).toContain('对话上下文')
     expect(wrapper.text()).toContain('A：その ほんは だれに もらいましたか。')
-    expect(wrapper.text()).toContain('study/reviews/2026-06-26-review.json')
+    expect(wrapper.text()).toContain('当前包批改')
+    expect(wrapper.text()).toContain('尚未批改')
+    expect(wrapper.text()).not.toContain('study/reviews/2026-06-26-review.json')
   })
 
   it('renders the latest review summary and per-item feedback when review data exists', async () => {
@@ -284,14 +287,20 @@ describe('AgentStudyWorkspace', () => {
   })
 
   it('copies the create-daily prompt instead of generating a packet in the browser', async () => {
-    const client = createClient()
+    const client = createClient({
+      phase: 'ready_for_next',
+      dailyPacket: {
+        status: 'reviewed',
+        correction: { status: 'reviewed', review_file: 'study/reviews/2026-06-26-review.json' }
+      }
+    })
     const copyText = vi.fn().mockResolvedValue(undefined)
     const wrapper = mountWorkspace(client, {
       props: { copyText }
     })
     await flushPromises()
 
-    await wrapper.findAll('button')[1].trigger('click')
+    await wrapper.find('[data-action="phase-primary"]').trigger('click')
     await flushPromises()
 
     expect(client.loadLatestAgentStudy).toHaveBeenCalledTimes(1)
@@ -311,7 +320,7 @@ describe('AgentStudyWorkspace', () => {
     await inputs[0].setValue('に')
     await textareas[0].setValue('わたしは せんせいに ほんを あげます')
     await textareas[1].setValue('ともだちに もらいました')
-    await wrapper.findAll('button')[2].trigger('click')
+    await wrapper.find('[data-action="save-daily"]').trigger('click')
     await flushPromises()
 
     expect(client.saveDailyPacket).toHaveBeenCalledWith({
@@ -344,7 +353,7 @@ describe('AgentStudyWorkspace', () => {
     await wrapper.find('textarea.assessment-input').setValue('ageru 和 morau 还会混')
     await wrapper.findAll('textarea.assessment-input')[1].setValue('还想再看一眼授受动词。')
     await wrapper.find('input[type="checkbox"]').setValue(true)
-    await wrapper.findAll('button')[3].trigger('click')
+    await wrapper.find('[data-action="submit-daily"]').trigger('click')
     await flushPromises()
 
     expect(client.submitDailyPacket).toHaveBeenCalledWith({
@@ -379,9 +388,15 @@ describe('AgentStudyWorkspace', () => {
     })
     await flushPromises()
 
-    await wrapper.findAll('button')[3].trigger('click')
+    const inputs = wrapper.findAll('.stub-input')
+    const textareas = wrapper.findAll('.stub-textarea')
+    await inputs[0].setValue('は')
+    await textareas[0].setValue('わたしは せんせいに ほんを あげます')
+    await textareas[1].setValue('ともだちに もらいました')
+    await wrapper.find('select.assessment-input').setValue('steady')
+    await wrapper.find('[data-action="submit-daily"]').trigger('click')
     await flushPromises()
-    await wrapper.findAll('button')[4].trigger('click')
+    await wrapper.find('[data-action="copy-review"]').trigger('click')
     await flushPromises()
 
     expect(client.loadPromptFile).not.toHaveBeenCalled()
@@ -400,7 +415,7 @@ describe('AgentStudyWorkspace', () => {
     await flushPromises()
 
     await wrapper.find('.stub-input').setValue('に')
-    await wrapper.findAll('button')[2].trigger('click')
+    await wrapper.find('[data-action="save-daily"]').trigger('click')
     await flushPromises()
 
     expect(wrapper.text()).toContain('草稿保存失败')
@@ -414,7 +429,13 @@ describe('AgentStudyWorkspace', () => {
     const wrapper = mountWorkspace(client)
     await flushPromises()
 
-    await wrapper.findAll('button')[3].trigger('click')
+    const inputs = wrapper.findAll('.stub-input')
+    const textareas = wrapper.findAll('.stub-textarea')
+    await inputs[0].setValue('は')
+    await textareas[0].setValue('わたしは せんせいに ほんを あげます')
+    await textareas[1].setValue('ともだちに もらいました')
+    await wrapper.find('select.assessment-input').setValue('steady')
+    await wrapper.find('[data-action="submit-daily"]').trigger('click')
     await flushPromises()
 
     expect(wrapper.text()).toContain('提交失败')
@@ -460,7 +481,7 @@ describe('AgentStudyWorkspace', () => {
 
     expect(wrapper.text()).toContain('当前还没有可用的每日学习包。')
     expect(wrapper.text()).toContain('复制生成学习包提示词')
-    await wrapper.findAll('button')[1].trigger('click')
+    await wrapper.find('[data-action="create-packet"]').trigger('click')
     await flushPromises()
 
     expect(copyText).toHaveBeenCalledWith(expect.stringContaining('生成今日学习包'))

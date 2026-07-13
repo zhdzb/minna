@@ -334,6 +334,7 @@ describe('agentStudyRoutes', () => {
       path.join(studyRoot, 'index.json'),
       createIndexDocument({ latestReview: 'study/reviews/2026-06-30-review.json' })
     )
+    writeJson(path.join(studyRoot, 'state', 'review-queue.json'), createReviewQueue())
 
     const fileStore = createAgentStudyFileStore({ studyRoot })
     const latest = await handleGetLatestAgentStudy({ fileStore })

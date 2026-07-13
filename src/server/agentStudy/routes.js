@@ -7,6 +7,7 @@ import {
 import { createAgentStudyEventLog } from './eventLog.js'
 import { createAgentStudyFileStore } from './fileStore.js'
 import { createSyllabusStore } from './syllabusStore.js'
+import { deriveAgentStudyPhase, matchesDaily } from '../../utils/agentStudyPhase.js'
 
 const assertJsonObject = (payload, label) => {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
@@ -36,10 +37,16 @@ const resolveDailyTargetPath = ({ payload, fileStore }) => {
 
 const handleGetLatestAgentStudy = async ({ fileStore = createAgentStudyFileStore() } = {}) => {
   const index = fileStore.loadIndex()
+  const dailyPacket = fileStore.loadLatestDaily()
+  const latestReviewResult = fileStore.loadLatestReview()
+  const reviewQueue = fileStore.readStudyJson('study/state/review-queue.json', validateReviewQueue)
+  const reviewResult = matchesDaily(dailyPacket, latestReviewResult) ? latestReviewResult : null
   return {
     index,
-    dailyPacket: fileStore.loadLatestDaily(),
-    reviewResult: fileStore.loadLatestReview()
+    dailyPacket,
+    reviewResult,
+    latestReviewResult,
+    phase: deriveAgentStudyPhase({ dailyPacket, reviewResult, reviewQueue })
   }
 }
 
@@ -51,14 +58,21 @@ const handleGetAgentProgressReview = async (
   } = {}
 ) => {
   const index = fileStore.loadIndex()
+  const dailyPacket = fileStore.loadLatestDaily()
+  const latestReviewResult = fileStore.loadLatestReview()
+  const reviewQueue = fileStore.readStudyJson('study/state/review-queue.json', validateReviewQueue)
+  const reviewResult = matchesDaily(dailyPacket, latestReviewResult) ? latestReviewResult : null
 
   return {
     index,
     profile: fileStore.readStudyJson('study/state/profile.json', validateProfile),
     current: fileStore.readStudyJson('study/state/current.json', validateCurrent),
     mastery: fileStore.readStudyJson('study/state/mastery.json', validateMastery),
-    reviewQueue: fileStore.readStudyJson('study/state/review-queue.json', validateReviewQueue),
-    reviewResult: fileStore.loadLatestReview(),
+    dailyPacket,
+    reviewQueue,
+    reviewResult,
+    latestReviewResult,
+    phase: deriveAgentStudyPhase({ dailyPacket, reviewResult, reviewQueue }),
     recentEvents: eventLog.readRecentEvents(recentEventLimit),
     nextAgentContext: {
       path: 'study/context/next-agent-context.md',

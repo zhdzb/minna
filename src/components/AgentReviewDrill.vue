@@ -7,8 +7,8 @@
         <p class="drill-subtitle">在这里完成结构化复习变体题，需要时先保存草稿，确认后再提交回仓库。</p>
       </div>
       <div class="header-actions">
-        <el-button :loading="isSaving" @click="saveDrill">保存草稿</el-button>
-        <el-button type="primary" :loading="isSubmitting" @click="submitDrill">提交训练</el-button>
+        <el-button :loading="isSaving" :disabled="isSubmitted" @click="saveDrill">保存草稿</el-button>
+        <el-button type="primary" :loading="isSubmitting" :disabled="isSubmitted || !hasCompleteAnswers" @click="submitDrill">提交训练</el-button>
         <el-button :loading="isLoading" @click="loadDrill">刷新</el-button>
       </div>
     </header>
@@ -94,15 +94,17 @@
                 class="draft-input"
                 :value="item.user_answer"
                 rows="4"
+                :disabled="isSubmitted"
                 placeholder="请为这道复习变体题重新作答。"
                 @input="updateAnswer(item.id, $event.target.value)"
               />
             </label>
 
-            <div class="detail-block answer-reference-block">
+            <div v-if="isSubmitted" class="detail-block answer-reference-block">
               <p class="block-label">参考答案</p>
               <p class="detail-copy">{{ item.answer_reference }}</p>
             </div>
+            <p v-else class="answer-locked-note">提交训练后显示参考答案。</p>
           </article>
         </div>
       </section>
@@ -157,6 +159,11 @@ const latestReviewAccuracy = computed(() => {
   return `正确率 ${Math.round(value * 100)}%`
 })
 const dueItems = computed(() => (progressPayload.value?.reviewQueue?.items || []).filter((item) => item.status === 'due'))
+const isSubmitted = computed(() => reviewDrill.value?.status === 'submitted')
+const hasCompleteAnswers = computed(() =>
+  Boolean(reviewDrill.value?.items?.length) &&
+  reviewDrill.value.items.every((item) => String(item.user_answer || '').trim())
+)
 
 const cloneValue = (value) => JSON.parse(JSON.stringify(value))
 
@@ -214,7 +221,7 @@ const updateAnswer = (itemId, value) => {
 }
 
 const persistDrill = async (mode) => {
-  if (!reviewDrill.value) return
+  if (!reviewDrill.value || isSubmitted.value) return
 
   const requestPayload = {
     reviewDrill: cloneValue(reviewDrill.value),
@@ -444,6 +451,12 @@ onMounted(() => {
 .answer-reference-block {
   padding-top: 12px;
   border-top: 1px dashed var(--app-border);
+}
+
+.answer-locked-note {
+  margin: 0;
+  color: var(--app-text-soft);
+  font-size: 13px;
 }
 
 @media (max-width: 900px) {
