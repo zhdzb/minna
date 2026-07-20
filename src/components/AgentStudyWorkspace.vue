@@ -25,9 +25,14 @@
       </div>
       <div class="phase-action">
         <span v-if="dailyPacket && phase === PHASES.STUDYING">已完成 {{ answeredExerciseCount }} / {{ dailyPacket.exercises?.length || 0 }} 题</span>
-        <el-button data-action="phase-primary" type="primary" :loading="isCopyingPrompt" @click="runPrimaryPhaseAction">
-          {{ phaseDetails.action }}
-        </el-button>
+        <div class="phase-buttons">
+          <el-button data-action="phase-primary" type="primary" :loading="isCopyingPrompt" @click="runPrimaryPhaseAction">
+            {{ phaseDetails.action }}
+          </el-button>
+          <el-button data-action="copy-continuation" :loading="isCopyingPrompt" @click="copyContinuationPrompt">
+            复制接续指令
+          </el-button>
+        </div>
       </div>
     </section>
 
@@ -37,6 +42,9 @@
 
     <section v-else-if="loadError" class="agent-study-band">
       <el-alert :closable="false" show-icon title="加载失败" type="error" :description="loadError" />
+      <el-button data-action="copy-continuation" :loading="isCopyingPrompt" @click="copyContinuationPrompt">
+        复制接续诊断指令
+      </el-button>
     </section>
 
     <section v-else-if="!dailyPacket" class="agent-study-band">
@@ -46,8 +54,8 @@
           请先把生成学习包提示词交给编辑器里的 Codex。Codex 会读取项目文件并写入新的
           daily packet，之后刷新本页即可开始学习。
         </p>
-        <el-button data-action="create-packet" type="primary" :loading="isCopyingPrompt" @click="copyCreateDailyPacketPrompt">
-          复制生成学习包提示词
+        <el-button data-action="create-packet" type="primary" :loading="isCopyingPrompt" @click="copyContinuationPrompt">
+          复制接续指令
         </el-button>
       </div>
       <p v-if="promptCopyMessage" class="prompt-feedback success-copy">{{ promptCopyMessage }}</p>
@@ -442,6 +450,7 @@ import { createAgentStudyClient } from '@/utils/agentStudyClient'
 import { PHASES, deriveAgentStudyPhase, getAgentStudyPhaseDetails } from '@/utils/agentStudyPhase'
 import {
   buildAnswerSummary,
+  buildContinueAgentStudyPrompt,
   buildCreateDailyPacketPrompt,
   buildReviewSubmittedPacketPrompt
 } from '@/utils/agentStudyPromptText'
@@ -574,6 +583,13 @@ const phaseDescription = computed(() => {
   return phaseDetails.value.description
 })
 const createDailyPacketPrompt = computed(() => buildCreateDailyPacketPrompt())
+const continuationPrompt = computed(() =>
+  buildContinueAgentStudyPrompt({
+    indexDocument: indexDocument.value,
+    dailyPacket: dailyPacket.value,
+    phase: phase.value
+  })
+)
 const submittedDailyPath = computed(() =>
   indexDocument.value?.latest_daily || (dailyPacket.value?.date ? `study/daily/${dailyPacket.value.date}.json` : 'study/daily/YYYY-MM-DD.json')
 )
@@ -861,6 +877,13 @@ const copyCreateDailyPacketPrompt = async () => {
   )
 }
 
+const copyContinuationPrompt = async () => {
+  await copyPromptText(
+    continuationPrompt.value,
+    '接续指令已复制。请把它交给全新的 Codex 上下文。'
+  )
+}
+
 const copyReviewPrompt = async () => {
   await copyPromptText(
     reviewHandoffPrompt.value,
@@ -946,6 +969,12 @@ onMounted(() => {
   flex: 0 0 auto;
   color: var(--app-text-soft);
   font-size: 13px;
+}
+
+.phase-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .header-actions {
@@ -1362,6 +1391,10 @@ onMounted(() => {
   .phase-action {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .phase-buttons {
+    width: 100%;
   }
 }
 </style>

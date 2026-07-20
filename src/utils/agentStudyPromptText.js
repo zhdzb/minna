@@ -8,6 +8,32 @@ const STATIC_READ_FILES = [
   'study/state/promotion-rules.json'
 ]
 
+const buildContinueAgentStudyPrompt = ({ indexDocument, dailyPacket, phase } = {}) => {
+  const dailyPath = normalizePath(
+    indexDocument?.latest_daily,
+    dailyPacket?.date ? `study/daily/${dailyPacket.date}.json` : '未创建'
+  )
+  const reviewPath = normalizePath(indexDocument?.latest_review, '未创建')
+
+  return [
+    '请作为 Codex Study Loop 学习 agent 执行“接续当前学习流程”。',
+    '',
+    '这是一个全新的上下文。不要假设你拥有之前的对话记录；先恢复项目状态，再决定是否执行写入。',
+    '',
+    '先读取：',
+    ...STATIC_READ_FILES.map((file) => `- ${file}`),
+    '- src/data/syllabus.json',
+    '- study/prompts/templates/continue-agent-study.md',
+    '',
+    '当前快照仅供定位，实际决策必须以文件内容为准：',
+    `- latest daily: ${dailyPath}`,
+    `- latest review: ${reviewPath}`,
+    `- observed phase: ${String(phase || 'unknown')}`,
+    '',
+    '请严格执行 continue-agent-study 模板中的预检和阶段分流规则。若预检失败，停止写入并说明具体阻塞；若预检通过，执行该阶段唯一允许的下一步。'
+  ].join('\n')
+}
+
 const buildCreateDailyPacketPrompt = () => [
   '请作为 Codex Study Loop 学习 agent 执行“生成今日学习包”。',
   '',
@@ -105,6 +131,7 @@ const buildReviewSubmittedPacketPrompt = ({ dailyPacket, indexDocument } = {}) =
 
 export {
   buildAnswerSummary,
+  buildContinueAgentStudyPrompt,
   buildCreateDailyPacketPrompt,
   buildReviewSubmittedPacketPrompt
 }

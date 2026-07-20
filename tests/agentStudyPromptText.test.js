@@ -1,11 +1,30 @@
 import { describe, expect, it } from 'vitest'
 import {
   buildAnswerSummary,
+  buildContinueAgentStudyPrompt,
   buildCreateDailyPacketPrompt,
   buildReviewSubmittedPacketPrompt
 } from '../src/utils/agentStudyPromptText'
 
 describe('agentStudyPromptText', () => {
+  it('builds a self-contained continuation prompt for a fresh Codex context', () => {
+    const prompt = buildContinueAgentStudyPrompt({
+      indexDocument: {
+        latest_daily: 'study/daily/2026-07-11.json',
+        latest_review: 'study/reviews/2026-07-10-review.json'
+      },
+      dailyPacket: { date: '2026-07-11' },
+      phase: 'studying'
+    })
+
+    expect(prompt).toContain('接续当前学习流程')
+    expect(prompt).toContain('全新的上下文')
+    expect(prompt).toContain('study/prompts/templates/continue-agent-study.md')
+    expect(prompt).toContain('study/daily/2026-07-11.json')
+    expect(prompt).toContain('study/reviews/2026-07-10-review.json')
+    expect(prompt).toContain('observed phase: studying')
+  })
+
   it('builds a Codex-facing create daily packet prompt without frontend generation wording', () => {
     const prompt = buildCreateDailyPacketPrompt()
 

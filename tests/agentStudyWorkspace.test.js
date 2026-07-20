@@ -309,6 +309,23 @@ describe('AgentStudyWorkspace', () => {
     expect(wrapper.text()).toContain('生成学习包提示词已复制')
   })
 
+  it('copies a state-validated continuation prompt for a fresh Codex context', async () => {
+    const client = createClient()
+    const copyText = vi.fn().mockResolvedValue(undefined)
+    const wrapper = mountWorkspace(client, {
+      props: { copyText }
+    })
+    await flushPromises()
+
+    await wrapper.find('[data-action="copy-continuation"]').trigger('click')
+    await flushPromises()
+
+    expect(copyText).toHaveBeenCalledWith(expect.stringContaining('接续当前学习流程'))
+    expect(copyText).toHaveBeenCalledWith(expect.stringContaining('continue-agent-study.md'))
+    expect(copyText).toHaveBeenCalledWith(expect.stringContaining('observed phase: studying'))
+    expect(wrapper.text()).toContain('接续指令已复制')
+  })
+
   it('updates answers and saves them through the daily save client', async () => {
     const client = createClient()
     const wrapper = mountWorkspace(client)
@@ -480,10 +497,10 @@ describe('AgentStudyWorkspace', () => {
     await flushPromises()
 
     expect(wrapper.text()).toContain('当前还没有可用的每日学习包。')
-    expect(wrapper.text()).toContain('复制生成学习包提示词')
+    expect(wrapper.text()).toContain('复制接续指令')
     await wrapper.find('[data-action="create-packet"]').trigger('click')
     await flushPromises()
 
-    expect(copyText).toHaveBeenCalledWith(expect.stringContaining('生成今日学习包'))
+    expect(copyText).toHaveBeenCalledWith(expect.stringContaining('接续当前学习流程'))
   })
 })
