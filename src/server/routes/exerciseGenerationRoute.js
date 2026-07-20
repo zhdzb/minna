@@ -3,18 +3,21 @@ import { requestServerLlmText } from '../llmRequest'
 
 const EXERCISE_TYPE_PROMPTS = {
   ALL: (questionCount) => {
-    const fillCount = Math.ceil(questionCount * 0.4)
-    const translateCount = Math.ceil(questionCount * 0.4)
-    const conversationCount = questionCount - fillCount - translateCount
+    const translateCount = Math.ceil(questionCount * 0.6)
+    const conversationCount = Math.floor(questionCount * 0.2)
+    const readingCount = Math.floor(questionCount * 0.1)
+    const listeningCount = questionCount - translateCount - conversationCount - readingCount
 
     return `请总共生成 ${questionCount} 题：
-- ${fillCount} 题 q_fill
 - ${translateCount} 题 q_translate
-- ${conversationCount} 题 q_conversation`
+- ${conversationCount} 题 q_conversation
+- ${readingCount} 题 q_reading
+- ${listeningCount} 题 q_listening`
   },
-  q_fill: (questionCount) => `只生成 ${questionCount} 题 q_fill。`,
   q_translate: (questionCount) => `只生成 ${questionCount} 题 q_translate。`,
-  q_conversation: (questionCount) => `只生成 ${questionCount} 题 q_conversation。`
+  q_conversation: (questionCount) => `只生成 ${questionCount} 题 q_conversation。`,
+  q_reading: (questionCount) => `只生成 ${questionCount} 题 q_reading。`,
+  q_listening: (questionCount) => `只生成 ${questionCount} 题 q_listening。`
 }
 
 const normalizeString = (value) => String(value || '').trim()
@@ -141,16 +144,17 @@ ${questionTypeInstruction}
 2. 顶层必须是一个对象，且只包含一个键："exercises"。
 3. "exercises" 必须是长度恰好为 ${questionCount} 的数组。
 4. 每道题都必须有唯一 id。
-5. 每道题的 type 必须是 q_fill、q_translate、q_conversation 之一。
+5. 每道题的 type 必须是 q_translate、q_conversation、q_reading、q_listening 之一；不要生成填空题。
 6. 每道题的 target_grammar 必须与上面的某一条目标语法完全一致。
 7. 不要生成重复题或只是换几个词的近重复题。
 8. 优先使用当前课及之前课的词；如必须超纲，放进 vocab_hints 并显式标注。
 9. 题目不要总围绕“书、本子、铅笔”这类最简单物品，要结合本课主题、句式和词汇做变化。
-10. q_fill 必须包含 question、options、answer；answer 必须出现在 options 中，且只能有一个正确项。
-11. q_translate 必须包含 chinese_prompt、vocab_hints，以及 answer 或 answer_pattern。
-12. q_conversation 必须包含 scene_description、turns、missing_turn_index、answer。
-13. 若出现人名、地名、专有名词，尽量在 vocab_hints 中补读音或中文义。
-14. 对话题优先体现礼貌层级、授受方向、条件应对、时间顺序等本课容易错的点。
+10. q_translate 是完整造句题，必须包含 chinese_prompt、vocab_hints，以及 answer 或 answer_pattern。
+11. q_conversation 必须包含 scene_description、turns、missing_turn_index、answer。
+12. q_reading 必须包含日语 passage、中文 question、日语 answer 和 vocab_hints；短文优先采用通知、邮件、日程、工作说明或 JLPT 风格短文。
+13. q_listening 必须包含只供播放的日语 audio_script、中文 question、日语 answer 和 vocab_hints；内容优先采用职场对话、广播、时间安排或确认事项。
+14. 若出现人名、地名、专有名词，尽量在 vocab_hints 中补读音或中文义。
+15. 造句与对话题优先体现礼貌层级、授受方向、条件应对、时间顺序，以及在日本工作时常见的确认、请求、报告和回应。
 
 避免重复使用这些最近已经出过的题：
 ${recentExercises.length > 0 ? JSON.stringify(recentExercises.slice(0, 15), null, 2) : '[]'}

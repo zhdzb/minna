@@ -1,4 +1,4 @@
-const GENERATED_TYPES = ['q_fill', 'q_translate', 'q_conversation']
+const GENERATED_TYPES = ['q_translate', 'q_conversation', 'q_reading', 'q_listening']
 
 const normalizeText = (value) => String(value || '').trim()
 
@@ -133,12 +133,16 @@ const validateTargetGrammar = (targetGrammar, expectedGrammarPoints, index) => {
 }
 
 const buildQuestionSignature = (exercise) => {
-  if (exercise.type === 'q_fill') {
-    return `${exercise.type}:${normalizeText(exercise.question)}`
-  }
-
   if (exercise.type === 'q_translate') {
     return `${exercise.type}:${normalizeText(exercise.chinese_prompt)}`
+  }
+
+  if (exercise.type === 'q_reading') {
+    return `${exercise.type}:${normalizeText(exercise.passage)}:${normalizeText(exercise.question)}`
+  }
+
+  if (exercise.type === 'q_listening') {
+    return `${exercise.type}:${normalizeText(exercise.audio_script)}:${normalizeText(exercise.question)}`
   }
 
   return `${exercise.type}:${normalizeText(exercise.scene_description)}`
@@ -160,28 +164,6 @@ const normalizeGeneratedExercise = (exercise, index, expectedGrammarPoints) => {
   }
 
   normalized.target_grammar = validateTargetGrammar(normalized.target_grammar, expectedGrammarPoints, index)
-
-  if (normalized.type === 'q_fill') {
-    normalized.question = assertNonEmptyString(exercise.question, `exercise ${index + 1}: question`)
-
-    if (!Array.isArray(exercise.options) || exercise.options.length < 2) {
-      throw new Error(`exercise ${index + 1}: options must contain at least 2 items`)
-    }
-
-    normalized.options = exercise.options.map((option, optionIndex) =>
-      assertNonEmptyString(option, `exercise ${index + 1}: options[${optionIndex}]`)
-    )
-
-    const uniqueOptions = new Set(normalized.options)
-    if (uniqueOptions.size !== normalized.options.length) {
-      throw new Error(`exercise ${index + 1}: options must be unique`)
-    }
-
-    normalized.answer = assertNonEmptyString(exercise.answer, `exercise ${index + 1}: answer`)
-    if (!uniqueOptions.has(normalized.answer)) {
-      throw new Error(`exercise ${index + 1}: answer must be one of the options`)
-    }
-  }
 
   if (normalized.type === 'q_translate') {
     normalized.chinese_prompt = assertNonEmptyString(
@@ -243,6 +225,23 @@ const normalizeGeneratedExercise = (exercise, index, expectedGrammarPoints) => {
     }
 
     normalized.missing_turn_index = missingIndex
+    normalized.vocab_hints = normalizeVocabHints(exercise.vocab_hints, index, { allowEmpty: true })
+  }
+
+  if (normalized.type === 'q_reading') {
+    normalized.passage = assertNonEmptyString(exercise.passage, `exercise ${index + 1}: passage`)
+    normalized.question = assertNonEmptyString(exercise.question, `exercise ${index + 1}: question`)
+    normalized.answer = assertNonEmptyString(exercise.answer, `exercise ${index + 1}: answer`)
+    normalized.vocab_hints = normalizeVocabHints(exercise.vocab_hints, index, { allowEmpty: true })
+  }
+
+  if (normalized.type === 'q_listening') {
+    normalized.audio_script = assertNonEmptyString(
+      exercise.audio_script,
+      `exercise ${index + 1}: audio_script`
+    )
+    normalized.question = assertNonEmptyString(exercise.question, `exercise ${index + 1}: question`)
+    normalized.answer = assertNonEmptyString(exercise.answer, `exercise ${index + 1}: answer`)
     normalized.vocab_hints = normalizeVocabHints(exercise.vocab_hints, index, { allowEmpty: true })
   }
 

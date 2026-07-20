@@ -174,6 +174,18 @@
               <p v-if="exercise.answer_format" class="item-copy"><strong>回答格式：</strong>{{ exercise.answer_format }}</p>
             </div>
 
+            <div v-if="exercise.type === 'q_listening'" class="listening-control">
+              <el-button
+                type="primary"
+                plain
+                :loading="activeListeningExerciseId === exercise.id"
+                @click="playListeningExercise(exercise)"
+              >
+                {{ activeListeningExerciseId === exercise.id ? '正在播放' : '播放听力' }}
+              </el-button>
+              <span>可重复播放，原文不会显示。</span>
+            </div>
+
             <div v-if="exercise.supporting_lines?.length" class="supporting-lines">
               <p class="supporting-title">对话上下文</p>
               <ul class="supporting-list">
@@ -445,7 +457,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { createAgentStudyClient } from '@/utils/agentStudyClient'
 import { PHASES, deriveAgentStudyPhase, getAgentStudyPhaseDetails } from '@/utils/agentStudyPhase'
 import {
@@ -454,7 +466,7 @@ import {
   buildCreateDailyPacketPrompt,
   buildReviewSubmittedPacketPrompt
 } from '@/utils/agentStudyPromptText'
-import { toKanaInput } from '@/utils/wanakanaInput'
+import { toKanaInputWithSelection } from '@/utils/wanakanaInput'
 
 const props = defineProps({
   client: {
@@ -471,6 +483,7 @@ const isLoading = ref(true)
 const isSaving = ref(false)
 const isSubmitting = ref(false)
 const isCopyingPrompt = ref(false)
+const activeListeningExerciseId = ref('')
 const loadError = ref('')
 const saveError = ref('')
 const saveMessage = ref('')
@@ -674,8 +687,37 @@ const getAnswerValue = (exerciseId) => answerDrafts.value?.[exerciseId] || ''
 
 const answerPlaceholder = (exerciseType) => {
   if (exerciseType === 'q_conversation') return '请输入自然的日语对话回复'
-  if (exerciseType === 'q_translate') return '请输入你的日语翻译草稿'
+  if (exerciseType === 'q_translate') return '请输入你的日语造句'
+  if (exerciseType === 'q_reading') return '请根据短文用日语回答'
+  if (exerciseType === 'q_listening') return '请根据听到的内容用日语回答'
   return '请输入答案'
+}
+
+const playListeningExercise = (exercise) => {
+  const audioText = String(exercise?.metadata?.audio_text || '').trim()
+  const speechSynthesis = window.speechSynthesis
+  const Utterance = window.SpeechSynthesisUtterance
+
+  if (!audioText || !speechSynthesis || typeof Utterance !== 'function') {
+    promptError.value = '当前浏览器不支持日语语音播放，请换用支持 Web Speech 的浏览器。'
+    return
+  }
+
+  speechSynthesis.cancel()
+  const utterance = new Utterance(audioText)
+  utterance.lang = 'ja-JP'
+  utterance.rate = 0.9
+  activeListeningExerciseId.value = exercise.id
+  utterance.onend = () => {
+    if (activeListeningExerciseId.value === exercise.id) {
+      activeListeningExerciseId.value = ''
+    }
+  }
+  utterance.onerror = () => {
+    activeListeningExerciseId.value = ''
+    promptError.value = '听力播放失败，请检查浏览器语音设置后重试。'
+  }
+  speechSynthesis.speak(utterance)
 }
 
 const formatPercent = (value) => {
@@ -715,10 +757,28 @@ const resetTransientMessages = () => {
 }
 
 const updateAnswer = (exerciseId, value) => {
+  const activeInput = document.activeElement
+  const canRestoreSelection =
+    activeInput instanceof HTMLInputElement || activeInput instanceof HTMLTextAreaElement
+  const converted = toKanaInputWithSelection(
+    value,
+    canRestoreSelection ? activeInput.selectionStart : null,
+    canRestoreSelection ? activeInput.selectionEnd : null
+  )
+
   answerDrafts.value = {
     ...answerDrafts.value,
-    [exerciseId]: typeof value === 'string' ? toKanaInput(value) : ''
+    [exerciseId]: typeof value === 'string' ? converted.value : ''
   }
+
+  if (canRestoreSelection && converted.selectionStart !== null) {
+    nextTick(() => {
+      if (activeInput.isConnected && document.activeElement === activeInput) {
+        activeInput.setSelectionRange(converted.selectionStart, converted.selectionEnd)
+      }
+    })
+  }
+
   resetTransientMessages()
 }
 
@@ -1148,6 +1208,15 @@ onMounted(() => {
   color: var(--app-text-muted);
   display: grid;
   gap: 6px;
+}
+
+.listening-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  color: var(--app-text-soft);
+  font-size: 13px;
 }
 
 .choice-row {

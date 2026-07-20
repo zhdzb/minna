@@ -3,7 +3,7 @@
 ## 当前快照
 - 当前课程：6
 - 学习模式：lesson_foundation
-- 当前目标：从第 6 课开始学习动作对象、地点与邀请, 后续覆盖第 6-10 课核心句型, 每轮默认完成 30 道输入与输出题, 保留第 1-5 课错题的间隔复习
+- 当前目标：从第 6 课开始学习动作对象、地点与邀请, 后续覆盖第 6-10 课核心句型, 以赴日工作和 JLPT 为目标，重点提升造句、职场沟通、阅读和听力, 每轮默认完成 30 道练习，不再安排孤立填空题, 保留第 1-5 课错题的间隔复习
 - 最新 daily：study/daily/2026-07-11.json
 - 最新 review：study/reviews/2026-07-10-review.json
 - 最新 prompt：study/prompts/generated/2026-07-11-review.md
@@ -11,7 +11,7 @@
 - 重点语法：N を V, place で V, Vませんか / Vましょう, 第 1-5 课错题复习
 - 薄弱语法摘要：N1 の N2 [learning]
 - 到期复习队列：lesson-1/noun-relationship-no (wrong, due 2026-07-10)。
-- 最近事件：2026-07-10T13:00:00+08:00 review_applied | 2026-07-10T13:30:00+08:00 progress_calibrated | 2026-07-10T13:40:00+08:00 daily_packet_created
+- 最近事件：2026-07-10T13:30:00+08:00 progress_calibrated | 2026-07-10T13:40:00+08:00 daily_packet_created | 2026-07-20T23:54:12+08:00 learning_preferences_updated
 
 ## 下一步动作
 - 先读最新的 daily packet，确认下一步是创建新包、继续提交后的跟进，还是继续批改后的跟进。

@@ -17,4 +17,30 @@ const toKanaInput = (value) => {
   })
 }
 
-export { toKanaInput }
+const clampSelection = (value, textLength) => {
+  if (!Number.isInteger(value)) return null
+  return Math.max(0, Math.min(value, textLength))
+}
+
+const toKanaInputWithSelection = (value, selectionStart, selectionEnd = selectionStart) => {
+  const text = String(value || '')
+  const start = clampSelection(selectionStart, text.length)
+  const end = clampSelection(selectionEnd, text.length)
+  const convertedValue = toKanaInput(text)
+
+  if (start === null || end === null) {
+    return {
+      value: convertedValue,
+      selectionStart: null,
+      selectionEnd: null
+    }
+  }
+
+  return {
+    value: convertedValue,
+    selectionStart: toKanaInput(text.slice(0, start)).length,
+    selectionEnd: toKanaInput(text.slice(0, end)).length
+  }
+}
+
+export { toKanaInput, toKanaInputWithSelection }

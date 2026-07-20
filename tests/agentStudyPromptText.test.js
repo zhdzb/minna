@@ -32,6 +32,8 @@ describe('agentStudyPromptText', () => {
     expect(prompt).toContain('study/context/next-agent-context.md')
     expect(prompt).toContain('src/data/syllabus.json')
     expect(prompt).toContain('不要调用前端 LLM 出题逻辑')
+    expect(prompt).toContain('不要生成填空题')
+    expect(prompt).toContain('赴日工作情境')
   })
 
   it('summarizes submitted answers for the review handoff', () => {

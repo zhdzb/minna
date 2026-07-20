@@ -43,11 +43,6 @@ const getLessonById = (lessonId) =>
     ? syllabusData.lessons.find((lesson) => Number(lesson.id) === Number(lessonId)) || null
     : null
 
-const getQuestionTypeIds = (lesson) =>
-  Array.isArray(lesson?.enabled_question_types) && lesson.enabled_question_types.length
-    ? lesson.enabled_question_types
-    : ['q_fill', 'q_translate', 'q_conversation']
-
 const pickVocabulary = (lesson, limit = 6) => {
   const vocabulary = Array.isArray(lesson?.core_vocabulary) ? lesson.core_vocabulary : []
   return vocabulary.slice(0, limit).map((item) => ({
@@ -56,13 +51,6 @@ const pickVocabulary = (lesson, limit = 6) => {
     meaning: String(item?.meaning || '').trim(),
     usage: String(item?.usage || '').trim()
   })).filter((item) => item.word)
-}
-
-const buildVocabularyHint = (item) => {
-  const pieces = [item.word]
-  if (item.kana) pieces.push(item.kana)
-  if (item.meaning) pieces.push(item.meaning)
-  return pieces.join(' / ')
 }
 
 const summarizeVocabulary = (items) =>
@@ -74,7 +62,18 @@ const summarizeVocabulary = (items) =>
     return segments.join('，')
   })
 
-const QUESTION_TYPE_ORDER = ['q_fill', 'q_translate', 'q_conversation']
+const QUESTION_TYPE_ORDER = [
+  'q_translate',
+  'q_translate',
+  'q_translate',
+  'q_translate',
+  'q_translate',
+  'q_translate',
+  'q_conversation',
+  'q_conversation',
+  'q_reading',
+  'q_listening'
+]
 
 const createVocabularyLookup = (items) =>
   new Map(
@@ -188,57 +187,18 @@ const buildFallbackExerciseDraft = ({
     vocabulary.slice(index % Math.max(vocabulary.length, 1)).concat(vocabulary),
     4
   )
-  const vocabHints = vocabItems.map(buildVocabularyHint)
   const vocabA = vocabItems[0]?.word || 'わたし'
   const vocabB = vocabItems[1]?.word || 'がくせい'
   const vocabC = vocabItems[2]?.word || 'にほん'
-  const meaningA = vocabItems[0]?.meaning || '我'
   const meaningB = vocabItems[1]?.meaning || '学生'
   const meaningC = vocabItems[2]?.meaning || '日本'
-
-  if (type === 'q_fill') {
-    const choices = targetGrammar.includes('じゃありません')
-      ? ['です', 'じゃありません', 'ですか', 'の']
-      : targetGrammar.includes('ですか')
-        ? ['です', 'ですか', 'じゃありません', 'の']
-        : targetGrammar.includes('N1 の N2')
-          ? ['は', 'の', 'を', 'に']
-          : ['は', 'です', 'の', 'か']
-
-    const answer = targetGrammar.includes('N1 の N2')
-      ? 'の'
-      : targetGrammar.includes('ですか')
-        ? 'ですか'
-        : targetGrammar.includes('じゃありません')
-          ? 'じゃありません'
-          : targetGrammar.includes('です')
-            ? 'です'
-            : choices[0]
-
-    const question = targetGrammar.includes('N1 の N2')
-      ? `请补全句子：${vocabA} ___ ${vocabB}`
-      : targetGrammar.includes('ですか')
-        ? `请把下面句子补成问句：${vocabA} は ${vocabB} ___`
-        : targetGrammar.includes('じゃありません')
-          ? `请把下面句子补成否定句：${vocabA} は ${vocabB} ___`
-          : `请补全这句自我介绍：${vocabA} は ${vocabB} ___`
-
-    return {
-      type,
-      prompt: `第 ${index + 1} 题：按要求完成句型填空`,
-      instruction: question,
-      context_note: `场景：${lesson.theme}。请只补一个最合适的词，重点关注「${targetGrammar}」的句尾形式。`,
-      answer_format: '只填写一个选项，不要写完整句子。',
-      choices,
-      vocab_hints: vocabHints,
-      answer_reference: answer,
-      metadata: {
-        source: 'rule-based',
-        difficulty: 'foundation',
-        skill: 'grammar'
-      }
-    }
-  }
+  const sentenceAnswer = targetGrammar.includes('N1 の N2')
+    ? `${vocabA} の ${vocabB} です。`
+    : targetGrammar.includes('ですか')
+      ? `${vocabA} は ${vocabB} ですか。`
+      : targetGrammar.includes('じゃありません')
+        ? `${vocabA} は ${vocabB} じゃありません。`
+        : pattern || `${vocabA} は ${vocabB} です。`
 
   if (type === 'q_translate') {
     const translationPrompt = targetGrammar.includes('じゃありません')
@@ -249,14 +209,6 @@ const buildFallbackExerciseDraft = ({
           ? `把“这是我的${meaningB}”说成自然日语。`
           : `在“${lesson.theme}”场景里，用「${targetGrammar}」完成一句自然表达。`
 
-    const answerPattern = targetGrammar.includes('N1 の N2')
-      ? `${vocabA} の ${vocabB} です。`
-      : targetGrammar.includes('ですか')
-        ? `${vocabA} は ${vocabB} ですか。`
-        : targetGrammar.includes('じゃありません')
-          ? `${vocabA} は ${vocabB} じゃありません。`
-          : `${vocabA} は ${vocabB} です。`
-
     return {
       type,
       prompt: `第 ${index + 1} 题：把中文意思说成日语`,
@@ -264,11 +216,48 @@ const buildFallbackExerciseDraft = ({
       context_note: `请至少使用目标句型「${targetGrammar}」，不要只写寒暄语。`,
       answer_format: '写 1 句完整、自然的日语句子。',
       vocab_hints: ['本题不提供日语词形提示，请根据中文语义和本课内容组织表达。'],
-      answer_reference: answerPattern,
+      answer_reference: sentenceAnswer,
       metadata: {
         source: 'rule-based',
         difficulty: 'foundation',
         skill: 'output'
+      }
+    }
+  }
+
+  if (type === 'q_reading') {
+    return {
+      type,
+      prompt: `第 ${index + 1} 题：阅读短文并用日语回答`,
+      instruction: '阅读下面的日语内容，用一句自然日语写出主要信息。',
+      context_note: `短文模拟 JLPT 短文或日本工作生活中的通知。重点理解「${targetGrammar}」在上下文里的意思。`,
+      answer_format: '写 1 句完整日语，不要直接整段照抄。',
+      supporting_lines: [sentenceAnswer],
+      vocab_hints: ['本题不提供答案词形提示，请根据短文理解作答。'],
+      answer_reference: sentenceAnswer,
+      metadata: {
+        source: 'rule-based',
+        difficulty: 'foundation',
+        skill: 'reading'
+      }
+    }
+  }
+
+  if (type === 'q_listening') {
+    return {
+      type,
+      prompt: `第 ${index + 1} 题：听取内容并用日语回答`,
+      instruction: '点击播放，听完后用一句自然日语写出主要信息。',
+      context_note: `音频模拟日本工作或生活中的简短说明。重点听清「${targetGrammar}」表达的关系。`,
+      answer_format: '写 1 句完整日语；可以重复播放，但不显示原文。',
+      supporting_lines: [],
+      vocab_hints: ['本题不显示听力原文，请根据音频作答。'],
+      answer_reference: sentenceAnswer,
+      metadata: {
+        source: 'rule-based',
+        difficulty: 'foundation',
+        skill: 'listening',
+        audio_text: sentenceAnswer
       }
     }
   }
@@ -562,11 +551,14 @@ const toDailyExercises = ({ generatedExercises, lesson, reviewItems }) => {
       source: 'llm',
       difficulty: 'foundation',
       skill:
-        exercise.type === 'q_fill'
-          ? 'grammar'
-          : exercise.type === 'q_translate'
-            ? 'output'
-            : 'conversation'
+        exercise.type === 'q_translate'
+          ? 'output'
+          : exercise.type === 'q_conversation'
+            ? 'conversation'
+            : exercise.type === 'q_reading'
+              ? 'reading'
+              : 'listening',
+      ...(exercise.type === 'q_listening' ? { audio_text: exercise.audio_script } : {})
     },
     ...(reviewMap.has(exercise.target_grammar)
       ? { review_queue_id: reviewMap.get(exercise.target_grammar) }
@@ -575,38 +567,46 @@ const toDailyExercises = ({ generatedExercises, lesson, reviewItems }) => {
 }
 
 const normalizeExercisePrompt = (exercise, index) => {
-  if (exercise.type === 'q_fill') return `第 ${index + 1} 题：按要求完成句型填空`
   if (exercise.type === 'q_translate') return `第 ${index + 1} 题：把中文意思说成日语`
+  if (exercise.type === 'q_reading') return `第 ${index + 1} 题：阅读短文并用日语回答`
+  if (exercise.type === 'q_listening') return `第 ${index + 1} 题：听取内容并用日语回答`
   return `第 ${index + 1} 题：根据情境完成你的回应`
 }
 
 const normalizeExerciseInstruction = (exercise) => {
-  if (exercise.type === 'q_fill') {
-    return exercise.question || exercise.prompt || `请完成关于「${exercise.target_grammar}」的填空`
-  }
   if (exercise.type === 'q_translate') {
     return exercise.chinese_prompt || exercise.prompt || `请用日语表达本课句意`
+  }
+  if (exercise.type === 'q_reading' || exercise.type === 'q_listening') {
+    return exercise.question || exercise.prompt || '请理解内容后用日语回答。'
   }
   return exercise.scene_description || exercise.prompt || `请完成一轮情境对话`
 }
 
 const normalizeExerciseContext = (exercise) => {
-  if (exercise.type === 'q_fill') {
-    return `请只填写最合适的一个选项，重点使用「${exercise.target_grammar}」。`
-  }
   if (exercise.type === 'q_translate') {
     return `请写成完整自然的日语句子，并明确用到「${exercise.target_grammar}」。`
+  }
+  if (exercise.type === 'q_reading') {
+    return `先理解短文，再用自然日语回答；重点识别「${exercise.target_grammar}」在上下文中的作用。`
+  }
+  if (exercise.type === 'q_listening') {
+    return `听力原文不会显示；可重复播放，重点听清「${exercise.target_grammar}」。`
   }
   return '你只需要补当前这一轮的回答，不必续写整段对话。'
 }
 
 const normalizeExerciseAnswerFormat = (exercise) => {
-  if (exercise.type === 'q_fill') return '只填写一个选项，不要写完整句子。'
   if (exercise.type === 'q_translate') return '写 1 句完整、自然的日语句子。'
+  if (exercise.type === 'q_reading') return '根据短文写 1 句自然日语。'
+  if (exercise.type === 'q_listening') return '根据播放内容写 1 句自然日语。'
   return '只写你这一轮的回答，1 句即可。'
 }
 
 const normalizeExerciseSupportingLines = (exercise) => {
+  if (exercise.type === 'q_reading') {
+    return [String(exercise.passage || '').trim()].filter(Boolean)
+  }
   if (!Array.isArray(exercise.turns)) return []
   return exercise.turns.map((turn, index) => {
     const speaker = String(turn?.speaker || `角色${index + 1}`).trim()
@@ -645,7 +645,7 @@ const generateExercises = async ({
           difficulty: 'foundation',
           questionCount,
           questionType: 'ALL',
-          customPrompt: '请使用中文题干说明，日语答案保持自然，尽量覆盖句型骨架、隐藏句式和本课词汇。题干、instruction、context_note、supporting_lines 和 vocab_hints 都不得出现参考答案、完整标准句、目标回答的日语词形或会直接拼出答案的词组；参考答案只能放在 answer_reference。q_fill 的 options 仅提供必要选项，不要在题干解释正确选项。'
+          customPrompt: '学习者以赴日工作和 JLPT 考级为目标。不要生成填空题；以完整造句为主，并加入职场情境对话、JLPT 风格短文阅读和可播放的听力理解。请使用中文题干说明，日语答案保持自然，尽量覆盖句型骨架、隐藏句式和本课词汇。题干、instruction、context_note、supporting_lines 和 vocab_hints 不得出现参考答案、完整标准回答或可直接拼出答案的日语词组；参考答案只能放在 answer_reference。阅读短文本身可以显示，听力 audio_script 只能保存供播放，不得显示在题面。'
         }
       },
       { requestLlm, providerOptions }

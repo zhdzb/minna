@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": 14,
-  "updated_at": "2026-07-10T13:40:00+08:00",
+  "revision": 15,
+  "updated_at": "2026-07-20T23:54:12+08:00",
   "latest_daily": "study/daily/2026-07-11.json",
   "latest_prompt": "study/prompts/generated/2026-07-11-review.md",
   "latest_review": "study/reviews/2026-07-10-review.json",

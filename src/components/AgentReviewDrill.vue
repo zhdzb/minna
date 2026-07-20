@@ -130,9 +130,9 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { createAgentStudyClient } from '@/utils/agentStudyClient'
-import { toKanaInput } from '@/utils/wanakanaInput'
+import { toKanaInputWithSelection } from '@/utils/wanakanaInput'
 
 const props = defineProps({
   client: {
@@ -207,16 +207,33 @@ const formatQueueKey = (value) => String(value || '').replaceAll('/', ' / ')
 const updateAnswer = (itemId, value) => {
   if (!reviewDrill.value) return
 
+  const activeInput = document.activeElement
+  const canRestoreSelection =
+    activeInput instanceof HTMLInputElement || activeInput instanceof HTMLTextAreaElement
+  const converted = toKanaInputWithSelection(
+    value,
+    canRestoreSelection ? activeInput.selectionStart : null,
+    canRestoreSelection ? activeInput.selectionEnd : null
+  )
+
   reviewDrill.value = {
     ...reviewDrill.value,
     items: reviewDrill.value.items.map((item) =>
       item.id === itemId
         ? {
             ...item,
-            user_answer: toKanaInput(value)
+            user_answer: converted.value
           }
         : item
     )
+  }
+
+  if (canRestoreSelection && converted.selectionStart !== null) {
+    nextTick(() => {
+      if (activeInput.isConnected && document.activeElement === activeInput) {
+        activeInput.setSelectionRange(converted.selectionStart, converted.selectionEnd)
+      }
+    })
   }
 }
 

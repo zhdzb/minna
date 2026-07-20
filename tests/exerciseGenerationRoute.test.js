@@ -8,17 +8,18 @@ describe('exerciseGenerationRoute', () => {
         exercises: [
           {
             id: 'q1',
-            type: 'q_fill',
+            type: 'q_translate',
             target_grammar: '〜ています',
-            question: 'いま、わたしは ____。',
-            options: ['たべています', 'たべます'],
-            answer: 'たべています'
+            chinese_prompt: '我现在在吃饭。',
+            answer: 'いま、ごはんを たべています。',
+            vocab_hints: []
           },
           {
             id: 'q2',
-            type: 'q_translate',
+            type: 'q_listening',
             target_grammar: '〜ています',
-            chinese_prompt: '我现在在学习。',
+            audio_script: 'いま、べんきょうしています。',
+            question: '说话人现在在做什么？请用日语回答。',
             answer: 'いま、べんきょうしています。',
             vocab_hints: []
           }
@@ -47,6 +48,8 @@ describe('exerciseGenerationRoute', () => {
     expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('修饰句与正在进行的表达')
     expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('いま でんわして います。')
     expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('でんわします')
+    expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('不要生成填空题')
+    expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('q_listening')
   })
 
   it('rejects invalid payload before calling LLM', async () => {
@@ -63,5 +66,33 @@ describe('exerciseGenerationRoute', () => {
     ).rejects.toThrow(/grammar_points/)
 
     expect(requestLlm).not.toHaveBeenCalled()
+  })
+
+  it('rejects generated fill-in questions', async () => {
+    const requestLlm = vi.fn(async () =>
+      JSON.stringify({
+        exercises: [
+          {
+            id: 'q1',
+            type: 'q_fill',
+            target_grammar: '〜ています',
+            question: 'いま、わたしは ____。',
+            options: ['たべています', 'たべます'],
+            answer: 'たべています'
+          }
+        ]
+      })
+    )
+
+    await expect(
+      handleExerciseGeneration(
+        {
+          lesson: 22,
+          grammar_points: ['〜ています'],
+          config: { questionType: 'ALL', questionCount: 1 }
+        },
+        { requestLlm }
+      )
+    ).rejects.toThrow(/unsupported type "q_fill"/)
   })
 })

@@ -159,10 +159,24 @@ describe('agentStudyDailyPacketGenerator', () => {
     expect(result.dailyPacket.exercises.length).toBeGreaterThanOrEqual(3)
     expect(result.dailyPacket.exercises[0].instruction).toBeTruthy()
     expect(result.dailyPacket.exercises[0].answer_format).toBeTruthy()
-    expect(result.dailyPacket.exercises[0].choices?.length || 0).toBeGreaterThanOrEqual(2)
-    expect(result.dailyPacket.exercises[2].supporting_lines?.length || 0).toBeGreaterThanOrEqual(2)
-    expect(result.dailyPacket.exercises[2].supporting_lines[1]).toBe('B：（这里由你作答）')
-    expect(result.dailyPacket.exercises[2].supporting_lines.join(' ')).not.toContain(result.dailyPacket.exercises[2].answer_reference)
+    expect(result.dailyPacket.exercises.every((exercise) => exercise.type !== 'q_fill')).toBe(true)
+
+    const typeCounts = result.dailyPacket.exercises.reduce((counts, exercise) => {
+      counts[exercise.type] = (counts[exercise.type] || 0) + 1
+      return counts
+    }, {})
+    expect(typeCounts.q_translate).toBeGreaterThan(typeCounts.q_conversation)
+    expect(typeCounts.q_reading).toBeGreaterThan(0)
+    expect(typeCounts.q_listening).toBeGreaterThan(0)
+
+    const conversationExercise = result.dailyPacket.exercises.find((exercise) => exercise.type === 'q_conversation')
+    expect(conversationExercise.supporting_lines?.length || 0).toBeGreaterThanOrEqual(2)
+    expect(conversationExercise.supporting_lines[1]).toBe('B：（这里由你作答）')
+    expect(conversationExercise.supporting_lines.join(' ')).not.toContain(conversationExercise.answer_reference)
+
+    const listeningExercise = result.dailyPacket.exercises.find((exercise) => exercise.type === 'q_listening')
+    expect(listeningExercise.metadata.audio_text).toBeTruthy()
+    expect(listeningExercise.supporting_lines).not.toContain(listeningExercise.metadata.audio_text)
 
     const writtenDaily = JSON.parse(fs.readFileSync(path.join(studyRoot, 'daily', '2026-07-01.json'), 'utf8'))
     const writtenIndex = JSON.parse(fs.readFileSync(path.join(studyRoot, 'index.json'), 'utf8'))

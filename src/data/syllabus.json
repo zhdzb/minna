@@ -1,15 +1,9 @@
 {
   "question_types": [
     {
-      "id": "q_fill",
-      "name": "基础填空",
-      "desc": "考查助词、变形和固定句型的受控输出。",
-      "difficulty_range": [1, 3]
-    },
-    {
       "id": "q_translate",
-      "name": "提示翻译",
-      "desc": "根据中文语义、限定语法和词汇提示，组织出完整自然的日语句子。",
+      "name": "完整造句",
+      "desc": "根据中文情境和目标语法，组织出可用于真实工作生活的完整自然日语。",
       "difficulty_range": [2, 4]
     },
     {
@@ -17,6 +11,18 @@
       "name": "情境对话",
       "desc": "把语法放进真实交流场景里，考查应答自然度、礼貌层级和语义方向。",
       "difficulty_range": [3, 5]
+    },
+    {
+      "id": "q_reading",
+      "name": "短文阅读",
+      "desc": "阅读 JLPT 风格短文、通知、邮件或工作说明，并用日语提取关键信息。",
+      "difficulty_range": [2, 5]
+    },
+    {
+      "id": "q_listening",
+      "name": "听力理解",
+      "desc": "听取工作和生活场景中的日语说明或对话，并用日语回答关键信息。",
+      "difficulty_range": [2, 5]
     }
   ],
   "lessons": [
@@ -35,7 +41,7 @@
         { "word": "エンジニア", "kana": "エンジニア", "meaning": "工程师", "usage": "更适合现代场景出题" },
         { "word": "にほん", "kana": "にほん", "meaning": "日本", "usage": "国籍与地点" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 2,
@@ -52,7 +58,7 @@
         { "word": "めいし", "kana": "めいし", "meaning": "名片", "usage": "商务场景常用" },
         { "word": "パソコン", "kana": "パソコン", "meaning": "电脑", "usage": "现代办公场景" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 3,
@@ -69,7 +75,7 @@
         { "word": "とけい", "kana": "とけい", "meaning": "手表、钟表", "usage": "价格问句" },
         { "word": "フロア", "kana": "フロア", "meaning": "楼层", "usage": "办公室分布" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 4,
@@ -86,7 +92,7 @@
         { "word": "かいぎ", "kana": "かいぎ", "meaning": "会议", "usage": "现代办公时间安排" },
         { "word": "よてい", "kana": "よてい", "meaning": "计划、安排", "usage": "日程管理" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 5,
@@ -103,7 +109,7 @@
         { "word": "えき", "kana": "えき", "meaning": "车站", "usage": "路线目标" },
         { "word": "ひとりで", "kana": "ひとりで", "meaning": "一个人", "usage": "对比同行者" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 6,
@@ -120,7 +126,7 @@
         { "word": "きっさてん", "kana": "きっさてん", "meaning": "咖啡店", "usage": "邀请场景" },
         { "word": "ひるごはん", "kana": "ひるごはん", "meaning": "午饭", "usage": "日常邀约" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 7,
@@ -137,7 +143,7 @@
         { "word": "かします", "kana": "かします", "meaning": "借出", "usage": "授受延伸练习" },
         { "word": "かります", "kana": "かります", "meaning": "借入", "usage": "和もらう区分" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 8,
@@ -154,7 +160,7 @@
         { "word": "やさしい", "kana": "やさしい", "meaning": "简单、温柔", "usage": "题目/人都可" },
         { "word": "きれい", "kana": "きれい", "meaning": "漂亮、干净", "usage": "风景、房间、文件排版" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 9,
@@ -171,7 +177,7 @@
         { "word": "プレゼン", "kana": "プレゼン", "meaning": "演示、汇报", "usage": "现代能力场景" },
         { "word": "データ", "kana": "データ", "meaning": "数据", "usage": "业务理解" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 10,
@@ -188,7 +194,7 @@
         { "word": "ロッカー", "kana": "ロッカー", "meaning": "储物柜", "usage": "办公室设施" },
         { "word": "うけつけ", "kana": "うけつけ", "meaning": "前台", "usage": "方位说明" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 11,
@@ -205,7 +211,7 @@
         { "word": "けん", "kana": "けん", "meaning": "件", "usage": "现代工作量表达" },
         { "word": "ぶんしょ", "kana": "ぶんしょ", "meaning": "文件", "usage": "处理件数" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 12,
@@ -222,7 +228,7 @@
         { "word": "パソコン", "kana": "パソコン", "meaning": "电脑", "usage": "产品比较" },
         { "word": "チーム", "kana": "チーム", "meaning": "团队", "usage": "集合比较" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 13,
@@ -239,7 +245,7 @@
         { "word": "けんしゅう", "kana": "けんしゅう", "meaning": "培训", "usage": "去参加培训" },
         { "word": "りょこう", "kana": "りょこう", "meaning": "旅行", "usage": "愿望与计划" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 14,
@@ -256,7 +262,7 @@
         { "word": "しりょう", "kana": "しりょう", "meaning": "资料", "usage": "办公对象" },
         { "word": "にもつ", "kana": "にもつ", "meaning": "行李", "usage": "帮助场景" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 15,
@@ -273,7 +279,7 @@
         { "word": "けっこんしています", "kana": "けっこんしています", "meaning": "已婚", "usage": "状态表达" },
         { "word": "ルール", "kana": "ルール", "meaning": "规则", "usage": "禁止许可场景" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 16,
@@ -290,7 +296,7 @@
         { "word": "しずか", "kana": "しずか", "meaning": "安静", "usage": "并列描述" },
         { "word": "まち", "kana": "まち", "meaning": "城市", "usage": "整体局部描述" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 17,
@@ -307,7 +313,7 @@
         { "word": "しゅくだい", "kana": "しゅくだい", "meaning": "作业", "usage": "必须完成" },
         { "word": "しめきり", "kana": "しめきり", "meaning": "截止日期", "usage": "工作任务" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 18,
@@ -324,7 +330,7 @@
         { "word": "しりょう", "kana": "しりょう", "meaning": "资料", "usage": "会前准备" },
         { "word": "ゴルフ", "kana": "ゴルフ", "meaning": "高尔夫", "usage": "兴趣介绍" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 19,
@@ -341,7 +347,7 @@
         { "word": "げんき", "kana": "げんき", "meaning": "精神、有活力", "usage": "状态变化" },
         { "word": "しゅうまつ", "kana": "しゅうまつ", "meaning": "周末", "usage": "たり列举" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 20,
@@ -358,7 +364,7 @@
         { "word": "チャット", "kana": "チャット", "meaning": "聊天、消息", "usage": "现代口语引用" },
         { "word": "ミーティング", "kana": "ミーティング", "meaning": "会议", "usage": "日常口语" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 21,
@@ -375,7 +381,7 @@
         { "word": "ひつよう", "kana": "ひつよう", "meaning": "必要", "usage": "意见判断" },
         { "word": "たぶん", "kana": "たぶん", "meaning": "大概", "usage": "推测辅助词" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 22,
@@ -392,7 +398,7 @@
         { "word": "ひと", "kana": "ひと", "meaning": "人", "usage": "修饰句对象" },
         { "word": "まち", "kana": "まち", "meaning": "城市", "usage": "地点修饰" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 23,
@@ -409,7 +415,7 @@
         { "word": "しんごう", "kana": "しんごう", "meaning": "红绿灯", "usage": "路线说明" },
         { "word": "トラブル", "kana": "トラブル", "meaning": "故障、问题", "usage": "条件应对" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 24,
@@ -426,7 +432,7 @@
         { "word": "せんぱい", "kana": "せんぱい", "meaning": "前辈", "usage": "帮助来源" },
         { "word": "ぶちょう", "kana": "ぶちょう", "meaning": "部长", "usage": "工作受益场景" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     },
     {
       "id": 25,
@@ -443,7 +449,7 @@
         { "word": "けっせき", "kana": "けっせき", "meaning": "缺席", "usage": "假设缺席" },
         { "word": "トラブル", "kana": "トラブル", "meaning": "故障、问题", "usage": "应急场景" }
       ],
-      "enabled_question_types": ["q_fill", "q_translate", "q_conversation"]
+      "enabled_question_types": ["q_translate", "q_conversation", "q_reading", "q_listening"]
     }
   ]
 }

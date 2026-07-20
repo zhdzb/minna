@@ -1,8 +1,13 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import AgentStudyWorkspace from '../src/components/AgentStudyWorkspace.vue'
 
 const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0))
+
+afterEach(() => {
+  vi.unstubAllGlobals()
+  document.body.innerHTML = ''
+})
 
 const createDailyPacket = (overrides = {}) => ({
   id: 'daily-2026-06-26',
@@ -352,6 +357,77 @@ describe('AgentStudyWorkspace', () => {
       })
     })
     expect(wrapper.text()).toContain('草稿已保存')
+  })
+
+  it('keeps the caret in the middle after converting romaji to kana', async () => {
+    vi.stubGlobal('wanakana', {
+      toKana: (value) => value.replaceAll('ka', 'か')
+    })
+    const client = createClient()
+    const wrapper = mountWorkspace(client)
+    await flushPromises()
+    document.body.appendChild(wrapper.element)
+
+    const textarea = wrapper.findAll('.stub-textarea')[0]
+    textarea.element.focus()
+    textarea.element.value = 'あkaい'
+    textarea.element.setSelectionRange(3, 3)
+    await textarea.trigger('input')
+    await flushPromises()
+
+    expect(textarea.element.value).toBe('あかい')
+    expect(textarea.element.selectionStart).toBe(2)
+    expect(textarea.element.selectionEnd).toBe(2)
+  })
+
+  it('plays listening exercises without exposing the transcript', async () => {
+    const speak = vi.fn()
+    const cancel = vi.fn()
+    class TestUtterance {
+      constructor (text) {
+        this.text = text
+      }
+    }
+    vi.stubGlobal('speechSynthesis', { speak, cancel })
+    vi.stubGlobal('SpeechSynthesisUtterance', TestUtterance)
+
+    const audioText = 'かいぎは くじからです。'
+    const client = createClient({
+      dailyPacket: {
+        exercises: [
+          {
+            id: 'exercise-listening',
+            prompt: '听取会议时间并回答',
+            type: 'q_listening',
+            lesson: 7,
+            target_grammar: 'time から',
+            instruction: '点击播放后，用日语回答会议时间。',
+            context_note: '听力原文不会显示。',
+            answer_format: '写 1 句自然日语。',
+            supporting_lines: [],
+            metadata: { skill: 'listening', audio_text: audioText },
+            vocab_hints: []
+          }
+        ],
+        answers: { 'exercise-listening': '' },
+        review_items: []
+      }
+    })
+    const wrapper = mountWorkspace(client)
+    await flushPromises()
+
+    expect(wrapper.text()).toContain('播放听力')
+    expect(wrapper.text()).not.toContain(audioText)
+    const playButton = wrapper.findAll('button').find((button) => button.text().includes('播放听力'))
+    await playButton.trigger('click')
+
+    expect(cancel).toHaveBeenCalledTimes(1)
+    expect(speak).toHaveBeenCalledTimes(1)
+    expect(speak.mock.calls[0][0]).toMatchObject({
+      text: audioText,
+      lang: 'ja-JP',
+      rate: 0.9
+    })
   })
 
   it('submits the packet with self assessment and shows the next review handoff', async () => {

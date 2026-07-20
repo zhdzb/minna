@@ -47,6 +47,27 @@ describe('agentStudyContentQuality', () => {
     expect(() => validateDailyPacketContentQuality(dailyPacket)).toThrow(/requires listening_script or shadowing_lines/)
   })
 
+  it('requires a hidden playback script for listening exercises', () => {
+    const dailyPacket = createSampleDailyPacket()
+    dailyPacket.exercises.push({
+      id: 'ex-listening',
+      type: 'q_listening',
+      lesson: 7,
+      target_grammar: 'N で V',
+      prompt: '听取内容并回答',
+      supporting_lines: [],
+      answer_reference: 'バスで いきます。',
+      metadata: {
+        source: 'codex',
+        difficulty: 'foundation',
+        skill: 'listening',
+        audio_text: ''
+      }
+    })
+
+    expect(() => validateDailyPacketContentQuality(dailyPacket)).toThrow(/metadata.audio_text/)
+  })
+
   it('rejects review drill items that simply repeat the original prompt', () => {
     const reviewDrill = createSampleReviewDrill()
     reviewDrill.items[0].variant_prompt = reviewDrill.items[0].original_prompt

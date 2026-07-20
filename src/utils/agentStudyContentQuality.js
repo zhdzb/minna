@@ -2,7 +2,14 @@ const isPlainObject = (value) => value !== null && typeof value === 'object' && 
 
 const normalizeText = (value) => String(value || '').trim()
 
-const OUTPUT_EXERCISE_TYPES = new Set(['q_translate', 'q_conversation', 'q_pattern_substitution'])
+const OUTPUT_EXERCISE_TYPES = new Set([
+  'q_translate',
+  'q_conversation',
+  'q_pattern_substitution',
+  'q_reading',
+  'q_listening'
+])
+const LISTENING_EXERCISE_TYPES = new Set(['q_listening'])
 const LISTENING_TASK_TYPES = new Set(['listening_drill', 'listening_shadowing', 'shadowing', 'shadowing_lines'])
 const EXAMPLE_REQUIRED_TYPES = new Set(['grammar_note', 'contrast_note'])
 
@@ -111,6 +118,17 @@ const validateExercises = (dailyPacket) => {
       assert(
         normalizeText(exercise.answer_reference) !== '' || isPlainObject(exercise.scoring_rubric),
         label + ' must provide answer_reference or scoring_rubric for output exercises'
+      )
+    }
+
+    if (LISTENING_EXERCISE_TYPES.has(normalizeText(exercise.type))) {
+      assert(
+        normalizeText(exercise?.metadata?.audio_text) !== '',
+        label + ' must provide metadata.audio_text for listening playback'
+      )
+      assert(
+        !(exercise.supporting_lines || []).includes(exercise.metadata.audio_text),
+        label + ' must not expose the listening transcript in supporting_lines'
       )
     }
   })
