@@ -36,6 +36,9 @@ describe('exerciseEvaluationRoute', () => {
     expect(result[0].id).toBe('q1')
     expect(requestLlm).toHaveBeenCalledTimes(1)
     expect(requestLlm.mock.calls[0][0].taskName).toBe('evaluation')
+    expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('Proper names are not scoring targets')
+    expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('full-width/half-width')
+    expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('giving/receiving direction')
   })
 
   it('rejects empty batch payload before calling LLM', async () => {

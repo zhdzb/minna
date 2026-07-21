@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "revision": 15,
-  "updated_at": "2026-07-20T23:54:12+08:00",
-  "latest_daily": "study/daily/2026-07-11.json",
-  "latest_prompt": "study/prompts/generated/2026-07-11-review.md",
-  "latest_review": "study/reviews/2026-07-10-review.json",
+  "revision": 20,
+  "updated_at": "2026-07-21T17:02:47+08:00",
+  "latest_daily": "study/daily/2026-07-21.json",
+  "latest_prompt": "study/prompts/generated/2026-07-21-review.md",
+  "latest_review": "study/reviews/2026-07-21-review.json",
   "schema_versions": {
     "index": 1,
     "profile": 1,

@@ -1,0 +1,870 @@
+{
+  "schema_version": 1,
+  "revision": 5,
+  "updated_at": "2026-07-21T17:02:47+08:00",
+  "id": "daily-2026-07-21",
+  "date": "2026-07-21",
+  "status": "reviewed",
+  "created_at": "2026-07-21T00:26:41+08:00",
+  "mission": {
+    "title": "第 6-10 课日本工作场景综合训练",
+    "plan_type": "multi_lesson_workplace_output",
+    "available_minutes": 90,
+    "focus_lessons": [
+      1,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "goals": [
+      "用完整日语句子复习 1 道到期错题并完成第 6-10 课综合输出",
+      "练习日本职场中的行动、沟通、描述、理由和位置说明",
+      "通过短文与隐藏原文听力训练 JLPT 所需的输入理解"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "task-due-review",
+      "type": "review_queue",
+      "title": "完成第 1 课到期错题变体",
+      "minutes": 8,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-grammar-map",
+      "type": "grammar_review",
+      "title": "扫读第 6-10 课职场句型地图",
+      "minutes": 17,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-listening",
+      "type": "listening_drill",
+      "title": "完成工作安排与办公位置听力",
+      "minutes": 15,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-output",
+      "type": "controlled_output",
+      "title": "完成造句、情境应答和阅读题",
+      "minutes": 45,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-self-check",
+      "type": "self_check",
+      "title": "标记不确定的助词、词形和听力信息",
+      "minutes": 5,
+      "required": true,
+      "status": "pending"
+    }
+  ],
+  "study_materials": [
+    {
+      "id": "lesson-1-review-note",
+      "type": "grammar_note",
+      "lesson": 1,
+      "title": "所属关系与完整陈述",
+      "content": "名词之间的所属或类别关系用「の」连接；礼貌陈述需要以「です」完整收束。",
+      "examples": [
+        {
+          "ja": "これは かいしゃの パソコンです。",
+          "zh": "这是公司的电脑。",
+          "note": "「かいしゃの パソコン」表示所属。"
+        },
+        {
+          "ja": "さとうさんは ABCの しゃいんです。",
+          "zh": "佐藤（さとう）先生是 ABC 公司的职员。",
+          "note": "所属名词组放在身份名词前。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-6-workplace-map",
+      "type": "grammar_note",
+      "lesson": 6,
+      "title": "行动、地点与邀请",
+      "content": "动作对象用「を」，动作发生地点用「で」。邀请时用「ませんか」给对方选择空间，用「ましょう」共同决定行动。",
+      "examples": [
+        {
+          "ja": "しょくどうで あさごはんを たべます。",
+          "zh": "在食堂吃早饭。",
+          "note": "地点和动作对象分别标记。"
+        },
+        {
+          "ja": "どようびに いっしょに えいがを みませんか。",
+          "zh": "星期六一起看电影吗？",
+          "note": "用于礼貌邀请。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-7-workplace-map",
+      "type": "grammar_note",
+      "lesson": 7,
+      "title": "工作手段、授受方向与完成",
+      "content": "工具和通信手段用「で」。给予与接受要从主语视角判断人物方向；「もう」配合过去式表示已经完成。",
+      "examples": [
+        {
+          "ja": "はさみで かみを きります。",
+          "zh": "用剪刀剪纸。",
+          "note": "工具用「で」标记。"
+        },
+        {
+          "ja": "わたしは さとうさんに おみやげを もらいました。",
+          "zh": "我从佐藤（さとう）先生那里收到了特产。",
+          "note": "接受来源用「に」标记。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-8-workplace-map",
+      "type": "grammar_note",
+      "lesson": 8,
+      "title": "办公室与工作评价",
+      "content": "注意い形容词和な形容词的否定及修饰形式。「あまり」通常与否定搭配，表达“不太”。",
+      "examples": [
+        {
+          "ja": "これは あたらしい コピーきです。",
+          "zh": "这是新的复印机。",
+          "note": "い形容词直接修饰名词。"
+        },
+        {
+          "ja": "この みせは あまり にぎやかじゃありません。",
+          "zh": "这家店不太热闹。",
+          "note": "程度副词与否定形式搭配。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-9-workplace-map",
+      "type": "grammar_note",
+      "lesson": 9,
+      "title": "能力、偏好与理由",
+      "content": "理解、喜好和擅长的对象常用「が」。需要解释安排或婉拒时，可在原因后使用「から」。",
+      "examples": [
+        {
+          "ja": "わたしは りょうりが すきです。",
+          "zh": "我喜欢做饭。",
+          "note": "喜好的对象用「が」。"
+        },
+        {
+          "ja": "あした やすみですから、きょう かいものを します。",
+          "zh": "因为明天休息，所以今天去买东西。",
+          "note": "先说明原因，再说行动。"
+        }
+      ]
+    },
+    {
+      "id": "lesson-10-workplace-map",
+      "type": "grammar_note",
+      "lesson": 10,
+      "title": "找人、找物与办公室方位",
+      "content": "人和动物的存在用「います」，物品和设施用「あります」。存在地点用「に」，方位名词前用「の」连接。",
+      "examples": [
+        {
+          "ja": "こうえんに こどもが います。",
+          "zh": "公园里有孩子。",
+          "note": "人的存在用「います」。"
+        },
+        {
+          "ja": "ぎんこうの まえに バスていが あります。",
+          "zh": "银行前面有公交车站。",
+          "note": "设施的存在用「あります」。"
+        }
+      ]
+    },
+    {
+      "id": "lessons-6-10-listening-script",
+      "type": "listening_script",
+      "lesson": 10,
+      "title": "工作日程与办公室位置跟读",
+      "content": "A：きょう、どこで ひるごはんを たべますか。\nB：かいしゃの しょくどうで たべます。\nA：かいぎの しりょうは どこに ありますか。\nB：つくえの うえに あります。\nA：もう メールを おくりましたか。\nB：はい、もう おくりました。",
+      "examples": [
+        {
+          "ja": "かいしゃの しょくどうで たべます。",
+          "zh": "在公司食堂吃。",
+          "note": "注意听动作地点。"
+        },
+        {
+          "ja": "つくえの うえに あります。",
+          "zh": "在桌子上。",
+          "note": "注意听物品位置。"
+        }
+      ]
+    }
+  ],
+  "review_items": [
+    {
+      "review_queue_id": "rq-2026-07-10-lesson-1-relationship-name",
+      "lesson": 1,
+      "skill": "grammar_point",
+      "target_grammar": "N1 の N2"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "daily-2026-07-21-ex-1",
+      "type": "q_translate",
+      "lesson": 1,
+      "target_grammar": "身份与所属关系复习",
+      "prompt": "第 1 题：完整表达人物关系",
+      "instruction": "请用自然日语表达：山田（やまだ）先生是我的老师。",
+      "context_note": "请写成完整的礼貌陈述句。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "やまださんは わたしの せんせいです。",
+      "review_queue_id": "rq-2026-07-10-lesson-1-relationship-name",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "review",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-2",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "动作对象与发生地点",
+      "prompt": "第 2 题：描述上班后的行动",
+      "instruction": "请用自然日语表达：早上，我在办公室看邮件。",
+      "context_note": "场景：到公司后的第一项工作。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "あさ、オフィスで メールを みます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-3",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "礼貌邀请",
+      "prompt": "第 3 题：邀请同事午休",
+      "instruction": "请用自然日语邀请同事：一起吃午饭吗？",
+      "context_note": "场景：午休前询问同事的安排。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "いっしょに ひるごはんを たべませんか。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-4",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "行动内容提问",
+      "prompt": "第 4 题：询问午休安排",
+      "instruction": "请用自然日语表达：午休时做什么？",
+      "context_note": "场景：和新同事聊天。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "ひるやすみに なにを しますか。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-5",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "共同提议",
+      "prompt": "第 5 题：提出下一步行动",
+      "instruction": "请用自然日语表达：那么，三点在会议室谈吧。",
+      "context_note": "场景：你和同事确定沟通时间。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "じゃ、3じに かいぎしつで はなしましょう。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-6",
+      "type": "q_conversation",
+      "lesson": 6,
+      "target_grammar": "邀请回应与时间确认",
+      "prompt": "第 6 题：接受同事邀请",
+      "instruction": "同事邀请你下班后喝咖啡。请接受邀请，并提出六点去。",
+      "context_note": "请像真实对话一样礼貌回应。",
+      "answer_format": "写 B 的 1 句或 2 句日语。",
+      "choices": [],
+      "supporting_lines": [
+        "A：しごとの あとで、いっしょに コーヒーを のみませんか。",
+        "B：（请作答）"
+      ],
+      "vocab_hints": [],
+      "answer_reference": "はい、いいですね。6じに いきましょう。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "conversation"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-7",
+      "type": "q_listening",
+      "lesson": 6,
+      "target_grammar": "动作地点听辨",
+      "prompt": "第 7 题：听懂下班后的安排",
+      "instruction": "播放音频后，用日语回答：说话人下班后在哪里做什么？",
+      "context_note": "可重复播放，回答时写完整句子。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "きっさてんで コーヒーを のみます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "listening",
+        "audio_text": "きょう、しごとの あとで きっさてんへ いきます。きっさてんで コーヒーを のみます。"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-8",
+      "type": "q_translate",
+      "lesson": 7,
+      "target_grammar": "通信手段与动作",
+      "prompt": "第 8 题：说明资料发送方式",
+      "instruction": "请用自然日语表达：我用邮件发送会议资料。",
+      "context_note": "场景：向同事说明你的处理方式。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "メールで かいぎの しりょうを おくります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-9",
+      "type": "q_translate",
+      "lesson": 7,
+      "target_grammar": "接受来源",
+      "prompt": "第 9 题：说明文件来源",
+      "instruction": "请用自然日语表达：我从部长那里收到了日程表。",
+      "context_note": "场景：同事询问日程表是谁给你的。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "ぶちょうに よていひょうを もらいました。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-10",
+      "type": "q_translate",
+      "lesson": 7,
+      "target_grammar": "借出对象",
+      "prompt": "第 10 题：说明借出物品",
+      "instruction": "请用自然日语表达：我把词典借给了同事。",
+      "context_note": "注意从说话人的视角表达人物方向。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "わたしは どうりょうに じしょを かしました。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-11",
+      "type": "q_translate",
+      "lesson": 7,
+      "target_grammar": "工作完成状态",
+      "prompt": "第 11 题：汇报已经完成的工作",
+      "instruction": "请用自然日语表达：我已经发送资料了。",
+      "context_note": "场景：上司确认资料是否发出。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "もう しりょうを おくりました。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-12",
+      "type": "q_conversation",
+      "lesson": 7,
+      "target_grammar": "完成确认应答",
+      "prompt": "第 12 题：回应文件发送确认",
+      "instruction": "上司问你是否已经把文件发给田中（たなか）先生。请回答：是的，已经用邮件发了。",
+      "context_note": "请给出简洁、礼貌的工作汇报。",
+      "answer_format": "写 B 的 1 句日语。",
+      "choices": [],
+      "supporting_lines": [
+        "A：もう たなかさんに ファイルを おくりましたか。",
+        "B：（请作答）"
+      ],
+      "vocab_hints": [],
+      "answer_reference": "はい、もう メールで おくりました。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "conversation"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-13",
+      "type": "q_reading",
+      "lesson": 7,
+      "target_grammar": "工作邮件中的完成信息",
+      "prompt": "第 13 题：阅读简短工作邮件",
+      "instruction": "阅读邮件后，用日语回答：发送人已经完成了什么？",
+      "context_note": "请根据邮件信息作答，不要照抄称呼和寒暄。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [
+        "田中（たなか）さんへ",
+        "会議の資料をメールで送りました。",
+        "予定表はまだ送りません。午後に送ります。",
+        "よろしくお願いします。"
+      ],
+      "vocab_hints": [],
+      "answer_reference": "かいぎの しりょうを メールで おくりました。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "reading"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-14",
+      "type": "q_translate",
+      "lesson": 8,
+      "target_grammar": "办公环境评价",
+      "prompt": "第 14 题：描述办公室环境",
+      "instruction": "请用自然日语表达：这个办公室很安静。",
+      "context_note": "场景：向新同事介绍工作环境。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "この オフィスは とても しずかです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-15",
+      "type": "q_translate",
+      "lesson": 8,
+      "target_grammar": "工作难度否定评价",
+      "prompt": "第 15 题：说明工作难度",
+      "instruction": "请用自然日语表达：这项工作不太难。",
+      "context_note": "场景：同事问你对新任务的感受。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "この しごとは あまり むずかしくないです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-16",
+      "type": "q_translate",
+      "lesson": 8,
+      "target_grammar": "形容词修饰办公场所",
+      "prompt": "第 16 题：介绍办公地点",
+      "instruction": "请用自然日语表达：这是一个交通方便的办公室。",
+      "context_note": "场景：向求职者介绍公司位置。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "これは こうつうが べんりな オフィスです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-17",
+      "type": "q_conversation",
+      "lesson": 8,
+      "target_grammar": "环境评价应答",
+      "prompt": "第 17 题：回答办公环境问题",
+      "instruction": "对方问新办公室怎么样。请回答：很干净。",
+      "context_note": "请作简洁、自然的评价。",
+      "answer_format": "写 B 的 1 句日语。",
+      "choices": [],
+      "supporting_lines": [
+        "A：あたらしい オフィスは どうですか。",
+        "B：（请作答）"
+      ],
+      "vocab_hints": [],
+      "answer_reference": "とても きれいです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "conversation"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-18",
+      "type": "q_reading",
+      "lesson": 8,
+      "target_grammar": "办公设施描述理解",
+      "prompt": "第 18 题：阅读办公室介绍",
+      "instruction": "阅读短文后，用日语回答：休息室怎么样？",
+      "context_note": "只回答与休息室有关的信息。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [
+        "新しいオフィスは駅の近くです。",
+        "とても便利です。会議室は広いです。",
+        "でも、休憩室はあまり大きくないです。"
+      ],
+      "vocab_hints": [],
+      "answer_reference": "きゅうけいしつは あまり おおきくないです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "reading"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-19",
+      "type": "q_translate",
+      "lesson": 9,
+      "target_grammar": "语言理解程度",
+      "prompt": "第 19 题：说明日语能力",
+      "instruction": "请用自然日语表达：我懂一点日语。",
+      "context_note": "场景：入职时说明自己的语言能力。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "わたしは にほんごが すこし わかります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-20",
+      "type": "q_translate",
+      "lesson": 9,
+      "target_grammar": "工作安排与理由",
+      "prompt": "第 20 题：说明今天工作的理由",
+      "instruction": "请用自然日语表达：因为明天有汇报，所以今天工作。",
+      "context_note": "场景：同事问你今天为什么不早走。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "あした プレゼンが ありますから、きょう しごとを します。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-21",
+      "type": "q_translate",
+      "lesson": 9,
+      "target_grammar": "场所偏好",
+      "prompt": "第 21 题：说明自己的偏好",
+      "instruction": "请用自然日语表达：我喜欢安静的咖啡店。",
+      "context_note": "场景：同事问你午休喜欢去什么地方。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "わたしは しずかな きっさてんが すきです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-22",
+      "type": "q_conversation",
+      "lesson": 9,
+      "target_grammar": "带理由的婉拒",
+      "prompt": "第 22 题：婉拒下班聚餐",
+      "instruction": "同事邀请你今晚一起吃饭。请礼貌拒绝，并说明因为有工作。",
+      "context_note": "请给出符合真实职场交流的回应。",
+      "answer_format": "写 B 的 1 句或 2 句日语。",
+      "choices": [],
+      "supporting_lines": [
+        "A：きょう、いっしょに ばんごはんを たべませんか。",
+        "B：（请作答）"
+      ],
+      "vocab_hints": [],
+      "answer_reference": "すみません、しごとが ありますから、きょうは いきません。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "conversation"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-23",
+      "type": "q_conversation",
+      "lesson": 9,
+      "target_grammar": "工作能力应答",
+      "prompt": "第 23 题：说明擅长的工作",
+      "instruction": "对方问你擅长什么。请回答：我擅长做演示。",
+      "context_note": "场景：和新团队成员介绍自己的能力。",
+      "answer_format": "写 B 的 1 句日语。",
+      "choices": [],
+      "supporting_lines": [
+        "A：なにが じょうずですか。",
+        "B：（请作答）"
+      ],
+      "vocab_hints": [],
+      "answer_reference": "プレゼンが じょうずです。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "conversation"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-24",
+      "type": "q_listening",
+      "lesson": 9,
+      "target_grammar": "语言能力听辨",
+      "prompt": "第 24 题：听懂语言能力说明",
+      "instruction": "播放音频后，用日语回答：说话人最熟悉哪种语言？",
+      "context_note": "回答时说明语言和理解程度。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "えいごが よく わかります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "listening",
+        "audio_text": "わたしは にほんごが すこし わかります。えいごが よく わかります。ちゅうごくごは ぜんぜん わかりません。"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-25",
+      "type": "q_translate",
+      "lesson": 10,
+      "target_grammar": "办公物品位置",
+      "prompt": "第 25 题：说明资料的位置",
+      "instruction": "请用自然日语表达：桌子上有会议资料。",
+      "context_note": "场景：同事正在找开会需要的文件。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "つくえの うえに かいぎの しりょうが あります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-26",
+      "type": "q_translate",
+      "lesson": 10,
+      "target_grammar": "办公室设施方位",
+      "prompt": "第 26 题：介绍会议室位置",
+      "instruction": "请用自然日语表达：前台旁边有会议室。",
+      "context_note": "场景：为第一次来公司的访客指路。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "うけつけの となりに かいぎしつが あります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-27",
+      "type": "q_translate",
+      "lesson": 10,
+      "target_grammar": "人物所在位置",
+      "prompt": "第 27 题：说明上司在哪里",
+      "instruction": "请用自然日语表达：部长现在在会议室。",
+      "context_note": "场景：有人来办公室找部长。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "ぶちょうは いま かいぎしつに います。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-28",
+      "type": "q_conversation",
+      "lesson": 10,
+      "target_grammar": "设备位置应答",
+      "prompt": "第 28 题：回答设备在哪里",
+      "instruction": "同事问服务器在哪里。请回答：在储物柜旁边。",
+      "context_note": "请用完整句子说明设备位置。",
+      "answer_format": "写 B 的 1 句日语。",
+      "choices": [],
+      "supporting_lines": [
+        "A：サーバーは どこに ありますか。",
+        "B：（请作答）"
+      ],
+      "vocab_hints": [],
+      "answer_reference": "サーバーは ロッカーの となりに あります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "conversation"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-29",
+      "type": "q_reading",
+      "lesson": 10,
+      "target_grammar": "办公室布局阅读",
+      "prompt": "第 29 题：阅读办公室布局说明",
+      "instruction": "阅读短文后，用日语回答：服务器在哪里？",
+      "context_note": "请从多个位置描述中找到服务器的信息。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [
+        "受付の右に会議室があります。",
+        "ロッカーはコピー機と窓の間にあります。",
+        "サーバーはロッカーの隣にあります。"
+      ],
+      "vocab_hints": [],
+      "answer_reference": "サーバーは ロッカーの となりに あります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "reading"
+      }
+    },
+    {
+      "id": "daily-2026-07-21-ex-30",
+      "type": "q_listening",
+      "lesson": 10,
+      "target_grammar": "人物与物品位置听辨",
+      "prompt": "第 30 题：听懂办公室中的人物位置",
+      "instruction": "播放音频后，用日语回答：田中（たなか）先生在哪里？",
+      "context_note": "音频中还会出现物品位置，请注意区分。",
+      "answer_format": "写 1 句完整日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "たなかさんは かいぎしつに います。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "listening",
+        "audio_text": "たなかさんは かいぎしつに います。かいぎの しりょうは つくえの うえに あります。"
+      }
+    }
+  ],
+  "answers": {
+    "daily-2026-07-21-ex-1": "やまたさんはわたしのせんせいです",
+    "daily-2026-07-21-ex-2": "あさわたしはオフイスにマイルをみます",
+    "daily-2026-07-21-ex-3": "いつしょうにごはんたべますか",
+    "daily-2026-07-21-ex-4": "あんあたわみるやすみになんですか",
+    "daily-2026-07-21-ex-5": "さんじにかいぎしつで交谈です  交谈不会写",
+    "daily-2026-07-21-ex-6": "はい、のみます",
+    "daily-2026-07-21-ex-7": "きさてんでコーヒーをのみます",
+    "daily-2026-07-21-ex-8": "わたしはマイルデかいぎのしりょうをあげます  （あげます应该是基于的意思吧）",
+    "daily-2026-07-21-ex-9": "わたしはぶちょうに日程表をもらいます",
+    "daily-2026-07-21-ex-10": "わたしはじしょうを同事にかえります",
+    "daily-2026-07-21-ex-11": "わたしはしりょうをあげました",
+    "daily-2026-07-21-ex-12": "はい、おくりました",
+    "daily-2026-07-21-ex-13": "ごごんいかいぎのしりょうをおくりました",
+    "daily-2026-07-21-ex-14": "このオルイスはしずかです",
+    "daily-2026-07-21-ex-15": "このしことはむずかしじゃありませね",
+    "daily-2026-07-21-ex-16": "これはべんりゅうの交通がオフィスです",
+    "daily-2026-07-21-ex-17": "干净です",
+    "daily-2026-07-21-ex-18": "あまりおきくないです",
+    "daily-2026-07-21-ex-19": "わたしはにほんごをすおし懂です",
+    "daily-2026-07-21-ex-20": "あしたレポトをあげるから、きょうは工作しません",
+    "daily-2026-07-21-ex-21": "わたしはしずかなきさてんをすきです",
+    "daily-2026-07-21-ex-22": "すみません、工作します",
+    "daily-2026-07-21-ex-23": "わたしは演示をじょうずです",
+    "daily-2026-07-21-ex-24": "にほんごがすこしわかて、えいごがよこわかいります",
+    "daily-2026-07-21-ex-25": "つくえのまえにかいぎのしりょうをあります",
+    "daily-2026-07-21-ex-26": "前台の旁边にかいぎしつをあります",
+    "daily-2026-07-21-ex-27": "ぶちょうはがいぎしつにいます",
+    "daily-2026-07-21-ex-28": "储物柜の旁边",
+    "daily-2026-07-21-ex-29": "サーバーはロツカーのとなりです",
+    "daily-2026-07-21-ex-30": "なたかさんはかいぎしつにいます"
+  },
+  "self_assessment": {
+    "difficulty": "steady",
+    "uncertain_exercise_ids": [],
+    "confusing_points": [
+      "一些词汇想不起来怎么说"
+    ],
+    "pace": "",
+    "note": "我用了一些中文来替代我不会的词汇"
+  },
+  "correction": {
+    "status": "reviewed",
+    "prompt_file": "study/prompts/generated/2026-07-21-review.md",
+    "review_file": "study/reviews/2026-07-21-review.json"
+  },
+  "review_result": {
+    "id": "review-2026-07-21",
+    "accuracy": 0.58,
+    "summary": "按照目标能力优先的规则重新校准后，7 道语法或听读理解正确、仅有人名或一次性非目标拼写差异的题已判为正确。本轮仍需补强的是助词、动词方向、形容词词形和存在句。"
+  }
+}

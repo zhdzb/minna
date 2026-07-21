@@ -368,6 +368,62 @@
               </el-tag>
             </div>
 
+            <div v-if="item.exercise" class="review-question-block">
+              <p class="review-block-label">原题</p>
+              <p class="item-note">第 {{ item.exercise.lesson ?? '--' }} 课 · {{ item.exercise.type || '练习' }}</p>
+              <div class="exercise-detail-list">
+                <p v-if="item.exercise.instruction" class="item-copy">
+                  <strong>作答要求：</strong>{{ item.exercise.instruction }}
+                </p>
+                <p v-if="item.exercise.context_note" class="item-copy">
+                  <strong>场景说明：</strong>{{ item.exercise.context_note }}
+                </p>
+                <p v-if="item.exercise.answer_format" class="item-copy">
+                  <strong>回答格式：</strong>{{ item.exercise.answer_format }}
+                </p>
+              </div>
+
+              <div v-if="item.exercise.type === 'q_listening'" class="listening-control">
+                <el-button
+                  type="primary"
+                  plain
+                  :loading="activeListeningExerciseId === item.exercise.id"
+                  @click="playListeningExercise(item.exercise)"
+                >
+                  {{ activeListeningExerciseId === item.exercise.id ? '正在播放' : '重听原题' }}
+                </el-button>
+                <span>原文仍保持隐藏。</span>
+              </div>
+
+              <div v-if="item.exercise.supporting_lines?.length" class="supporting-lines">
+                <p class="supporting-title">
+                  {{ item.exercise.type === 'q_reading' ? '阅读材料' : '题目上下文' }}
+                </p>
+                <ul class="supporting-list">
+                  <li
+                    v-for="(line, index) in item.exercise.supporting_lines"
+                    :key="`${item.exercise_id}-review-line-${index}`"
+                  >
+                    {{ line }}
+                  </li>
+                </ul>
+              </div>
+
+              <div v-if="item.exercise.choices?.length" class="choice-row">
+                <span
+                  v-for="choice in item.exercise.choices"
+                  :key="`${item.exercise_id}-review-${choice}`"
+                  class="choice-chip"
+                >
+                  {{ choice }}
+                </span>
+              </div>
+
+              <p v-if="item.exercise.vocab_hints?.length" class="item-copy">
+                姓名 / 词汇提示：{{ item.exercise.vocab_hints.join(' / ') }}
+              </p>
+            </div>
+
             <div class="review-chip-row">
               <span class="review-chip">得分 {{ formatPercent(item.score) }}</span>
               <span class="review-chip">置信度 {{ formatPercent(item.confidence) }}</span>
@@ -566,7 +622,17 @@ const exerciseCountLabel = computed(() => `${dailyPacket.value?.exercises?.lengt
 const reviewItemCountLabel = computed(() => `${dailyPacket.value?.review_items?.length || 0} 项`)
 const showSubmissionNextStep = computed(() => dailyPacket.value?.status === 'submitted')
 const confusingPointsText = computed(() => selfAssessmentDraft.value.confusing_points.join('\n'))
-const reviewItems = computed(() => (Array.isArray(reviewResult.value?.items) ? reviewResult.value.items : []))
+const reviewItems = computed(() => {
+  const exercisesById = new Map(
+    (dailyPacket.value?.exercises || []).map((exercise) => [exercise.id, exercise])
+  )
+  const items = Array.isArray(reviewResult.value?.items) ? reviewResult.value.items : []
+
+  return items.map((item) => ({
+    ...item,
+    exercise: exercisesById.get(item.exercise_id) || null
+  }))
+})
 const reviewNextFocus = computed(() =>
   Array.isArray(reviewResult.value?.overall?.next_focus) ? reviewResult.value.overall.next_focus : []
 )
@@ -729,7 +795,7 @@ const findExercise = (exerciseId) =>
   dailyPacket.value?.exercises?.find((exercise) => exercise.id === exerciseId) || null
 
 const reviewExercisePrompt = (item) => {
-  const exercise = findExercise(item.exercise_id)
+  const exercise = item.exercise || findExercise(item.exercise_id)
   return exercise?.prompt || item.exercise_id || '批改项目'
 }
 
@@ -1298,6 +1364,14 @@ onMounted(() => {
 .review-item-card {
   display: grid;
   gap: 12px;
+}
+
+.review-question-block {
+  min-width: 0;
+  padding: 14px;
+  background: var(--app-soft-bg);
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
 }
 
 .review-chip-row,

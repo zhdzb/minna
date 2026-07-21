@@ -34,6 +34,7 @@ describe('agentStudyPromptText', () => {
     expect(prompt).toContain('不要调用前端 LLM 出题逻辑')
     expect(prompt).toContain('不要生成填空题')
     expect(prompt).toContain('赴日工作情境')
+    expect(prompt).toContain('人物姓名首次出现时必须附假名读音')
   })
 
   it('summarizes submitted answers for the review handoff', () => {
@@ -71,5 +72,7 @@ describe('agentStudyPromptText', () => {
     expect(prompt).toContain('study/prompts/generated/2026-07-01-review.md')
     expect(prompt).toContain('わたしは がくせいです。')
     expect(prompt).toContain('追加 study/logs/agent-events.jsonl')
+    expect(prompt).toContain('人名的轻微假名或字形差异')
+    expect(prompt).toContain('只用 exercise_id 关联 daily packet')
   })
 })

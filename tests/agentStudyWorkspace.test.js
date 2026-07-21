@@ -289,6 +289,12 @@ describe('AgentStudyWorkspace', () => {
     expect(wrapper.text()).toContain('需要补充信息')
     expect(wrapper.text()).toContain('老师认为这句可以理解')
     expect(wrapper.text()).toContain('target_particle')
+
+    const reviewCards = wrapper.findAll('.review-item-card')
+    expect(reviewCards[0].text()).toContain('原题')
+    expect(reviewCards[0].text()).toContain('请补全句子：せんせい ___ ほんを あげます。')
+    expect(reviewCards[0].text()).toContain('只填写一个选项')
+    expect(reviewCards[1].text()).toContain('A：その ほんは だれに もらいましたか。')
   })
 
   it('copies the create-daily prompt instead of generating a packet in the browser', async () => {

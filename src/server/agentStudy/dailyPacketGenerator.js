@@ -645,7 +645,7 @@ const generateExercises = async ({
           difficulty: 'foundation',
           questionCount,
           questionType: 'ALL',
-          customPrompt: '学习者以赴日工作和 JLPT 考级为目标。不要生成填空题；以完整造句为主，并加入职场情境对话、JLPT 风格短文阅读和可播放的听力理解。请使用中文题干说明，日语答案保持自然，尽量覆盖句型骨架、隐藏句式和本课词汇。题干、instruction、context_note、supporting_lines 和 vocab_hints 不得出现参考答案、完整标准回答或可直接拼出答案的日语词组；参考答案只能放在 answer_reference。阅读短文本身可以显示，听力 audio_script 只能保存供播放，不得显示在题面。'
+          customPrompt: '学习者以赴日工作和 JLPT 考级为目标。不要生成填空题；以完整造句为主，并加入职场情境对话、JLPT 风格短文阅读和可播放的听力理解。请使用中文题干说明，日语答案保持自然，尽量覆盖句型骨架、隐藏句式和本课词汇。人物姓名不是考查目标：题面首次出现姓名时必须附假名读音，例如“山田（やまだ）先生”。题干、instruction、context_note、supporting_lines 和 vocab_hints 不得出现参考答案、完整标准回答或可直接拼出答案的日语词组；姓名读音是唯一例外。参考答案只能放在 answer_reference。阅读短文本身可以显示，听力 audio_script 只能保存供播放，不得显示在题面。'
         }
       },
       { requestLlm, providerOptions }
@@ -683,6 +683,8 @@ const buildReviewPrompt = ({ date, dailyPath, lesson, focusGrammar, reviewItems 
   '## 批改要求',
   '- 输出必须保持结构化 review result。',
   '- 需要写明错因标签、可接受变体、是否建议重做。',
+  '- 人名的轻微假名或字形差异不影响语法、语义和指代时，必须判为正确，不得建议重做或写入 mastery 弱点。',
+  '- review item 只保存批改证据，不要复制原题数据；页面会通过 exercise_id 关联 daily packet。',
   '- 如果你判断学习者可以推进，请给出明确理由；否则指出下一轮最该补什么。',
   ''
 ].join('\n')

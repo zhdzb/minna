@@ -188,6 +188,8 @@ describe('agentStudyDailyPacketGenerator', () => {
     expect(writtenIndex.latest_daily).toBe('study/daily/2026-07-01.json')
     expect(writtenIndex.latest_prompt).toBe('study/prompts/generated/2026-07-01-review.md')
     expect(promptBody).toContain('学习包批改提示词')
+    expect(promptBody).toContain('人名的轻微假名或字形差异')
+    expect(promptBody).toContain('exercise_id 关联 daily packet')
     expect(contextBody).toContain('study/daily/2026-07-01.json')
     expect(logLines.length).toBe(1)
     expect(JSON.parse(logLines[0]).event).toBe('daily_packet_created')

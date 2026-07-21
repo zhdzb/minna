@@ -153,7 +153,7 @@ ${questionTypeInstruction}
 11. q_conversation 必须包含 scene_description、turns、missing_turn_index、answer。
 12. q_reading 必须包含日语 passage、中文 question、日语 answer 和 vocab_hints；短文优先采用通知、邮件、日程、工作说明或 JLPT 风格短文。
 13. q_listening 必须包含只供播放的日语 audio_script、中文 question、日语 answer 和 vocab_hints；内容优先采用职场对话、广播、时间安排或确认事项。
-14. 若出现人名、地名、专有名词，尽量在 vocab_hints 中补读音或中文义。
+14. 人物姓名不是考查目标。题面第一次出现姓名时必须直接附假名读音，例如“山田（やまだ）先生”；若姓名出现在日语对话或短文中，也要在 vocab_hints 中提供姓名与读音。不得要求学习者猜姓名读音。
 15. 造句与对话题优先体现礼貌层级、授受方向、条件应对、时间顺序，以及在日本工作时常见的确认、请求、报告和回应。
 
 避免重复使用这些最近已经出过的题：

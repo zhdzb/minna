@@ -51,8 +51,12 @@ Evaluation rules:
 1. Be tolerant of romaji input and judge the intended Japanese sentence.
 2. If pronunciation and kana are correct, do not mark the answer wrong only because kanji were omitted.
 3. Ignore missing sentence-final punctuation.
-4. Prefer short, precise Chinese explanations.
-5. Return raw JSON only. No markdown fences.
+4. Proper names are not scoring targets. If a person's name has a minor kana, long-vowel, or kanji/kana spelling difference but the referent, grammar, meaning, and communicative intent remain clear, mark the answer correct and mention the name only as a non-scoring note.
+5. Ignore equivalent spacing, full-width/half-width, Arabic/Japanese number, and kanji/kana variations.
+6. A one-off typo in non-target vocabulary must not make the whole answer wrong when the intended word is uniquely identifiable and meaning is unchanged.
+7. Still mark errors that change meaning or comprehension, including particles, conjugation, tense/polarity, giving/receiving direction, key reading/listening information, and required workplace politeness.
+8. Prefer short, precise Chinese explanations.
+9. Return raw JSON only. No markdown fences.
 
 Return an array of objects in this shape:
 [

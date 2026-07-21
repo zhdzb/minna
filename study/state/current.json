@@ -1,66 +1,72 @@
 {
   "schema_version": 1,
-  "revision": 6,
-  "updated_at": "2026-07-20T23:54:12+08:00",
+  "revision": 8,
+  "updated_at": "2026-07-21T17:02:47+08:00",
   "current_lesson": 6,
   "learning_mode": "lesson_foundation",
   "active_goals": [
-    "从第 6 课开始学习动作对象、地点与邀请",
-    "后续覆盖第 6-10 课核心句型",
-    "以赴日工作和 JLPT 为目标，重点提升造句、职场沟通、阅读和听力",
-    "每轮默认完成 30 道练习，不再安排孤立填空题",
-    "保留第 1-5 课错题的间隔复习"
+    "N を V 与 place で V",
+    "おくります・あげます・もらいます・かします的方向",
+    "形容词否定与が助词",
+    "あります／います和位置助词",
+    "批改聚焦语法、语义和听读理解，人名与等价书写差异不计分"
   ],
   "weakness_summary": [
     {
       "scope": "exercise",
-      "key": "daily-2026-07-10-ex-1",
-      "problem": "「わたしの せんせいは やまださん」前半关系结构正确，但陈述句必须以「です」收束；少了它，句子不完整。",
+      "key": "daily-2026-07-21-ex-2",
+      "problem": "“早上看邮件”的场景抓到了，但动作地点应使用「で」，邮件是「メール」，办公室是「オフィス」。",
       "evidence": [
-        "exercise:daily-2026-07-10-ex-1",
-        "N1 の N2 / N1 は N2 です",
+        "exercise:daily-2026-07-21-ex-2",
+        "动作对象与发生地点",
+        "particle",
+        "vocabulary",
+        "kana_kanji"
+      ]
+    },
+    {
+      "scope": "exercise",
+      "key": "daily-2026-07-21-ex-3",
+      "problem": "你写成了普通疑问「吃饭吗」，题目要求的是礼貌邀请；要用「いっしょに」和「たべませんか」。",
+      "evidence": [
+        "exercise:daily-2026-07-21-ex-3",
+        "礼貌邀请",
+        "conjugation",
+        "kana_kanji",
+        "naturalness"
+      ]
+    },
+    {
+      "scope": "exercise",
+      "key": "daily-2026-07-21-ex-4",
+      "problem": "答案无法形成“午休时做什么”的可理解问句。先固定时间「ひるやすみに」，再用「なにを しますか」。",
+      "evidence": [
+        "exercise:daily-2026-07-21-ex-4",
+        "行动内容提问",
+        "vocabulary",
+        "kana_kanji",
+        "grammar_pattern"
+      ]
+    },
+    {
+      "scope": "exercise",
+      "key": "daily-2026-07-21-ex-5",
+      "problem": "三点和会议室的信息对，但题目要求共同提议；“谈”要用「はなします」，提议形式是「はなしましょう」。",
+      "evidence": [
+        "exercise:daily-2026-07-21-ex-5",
+        "共同提议",
+        "vocabulary",
         "grammar_pattern",
         "naturalness"
-      ]
-    },
-    {
-      "scope": "exercise",
-      "key": "daily-2026-07-10-ex-3",
-      "problem": "整句的语法和意思正确，但本题是填空且要求只填空格内容；严格按 q_fill 规则，应只提交「じゃありません」。",
-      "evidence": [
-        "exercise:daily-2026-07-10-ex-3",
-        "N1 は N2 じゃありません",
-        "naturalness"
-      ]
-    },
-    {
-      "scope": "exercise",
-      "key": "daily-2026-07-10-ex-5",
-      "problem": "「これはほんです」本身正确，但本题要求只选择并填写指示词；严格按 q_fill 规则，应只写「これ」。",
-      "evidence": [
-        "exercise:daily-2026-07-10-ex-5",
-        "これ / それ / あれ",
-        "naturalness"
-      ]
-    },
-    {
-      "scope": "exercise",
-      "key": "daily-2026-07-10-ex-14",
-      "problem": "「から」「まで」和整体语序正确，但 12 点应为「じゅうにじ／12じ」，不是「じょうにじ」。",
-      "evidence": [
-        "exercise:daily-2026-07-10-ex-14",
-        "N は time から time までです",
-        "kana_kanji",
-        "vocabulary"
       ]
     }
   ],
   "recent_focus": {
     "grammar": [
-      "N を V",
-      "place で V",
-      "Vませんか / Vましょう",
-      "第 1-5 课错题复习"
+      "N を V 与 place で V",
+      "おくります・あげます・もらいます・かします的方向",
+      "形容词否定与が助词",
+      "あります／います和位置助词"
     ],
     "listening": [
       "第 6 课动作与地点表达",
@@ -75,8 +81,8 @@
     ]
   },
   "next_recommendation": {
-    "date": "2026-07-10",
-    "plan_type": "lesson-foundation",
+    "date": "2026-07-21",
+    "plan_type": "review_then_output",
     "minutes": 90
   }
 }

@@ -50,6 +50,8 @@ describe('exerciseGenerationRoute', () => {
     expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('でんわします')
     expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('不要生成填空题')
     expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('q_listening')
+    expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('山田（やまだ）先生')
+    expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('不得要求学习者猜姓名读音')
   })
 
   it('rejects invalid payload before calling LLM', async () => {
