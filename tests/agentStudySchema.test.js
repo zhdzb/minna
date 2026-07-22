@@ -47,6 +47,18 @@ describe('agentStudySchema', () => {
     expect(validateReviewDrill(createSampleReviewDrill()).items).toHaveLength(1)
   })
 
+  it('preserves dictionary-form feedback for vocabulary errors', () => {
+    const reviewResult = createSampleReviewResult()
+    reviewResult.items[0].error_tags.push('vocabulary')
+    reviewResult.items[0].vocabulary_feedback = [
+      { dictionary_form: 'のむ', meaning: '喝' }
+    ]
+
+    expect(validateReviewResult(reviewResult).items[0].vocabulary_feedback).toEqual([
+      { dictionary_form: 'のむ', meaning: '喝' }
+    ])
+  })
+
   it('dispatches through the generic validator', () => {
     const indexDocument = readStudyJson('study/index.json')
     expect(validateAgentStudyDocument('index', indexDocument).schema_version).toBe(CURRENT_SCHEMA_VERSION)

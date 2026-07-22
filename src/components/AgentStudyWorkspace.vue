@@ -449,6 +449,15 @@
               <p class="item-copy">{{ item.explanation || '暂无说明。' }}</p>
             </div>
 
+            <div v-if="item.vocabulary_feedback?.length" class="review-answer-block">
+              <p class="review-block-label">词汇订正</p>
+              <ul class="review-focus-list">
+                <li v-for="feedback in item.vocabulary_feedback" :key="`${item.exercise_id}-${feedback.dictionary_form}`">
+                  辞书形：{{ feedback.dictionary_form }}<template v-if="feedback.meaning">（{{ feedback.meaning }}）</template>
+                </li>
+              </ul>
+            </div>
+
             <div v-if="item.acceptable_variants?.length" class="review-answer-block">
               <p class="review-block-label">可接受变体</p>
               <ul class="review-focus-list">

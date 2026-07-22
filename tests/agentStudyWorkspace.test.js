@@ -101,7 +101,7 @@ const createReviewResult = (overrides = {}) => ({
       exercise_id: 'exercise-fill',
       is_correct: false,
       score: 0.25,
-      error_tags: ['particle', 'grammar_pattern'],
+      error_tags: ['particle', 'grammar_pattern', 'vocabulary'],
       target_grammar: 'N で V',
       user_answer: 'に',
       correct_answer: 'で',
@@ -114,6 +114,7 @@ const createReviewResult = (overrides = {}) => ({
       confidence: 0.97,
       needs_user_input: false,
       acceptable_variants: [],
+      vocabulary_feedback: [{ dictionary_form: 'のむ', meaning: '喝' }],
       manual_override: null
     },
     {
@@ -289,6 +290,8 @@ describe('AgentStudyWorkspace', () => {
     expect(wrapper.text()).toContain('需要补充信息')
     expect(wrapper.text()).toContain('老师认为这句可以理解')
     expect(wrapper.text()).toContain('target_particle')
+    expect(wrapper.text()).toContain('词汇订正')
+    expect(wrapper.text()).toContain('辞书形：のむ（喝）')
 
     const reviewCards = wrapper.findAll('.review-item-card')
     expect(reviewCards[0].text()).toContain('原题')

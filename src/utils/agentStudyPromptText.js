@@ -122,6 +122,7 @@ const buildReviewSubmittedPacketPrompt = ({ dailyPacket, indexDocument } = {}) =
     '- 输出结构必须符合 review result schema',
     '- 每题说明是否正确、错因标签、参考答案、可接受变体、解释和是否建议重做',
     '- 人名的轻微假名或字形差异若不影响语法、语义和指代，必须判为正确；空格标点、全半角和等价汉字/假名差异不扣分',
+    '- 只要 error_tags 包含 vocabulary，vocabulary_feedback 必须逐个给出正确词的辞书形和中文义项；动词不能只给ます形、て形或过去形。',
     '- review result 不要复制题干或原题数据，只用 exercise_id 关联 daily packet',
     '- mastery 更新必须基于本次 review evidence',
     '- 如果可以推进下一步，写清楚理由；如果不能推进，写清楚下一轮优先练什么',

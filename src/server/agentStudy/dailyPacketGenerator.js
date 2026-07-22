@@ -684,6 +684,7 @@ const buildReviewPrompt = ({ date, dailyPath, lesson, focusGrammar, reviewItems 
   '- 输出必须保持结构化 review result。',
   '- 需要写明错因标签、可接受变体、是否建议重做。',
   '- 人名的轻微假名或字形差异不影响语法、语义和指代时，必须判为正确，不得建议重做或写入 mastery 弱点。',
+  '- 只要 error_tags 包含 vocabulary，vocabulary_feedback 必须逐个给出正确词的辞书形和中文义项；动词不能只给ます形、て形或过去形。',
   '- review item 只保存批改证据，不要复制原题数据；页面会通过 exercise_id 关联 daily packet。',
   '- 如果你判断学习者可以推进，请给出明确理由；否则指出下一轮最该补什么。',
   ''

@@ -63,6 +63,21 @@ const assertArray = (value, label) => {
 const normalizeStringArray = (value, label) =>
   assertArray(value, label).map((item, index) => assertNonEmptyString(item, label + '[' + index + ']'))
 
+const normalizeVocabularyFeedback = (value, label) => {
+  if (value == null) return []
+
+  return assertArray(value, label).map((item, index) => {
+    const feedback = assertPlainObject(item, label + '[' + index + ']')
+    return {
+      dictionary_form: assertNonEmptyString(
+        feedback.dictionary_form,
+        label + '[' + index + '].dictionary_form'
+      ),
+      meaning: assertOptionalString(feedback.meaning, label + '[' + index + '].meaning') || ''
+    }
+  })
+}
+
 const validateBaseDocument = (value, label) => {
   const doc = assertPlainObject(clone(value), label)
   const schemaVersion = doc.schema_version
@@ -374,6 +389,10 @@ const validateReviewResult = (value) => {
       confidence: reviewItem.confidence == null ? null : assertNumber(reviewItem.confidence, label + '.confidence'),
       needs_user_input: reviewItem.needs_user_input == null ? false : assertBoolean(reviewItem.needs_user_input, label + '.needs_user_input'),
       acceptable_variants: reviewItem.acceptable_variants == null ? [] : normalizeStringArray(reviewItem.acceptable_variants, label + '.acceptable_variants'),
+      vocabulary_feedback: normalizeVocabularyFeedback(
+        reviewItem.vocabulary_feedback,
+        label + '.vocabulary_feedback'
+      ),
       manual_override: reviewItem.manual_override == null ? null : reviewItem.manual_override
     }
     return normalized

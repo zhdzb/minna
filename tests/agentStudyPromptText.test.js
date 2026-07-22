@@ -73,6 +73,8 @@ describe('agentStudyPromptText', () => {
     expect(prompt).toContain('わたしは がくせいです。')
     expect(prompt).toContain('追加 study/logs/agent-events.jsonl')
     expect(prompt).toContain('人名的轻微假名或字形差异')
+    expect(prompt).toContain('vocabulary_feedback')
+    expect(prompt).toContain('辞书形')
     expect(prompt).toContain('只用 exercise_id 关联 daily packet')
   })
 })
