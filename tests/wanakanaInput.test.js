@@ -31,6 +31,28 @@ describe('wanakanaInput', () => {
     })
   })
 
+  it('does not let text after the caret commit unfinished romaji', () => {
+    window.wanakana = {
+      toKana: vi.fn((value) =>
+        value
+          .replaceAll('na', 'な')
+          .replaceAll('ni', 'に')
+      )
+    }
+
+    expect(toKanaInputWithSelection('あnaka', 2, 2)).toEqual({
+      value: 'あnaka',
+      selectionStart: 2,
+      selectionEnd: 2
+    })
+
+    expect(toKanaInputWithSelection('あniaka', 3, 3)).toEqual({
+      value: 'あにaka',
+      selectionStart: 2,
+      selectionEnd: 2
+    })
+  })
+
   it('preserves a selected range after conversion', () => {
     window.wanakana = {
       toKana: vi.fn((value) => value.replaceAll('ka', 'か'))

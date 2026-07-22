@@ -26,20 +26,25 @@ const toKanaInputWithSelection = (value, selectionStart, selectionEnd = selectio
   const text = String(value || '')
   const start = clampSelection(selectionStart, text.length)
   const end = clampSelection(selectionEnd, text.length)
-  const convertedValue = toKanaInput(text)
 
   if (start === null || end === null) {
     return {
-      value: convertedValue,
+      value: toKanaInput(text),
       selectionStart: null,
       selectionEnd: null
     }
   }
 
+  const selectionFrom = Math.min(start, end)
+  const selectionTo = Math.max(start, end)
+  const convertedBeforeSelection = toKanaInput(text.slice(0, selectionFrom))
+  const convertedThroughSelection = toKanaInput(text.slice(0, selectionTo))
+
   return {
-    value: convertedValue,
-    selectionStart: toKanaInput(text.slice(0, start)).length,
-    selectionEnd: toKanaInput(text.slice(0, end)).length
+    // Text after the caret must not force an unfinished romaji syllable to commit.
+    value: convertedThroughSelection + text.slice(selectionTo),
+    selectionStart: convertedBeforeSelection.length,
+    selectionEnd: convertedThroughSelection.length
   }
 }
 

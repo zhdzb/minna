@@ -386,6 +386,34 @@ describe('AgentStudyWorkspace', () => {
     expect(textarea.element.selectionEnd).toBe(2)
   })
 
+  it('keeps unfinished romaji intact until the middle-of-sentence syllable is complete', async () => {
+    vi.stubGlobal('wanakana', {
+      toKana: (value) => value.replaceAll('na', 'な').replaceAll('ni', 'に')
+    })
+    const client = createClient()
+    const wrapper = mountWorkspace(client)
+    await flushPromises()
+    document.body.appendChild(wrapper.element)
+
+    const textarea = wrapper.findAll('.stub-textarea')[0]
+    textarea.element.focus()
+    textarea.element.value = 'あnaka'
+    textarea.element.setSelectionRange(2, 2)
+    await textarea.trigger('input')
+    await flushPromises()
+
+    expect(textarea.element.value).toBe('あnaka')
+    expect(textarea.element.selectionStart).toBe(2)
+
+    textarea.element.value = 'あniaka'
+    textarea.element.setSelectionRange(3, 3)
+    await textarea.trigger('input')
+    await flushPromises()
+
+    expect(textarea.element.value).toBe('あにaka')
+    expect(textarea.element.selectionStart).toBe(2)
+  })
+
   it('plays listening exercises without exposing the transcript', async () => {
     const speak = vi.fn()
     const cancel = vi.fn()
