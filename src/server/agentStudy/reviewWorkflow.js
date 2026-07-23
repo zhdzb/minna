@@ -12,6 +12,7 @@ import {
 import { createAgentStudyContextWriter } from './contextWriter.js'
 import { createAgentStudyEventLog } from './eventLog.js'
 import { createAgentStudyFileStore, resolveStudyPath } from './fileStore.js'
+import { createAgentStudyMistakeStore, MISTAKE_BOOK_PATH } from './mistakeStore.js'
 import { updateMasteryFromReview } from './masteryUpdater.js'
 import { updateReviewQueueFromReview } from './reviewQueueUpdater.js'
 
@@ -213,6 +214,7 @@ const createAgentStudyReviewWorkflow = ({
   fsImpl = fs,
   now = () => new Date().toISOString(),
   fileStore = createAgentStudyFileStore({ studyRoot, fsImpl, now }),
+  mistakeStore = createAgentStudyMistakeStore({ studyRoot, fsImpl, now }),
   eventLog = createAgentStudyEventLog({ studyRoot, fsImpl, now }),
   contextWriter = createAgentStudyContextWriter({ studyRoot, fsImpl, now })
 } = {}) => {
@@ -291,6 +293,12 @@ const createAgentStudyReviewWorkflow = ({
     atomicWriteJson(fsImpl, reviewQueueAbsolutePath, updatedReviewQueue)
     atomicWriteJson(fsImpl, currentAbsolutePath, updatedCurrent)
     atomicWriteJson(fsImpl, dailyAbsolutePath, updatedDaily)
+    const updatedMistakeBook = mistakeStore.syncFromReview({
+      dailyPacket: storedDaily,
+      dailyPath: normalizedDailyPath,
+      reviewResult: normalizedReviewResult,
+      reviewPath: normalizedReviewPath
+    })
 
     const nextIndex = validateIndex({
       ...indexDocument,
@@ -316,6 +324,7 @@ const createAgentStudyReviewWorkflow = ({
         'study/state/mastery.json',
         'study/state/review-queue.json',
         'study/state/current.json',
+        MISTAKE_BOOK_PATH,
         'study/logs/agent-events.jsonl'
       ],
       summary: 'Applied submitted-packet review and refreshed study state.'
@@ -340,6 +349,7 @@ const createAgentStudyReviewWorkflow = ({
       mastery: updatedMastery,
       reviewQueue: updatedReviewQueue,
       current: updatedCurrent,
+      mistakeBook: updatedMistakeBook,
       index: nextIndex,
       reviewPath: normalizedReviewPath,
       context: contextResult,

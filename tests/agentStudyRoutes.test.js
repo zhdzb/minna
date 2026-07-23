@@ -10,11 +10,13 @@ import {
   handleGetPromptFile,
   handleGetLatestReviewDrill,
   handleGetLatestReview,
+  handleGetMistakes,
   handleGetSyllabus,
   handleSaveDailyPacket,
   handleSaveSyllabus,
   handleSaveReviewDrill,
   handleSubmitReviewDrill,
+  handleSubmitMistakeAttempt,
   handleSubmitDailyPacket
 } from '../src/server/agentStudy/routes.js'
 
@@ -546,10 +548,54 @@ describe('agentStudyRoutes', () => {
     expect(JSON.parse(logLines[1]).event).toBe('review_drill_submitted')
   })
 
+  it('loads automatic mistakes and records an answer without requesting another review', async () => {
+    const mistakeBook = {
+      items: [{ id: 'mistake:review-1:exercise-1', attempts: [] }]
+    }
+    const updatedBook = {
+      items: [{ id: 'mistake:review-1:exercise-1', attempts: [{ answer: '回答' }] }]
+    }
+    const mistakeStore = {
+      loadMistakeBook: vi.fn().mockReturnValue(mistakeBook),
+      recordAttempt: vi.fn().mockReturnValue({
+        mistakeBook: updatedBook,
+        mistake: updatedBook.items[0]
+      })
+    }
+    const eventLog = {
+      appendEvent: vi.fn()
+    }
+
+    await expect(handleGetMistakes({ mistakeStore })).resolves.toBe(mistakeBook)
+    await expect(
+      handleSubmitMistakeAttempt(
+        {
+          mistakeId: 'mistake:review-1:exercise-1',
+          answer: '回答'
+        },
+        { mistakeStore, eventLog }
+      )
+    ).resolves.toEqual({
+      mistakeBook: updatedBook,
+      mistake: updatedBook.items[0]
+    })
+
+    expect(mistakeStore.recordAttempt).toHaveBeenCalledWith({
+      mistakeId: 'mistake:review-1:exercise-1',
+      answer: '回答'
+    })
+    expect(eventLog.appendEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ event: 'mistake_practiced' })
+    )
+  })
+
   it('rejects invalid payloads before touching storage', async () => {
     await expect(handleSaveDailyPacket(null)).rejects.toThrow(/requires a JSON object payload/)
     await expect(handleSubmitDailyPacket({})).rejects.toThrow(/dailyPacket/)
     await expect(handleGetPromptFile({ path: '' })).rejects.toThrow(/requires a prompt path/)
     await expect(handleSaveReviewDrill({})).rejects.toThrow(/reviewDrill/)
+    await expect(handleSubmitMistakeAttempt({ mistakeId: '', answer: '' })).rejects.toThrow(
+      /requires mistakeId/
+    )
   })
 })

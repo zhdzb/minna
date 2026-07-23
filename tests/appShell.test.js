@@ -113,6 +113,7 @@ describe('App shell', () => {
     expect(wrapper.text()).toContain('学习工作台')
     expect(wrapper.text()).toContain('进度总览')
     expect(wrapper.text()).toContain('复习训练')
+    expect(wrapper.text()).toContain('错题训练')
     expect(wrapper.text()).toContain('课纲管理')
     expect(loadProgressReview).toHaveBeenCalledTimes(1)
     expect(wrapper.text()).toContain('当前课程：第 9 课')

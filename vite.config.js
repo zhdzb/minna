@@ -18,11 +18,13 @@ import {
   handleGetPromptFile,
   handleGetLatestReviewDrill,
   handleGetLatestReview,
+  handleGetMistakes,
   handleGetSyllabus,
   handleSaveDailyPacket,
   handleSaveSyllabus,
   handleSaveReviewDrill,
   handleSubmitReviewDrill,
+  handleSubmitMistakeAttempt,
   handleSubmitDailyPacket
 } from './src/server/agentStudy/routes.js'
 
@@ -366,6 +368,41 @@ const agentStudyRoutePlugin = () => {
 
         try {
           const result = await handleGetLatestReview()
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/mistakes/attempt', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handleSubmitMistakeAttempt(payload)
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/mistakes', async (req, res) => {
+        if (req.method !== 'GET') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const result = await handleGetMistakes()
           writeJson(res, 200, { success: true, data: result })
         } catch (error) {
           writeJson(res, 400, {

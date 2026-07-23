@@ -4,19 +4,19 @@
       <template #header>
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
           <div style="font-size: 1.1rem; font-weight: bold; color: #f56c6c;">
-            错题与收藏
+            错题训练
           </div>
-          <el-button type="danger" plain @click="clearAll" :disabled="tableData.length === 0">
-            清空全部
+          <el-button type="danger" plain @click="clearAll" :disabled="legacyItems.length === 0">
+            清空旧记录
           </el-button>
         </div>
       </template>
 
       <el-alert
         v-if="tableData.length === 0"
-        title="还没有错题或收藏"
+        title="还没有错题"
         type="success"
-        description="做完训练后，你保存的题目会出现在这里。"
+        description="批改完成后，系统会自动把 is_correct 为 false 的题目放到这里。"
         show-icon
         :closable="false"
       />
@@ -40,10 +40,10 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="标签" width="100">
+        <el-table-column label="来源" width="110">
           <template #default="{ row }">
-            <el-tag size="small" :type="row.mark_type === 'favorite' ? 'success' : 'danger'">
-              {{ row.mark_type === 'favorite' ? '收藏' : '错题' }}
+            <el-tag size="small" :type="row.source_type === 'agent-study' ? 'danger' : 'info'">
+              {{ row.source_type === 'agent-study' ? '自动错题' : '旧记录' }}
             </el-tag>
           </template>
         </el-table-column>
@@ -51,8 +51,13 @@
         <el-table-column prop="question_type" label="题型" width="130" />
         <el-table-column prop="grammar_point" label="语法点" min-width="180" show-overflow-tooltip />
         <el-table-column prop="original_question" label="题目" min-width="220" show-overflow-tooltip />
+        <el-table-column label="练习次数" width="100">
+          <template #default="{ row }">
+            {{ row.attempts?.length || 0 }}
+          </template>
+        </el-table-column>
 
-        <el-table-column label="操作" width="180">
+        <el-table-column label="操作" width="190">
           <template #default="{ row }">
             <div style="display: flex; gap: 8px;">
               <el-button
@@ -64,7 +69,13 @@
               >
                 重新做
               </el-button>
-              <el-button size="small" type="danger" plain @click="removeMistake(row.id)">
+              <el-button
+                v-if="row.source_type !== 'agent-study'"
+                size="small"
+                type="danger"
+                plain
+                @click="removeMistake(row.id)"
+              >
                 删除
               </el-button>
             </div>
@@ -86,7 +97,36 @@
         </div>
 
         <div style="font-size: 1rem; font-weight: 600; line-height: 1.7; margin-bottom: 16px;">
-          {{ reviewExercise.question || reviewExercise.chinese_prompt || reviewExercise.scene_description }}
+          {{ reviewExercise.prompt || reviewExercise.question || reviewExercise.chinese_prompt || reviewExercise.scene_description }}
+        </div>
+
+        <div
+          v-if="reviewExercise.instruction || reviewExercise.context_note"
+          style="background: #f7f8fa; border: 1px solid #ebeef5; border-radius: 8px; padding: 14px; margin-bottom: 16px;"
+        >
+          <p v-if="reviewExercise.instruction" style="margin: 0 0 8px; line-height: 1.7;">
+            {{ reviewExercise.instruction }}
+          </p>
+          <p v-if="reviewExercise.context_note" style="margin: 0; color: #606266; line-height: 1.7;">
+            {{ reviewExercise.context_note }}
+          </p>
+        </div>
+
+        <div v-if="reviewExercise.supporting_lines?.length" style="margin-bottom: 16px;">
+          <p style="font-size: 0.85rem; color: #909399;">题目材料</p>
+          <p
+            v-for="(line, index) in reviewExercise.supporting_lines"
+            :key="`supporting-${index}`"
+            style="margin: 6px 0; line-height: 1.7;"
+          >
+            {{ line }}
+          </p>
+        </div>
+
+        <div v-if="reviewExercise.metadata?.audio_text" style="margin-bottom: 16px;">
+          <el-button type="primary" plain @click="playAudio(reviewExercise.metadata.audio_text)">
+            播放题目音频
+          </el-button>
         </div>
 
         <div
@@ -109,12 +149,10 @@
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             <div
               v-for="(hint, index) in reviewExercise.vocab_hints"
-              :key="`${hint.word}-${index}`"
+              :key="`hint-${index}`"
               style="padding: 8px 10px; border-radius: 8px; background: #f5f7fa; border: 1px solid #ebeef5;"
             >
-              <div style="font-size: 0.75rem; color: #909399;">{{ hint.kana }}</div>
-              <div style="font-weight: 600;">{{ hint.word }}</div>
-              <div style="font-size: 0.8rem; color: #606266;">{{ hint.cn }}</div>
+              {{ formatVocabHint(hint) }}
             </div>
           </div>
         </div>
@@ -122,7 +160,7 @@
         <div v-if="reviewExercise.type === 'q_fill'" style="margin-bottom: 16px;">
           <el-radio-group v-model="reviewAnswer">
             <el-radio-button
-              v-for="option in reviewExercise.options"
+              v-for="option in reviewOptions"
               :key="option"
               :label="option"
             />
@@ -144,7 +182,12 @@
           </div>
           <div style="display: flex; gap: 8px;">
             <el-button @click="reviewDialogVisible = false">关闭</el-button>
-            <el-button type="primary" @click="submitReview">
+            <el-button
+              type="primary"
+              :loading="isSubmittingAttempt"
+              :disabled="!reviewAnswer.trim()"
+              @click="submitReview"
+            >
               提交并查看答案
             </el-button>
           </div>
@@ -162,6 +205,10 @@
         </el-alert>
 
         <el-card v-if="reviewSubmitted" shadow="never" style="background: #fafafa;">
+          <div v-if="activeReviewItem.user_wrong_input" style="margin-bottom: 10px;">
+            <strong>上次错答：</strong>
+            <span>{{ activeReviewItem.user_wrong_input }}</span>
+          </div>
           <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
             <strong>参考答案：</strong>
             <span>{{ activeReviewItem.correct_answer }}</span>
@@ -178,6 +225,17 @@
             <strong>解析：</strong>
             <div v-html="activeReviewItem.explanation" style="margin-top: 6px; line-height: 1.7;" />
           </div>
+          <div v-if="activeReviewItem.evaluation_snapshot?.vocabulary_feedback?.length" style="margin-top: 12px;">
+            <strong>词汇订正：</strong>
+            <ul style="margin: 6px 0 0; line-height: 1.7;">
+              <li
+                v-for="feedback in activeReviewItem.evaluation_snapshot.vocabulary_feedback"
+                :key="feedback.dictionary_form"
+              >
+                辞书形：{{ feedback.dictionary_form }}<template v-if="feedback.meaning">（{{ feedback.meaning }}）</template>
+              </li>
+            </ul>
+          </div>
         </el-card>
       </div>
     </el-dialog>
@@ -185,19 +243,53 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useMainStore } from '@/store/mainStore'
+import { createAgentStudyClient } from '@/utils/agentStudyClient'
+
+const props = defineProps({
+  client: {
+    type: Object,
+    default: null
+  }
+})
 
 const store = useMainStore()
+const client = computed(() => props.client || createAgentStudyClient())
 
 const reviewDialogVisible = ref(false)
 const activeReviewItem = ref(null)
 const reviewAnswer = ref('')
 const reviewSubmitted = ref(false)
+const isSubmittingAttempt = ref(false)
+const agentMistakeBook = ref({ items: [] })
 
-const tableData = computed(() => store.mistakes_book)
+const legacyItems = computed(() => store.mistakes_book || [])
+const agentItems = computed(() =>
+  (agentMistakeBook.value?.items || []).map((item) => ({
+    id: item.id,
+    timestamp: item.created_at,
+    mark_type: 'mistake',
+    source_type: 'agent-study',
+    lesson: item.lesson,
+    grammar_point: item.target_grammar,
+    question_type: item.exercise_snapshot.type,
+    original_question: item.exercise_snapshot.prompt,
+    user_wrong_input: item.review_snapshot.user_answer,
+    correct_answer: item.review_snapshot.correct_answer,
+    explanation: item.review_snapshot.explanation,
+    exercise_snapshot: item.exercise_snapshot,
+    evaluation_snapshot: item.review_snapshot,
+    attempts: item.attempts,
+    last_practiced_at: item.last_practiced_at
+  }))
+)
+const tableData = computed(() => [...agentItems.value, ...legacyItems.value])
 const reviewExercise = computed(() => activeReviewItem.value?.exercise_snapshot || null)
+const reviewOptions = computed(() =>
+  reviewExercise.value?.choices || reviewExercise.value?.options || []
+)
 
 const formatTime = (ts) => {
   if (!ts) return '未知时间'
@@ -241,8 +333,29 @@ const openReview = (item) => {
   reviewDialogVisible.value = true
 }
 
-const submitReview = () => {
-  reviewSubmitted.value = true
+const submitReview = async () => {
+  if (!reviewAnswer.value.trim()) return
+
+  if (activeReviewItem.value?.source_type !== 'agent-study') {
+    reviewSubmitted.value = true
+    return
+  }
+
+  isSubmittingAttempt.value = true
+  try {
+    const result = await client.value.submitMistakeAttempt({
+      mistakeId: activeReviewItem.value.id,
+      answer: reviewAnswer.value
+    })
+    agentMistakeBook.value = result.mistakeBook
+    const refreshed = agentItems.value.find((item) => item.id === activeReviewItem.value.id)
+    if (refreshed) activeReviewItem.value = refreshed
+    reviewSubmitted.value = true
+  } catch (error) {
+    ElMessage.error(error instanceof Error ? error.message : String(error))
+  } finally {
+    isSubmittingAttempt.value = false
+  }
 }
 
 const removeMistake = (id) => {
@@ -267,6 +380,19 @@ const clearAll = () => {
     .catch(() => {})
 }
 
+const formatVocabHint = (hint) => {
+  if (typeof hint === 'string') return hint
+  return [hint?.word, hint?.kana, hint?.meaning || hint?.cn].filter(Boolean).join(' / ')
+}
+
+const loadAgentMistakes = async () => {
+  try {
+    agentMistakeBook.value = await client.value.loadMistakes()
+  } catch (error) {
+    ElMessage.error(error instanceof Error ? error.message : String(error))
+  }
+}
+
 const playAudio = (text) => {
   if (!('speechSynthesis' in window)) {
     ElMessage.error('当前浏览器不支持语音播放。')
@@ -278,4 +404,6 @@ const playAudio = (text) => {
   utterance.rate = 0.85
   window.speechSynthesis.speak(utterance)
 }
+
+onMounted(loadAgentMistakes)
 </script>

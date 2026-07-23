@@ -22,6 +22,9 @@
             <el-menu-item index="/agent-review-drill">
               <span>复习训练</span>
             </el-menu-item>
+            <el-menu-item index="/mistakes">
+              <span>错题训练</span>
+            </el-menu-item>
             <el-menu-item index="/syllabus">
               <span>课纲管理</span>
             </el-menu-item>

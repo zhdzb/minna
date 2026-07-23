@@ -170,6 +170,7 @@ describe('agentStudyReviewWorkflow', () => {
     const updatedIndex = readJson(path.join(studyRoot, 'index.json'))
     const contextContent = fs.readFileSync(path.join(studyRoot, 'context', 'next-agent-context.md'), 'utf8')
     const writtenReview = readJson(path.join(studyRoot, 'reviews', '2026-06-26-review.json'))
+    const mistakeBook = readJson(path.join(studyRoot, 'state', 'mistakes.json'))
 
     expect(result.reviewPath).toBe('study/reviews/2026-06-26-review.json')
     expect(updatedDaily.status).toBe('reviewed')
@@ -185,6 +186,15 @@ describe('agentStudyReviewWorkflow', () => {
     expect(updatedIndex.latest_daily).toBe('study/daily/2026-06-26.json')
     expect(contextContent).toContain('最新 review：study/reviews/2026-06-26-review.json')
     expect(writtenReview.id).toBe('review-2026-06-26')
+    expect(
+      mistakeBook.items.find((item) => item.id === 'mistake:review-2026-06-26:ex-001')
+    ).toMatchObject({
+      exercise_id: 'ex-001',
+      review_id: 'review-2026-06-26'
+    })
+    expect(
+      mistakeBook.items.some((item) => item.exercise_id === 'ex-002' && item.review_id === 'review-2026-06-26')
+    ).toBe(false)
   })
 
   it('does not update index when a later workflow step fails', () => {

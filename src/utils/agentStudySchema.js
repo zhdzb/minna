@@ -356,6 +356,37 @@ const validateDailyPacket = (value) => {
   return doc
 }
 
+const validateReviewItem = (item, label) => {
+  const reviewItem = assertPlainObject(item, label)
+  const rubric = reviewItem.rubric == null ? null : assertPlainObject(reviewItem.rubric, label + '.rubric')
+  if (rubric) {
+    for (const [rubricKey, rubricScore] of Object.entries(rubric)) {
+      assertNumber(rubricScore, label + '.rubric.' + rubricKey)
+    }
+  }
+
+  return {
+    exercise_id: assertNonEmptyString(reviewItem.exercise_id, label + '.exercise_id'),
+    is_correct: assertBoolean(reviewItem.is_correct, label + '.is_correct'),
+    score: assertNumber(reviewItem.score, label + '.score'),
+    error_tags: normalizeStringArray(reviewItem.error_tags, label + '.error_tags'),
+    target_grammar: assertNonEmptyString(reviewItem.target_grammar, label + '.target_grammar'),
+    user_answer: typeof reviewItem.user_answer === 'string' ? reviewItem.user_answer : '',
+    correct_answer: assertNonEmptyString(reviewItem.correct_answer, label + '.correct_answer'),
+    explanation: assertNonEmptyString(reviewItem.explanation, label + '.explanation'),
+    retry_recommended: assertBoolean(reviewItem.retry_recommended, label + '.retry_recommended'),
+    rubric,
+    confidence: reviewItem.confidence == null ? null : assertNumber(reviewItem.confidence, label + '.confidence'),
+    needs_user_input: reviewItem.needs_user_input == null ? false : assertBoolean(reviewItem.needs_user_input, label + '.needs_user_input'),
+    acceptable_variants: reviewItem.acceptable_variants == null ? [] : normalizeStringArray(reviewItem.acceptable_variants, label + '.acceptable_variants'),
+    vocabulary_feedback: normalizeVocabularyFeedback(
+      reviewItem.vocabulary_feedback,
+      label + '.vocabulary_feedback'
+    ),
+    manual_override: reviewItem.manual_override == null ? null : reviewItem.manual_override
+  }
+}
+
 const validateReviewResult = (value) => {
   const doc = validateBaseDocument(value, 'reviewResult')
   doc.id = assertNonEmptyString(doc.id, 'reviewResult.id')
@@ -366,42 +397,61 @@ const validateReviewResult = (value) => {
   doc.overall.can_advance = assertBoolean(doc.overall.can_advance, 'reviewResult.overall.can_advance')
   doc.overall.summary = assertNonEmptyString(doc.overall.summary, 'reviewResult.overall.summary')
   doc.overall.next_focus = normalizeStringArray(doc.overall.next_focus, 'reviewResult.overall.next_focus')
-  doc.items = assertArray(doc.items, 'reviewResult.items').map((item, index) => {
-    const label = 'reviewResult.items[' + index + ']'
-    const reviewItem = assertPlainObject(item, label)
-    const rubric = reviewItem.rubric == null ? null : assertPlainObject(reviewItem.rubric, label + '.rubric')
-    if (rubric) {
-      for (const [rubricKey, rubricScore] of Object.entries(rubric)) {
-        assertNumber(rubricScore, label + '.rubric.' + rubricKey)
-      }
-    }
-    const normalized = {
-      exercise_id: assertNonEmptyString(reviewItem.exercise_id, label + '.exercise_id'),
-      is_correct: assertBoolean(reviewItem.is_correct, label + '.is_correct'),
-      score: assertNumber(reviewItem.score, label + '.score'),
-      error_tags: normalizeStringArray(reviewItem.error_tags, label + '.error_tags'),
-      target_grammar: assertNonEmptyString(reviewItem.target_grammar, label + '.target_grammar'),
-      user_answer: typeof reviewItem.user_answer === 'string' ? reviewItem.user_answer : '',
-      correct_answer: assertNonEmptyString(reviewItem.correct_answer, label + '.correct_answer'),
-      explanation: assertNonEmptyString(reviewItem.explanation, label + '.explanation'),
-      retry_recommended: assertBoolean(reviewItem.retry_recommended, label + '.retry_recommended'),
-      rubric,
-      confidence: reviewItem.confidence == null ? null : assertNumber(reviewItem.confidence, label + '.confidence'),
-      needs_user_input: reviewItem.needs_user_input == null ? false : assertBoolean(reviewItem.needs_user_input, label + '.needs_user_input'),
-      acceptable_variants: reviewItem.acceptable_variants == null ? [] : normalizeStringArray(reviewItem.acceptable_variants, label + '.acceptable_variants'),
-      vocabulary_feedback: normalizeVocabularyFeedback(
-        reviewItem.vocabulary_feedback,
-        label + '.vocabulary_feedback'
-      ),
-      manual_override: reviewItem.manual_override == null ? null : reviewItem.manual_override
-    }
-    return normalized
-  })
+  doc.items = assertArray(doc.items, 'reviewResult.items').map((item, index) =>
+    validateReviewItem(item, 'reviewResult.items[' + index + ']')
+  )
   doc.mastery_updates = assertArray(doc.mastery_updates, 'reviewResult.mastery_updates')
   doc.review_queue_updates = assertArray(doc.review_queue_updates, 'reviewResult.review_queue_updates')
   doc.promotion_decision = assertPlainObject(doc.promotion_decision, 'reviewResult.promotion_decision')
   doc.promotion_decision.can_advance = assertBoolean(doc.promotion_decision.can_advance, 'reviewResult.promotion_decision.can_advance')
   doc.promotion_decision.reason = assertNonEmptyString(doc.promotion_decision.reason, 'reviewResult.promotion_decision.reason')
+  return doc
+}
+
+const validateMistakeBook = (value) => {
+  const doc = validateBaseDocument(value, 'mistakeBook')
+  doc.items = assertArray(doc.items, 'mistakeBook.items').map((item, index) => {
+    const label = 'mistakeBook.items[' + index + ']'
+    const mistake = assertPlainObject(item, label)
+    const reviewSnapshot = validateReviewItem(
+      mistake.review_snapshot,
+      label + '.review_snapshot'
+    )
+    if (reviewSnapshot.is_correct) {
+      throw new Error(label + '.review_snapshot.is_correct must be false')
+    }
+
+    return {
+      id: assertNonEmptyString(mistake.id, label + '.id'),
+      status: assertNonEmptyString(mistake.status, label + '.status'),
+      created_at: assertNonEmptyString(mistake.created_at, label + '.created_at'),
+      source_daily: assertNonEmptyString(mistake.source_daily, label + '.source_daily'),
+      source_review: assertNonEmptyString(mistake.source_review, label + '.source_review'),
+      daily_id: assertNonEmptyString(mistake.daily_id, label + '.daily_id'),
+      review_id: assertNonEmptyString(mistake.review_id, label + '.review_id'),
+      exercise_id: assertNonEmptyString(mistake.exercise_id, label + '.exercise_id'),
+      lesson: assertInteger(mistake.lesson, label + '.lesson'),
+      target_grammar: assertNonEmptyString(mistake.target_grammar, label + '.target_grammar'),
+      exercise_snapshot: validateExercise(mistake.exercise_snapshot, index),
+      review_snapshot: reviewSnapshot,
+      attempts: assertArray(mistake.attempts, label + '.attempts').map((attempt, attemptIndex) => {
+        const attemptLabel = label + '.attempts[' + attemptIndex + ']'
+        const attemptValue = assertPlainObject(attempt, attemptLabel)
+        return {
+          id: assertNonEmptyString(attemptValue.id, attemptLabel + '.id'),
+          submitted_at: assertNonEmptyString(
+            attemptValue.submitted_at,
+            attemptLabel + '.submitted_at'
+          ),
+          answer: assertNonEmptyString(attemptValue.answer, attemptLabel + '.answer')
+        }
+      }),
+      last_practiced_at:
+        mistake.last_practiced_at == null
+          ? null
+          : assertNonEmptyString(mistake.last_practiced_at, label + '.last_practiced_at')
+    }
+  })
   return doc
 }
 
@@ -463,7 +513,8 @@ const validators = {
   promotionRules: validatePromotionRules,
   dailyPacket: validateDailyPacket,
   reviewResult: validateReviewResult,
-  reviewDrill: validateReviewDrill
+  reviewDrill: validateReviewDrill,
+  mistakeBook: validateMistakeBook
 }
 
 const validateAgentStudyDocument = (type, value) => {
@@ -481,6 +532,7 @@ export {
   validateDailyPacket,
   validateIndex,
   validateMastery,
+  validateMistakeBook,
   validateProfile,
   validatePromotionRules,
   validateReviewQueue,

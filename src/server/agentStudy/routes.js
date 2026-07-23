@@ -6,6 +6,7 @@ import {
 } from '../../utils/agentStudySchema.js'
 import { createAgentStudyEventLog } from './eventLog.js'
 import { createAgentStudyFileStore } from './fileStore.js'
+import { createAgentStudyMistakeStore, MISTAKE_BOOK_PATH } from './mistakeStore.js'
 import { createSyllabusStore } from './syllabusStore.js'
 import { deriveAgentStudyPhase, matchesDaily } from '../../utils/agentStudyPhase.js'
 
@@ -86,6 +87,34 @@ const handleGetLatestReview = async ({ fileStore = createAgentStudyFileStore() }
 
 const handleGetLatestReviewDrill = async ({ fileStore = createAgentStudyFileStore() } = {}) =>
   fileStore.loadLatestReviewDrill()
+
+const handleGetMistakes = async ({
+  mistakeStore = createAgentStudyMistakeStore()
+} = {}) => mistakeStore.loadMistakeBook()
+
+const handleSubmitMistakeAttempt = async (
+  payload,
+  {
+    mistakeStore = createAgentStudyMistakeStore(),
+    eventLog = createAgentStudyEventLog()
+  } = {}
+) => {
+  const normalized = assertJsonObject(payload, 'agent mistake attempt route')
+  const mistakeId = String(normalized.mistakeId || '').trim()
+  const answer = String(normalized.answer || '').trim()
+  if (!mistakeId) throw new Error('agent mistake attempt route requires mistakeId')
+  if (!answer) throw new Error('agent mistake attempt route requires a non-empty answer')
+
+  const result = mistakeStore.recordAttempt({ mistakeId, answer })
+  eventLog.appendEvent({
+    actor: 'frontend',
+    event: 'mistake_practiced',
+    input_files: [MISTAKE_BOOK_PATH],
+    output_files: [MISTAKE_BOOK_PATH, 'study/logs/agent-events.jsonl'],
+    summary: 'Recorded a repeated mistake practice attempt.'
+  })
+  return result
+}
 
 const handleGetSyllabus = async ({ syllabusStore = createSyllabusStore() } = {}) =>
   syllabusStore.loadSyllabus()
@@ -249,10 +278,12 @@ export {
   handleGetPromptFile,
   handleGetLatestReviewDrill,
   handleGetLatestReview,
+  handleGetMistakes,
   handleGetSyllabus,
   handleSaveDailyPacket,
   handleSaveSyllabus,
   handleSaveReviewDrill,
   handleSubmitReviewDrill,
+  handleSubmitMistakeAttempt,
   handleSubmitDailyPacket
 }

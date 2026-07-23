@@ -91,6 +91,17 @@ const createAgentStudyClient = (options = {}) => {
       method: 'GET'
     })
 
+  const loadMistakes = async () =>
+    request('mistakes', {
+      method: 'GET'
+    })
+
+  const submitMistakeAttempt = async ({ mistakeId, answer } = {}) =>
+    request('mistakes/attempt', {
+      method: 'POST',
+      body: JSON.stringify({ mistakeId, answer })
+    })
+
   const loadPromptFile = async (promptPath) =>
     request('prompt?path=' + encodeURIComponent(String(promptPath || '').trim()), {
       method: 'GET'
@@ -157,11 +168,13 @@ const createAgentStudyClient = (options = {}) => {
     loadPromptFile,
     loadLatestReviewDrill,
     loadLatestReview,
+    loadMistakes,
     loadSyllabus,
     saveDailyPacket,
     saveSyllabus,
     saveReviewDrill,
     submitReviewDrill,
+    submitMistakeAttempt,
     submitDailyPacket
   }
 }

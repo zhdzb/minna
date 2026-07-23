@@ -306,6 +306,59 @@ describe('agentStudyClient', () => {
     })
   })
 
+  it('loads automatic mistakes and submits repeated practice answers', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        createJsonResponse({
+          body: {
+            success: true,
+            data: {
+              items: [{ id: 'mistake:review-1:exercise-1' }]
+            }
+          }
+        })
+      )
+      .mockResolvedValueOnce(
+        createJsonResponse({
+          body: {
+            success: true,
+            data: {
+              mistake: {
+                id: 'mistake:review-1:exercise-1',
+                attempts: [{ answer: '回答' }]
+              }
+            }
+          }
+        })
+      )
+    const client = createAgentStudyClient({ fetchImpl: fetchMock })
+
+    await client.loadMistakes()
+    await client.submitMistakeAttempt({
+      mistakeId: 'mistake:review-1:exercise-1',
+      answer: '回答'
+    })
+
+    expect(fetchMock).toHaveBeenNthCalledWith(1, '/api/agent-study/mistakes', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+    expect(fetchMock).toHaveBeenNthCalledWith(2, '/api/agent-study/mistakes/attempt', {
+      method: 'POST',
+      body: JSON.stringify({
+        mistakeId: 'mistake:review-1:exercise-1',
+        answer: '回答'
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+  })
+
   it('throws a clear error when fetch support is unavailable', async () => {
     const client = createAgentStudyClient({ fetchImpl: null })
 
