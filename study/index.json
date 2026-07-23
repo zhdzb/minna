@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "revision": 21,
-  "updated_at": "2026-07-23T11:59:42+08:00",
-  "latest_daily": "study/daily/2026-07-21.json",
-  "latest_prompt": "study/prompts/generated/2026-07-21-review.md",
+  "revision": 22,
+  "updated_at": "2026-07-23T12:30:00+08:00",
+  "latest_daily": "study/daily/2026-07-23.json",
+  "latest_prompt": "study/prompts/generated/2026-07-23-review.md",
   "latest_review": "study/reviews/2026-07-21-review.json",
   "schema_versions": {
     "index": 1,
