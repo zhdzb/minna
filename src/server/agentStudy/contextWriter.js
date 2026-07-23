@@ -42,6 +42,14 @@ const summarizeRecentEvents = (recentEvents) => {
     .join(' | ')
 }
 
+const summarizeVocabularySelection = (selection) => {
+  const items = Array.isArray(selection?.items) ? selection.items : []
+  if (items.length === 0) return '尚未生成下一轮词汇选择。'
+  const terms = items.slice(0, 8).map((item) => `${item.word}（${item.kana}）`)
+  const remaining = items.length - terms.length
+  return `${terms.join('、')}${remaining > 0 ? `；另有 ${remaining} 个词` : ''}。`
+}
+
 const buildNextReadFiles = ({ indexDocument }) =>
   unique([
     'study/index.json',
@@ -49,6 +57,7 @@ const buildNextReadFiles = ({ indexDocument }) =>
     'study/state/mastery.json',
     'study/state/review-queue.json',
     'study/state/profile.json',
+    'study/context/vocabulary-selection.json',
     indexDocument.latest_daily,
     indexDocument.latest_prompt,
     indexDocument.latest_review,
@@ -60,6 +69,7 @@ const buildNextAgentContext = ({
   currentState,
   masteryState,
   reviewQueueState,
+  vocabularySelection = null,
   recentEvents = []
 }) => {
   const nextFiles = buildNextReadFiles({ indexDocument })
@@ -83,11 +93,13 @@ const buildNextAgentContext = ({
     '- 重点语法：' + focusGrammar,
     '- 薄弱语法摘要：' + summarizeWeakGrammarPoints(masteryState),
     '- 到期复习队列：' + summarizeDueReviewItems(reviewQueueState),
+    '- 下一轮目标词：' + summarizeVocabularySelection(vocabularySelection),
     '- 最近事件：' + summarizeRecentEvents(recentEvents),
     '',
     '## 下一步动作',
     '- 先读最新的 daily packet，确认下一步是创建新包、继续提交后的跟进，还是继续批改后的跟进。',
     '- 生成任何新 packet 或推进课程状态前，重新检查 mastery 和 review queue。',
+    '- 出题只读取 study/context/vocabulary-selection.json 中的小批目标词，不要把整本词库复制进上下文。',
     '- 上下文只保留路径和摘要，不要把历史 daily/review 全文复制进来。',
     '',
     '## 接下来先读',
@@ -110,12 +122,17 @@ const createAgentStudyContextWriter = ({
     const reviewQueueState = validateReviewQueue(
       readJsonFile(fsImpl, path.join(studyRoot, 'state', 'review-queue.json'))
     )
+    const vocabularySelectionPath = path.join(studyRoot, 'context', 'vocabulary-selection.json')
+    const vocabularySelection = fsImpl.existsSync(vocabularySelectionPath)
+      ? readJsonFile(fsImpl, vocabularySelectionPath)
+      : null
 
     return {
       indexDocument,
       currentState,
       masteryState,
       reviewQueueState,
+      vocabularySelection,
       recentEvents: eventLog.readRecentEvents(recentEventLimit)
     }
   }

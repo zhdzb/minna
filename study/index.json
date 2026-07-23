@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": 20,
-  "updated_at": "2026-07-21T17:02:47+08:00",
+  "revision": 21,
+  "updated_at": "2026-07-23T11:59:42+08:00",
   "latest_daily": "study/daily/2026-07-21.json",
   "latest_prompt": "study/prompts/generated/2026-07-21-review.md",
   "latest_review": "study/reviews/2026-07-21-review.json",
@@ -11,6 +11,7 @@
     "current": 1,
     "mastery": 1,
     "review_queue": 1,
+    "vocabulary_progress": 1,
     "promotion_rules": 1,
     "daily_packet": 1,
     "review_result": 1,

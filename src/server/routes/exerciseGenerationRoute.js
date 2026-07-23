@@ -29,7 +29,7 @@ const normalizeVocabulary = (value) => {
     .map((item) => {
       if (typeof item === 'string') {
         const text = normalizeString(item)
-        return text ? { word: text, kana: '', meaning: '', usage: '' } : null
+        return text ? { id: '', word: text, kana: '', meaning: '', usage: '' } : null
       }
 
       if (!item || typeof item !== 'object') return null
@@ -38,6 +38,7 @@ const normalizeVocabulary = (value) => {
       if (!word) return null
 
       return {
+        id: normalizeString(item.id),
         word,
         kana: normalizeString(item.kana),
         meaning: normalizeString(item.meaning),
@@ -94,7 +95,7 @@ const buildVocabularyLines = (items) => {
   if (!items.length) return ['- 无']
 
   return items.map((item) => {
-    const pieces = [item.word]
+    const pieces = [item.id ? `[${item.id}] ${item.word}` : item.word]
     if (item.kana) pieces.push(`读音: ${item.kana}`)
     if (item.meaning) pieces.push(`含义: ${item.meaning}`)
     if (item.usage) pieces.push(`用法: ${item.usage}`)
@@ -155,6 +156,8 @@ ${questionTypeInstruction}
 13. q_listening 必须包含只供播放的日语 audio_script、中文 question、日语 answer 和 vocab_hints；内容优先采用职场对话、广播、时间安排或确认事项。
 14. 人物姓名不是考查目标。题面第一次出现姓名时必须直接附假名读音，例如“山田（やまだ）先生”；若姓名出现在日语对话或短文中，也要在 vocab_hints 中提供姓名与读音。不得要求学习者猜姓名读音。
 15. 造句与对话题优先体现礼貌层级、授受方向、条件应对、时间顺序，以及在日本工作时常见的确认、请求、报告和回应。
+16. 每道题必须包含 target_vocabulary_ids，填写 1～3 个上方词汇 ID；答案、阅读原文或听力原文必须真实使用或明确考查这些词。
+17. 整套题必须覆盖上方提供的每一个词汇 ID。不要为了凑 ID 标记一个题目实际没有考查的词。
 
 避免重复使用这些最近已经出过的题：
 ${recentExercises.length > 0 ? JSON.stringify(recentExercises.slice(0, 15), null, 2) : '[]'}
@@ -183,7 +186,8 @@ const handleExerciseGeneration = async (
   const parsed = parseJsonText(text, 'exercise generation')
   return validateGeneratedExercisesPayload(parsed, {
     expectedGrammarPoints: normalizedInput.grammar_points,
-    expectedCount: normalizedInput.config.questionCount
+    expectedCount: normalizedInput.config.questionCount,
+    expectedVocabularyIds: normalizedInput.core_vocabulary.map((item) => item.id).filter(Boolean)
   })
 }
 

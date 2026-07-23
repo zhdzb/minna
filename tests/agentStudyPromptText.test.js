@@ -35,6 +35,7 @@ describe('agentStudyPromptText', () => {
     expect(prompt).toContain('不要生成填空题')
     expect(prompt).toContain('赴日工作情境')
     expect(prompt).toContain('人物姓名首次出现时必须附假名读音')
+    expect(prompt).toContain('metadata.target_vocabulary_ids')
   })
 
   it('summarizes submitted answers for the review handoff', () => {
@@ -76,5 +77,7 @@ describe('agentStudyPromptText', () => {
     expect(prompt).toContain('vocabulary_feedback')
     expect(prompt).toContain('辞书形')
     expect(prompt).toContain('只用 exercise_id 关联 daily packet')
+    expect(prompt).toContain('词汇掌握和整题正确性分开记录')
+    expect(prompt).toContain('npm run study:vocab-select')
   })
 })

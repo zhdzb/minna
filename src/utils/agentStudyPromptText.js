@@ -5,6 +5,7 @@ const STATIC_READ_FILES = [
   'study/state/current.json',
   'study/state/mastery.json',
   'study/state/review-queue.json',
+  'study/context/vocabulary-selection.json',
   'study/state/promotion-rules.json'
 ]
 
@@ -56,6 +57,7 @@ const buildCreateDailyPacketPrompt = () => [
   '- 不要调用前端 LLM 出题逻辑',
   '- 不要生成填空题；以完整造句为主，加入赴日工作情境、JLPT 风格阅读和听力理解',
   '- 题面人物姓名首次出现时必须附假名读音；姓名拼写不设为考查点',
+  '- 先运行 npm run study:vocab-select -- --count=18，并让每题用 metadata.target_vocabulary_ids 关联真实考查的目标词',
   '- 题目必须用于学习语法、输入和输出，不要让学习者猜题意',
   '- 题干用中文，答案目标用自然日语',
   '- 完成后运行 npm run verify；如果无法运行，说明原因'
@@ -117,12 +119,14 @@ const buildReviewSubmittedPacketPrompt = ({ dailyPacket, indexDocument } = {}) =
     '- 更新 study/index.json',
     '- 更新 study/context/next-agent-context.md',
     '- 追加 study/logs/agent-events.jsonl',
+    '- 写入完成后运行 npm run study:vocab-select -- --count=18，由代码更新词汇进度',
     '',
     '批改要求：',
     '- 输出结构必须符合 review result schema',
     '- 每题说明是否正确、错因标签、参考答案、可接受变体、解释和是否建议重做',
     '- 人名的轻微假名或字形差异若不影响语法、语义和指代，必须判为正确；空格标点、全半角和等价汉字/假名差异不扣分',
     '- 只要 error_tags 包含 vocabulary，vocabulary_feedback 必须逐个给出正确词的辞书形和中文义项；动词不能只给ます形、て形或过去形。',
+    '- 整题因语法错误被判错时，如果目标词没有问题，不要添加 vocabulary 标签；词汇掌握和整题正确性分开记录',
     '- review result 不要复制题干或原题数据，只用 exercise_id 关联 daily packet',
     '- mastery 更新必须基于本次 review evidence',
     '- 如果可以推进下一步，写清楚理由；如果不能推进，写清楚下一轮优先练什么',

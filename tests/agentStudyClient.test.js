@@ -161,6 +161,32 @@ describe('agentStudyClient', () => {
     })
   })
 
+  it('loads the vocabulary book through its dedicated endpoint', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      createJsonResponse({
+        body: {
+          success: true,
+          data: {
+            summary: { total: 300 },
+            items: []
+          }
+        }
+      })
+    )
+    const client = createAgentStudyClient({ fetchImpl: fetchMock })
+
+    await expect(client.loadVocabulary()).resolves.toEqual({
+      summary: { total: 300 },
+      items: []
+    })
+    expect(fetchMock).toHaveBeenCalledWith('/api/agent-study/vocabulary', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+  })
+
   it('loads a prompt file through the prompt endpoint', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
       createJsonResponse({

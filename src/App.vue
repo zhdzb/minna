@@ -25,6 +25,9 @@
             <el-menu-item index="/mistakes">
               <span>错题训练</span>
             </el-menu-item>
+            <el-menu-item index="/vocabulary">
+              <span>单词本</span>
+            </el-menu-item>
             <el-menu-item index="/syllabus">
               <span>课纲管理</span>
             </el-menu-item>

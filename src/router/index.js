@@ -36,6 +36,11 @@ const routes = [
     component: () => import('@/components/MistakesBook.vue')
   },
   {
+    path: '/vocabulary',
+    name: 'VocabularyBook',
+    component: () => import('@/components/VocabularyBook.vue')
+  },
+  {
     path: '/weekly-review',
     name: 'WeeklyReview',
     component: WeeklyReview

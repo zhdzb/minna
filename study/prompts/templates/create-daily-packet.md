@@ -11,11 +11,14 @@
 - `study/state/current.json`
 - `study/state/mastery.json`
 - `study/state/review-queue.json`
+- `study/context/vocabulary-selection.json`
 - `study/state/promotion-rules.json`
 - `src/data/syllabus.json`
 - `study/index.json` 中指向的最新 daily（如果存在）
 - `study/index.json` 中指向的最新 review（如果存在）
 - `study/logs/agent-events.jsonl`
+
+读取前先运行 `npm run study:vocab-select -- --count=18`，由代码根据词汇进度刷新这一小批目标词。不要把 `src/data/vocabulary.json` 或完整词汇进度复制进 Agent 上下文。
 
 ## 允许写入
 
@@ -37,6 +40,8 @@
 - 练习默认按完整造句约 60%、职场情境应答约 20%、短文阅读约 10%、听力理解约 10% 分配；题量较少时仍须以完整造句为主。
 - 造句和对话优先采用赴日工作常见场景：自我介绍、日程确认、请求与许可、工作汇报、道歉、电话、会议、通勤和生活手续。
 - 人物姓名不是考查目标。题面中人物姓名第一次出现时必须直接附上假名读音，例如“山田（やまだ）先生”；不得要求学习者凭空猜测姓名读音，也不要把姓名拼写设为评分点。
+- 每道题必须在 `metadata.target_vocabulary_ids` 中写入 1～3 个 `study/context/vocabulary-selection.json` 里的词汇 ID，且题目必须真实考查这些词；整份 packet 应覆盖本轮选择中的全部词。
+- 目标词只用于控制题目词汇覆盖，不要在题干或 `vocab_hints` 中直接泄露答案词形。中文语义可以明确，答案词形只能出现在参考答案、阅读原文或隐藏听力原文中。
 - 阅读题使用 JLPT 风格短文、通知、邮件、日程或工作说明；短文写入 `supporting_lines`，要求学习者理解后用自然日语回答。
 - 听力题必须把隐藏的日语播放文本写入 `metadata.audio_text`，并保持 `supporting_lines` 不含原文；问题用中文，学习者用自然日语回答。
 - 如果源数据不完整或有歧义，把不确定性写进 packet/context，不要擅自脑补。

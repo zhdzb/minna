@@ -96,6 +96,11 @@ const createAgentStudyClient = (options = {}) => {
       method: 'GET'
     })
 
+  const loadVocabulary = async () =>
+    request('vocabulary', {
+      method: 'GET'
+    })
+
   const submitMistakeAttempt = async ({ mistakeId, answer } = {}) =>
     request('mistakes/attempt', {
       method: 'POST',
@@ -169,6 +174,7 @@ const createAgentStudyClient = (options = {}) => {
     loadLatestReviewDrill,
     loadLatestReview,
     loadMistakes,
+    loadVocabulary,
     loadSyllabus,
     saveDailyPacket,
     saveSyllabus,

@@ -160,6 +160,12 @@ describe('agentStudyDailyPacketGenerator', () => {
     expect(result.dailyPacket.exercises[0].instruction).toBeTruthy()
     expect(result.dailyPacket.exercises[0].answer_format).toBeTruthy()
     expect(result.dailyPacket.exercises.every((exercise) => exercise.type !== 'q_fill')).toBe(true)
+    expect(result.dailyPacket.vocabulary_plan.selected_ids).toHaveLength(10)
+    expect(
+      result.dailyPacket.exercises.every(
+        (exercise) => exercise.metadata.target_vocabulary_ids.length > 0
+      )
+    ).toBe(true)
 
     const typeCounts = result.dailyPacket.exercises.reduce((counts, exercise) => {
       counts[exercise.type] = (counts[exercise.type] || 0) + 1

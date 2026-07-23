@@ -8,6 +8,7 @@ import { createAgentStudyEventLog } from './eventLog.js'
 import { createAgentStudyFileStore } from './fileStore.js'
 import { createAgentStudyMistakeStore, MISTAKE_BOOK_PATH } from './mistakeStore.js'
 import { createSyllabusStore } from './syllabusStore.js'
+import { createAgentStudyVocabularyStore } from './vocabularyStore.js'
 import { deriveAgentStudyPhase, matchesDaily } from '../../utils/agentStudyPhase.js'
 
 const assertJsonObject = (payload, label) => {
@@ -91,6 +92,10 @@ const handleGetLatestReviewDrill = async ({ fileStore = createAgentStudyFileStor
 const handleGetMistakes = async ({
   mistakeStore = createAgentStudyMistakeStore()
 } = {}) => mistakeStore.loadMistakeBook()
+
+const handleGetVocabulary = async ({
+  vocabularyStore = createAgentStudyVocabularyStore()
+} = {}) => vocabularyStore.loadVocabularyBook()
 
 const handleSubmitMistakeAttempt = async (
   payload,
@@ -279,6 +284,7 @@ export {
   handleGetLatestReviewDrill,
   handleGetLatestReview,
   handleGetMistakes,
+  handleGetVocabulary,
   handleGetSyllabus,
   handleSaveDailyPacket,
   handleSaveSyllabus,

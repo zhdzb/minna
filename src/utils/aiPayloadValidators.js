@@ -148,7 +148,38 @@ const buildQuestionSignature = (exercise) => {
   return `${exercise.type}:${normalizeText(exercise.scene_description)}`
 }
 
-const normalizeGeneratedExercise = (exercise, index, expectedGrammarPoints) => {
+const normalizeTargetVocabularyIds = (value, index, expectedVocabularyIds) => {
+  if (expectedVocabularyIds.length === 0) return []
+  if (!Array.isArray(value) || value.length === 0) {
+    throw new Error(`exercise ${index + 1}: target_vocabulary_ids must be a non-empty array`)
+  }
+
+  const normalized = Array.from(
+    new Set(
+      value.map((item, targetIndex) =>
+        assertNonEmptyString(
+          item,
+          `exercise ${index + 1}: target_vocabulary_ids[${targetIndex}]`
+        )
+      )
+    )
+  )
+  if (normalized.length > 3) {
+    throw new Error(`exercise ${index + 1}: target_vocabulary_ids must contain at most 3 ids`)
+  }
+  const invalidId = normalized.find((id) => !expectedVocabularyIds.includes(id))
+  if (invalidId) {
+    throw new Error(`exercise ${index + 1}: unknown target vocabulary id "${invalidId}"`)
+  }
+  return normalized
+}
+
+const normalizeGeneratedExercise = (
+  exercise,
+  index,
+  expectedGrammarPoints,
+  expectedVocabularyIds
+) => {
   if (!exercise || typeof exercise !== 'object') {
     throw new Error(`exercise ${index + 1}: item must be an object`)
   }
@@ -164,6 +195,11 @@ const normalizeGeneratedExercise = (exercise, index, expectedGrammarPoints) => {
   }
 
   normalized.target_grammar = validateTargetGrammar(normalized.target_grammar, expectedGrammarPoints, index)
+  normalized.target_vocabulary_ids = normalizeTargetVocabularyIds(
+    exercise.target_vocabulary_ids,
+    index,
+    expectedVocabularyIds
+  )
 
   if (normalized.type === 'q_translate') {
     normalized.chinese_prompt = assertNonEmptyString(
@@ -253,6 +289,9 @@ export const validateGeneratedExercisesPayload = (payload, options = {}) => {
     ? options.expectedGrammarPoints
     : []
   const expectedCount = Number.isInteger(options.expectedCount) ? options.expectedCount : null
+  const expectedVocabularyIds = Array.isArray(options.expectedVocabularyIds)
+    ? options.expectedVocabularyIds.map((item) => normalizeText(item)).filter(Boolean)
+    : []
 
   if (expectedGrammarPoints.length === 0) {
     throw new Error('expectedGrammarPoints is required for generated exercise validation')
@@ -270,7 +309,12 @@ export const validateGeneratedExercisesPayload = (payload, options = {}) => {
   }
 
   const normalizedExercises = exercises.map((exercise, index) =>
-    normalizeGeneratedExercise(exercise, index, expectedGrammarPoints)
+    normalizeGeneratedExercise(
+      exercise,
+      index,
+      expectedGrammarPoints,
+      expectedVocabularyIds
+    )
   )
 
   const ids = normalizedExercises.map((exercise) => exercise.id)
@@ -281,6 +325,21 @@ export const validateGeneratedExercisesPayload = (payload, options = {}) => {
   const signatures = normalizedExercises.map(buildQuestionSignature)
   if (new Set(signatures).size !== signatures.length) {
     throw new Error('generated exercises contain duplicate questions')
+  }
+
+  if (expectedVocabularyIds.length > 0) {
+    const coveredVocabularyIds = new Set(
+      normalizedExercises.flatMap((exercise) => exercise.target_vocabulary_ids)
+    )
+    const missingVocabularyIds = expectedVocabularyIds.filter(
+      (id) => !coveredVocabularyIds.has(id)
+    )
+    if (missingVocabularyIds.length > 0) {
+      throw new Error(
+        'generated exercises did not cover selected vocabulary ids: ' +
+          missingVocabularyIds.join(', ')
+      )
+    }
   }
 
   return { exercises: normalizedExercises }

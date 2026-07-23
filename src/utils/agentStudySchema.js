@@ -239,6 +239,58 @@ const validateReviewQueue = (value) => {
   return doc
 }
 
+const validateVocabularyProgress = (value) => {
+  const doc = validateBaseDocument(value, 'vocabularyProgress')
+  doc.processed_review_ids = normalizeStringArray(
+    doc.processed_review_ids,
+    'vocabularyProgress.processed_review_ids'
+  )
+  doc.items = assertPlainObject(doc.items, 'vocabularyProgress.items')
+
+  for (const [key, progressValue] of Object.entries(doc.items)) {
+    const label = 'vocabularyProgress.items.' + key
+    const progress = assertPlainObject(progressValue, label)
+    progress.status = assertNonEmptyString(progress.status, label + '.status')
+    if (!['learning', 'review', 'mastered'].includes(progress.status)) {
+      throw new Error(label + '.status must be learning, review, or mastered')
+    }
+    progress.seen_count = assertInteger(progress.seen_count, label + '.seen_count')
+    progress.correct_count = assertInteger(progress.correct_count, label + '.correct_count')
+    progress.correct_streak = assertInteger(progress.correct_streak, label + '.correct_streak')
+    progress.last_result = assertNonEmptyString(progress.last_result, label + '.last_result')
+    progress.last_seen_at = assertNonEmptyString(progress.last_seen_at, label + '.last_seen_at')
+    progress.due_date = assertNonEmptyString(progress.due_date, label + '.due_date')
+    progress.modes = assertPlainObject(progress.modes, label + '.modes')
+
+    for (const mode of ['production', 'reading', 'listening']) {
+      const modeLabel = label + '.modes.' + mode
+      const modeProgress = assertPlainObject(progress.modes[mode], modeLabel)
+      modeProgress.seen_count = assertInteger(modeProgress.seen_count, modeLabel + '.seen_count')
+      modeProgress.correct_count = assertInteger(
+        modeProgress.correct_count,
+        modeLabel + '.correct_count'
+      )
+    }
+
+    for (const counter of [
+      progress.seen_count,
+      progress.correct_count,
+      progress.correct_streak,
+      ...Object.values(progress.modes).flatMap((mode) => [
+        mode.seen_count,
+        mode.correct_count
+      ])
+    ]) {
+      if (counter < 0) throw new Error(label + ' counters must be >= 0')
+    }
+    if (progress.correct_count > progress.seen_count) {
+      throw new Error(label + '.correct_count cannot exceed seen_count')
+    }
+  }
+
+  return doc
+}
+
 const validatePromotionRules = (value) => {
   const doc = validateBaseDocument(value, 'promotionRules')
   doc.lesson_gate = assertPlainObject(doc.lesson_gate, 'promotionRules.lesson_gate')
@@ -292,6 +344,10 @@ const validateExercise = (item, index) => {
   exercise.metadata.source = assertNonEmptyString(exercise.metadata.source, label + '.metadata.source')
   exercise.metadata.difficulty = assertNonEmptyString(exercise.metadata.difficulty, label + '.metadata.difficulty')
   exercise.metadata.skill = assertNonEmptyString(exercise.metadata.skill, label + '.metadata.skill')
+  exercise.metadata.target_vocabulary_ids = normalizeOptionalStringArray(
+    exercise.metadata.target_vocabulary_ids,
+    label + '.metadata.target_vocabulary_ids'
+  )
   return exercise
 }
 
@@ -320,6 +376,17 @@ const validateDailyPacket = (value) => {
     }
   })
   doc.study_materials = assertArray(doc.study_materials, 'dailyPacket.study_materials').map(validateStudyMaterial)
+  if (doc.vocabulary_plan != null) {
+    const vocabularyPlan = assertPlainObject(doc.vocabulary_plan, 'dailyPacket.vocabulary_plan')
+    vocabularyPlan.selection_file = assertOptionalString(
+      vocabularyPlan.selection_file,
+      'dailyPacket.vocabulary_plan.selection_file'
+    )
+    vocabularyPlan.selected_ids = normalizeOptionalStringArray(
+      vocabularyPlan.selected_ids,
+      'dailyPacket.vocabulary_plan.selected_ids'
+    )
+  }
   doc.review_items = assertArray(doc.review_items, 'dailyPacket.review_items').map((item, index) => {
     const label = 'dailyPacket.review_items[' + index + ']'
     const reviewItem = assertPlainObject(item, label)
@@ -510,6 +577,7 @@ const validators = {
   current: validateCurrent,
   mastery: validateMastery,
   reviewQueue: validateReviewQueue,
+  vocabularyProgress: validateVocabularyProgress,
   promotionRules: validatePromotionRules,
   dailyPacket: validateDailyPacket,
   reviewResult: validateReviewResult,
@@ -537,5 +605,6 @@ export {
   validatePromotionRules,
   validateReviewQueue,
   validateReviewDrill,
-  validateReviewResult
+  validateReviewResult,
+  validateVocabularyProgress
 }

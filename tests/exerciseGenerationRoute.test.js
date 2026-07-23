@@ -10,6 +10,7 @@ describe('exerciseGenerationRoute', () => {
             id: 'q1',
             type: 'q_translate',
             target_grammar: '〜ています',
+            target_vocabulary_ids: ['vocab-phone'],
             chinese_prompt: '我现在在吃饭。',
             answer: 'いま、ごはんを たべています。',
             vocab_hints: []
@@ -18,6 +19,7 @@ describe('exerciseGenerationRoute', () => {
             id: 'q2',
             type: 'q_listening',
             target_grammar: '〜ています',
+            target_vocabulary_ids: ['vocab-phone'],
             audio_script: 'いま、べんきょうしています。',
             question: '说话人现在在做什么？请用日语回答。',
             answer: 'いま、べんきょうしています。',
@@ -35,7 +37,13 @@ describe('exerciseGenerationRoute', () => {
         sentence_patterns: ['いま でんわして います。'],
         hidden_knowledge: ['注意进行体和状态体的区别。'],
         core_vocabulary: [
-          { word: 'でんわします', kana: 'でんわします', meaning: '打电话', usage: '正在进行' }
+          {
+            id: 'vocab-phone',
+            word: 'でんわします',
+            kana: 'でんわします',
+            meaning: '打电话',
+            usage: '正在进行'
+          }
         ],
         config: { questionType: 'ALL', questionCount: 2 }
       },
@@ -43,6 +51,7 @@ describe('exerciseGenerationRoute', () => {
     )
 
     expect(result.exercises).toHaveLength(2)
+    expect(result.exercises[0].target_vocabulary_ids).toEqual(['vocab-phone'])
     expect(requestLlm).toHaveBeenCalledTimes(1)
     expect(requestLlm.mock.calls[0][0].taskName).toBe('exercise')
     expect(requestLlm.mock.calls[0][0].systemPrompt).toContain('修饰句与正在进行的表达')

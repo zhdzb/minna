@@ -28,6 +28,8 @@
 - `study/logs/agent-events.jsonl`
 - `study/index.json`
 
+review 文件和 daily 状态写入完成后运行 `npm run study:vocab-select -- --count=18`。该命令会由代码读取本次 review evidence，更新词汇进度并刷新下一轮小批词汇；Agent 不要直接编辑 `study/state/vocabulary-progress.json`。
+
 ## 硬规则
 
 - 不要覆盖或删除历史 review 文件，也不要改写旧的 event-log 行。
@@ -93,6 +95,8 @@
 - 仍需计分的内容包括：影响理解的词汇错误、助词和词形、时态与肯否定、授受或移动方向、听力/阅读关键信息，以及职场场景明确要求的礼貌程度。重复出现并妨碍理解的拼写问题也应记录。
 - `kana_kanji` 只能用于会影响词义、读音辨识或交流理解的书写错误，不能用于单纯的人名拼写、空格标点或等价字形。
 - 只要 `error_tags` 包含 `vocabulary`，该题的 `vocabulary_feedback` 必须逐个列出影响理解的词汇，格式为 `{ "dictionary_form": "正确词的辞书形", "meaning": "中文义项" }`。动词必须给辞书形（如「のみます」对应「のむ」），不可只重复题目中的ます形、て形或过去形；名词给通常词形，い形容词给以「い」结尾的基本形，な形容词给不带「です」的基本形。没有计分词汇错误时写空数组。姓名和不计分的轻微拼写偏差不得写入此字段。
+- 词汇掌握和整题正确性分开记录：即使整题因助词、活用或语法错误而 `is_correct: false`，只要目标词本身没有问题，就不要添加 `vocabulary` 标签。系统会据此给 `metadata.target_vocabulary_ids` 中的词记录词汇通过。
+- 如果目标词存在词汇错误，`vocabulary_feedback.dictionary_form` 必须与正确目标词的辞书形一致；系统依靠该字段只降低出错词，不连带同题中其他正确目标词。
 
 - `q_fill`：严格按答案或选项匹配
 - `q_translate`：综合语义、目标语法、助词、变形、自然度评分

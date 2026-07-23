@@ -8,6 +8,7 @@ const DEFAULT_SCHEMA_VERSIONS = Object.freeze({
   current: CURRENT_SCHEMA_VERSION,
   mastery: CURRENT_SCHEMA_VERSION,
   review_queue: CURRENT_SCHEMA_VERSION,
+  vocabulary_progress: CURRENT_SCHEMA_VERSION,
   promotion_rules: CURRENT_SCHEMA_VERSION,
   daily_packet: CURRENT_SCHEMA_VERSION,
   review_result: CURRENT_SCHEMA_VERSION

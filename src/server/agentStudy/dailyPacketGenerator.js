@@ -5,6 +5,11 @@ import { validateDailyPacket, validateCurrent, validateIndex, validateMastery, v
 import { validateDailyPacketContentQuality } from '../../utils/agentStudyContentQuality.js'
 import { createAgentStudyEventLog } from './eventLog.js'
 import { createAgentStudyContextWriter } from './contextWriter.js'
+import {
+  createAgentStudyVocabularyStore,
+  VOCABULARY_PROGRESS_PATH,
+  VOCABULARY_SELECTION_PATH
+} from './vocabularyStore.js'
 import { handleExerciseGeneration } from '../routes/exerciseGenerationRoute.js'
 
 const clone = (value) => JSON.parse(JSON.stringify(value))
@@ -42,16 +47,6 @@ const getLessonById = (lessonId) =>
   Array.isArray(syllabusData.lessons)
     ? syllabusData.lessons.find((lesson) => Number(lesson.id) === Number(lessonId)) || null
     : null
-
-const pickVocabulary = (lesson, limit = 6) => {
-  const vocabulary = Array.isArray(lesson?.core_vocabulary) ? lesson.core_vocabulary : []
-  return vocabulary.slice(0, limit).map((item) => ({
-    word: String(item?.word || '').trim(),
-    kana: String(item?.kana || '').trim(),
-    meaning: String(item?.meaning || '').trim(),
-    usage: String(item?.usage || '').trim()
-  })).filter((item) => item.word)
-}
 
 const summarizeVocabulary = (items) =>
   items.map((item) => {
@@ -190,6 +185,10 @@ const buildFallbackExerciseDraft = ({
   const vocabA = vocabItems[0]?.word || 'わたし'
   const vocabB = vocabItems[1]?.word || 'がくせい'
   const vocabC = vocabItems[2]?.word || 'にほん'
+  const targetVocabularyIds = vocabItems
+    .slice(0, 2)
+    .map((item) => item.id)
+    .filter(Boolean)
   const meaningB = vocabItems[1]?.meaning || '学生'
   const meaningC = vocabItems[2]?.meaning || '日本'
   const sentenceAnswer = targetGrammar.includes('N1 の N2')
@@ -220,7 +219,8 @@ const buildFallbackExerciseDraft = ({
       metadata: {
         source: 'rule-based',
         difficulty: 'foundation',
-        skill: 'output'
+        skill: 'output',
+        target_vocabulary_ids: targetVocabularyIds
       }
     }
   }
@@ -238,7 +238,8 @@ const buildFallbackExerciseDraft = ({
       metadata: {
         source: 'rule-based',
         difficulty: 'foundation',
-        skill: 'reading'
+        skill: 'reading',
+        target_vocabulary_ids: targetVocabularyIds
       }
     }
   }
@@ -257,6 +258,7 @@ const buildFallbackExerciseDraft = ({
         source: 'rule-based',
         difficulty: 'foundation',
         skill: 'listening',
+        target_vocabulary_ids: targetVocabularyIds,
         audio_text: sentenceAnswer
       }
     }
@@ -281,7 +283,8 @@ const buildFallbackExerciseDraft = ({
     metadata: {
       source: 'rule-based',
       difficulty: 'foundation',
-      skill: 'conversation'
+      skill: 'conversation',
+      target_vocabulary_ids: targetVocabularyIds
     }
   }
 }
@@ -558,6 +561,9 @@ const toDailyExercises = ({ generatedExercises, lesson, reviewItems }) => {
             : exercise.type === 'q_reading'
               ? 'reading'
               : 'listening',
+      target_vocabulary_ids: Array.isArray(exercise.target_vocabulary_ids)
+        ? exercise.target_vocabulary_ids
+        : [],
       ...(exercise.type === 'q_listening' ? { audio_text: exercise.audio_script } : {})
     },
     ...(reviewMap.has(exercise.target_grammar)
@@ -633,6 +639,7 @@ const generateExercises = async ({
         sentence_patterns: lesson.sentence_patterns,
         hidden_knowledge: lesson.hidden_knowledge,
         core_vocabulary: vocabulary.map((item) => ({
+          id: item.id,
           word: item.word,
           kana: item.kana,
           meaning: item.meaning,
@@ -685,8 +692,10 @@ const buildReviewPrompt = ({ date, dailyPath, lesson, focusGrammar, reviewItems 
   '- 需要写明错因标签、可接受变体、是否建议重做。',
   '- 人名的轻微假名或字形差异不影响语法、语义和指代时，必须判为正确，不得建议重做或写入 mastery 弱点。',
   '- 只要 error_tags 包含 vocabulary，vocabulary_feedback 必须逐个给出正确词的辞书形和中文义项；动词不能只给ます形、て形或过去形。',
+  '- 整题因语法错误被判错时，如果 metadata.target_vocabulary_ids 中的词没有问题，不要添加 vocabulary 标签。',
   '- review item 只保存批改证据，不要复制原题数据；页面会通过 exercise_id 关联 daily packet。',
   '- 如果你判断学习者可以推进，请给出明确理由；否则指出下一轮最该补什么。',
+  '- review 和状态文件写入完成后运行 npm run study:vocab-select -- --count=18，由代码更新词汇进度。',
   ''
 ].join('\n')
 
@@ -718,7 +727,8 @@ const createDailyPacketDocument = ({
   tasks,
   studyMaterials,
   reviewItems,
-  exercises
+  exercises,
+  vocabularySelection
 }) => validateDailyPacketContentQuality(validateDailyPacket({
   schema_version: 1,
   revision: 1,
@@ -736,6 +746,10 @@ const createDailyPacketDocument = ({
   },
   tasks,
   study_materials: studyMaterials,
+  vocabulary_plan: {
+    selection_file: VOCABULARY_SELECTION_PATH,
+    selected_ids: vocabularySelection.items.map((item) => item.id)
+  },
   review_items: reviewItems,
   exercises,
   answers: buildAnswers(exercises),
@@ -759,10 +773,13 @@ const createAgentStudyDailyPacketGenerator = ({
   fsImpl = fs,
   now = () => new Date().toISOString(),
   requestLlm,
-  providerOptions
+  providerOptions,
+  vocabularyStore: vocabularyStoreOverride
 } = {}) => {
   const eventLog = createAgentStudyEventLog({ studyRoot, fsImpl, now })
   const contextWriter = createAgentStudyContextWriter({ studyRoot, fsImpl, now })
+  const vocabularyStore =
+    vocabularyStoreOverride || createAgentStudyVocabularyStore({ studyRoot, fsImpl, now })
 
   const loadInputs = () => {
     const indexDocument = validateIndex(readJsonFile(fsImpl, path.join(studyRoot, 'index.json')))
@@ -810,10 +827,15 @@ const createAgentStudyDailyPacketGenerator = ({
     const reviewItems = buildReviewItems({ reviewQueue, mastery, lessonId })
     const focusGrammar = buildFocusGrammar({ lesson, current, mastery, reviewItems })
     const availableMinutes = Number(current.next_recommendation?.minutes || profile.daily_time_budget_minutes || 45)
-    const vocabulary = pickVocabulary(lesson, 8)
+    const exerciseCount = buildExerciseCountForMinutes(availableMinutes)
+    const vocabularySelection = vocabularyStore.selectForPacket({
+      lesson: lessonId,
+      date,
+      count: Math.min(18, Math.max(10, Math.ceil(exerciseCount * 0.6)))
+    })
+    const vocabulary = vocabularySelection.items
     const tasks = buildTasks({ availableMinutes, reviewItems })
     const studyMaterials = buildStudyMaterials({ lesson, focusGrammar, vocabulary })
-    const exerciseCount = buildExerciseCountForMinutes(availableMinutes)
     const generatedExercises = await generateExercises({
       lesson,
       focusGrammar,
@@ -842,7 +864,8 @@ const createAgentStudyDailyPacketGenerator = ({
       tasks,
       studyMaterials,
       reviewItems,
-      exercises
+      exercises,
+      vocabularySelection
     })
 
     const promptContent = buildReviewPrompt({ date, dailyPath, lesson, focusGrammar, reviewItems })
@@ -885,6 +908,8 @@ const createAgentStudyDailyPacketGenerator = ({
         'study/state/current.json',
         'study/state/mastery.json',
         'study/state/review-queue.json',
+        VOCABULARY_PROGRESS_PATH,
+        'src/data/vocabulary.json',
         'src/data/syllabus.json',
         indexDocument.latest_daily
       ]),
@@ -892,6 +917,7 @@ const createAgentStudyDailyPacketGenerator = ({
         dailyPath,
         promptPath,
         'study/context/next-agent-context.md',
+        VOCABULARY_SELECTION_PATH,
         'study/index.json',
         'study/logs/agent-events.jsonl'
       ],

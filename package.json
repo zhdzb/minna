@@ -3,6 +3,7 @@
     "dev": "vite",
     "build": "vite build",
     "start": "vite",
+    "study:vocab-select": "node scripts/refresh-vocabulary-selection.mjs",
     "test": "vitest run --maxWorkers=1",
     "verify": "npm run build && npm run test"
   },

@@ -13,6 +13,11 @@ import { createAgentStudyContextWriter } from './contextWriter.js'
 import { createAgentStudyEventLog } from './eventLog.js'
 import { createAgentStudyFileStore, resolveStudyPath } from './fileStore.js'
 import { createAgentStudyMistakeStore, MISTAKE_BOOK_PATH } from './mistakeStore.js'
+import {
+  createAgentStudyVocabularyStore,
+  VOCABULARY_PROGRESS_PATH,
+  VOCABULARY_SELECTION_PATH
+} from './vocabularyStore.js'
 import { updateMasteryFromReview } from './masteryUpdater.js'
 import { updateReviewQueueFromReview } from './reviewQueueUpdater.js'
 
@@ -182,7 +187,8 @@ const writeContextSnapshot = ({
   indexDocument,
   currentState,
   masteryState,
-  reviewQueueState
+  reviewQueueState,
+  vocabularySelection
 }) => {
   if (typeof contextWriter.buildNextAgentContext === 'function') {
     const recentEvents =
@@ -192,6 +198,7 @@ const writeContextSnapshot = ({
       currentState,
       masteryState,
       reviewQueueState,
+      vocabularySelection,
       recentEvents
     })
     const relativePath = path.posix.join('study', 'context', 'next-agent-context.md')
@@ -215,6 +222,7 @@ const createAgentStudyReviewWorkflow = ({
   now = () => new Date().toISOString(),
   fileStore = createAgentStudyFileStore({ studyRoot, fsImpl, now }),
   mistakeStore = createAgentStudyMistakeStore({ studyRoot, fsImpl, now }),
+  vocabularyStore = createAgentStudyVocabularyStore({ studyRoot, fsImpl, now }),
   eventLog = createAgentStudyEventLog({ studyRoot, fsImpl, now }),
   contextWriter = createAgentStudyContextWriter({ studyRoot, fsImpl, now })
 } = {}) => {
@@ -299,6 +307,15 @@ const createAgentStudyReviewWorkflow = ({
       reviewResult: normalizedReviewResult,
       reviewPath: normalizedReviewPath
     })
+    const updatedVocabularyProgress = vocabularyStore.syncFromReview({
+      dailyPacket: storedDaily,
+      reviewResult: normalizedReviewResult
+    })
+    const vocabularySelection = vocabularyStore.selectForPacket({
+      lesson: updatedCurrent.current_lesson,
+      date: updatedCurrent.next_recommendation.date,
+      count: 18
+    })
 
     const nextIndex = validateIndex({
       ...indexDocument,
@@ -325,6 +342,8 @@ const createAgentStudyReviewWorkflow = ({
         'study/state/review-queue.json',
         'study/state/current.json',
         MISTAKE_BOOK_PATH,
+        VOCABULARY_PROGRESS_PATH,
+        VOCABULARY_SELECTION_PATH,
         'study/logs/agent-events.jsonl'
       ],
       summary: 'Applied submitted-packet review and refreshed study state.'
@@ -338,7 +357,8 @@ const createAgentStudyReviewWorkflow = ({
       indexDocument: nextIndex,
       currentState: updatedCurrent,
       masteryState: updatedMastery,
-      reviewQueueState: updatedReviewQueue
+      reviewQueueState: updatedReviewQueue,
+      vocabularySelection
     })
 
     atomicWriteJson(fsImpl, path.join(studyRoot, 'index.json'), nextIndex)
@@ -350,6 +370,8 @@ const createAgentStudyReviewWorkflow = ({
       reviewQueue: updatedReviewQueue,
       current: updatedCurrent,
       mistakeBook: updatedMistakeBook,
+      vocabularyProgress: updatedVocabularyProgress,
+      vocabularySelection,
       index: nextIndex,
       reviewPath: normalizedReviewPath,
       context: contextResult,

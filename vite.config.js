@@ -19,6 +19,7 @@ import {
   handleGetLatestReviewDrill,
   handleGetLatestReview,
   handleGetMistakes,
+  handleGetVocabulary,
   handleGetSyllabus,
   handleSaveDailyPacket,
   handleSaveSyllabus,
@@ -408,6 +409,23 @@ const agentStudyRoutePlugin = () => {
           writeJson(res, 400, {
             success: false,
             error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/vocabulary', async (req, res) => {
+        if (req.method !== 'GET') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const result = await handleGetVocabulary()
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 500, {
+            success: false,
+            error: error.message || 'Failed to load vocabulary book'
           })
         }
       })

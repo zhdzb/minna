@@ -20,7 +20,25 @@ const readJson = (relativePath) =>
 
 describe('agentStudy legacy migration', () => {
   it('parses legacy JSON text and groups repeat mistakes into stable buckets', () => {
-    const legacyText = fs.readFileSync(path.join(repoRoot, 'data.json'), 'utf8')
+    const legacyText = JSON.stringify({
+      progress: { current_lesson: 7 },
+      mistakes_book: [
+        ...Array.from({ length: 9 }, (_, index) => ({
+          id: `lesson-1-${index + 1}`,
+          timestamp: `2026-03-${String(index + 1).padStart(2, '0')}T10:00:00.000Z`,
+          mark_type: 'mistake',
+          lesson: 1,
+          grammar_point: 'q_translate'
+        })),
+        {
+          id: 'lesson-17-required-form',
+          timestamp: '2026-04-12T13:24:06.364Z',
+          mark_type: 'mistake',
+          lesson: 17,
+          grammar_point: 'Vなければ なりません'
+        }
+      ]
+    })
     const legacyData = parseLegacyData(legacyText)
     const mistakeBuckets = buildLegacyMistakeBuckets(legacyData)
 
@@ -33,7 +51,7 @@ describe('agentStudy legacy migration', () => {
     expect(mistakeBuckets.some((bucket) => bucket.lesson === 17)).toBe(true)
   })
 
-  it('migrates the current repo data.json into valid study state documents', () => {
+  it('migrates the current repo data.json after legacy mistakes have moved to Agent Study', () => {
     const legacyData = readJson('data.json')
     const migrated = migrateLegacyDataToStudyState({
       legacyData,
@@ -61,15 +79,10 @@ describe('agentStudy legacy migration', () => {
       pattern: 'N(工具/手段) で V (使用某种工具做某事)',
       status: 'weak'
     })
+    expect(validateReviewQueue(migrated.reviewQueue).items.length).toBeGreaterThanOrEqual(5)
     expect(
-      Object.values(migrated.mastery.grammar_points).some(
-        (point) => point.lesson === 17 && point.pattern.includes('なければ')
-      )
+      migrated.reviewQueue.items.some((item) => item.key === 'lesson-7/tool-means')
     ).toBe(true)
-
-    expect(validateReviewQueue(migrated.reviewQueue).items.length).toBeGreaterThanOrEqual(6)
-    expect(migrated.reviewQueue.items.some((item) => item.id === 'rq-lesson-1-q-translate')).toBe(true)
-    expect(migrated.reviewQueue.items.some((item) => item.id.includes('lesson-17'))).toBe(true)
 
     expect(migrated.report).toMatchObject({
       migrated_at: '2026-06-30T10:00:00+08:00',
@@ -77,7 +90,7 @@ describe('agentStudy legacy migration', () => {
       current_lesson: 7,
       migrated_lesson_state_count: 13,
       migrated_pattern_count: 1,
-      migrated_mistake_bucket_count: 5
+      migrated_mistake_bucket_count: 0
     })
   })
 })

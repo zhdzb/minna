@@ -12,7 +12,8 @@ import {
   validateDailyPacket,
   validateReviewDrill,
   validateReviewQueue,
-  validateReviewResult
+  validateReviewResult,
+  validateVocabularyProgress
 } from '../src/utils/agentStudySchema'
 import {
   createSampleDailyPacket,
@@ -38,6 +39,10 @@ describe('agentStudySchema', () => {
     expect(validateCurrent(readStudyJson('study/state/current.json')).current_lesson).toBe(6)
     expect(validateMastery(readStudyJson('study/state/mastery.json')).current_gate).toBe('lesson-6-foundation')
     expect(validateReviewQueue(readStudyJson('study/state/review-queue.json')).items).toHaveLength(4)
+    expect(
+      validateVocabularyProgress(readStudyJson('study/state/vocabulary-progress.json'))
+        .processed_review_ids
+    ).toContain('review-2026-07-21')
     expect(validatePromotionRules(readStudyJson('study/state/promotion-rules.json')).lesson_gate.min_recent_sessions).toBe(2)
   })
 

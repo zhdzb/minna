@@ -11,6 +11,7 @@ import {
   handleGetLatestReviewDrill,
   handleGetLatestReview,
   handleGetMistakes,
+  handleGetVocabulary,
   handleGetSyllabus,
   handleSaveDailyPacket,
   handleSaveSyllabus,
@@ -587,6 +588,19 @@ describe('agentStudyRoutes', () => {
     expect(eventLog.appendEvent).toHaveBeenCalledWith(
       expect.objectContaining({ event: 'mistake_practiced' })
     )
+  })
+
+  it('loads the materialized vocabulary book from the vocabulary store', async () => {
+    const vocabularyBook = {
+      summary: { total: 300, new: 300 },
+      items: [{ id: 'vocab-001', word: 'する' }]
+    }
+    const vocabularyStore = {
+      loadVocabularyBook: vi.fn().mockReturnValue(vocabularyBook)
+    }
+
+    await expect(handleGetVocabulary({ vocabularyStore })).resolves.toBe(vocabularyBook)
+    expect(vocabularyStore.loadVocabularyBook).toHaveBeenCalledTimes(1)
   })
 
   it('rejects invalid payloads before touching storage', async () => {
