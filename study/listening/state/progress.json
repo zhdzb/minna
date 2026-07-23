@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-07-23T13:00:00+08:00",
+  "total_attempts": 0,
+  "completed_attempts": 0,
+  "comprehension_correct": 0,
+  "comprehension_total": 0,
+  "average_accuracy": 0,
+  "shadowing_completed_segments": 0,
+  "shadowing_total_segments": 0,
+  "average_shadowing_rating": 0,
+  "workplace_response_count": 0,
+  "scenario_counts": {},
+  "recent_focus": []
+}

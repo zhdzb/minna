@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-07-23T07:01:41.605Z",
+  "id": "listening-2026-07-23-01",
+  "date": "2026-07-23",
+  "created_at": "2026-07-23T07:01:41.605Z",
+  "source_snapshot_id": "listening-source-20260723070141",
+  "prompt_file": "study/listening/prompts/generated/listening-2026-07-23-01.md",
+  "plan": {
+    "title": "晨会前的会议确认",
+    "scenario_id": "morning-meeting",
+    "scenario_label": "晨会与会议安排",
+    "level": "N5-N4",
+    "estimated_minutes": 20,
+    "focus_lessons": [
+      6,
+      10
+    ],
+    "target_grammar": [
+      "time に V",
+      "place で V",
+      "N は place です"
+    ],
+    "target_vocabulary_ids": [
+      "vocab-007",
+      "vocab-009",
+      "vocab-044",
+      "vocab-045",
+      "vocab-052",
+      "vocab-143",
+      "vocab-154",
+      "vocab-010"
+    ],
+    "goals": [
+      "听清会议时间和地点",
+      "理解工作前需要完成的动作",
+      "练习确认安排的自然回应"
+    ]
+  },
+  "audio": {
+    "lang": "ja-JP",
+    "default_rate": 0.9,
+    "voice_hint": "Japanese"
+  },
+  "script": {
+    "title": "晨会前的会议确认",
+    "summary_zh": "晨会与会议安排。先盲听，再对照文本完成分段跟读。",
+    "full_text": "おはようございます。今日の会議は九時からです。 会議室はどこですか。 二階の会議室です。八時五十分までに来てください。 はい、分かりました。資料は先に自分の席で見ます。",
+    "segments": [
+      {
+        "id": "listening-2026-07-23-01-segment-1",
+        "speaker": "佐藤（さとう）",
+        "text": "おはようございます。今日の会議は九時からです。",
+        "kana": "おはようございます。きょうの かいぎは くじからです。",
+        "meaning_zh": "早上好。今天的会议从九点开始。",
+        "focus": "时间与主题"
+      },
+      {
+        "id": "listening-2026-07-23-01-segment-2",
+        "speaker": "李（り）",
+        "text": "会議室はどこですか。",
+        "kana": "かいぎしつは どこですか。",
+        "meaning_zh": "会议室在哪里？",
+        "focus": "地点确认"
+      },
+      {
+        "id": "listening-2026-07-23-01-segment-3",
+        "speaker": "佐藤（さとう）",
+        "text": "二階の会議室です。八時五十分までに来てください。",
+        "kana": "にかいの かいぎしつです。はちじ ごじゅっぷんまでに きてください。",
+        "meaning_zh": "在二楼的会议室。请在八点五十分之前来。",
+        "focus": "楼层与截止时间"
+      },
+      {
+        "id": "listening-2026-07-23-01-segment-4",
+        "speaker": "李（り）",
+        "text": "はい、分かりました。資料は先に自分の席で見ます。",
+        "kana": "はい、わかりました。しりょうは さきに じぶんの せきで みます。",
+        "meaning_zh": "好的，明白了。我会先在自己的座位上看资料。",
+        "focus": "确认与动作地点"
+      }
+    ],
+    "glossary": [
+      {
+        "id": "vocab-007",
+        "word": "見る",
+        "kana": "みる",
+        "meaning": "看"
+      },
+      {
+        "id": "vocab-009",
+        "word": "来る",
+        "kana": "くる",
+        "meaning": "来"
+      },
+      {
+        "id": "vocab-044",
+        "word": "時間",
+        "kana": "じかん",
+        "meaning": "时间；小时"
+      },
+      {
+        "id": "vocab-045",
+        "word": "今日",
+        "kana": "きょう",
+        "meaning": "今天"
+      },
+      {
+        "id": "vocab-052",
+        "word": "会社",
+        "kana": "かいしゃ",
+        "meaning": "公司"
+      },
+      {
+        "id": "vocab-143",
+        "word": "会議",
+        "kana": "かいぎ",
+        "meaning": "会议"
+      },
+      {
+        "id": "vocab-154",
+        "word": "資料",
+        "kana": "しりょう",
+        "meaning": "资料"
+      },
+      {
+        "id": "vocab-010",
+        "word": "分かる",
+        "kana": "わかる",
+        "meaning": "明白；懂"
+      }
+    ]
+  },
+  "comprehension": {
+    "questions": [
+      {
+        "id": "listening-2026-07-23-01-question-1",
+        "type": "single_choice",
+        "prompt_zh": "这段对话主要在确认什么？",
+        "choices": [
+          "会议安排",
+          "午饭菜单",
+          "回家路线"
+        ],
+        "answer_reference": "会议安排",
+        "accepted_keywords": [
+          "会议"
+        ],
+        "explanation_zh": "两人确认了会议开始时间、会议室和到达时间。",
+        "segment_ids": [
+          "listening-2026-07-23-01-segment-1",
+          "listening-2026-07-23-01-segment-2",
+          "listening-2026-07-23-01-segment-3"
+        ]
+      },
+      {
+        "id": "listening-2026-07-23-01-question-2",
+        "type": "single_choice",
+        "prompt_zh": "会议在哪里举行？",
+        "choices": [
+          "一楼前台",
+          "二楼会议室",
+          "公司食堂"
+        ],
+        "answer_reference": "二楼会议室",
+        "accepted_keywords": [
+          "二楼",
+          "会议室"
+        ],
+        "explanation_zh": "佐藤说「二階の会議室です」。",
+        "segment_ids": [
+          "listening-2026-07-23-01-segment-3"
+        ]
+      },
+      {
+        "id": "listening-2026-07-23-01-question-3",
+        "type": "short_answer",
+        "prompt_zh": "李需要在几点之前到达？可用中文或日语回答。",
+        "choices": [],
+        "answer_reference": "八点五十分之前",
+        "accepted_keywords": [
+          "八点五十分",
+          "8点50分",
+          "八時五十分",
+          "8時50分"
+        ],
+        "explanation_zh": "关键词是「八時五十分までに」。",
+        "segment_ids": [
+          "listening-2026-07-23-01-segment-3"
+        ]
+      }
+    ]
+  },
+  "workplace_response": {
+    "prompt_zh": "你是李。请用一句自然日语确认自己会在八点五十分之前到。",
+    "context_zh": "这是对同事说明自己已经听懂安排，不需要重复全部信息。",
+    "answer_reference": "はい、八時五十分までに行きます。",
+    "acceptable_variants": [
+      "分かりました。八時五十分までに行きます。",
+      "はい、八時五十分までに会議室へ行きます。"
+    ]
+  }
+}

@@ -41,6 +41,11 @@ const routes = [
     component: () => import('@/components/VocabularyBook.vue')
   },
   {
+    path: '/listening-lab',
+    name: 'ListeningLab',
+    component: () => import('@/components/ListeningLab.vue')
+  },
+  {
     path: '/weekly-review',
     name: 'WeeklyReview',
     component: WeeklyReview

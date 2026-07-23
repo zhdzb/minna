@@ -15,6 +15,7 @@ describe('router entry cleanup', () => {
     expect(routeNames).toContain('AgentStudyWorkspace')
     expect(routeNames).toContain('AgentProgressReview')
     expect(routeNames).toContain('AgentReviewDrill')
+    expect(routeNames).toContain('ListeningLab')
     expect(routeNames).not.toContain('Dashboard')
     expect(routeNames).not.toContain('TrainingEngine')
     expect(routeNames).not.toContain('PatternSubstitutionMode')

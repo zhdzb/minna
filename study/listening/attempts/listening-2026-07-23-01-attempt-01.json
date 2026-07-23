@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-07-23T07:01:41.605Z",
+  "id": "listening-2026-07-23-01-attempt-01",
+  "session_id": "listening-2026-07-23-01",
+  "status": "in_progress",
+  "started_at": "2026-07-23T07:01:41.605Z",
+  "submitted_at": null,
+  "current_stage": "blind_listening",
+  "transcript_revealed": false,
+  "playback_counts": {
+    "full": 0,
+    "listening-2026-07-23-01-segment-1": 0,
+    "listening-2026-07-23-01-segment-2": 0,
+    "listening-2026-07-23-01-segment-3": 0,
+    "listening-2026-07-23-01-segment-4": 0
+  },
+  "answers": {
+    "listening-2026-07-23-01-question-1": "",
+    "listening-2026-07-23-01-question-2": "",
+    "listening-2026-07-23-01-question-3": ""
+  },
+  "response_answer": "",
+  "shadowing": [
+    {
+      "segment_id": "listening-2026-07-23-01-segment-1",
+      "completed": false,
+      "self_rating": null,
+      "recording_file": null,
+      "recorded_at": null
+    },
+    {
+      "segment_id": "listening-2026-07-23-01-segment-2",
+      "completed": false,
+      "self_rating": null,
+      "recording_file": null,
+      "recorded_at": null
+    },
+    {
+      "segment_id": "listening-2026-07-23-01-segment-3",
+      "completed": false,
+      "self_rating": null,
+      "recording_file": null,
+      "recorded_at": null
+    },
+    {
+      "segment_id": "listening-2026-07-23-01-segment-4",
+      "completed": false,
+      "self_rating": null,
+      "recording_file": null,
+      "recorded_at": null
+    }
+  ],
+  "reflection": {
+    "confidence": null,
+    "difficult_segment_ids": [],
+    "note": ""
+  },
+  "feedback": null
+}

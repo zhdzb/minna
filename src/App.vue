@@ -28,6 +28,9 @@
             <el-menu-item index="/vocabulary">
               <span>单词本</span>
             </el-menu-item>
+            <el-menu-item index="/listening-lab">
+              <span>听读跟读</span>
+            </el-menu-item>
             <el-menu-item index="/syllabus">
               <span>课纲管理</span>
             </el-menu-item>
@@ -347,6 +350,39 @@ body {
 @media (max-width: 900px) {
   .app-shell-sidebar {
     width: 180px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-shell-sidebar {
+    width: 112px !important;
+  }
+
+  .app-shell-brand {
+    padding: 16px 8px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .app-shell-menu .el-menu-item {
+    height: 50px;
+    padding: 0 10px !important;
+    line-height: 1.25;
+    white-space: normal;
+  }
+
+  .app-shell-menu .el-menu-item span {
+    font-size: 12px;
+  }
+
+  .app-shell-sidebar-footer {
+    gap: 7px;
+    padding: 10px 6px;
+  }
+
+  .app-shell-lesson,
+  .app-shell-phase {
+    font-size: 11px;
   }
 }
 </style>

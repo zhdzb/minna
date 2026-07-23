@@ -28,6 +28,15 @@ import {
   handleSubmitMistakeAttempt,
   handleSubmitDailyPacket
 } from './src/server/agentStudy/routes.js'
+import {
+  handleGenerateListeningSession,
+  handleGetListeningLab,
+  handleGetListeningRecording,
+  handleRetryListeningSession,
+  handleSaveListeningAttempt,
+  handleSaveListeningRecording,
+  handleSubmitListeningAttempt
+} from './src/server/listeningLab/routes.js'
 
 // Custom Vite plugin to handle local data.json saving automatically
 const saveLocalDataPlugin = () => {
@@ -537,6 +546,89 @@ const agentStudyRoutePlugin = () => {
   }
 }
 
+const listeningLabRoutePlugin = () => {
+  return {
+    name: 'listening-lab-routes',
+    configureServer(server) {
+      const useJsonPostRoute = (route, handler) => {
+        server.middlewares.use(route, async (req, res) => {
+          if (req.method !== 'POST') {
+            writeJson(res, 405, { success: false, error: 'Method not allowed' })
+            return
+          }
+          try {
+            const payload = await readJsonBody(req)
+            const result = await handler(payload)
+            writeJson(res, 200, { success: true, data: result })
+          } catch (error) {
+            writeJson(res, 400, {
+              success: false,
+              error: error instanceof Error ? error.message : String(error)
+            })
+          }
+        })
+      }
+
+      useJsonPostRoute('/api/listening-lab/generate', handleGenerateListeningSession)
+      useJsonPostRoute('/api/listening-lab/attempt/save', handleSaveListeningAttempt)
+      useJsonPostRoute('/api/listening-lab/attempt/submit', handleSubmitListeningAttempt)
+      useJsonPostRoute('/api/listening-lab/retry', handleRetryListeningSession)
+
+      server.middlewares.use('/api/listening-lab/recording', async (req, res) => {
+        if (req.method === 'POST') {
+          try {
+            const payload = await readJsonBody(req)
+            const result = await handleSaveListeningRecording(payload)
+            writeJson(res, 200, { success: true, data: result })
+          } catch (error) {
+            writeJson(res, 400, {
+              success: false,
+              error: error instanceof Error ? error.message : String(error)
+            })
+          }
+          return
+        }
+
+        if (req.method === 'GET') {
+          try {
+            const requestUrl = new URL(req.url || '/', 'http://127.0.0.1')
+            const recording = await handleGetListeningRecording({
+              path: requestUrl.searchParams.get('path') || ''
+            })
+            res.statusCode = 200
+            res.setHeader('Content-Type', recording.mimeType)
+            fs.createReadStream(recording.absolutePath).pipe(res)
+          } catch (error) {
+            writeJson(res, 404, {
+              success: false,
+              error: error instanceof Error ? error.message : String(error)
+            })
+          }
+          return
+        }
+
+        writeJson(res, 405, { success: false, error: 'Method not allowed' })
+      })
+
+      server.middlewares.use('/api/listening-lab', async (req, res) => {
+        if (req.method !== 'GET') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+        try {
+          const result = await handleGetListeningLab()
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+    }
+  }
+}
+
 export default defineConfig(({ mode }) => {
   const fileEnv = loadEnv(mode, process.cwd(), '')
   const runtimeEnv = { ...process.env, ...fileEnv }
@@ -548,7 +640,8 @@ export default defineConfig(({ mode }) => {
       llmProxyPlugin(),
       aiRoutePlugin(runtimeEnv),
       stateRoutePlugin(runtimeEnv),
-      agentStudyRoutePlugin()
+      agentStudyRoutePlugin(),
+      listeningLabRoutePlugin()
     ],
     resolve: {
       alias: {

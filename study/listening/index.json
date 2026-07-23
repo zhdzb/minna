@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "revision": 2,
+  "updated_at": "2026-07-23T07:01:41.605Z",
+  "latest_session": "study/listening/sessions/listening-2026-07-23-01.json",
+  "latest_attempt": "study/listening/attempts/listening-2026-07-23-01-attempt-01.json",
+  "sessions": [
+    {
+      "id": "listening-2026-07-23-01",
+      "date": "2026-07-23",
+      "title": "晨会前的会议确认",
+      "scenario": "晨会与会议安排",
+      "status": "in_progress",
+      "session_file": "study/listening/sessions/listening-2026-07-23-01.json",
+      "attempt_file": "study/listening/attempts/listening-2026-07-23-01-attempt-01.json",
+      "accuracy": null,
+      "updated_at": "2026-07-23T07:01:41.605Z"
+    }
+  ]
+}
