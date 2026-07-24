@@ -1,0 +1,917 @@
+{
+  "schema_version": 1,
+  "revision": 3,
+  "updated_at": "2026-07-24T12:00:00+08:00",
+  "id": "review-2026-07-23",
+  "daily_id": "daily-2026-07-23",
+  "created_at": "2026-07-24T12:00:00+08:00",
+  "overall": {
+    "accuracy": 0.63,
+    "can_advance": false,
+    "summary": "30题中有10题正确，其中3题仅含不影响理解的非目标书写差异而按正确处理。基础的动作对象、地点和部分完成表达已能产出；但邀请后的共同提议、疑问句、存在句、移动方向、引述、未完成状态，以及读听中的关键动词和时间信息仍不稳定，未达到推进门槛。",
+    "next_focus": [
+      "NをV／placeでV",
+      "存在句（に／が／あります・います）",
+      "行く・来る与买いに行く",
+      "ている／まだ与引用と"
+    ]
+  },
+  "items": [
+    {
+      "exercise_id": "daily-2026-07-23-ex-1",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "动作对象与地点",
+      "user_answer": "けさ、わたしはオフィスでメールをよみました",
+      "correct_answer": "けさ、わたしはオフィスでメールをよみました。",
+      "explanation": "动作对象用を、动作地点用で，过去形也正确。",
+      "retry_recommended": false,
+      "rubric": {
+        "grammar": 1,
+        "meaning": 1,
+        "naturalness": 1
+      },
+      "confidence": 0.99,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "今朝、私はオフィスでメールを読みました。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-2",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "动作对象与地点",
+      "user_answer": "ひるやすみ、わたしはしょくどでひるごはんをたべました",
+      "correct_answer": "ひるやすみに、わたしはしょくどうでひるごはんをたべました。",
+      "explanation": "地点、对象和过去动作均正确；时间助词省略不影响理解。",
+      "retry_recommended": false,
+      "rubric": {
+        "grammar": 1,
+        "meaning": 1,
+        "naturalness": 0.95
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "昼休みに、私は食堂で昼ご飯を食べました。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-3",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "礼貌邀请",
+      "user_answer": "コーヒーをのみましょうか？",
+      "correct_answer": "コーヒーをのみましょうか。",
+      "explanation": "「〜ましょうか」正确构成礼貌邀请。",
+      "retry_recommended": false,
+      "rubric": {
+        "grammar": 1,
+        "meaning": 1,
+        "politeness": 1
+      },
+      "confidence": 0.99,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "コーヒーを飲みませんか。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-4",
+      "is_correct": false,
+      "score": 0.7,
+      "error_tags": [
+        "grammar_pattern",
+        "particle"
+      ],
+      "target_grammar": "共同提议",
+      "user_answer": "じゃ、わたしたちはさんじにかいぎしましょう",
+      "correct_answer": "じゃ、わたしたちはさんじにかいぎしつではなしましょう。",
+      "explanation": "三点共同进行某事的提议方向对，但题目要求在会议室谈；需补出地点「会議室で」和目标动作。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.7,
+        "meaning": 0.7,
+        "naturalness": 0.65
+      },
+      "confidence": 0.96,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "じゃ、3時に会議室で話しましょう。",
+        "3時に会議室で会議をしましょう。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-5",
+      "is_correct": false,
+      "score": 0.2,
+      "error_tags": [
+        "grammar_pattern",
+        "particle",
+        "vocabulary"
+      ],
+      "target_grammar": "动作内容提问",
+      "user_answer": "ごごがしますか",
+      "correct_answer": "ごご、なにをしますか。",
+      "explanation": "询问动作内容要用「何をしますか」；「午後」不能接が来代替疑问对象。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.15,
+        "meaning": 0.3,
+        "naturalness": 0.2
+      },
+      "confidence": 0.99,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "午後に何をしますか。"
+      ],
+      "vocabulary_feedback": [
+        {
+          "dictionary_form": "何（なに）",
+          "meaning": "什么"
+        },
+        {
+          "dictionary_form": "する",
+          "meaning": "做；进行"
+        }
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-6",
+      "is_correct": true,
+      "score": 0.95,
+      "error_tags": [],
+      "target_grammar": "动作对象",
+      "user_answer": "わたしはレポトをうつします",
+      "correct_answer": "わたしはレポートをうつします。",
+      "explanation": "「レポートをうつします」的对象和动词正确；长音遗漏不影响语义。",
+      "retry_recommended": false,
+      "rubric": {
+        "grammar": 1,
+        "meaning": 1,
+        "naturalness": 0.9
+      },
+      "confidence": 0.97,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "私はレポートを写します。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-7",
+      "is_correct": false,
+      "score": 0.65,
+      "error_tags": [
+        "vocabulary",
+        "naturalness"
+      ],
+      "target_grammar": "动作地点",
+      "user_answer": "あしたかいぎしつでプレゼントします",
+      "correct_answer": "あした、かいぎしつでプレゼンします。",
+      "explanation": "地点「会議室で」正确，但「プレゼントします」是送礼物，不是作报告／演示的「プレゼンします」。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.9,
+        "meaning": 0.45,
+        "naturalness": 0.5
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "明日、会議室でプレゼンテーションをします。"
+      ],
+      "vocabulary_feedback": [
+        {
+          "dictionary_form": "プレゼンする",
+          "meaning": "做演示；作报告"
+        }
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-8",
+      "is_correct": false,
+      "score": 0.5,
+      "error_tags": [
+        "grammar_pattern",
+        "meaning_drift"
+      ],
+      "target_grammar": "移动与目的",
+      "user_answer": "ひるやすみにべんりてんでみずをかいました／ひるやすみにべんりてんでみずをかいます",
+      "correct_answer": "ひるやすみにコンビニへみずをかいにいきます。",
+      "explanation": "「在便利店买水」可理解，但题目考查为了买水而去便利店，应使用「水を買いに行きます」；语境已指定计划动作。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.35,
+        "meaning": 0.7,
+        "naturalness": 0.55
+      },
+      "confidence": 0.97,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "昼休みにコンビニへ水を買いに行きます。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-9",
+      "is_correct": true,
+      "score": 0.95,
+      "error_tags": [],
+      "target_grammar": "过去动作",
+      "user_answer": "きのう、わたしはどうりょうとえがをみました",
+      "correct_answer": "きのう、わたしはどうりょうとえいがをみました。",
+      "explanation": "过去动作、同伴助词和意思正确；「えが」的单次非目标书写差异不影响理解。",
+      "retry_recommended": false,
+      "rubric": {
+        "grammar": 1,
+        "meaning": 1,
+        "naturalness": 0.9
+      },
+      "confidence": 0.97,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "昨日、私は同僚と映画を見ました。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-10",
+      "is_correct": true,
+      "score": 0.95,
+      "error_tags": [],
+      "target_grammar": "否定动作",
+      "user_answer": "きょうわたしはざんぎゅうしません",
+      "correct_answer": "きょう、わたしはざんぎょうしません。",
+      "explanation": "否定动作正确；「ざんぎゅう」是一次性非目标书写差异，意思仍清楚。",
+      "retry_recommended": false,
+      "rubric": {
+        "grammar": 1,
+        "meaning": 1,
+        "naturalness": 0.9
+      },
+      "confidence": 0.96,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "今日は私は残業しません。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-11",
+      "is_correct": true,
+      "score": 1,
+      "error_tags": [],
+      "target_grammar": "完成状态",
+      "user_answer": "メールをおくりました",
+      "correct_answer": "メールをおくりました。",
+      "explanation": "邮件已发送的完成表达正确。",
+      "retry_recommended": false,
+      "rubric": {
+        "grammar": 1,
+        "meaning": 1,
+        "naturalness": 1
+      },
+      "confidence": 0.99,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "メールはもう送りました。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-12",
+      "is_correct": false,
+      "score": 0.55,
+      "error_tags": [
+        "grammar_pattern"
+      ],
+      "target_grammar": "未完成状态",
+      "user_answer": "レポトをうつしません",
+      "correct_answer": "レポートはまだうつしていません。",
+      "explanation": "「うつしません」是一般否定；题目要表达目前尚未完成，应使用「まだ〜ていません」。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.35,
+        "meaning": 0.8,
+        "naturalness": 0.55
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "レポートはまだ写していません。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-13",
+      "is_correct": true,
+      "score": 0.9,
+      "error_tags": [],
+      "target_grammar": "存在与动作",
+      "user_answer": "かいぎしつにひとがいます、てんわします",
+      "correct_answer": "かいぎしつにひとがいます。でんわをしています。",
+      "explanation": "人存在于会议室表达正确；后句「電話します」也可表达打电话，省略主语自然。",
+      "retry_recommended": false,
+      "rubric": {
+        "grammar": 0.9,
+        "meaning": 1,
+        "naturalness": 0.85
+      },
+      "confidence": 0.94,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "会議室に人がいます。電話をしています。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-14",
+      "is_correct": false,
+      "score": 0.35,
+      "error_tags": [
+        "vocabulary",
+        "particle"
+      ],
+      "target_grammar": "物品存在",
+      "user_answer": "つくえのうたにきょうのしりょうがあります",
+      "correct_answer": "つくえのうえにきょうのしりょうがあります。",
+      "explanation": "题目所给位置是桌子上，不是「うた」；存在句其余结构正确。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.7,
+        "meaning": 0.35,
+        "naturalness": 0.45
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "机の上に今日の資料があります。"
+      ],
+      "vocabulary_feedback": [
+        {
+          "dictionary_form": "上（うえ）",
+          "meaning": "上面"
+        }
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-15",
+      "is_correct": false,
+      "score": 0.35,
+      "error_tags": [
+        "vocabulary",
+        "particle",
+        "meaning_drift"
+      ],
+      "target_grammar": "来访说明",
+      "user_answer": "おきゃくはごごにかいしゃをいきます",
+      "correct_answer": "おきゃくさんはごごにかいしゃにきます。",
+      "explanation": "来访者是朝公司「来」，不能写成「去」；目的地用に。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.25,
+        "meaning": 0.25,
+        "naturalness": 0.35
+      },
+      "confidence": 0.99,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "お客さんは午後、会社に来ます。"
+      ],
+      "vocabulary_feedback": [
+        {
+          "dictionary_form": "来る（くる）",
+          "meaning": "来"
+        }
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-16",
+      "is_correct": false,
+      "score": 0.3,
+      "error_tags": [
+        "grammar_pattern",
+        "particle",
+        "vocabulary"
+      ],
+      "target_grammar": "理解确认",
+      "user_answer": "わたしはかいのいしをわかります",
+      "correct_answer": "かいぎのいみがわかります。",
+      "explanation": "「分かる」的理解对象通常用が；「会の意志」不能表达题目要确认的会议信息／意思。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.25,
+        "meaning": 0.3,
+        "naturalness": 0.25
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "会議の意味が分かります。",
+        "会議のことが分かります。"
+      ],
+      "vocabulary_feedback": [
+        {
+          "dictionary_form": "分かる（わかる）",
+          "meaning": "明白；理解"
+        },
+        {
+          "dictionary_form": "意味（いみ）",
+          "meaning": "意思；含义"
+        }
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-17",
+      "is_correct": false,
+      "score": 0.1,
+      "error_tags": [
+        "grammar_pattern",
+        "vocabulary",
+        "particle"
+      ],
+      "target_grammar": "引述内容",
+      "user_answer": "どりょうがあしたにおさけをいきます",
+      "correct_answer": "どうりょうはあしたおおさかへいくといいました。",
+      "explanation": "题目要求转述，必须用「〜と言いました」；同僚、目的地和移动表达也需要改正。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.1,
+        "meaning": 0.2,
+        "naturalness": 0.1
+      },
+      "confidence": 0.99,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "同僚は明日大阪へ行くと言いました。"
+      ],
+      "vocabulary_feedback": [
+        {
+          "dictionary_form": "同僚（どうりょう）",
+          "meaning": "同事"
+        },
+        {
+          "dictionary_form": "大阪（おおさか）",
+          "meaning": "大阪"
+        },
+        {
+          "dictionary_form": "行く（いく）",
+          "meaning": "去"
+        },
+        {
+          "dictionary_form": "言う（いう）",
+          "meaning": "说"
+        }
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-18",
+      "is_correct": false,
+      "score": 0,
+      "error_tags": [
+        "vocabulary",
+        "grammar_pattern"
+      ],
+      "target_grammar": "表达想法",
+      "user_answer": "不会",
+      "correct_answer": "このほうほうはこれからたいせつになるとおもいます。",
+      "explanation": "本题未用日语作答；练习「〜と思います」表达对未来的看法。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0,
+        "meaning": 0,
+        "naturalness": 0
+      },
+      "confidence": 0.99,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "この方法はこれから大切になると思います。"
+      ],
+      "vocabulary_feedback": [
+        {
+          "dictionary_form": "思う（おもう）",
+          "meaning": "想；认为"
+        },
+        {
+          "dictionary_form": "なる",
+          "meaning": "变成；成为"
+        }
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-19",
+      "is_correct": true,
+      "score": 0.9,
+      "error_tags": [],
+      "target_grammar": "接受邀请",
+      "user_answer": "いいです、なんじにいきますか",
+      "correct_answer": "はい、いいですね。なんじにいきますか。",
+      "explanation": "已自然接受邀请并询问时间；「いいです」略直接但在此语境可接受。",
+      "retry_recommended": false,
+      "rubric": {
+        "grammar": 1,
+        "meaning": 1,
+        "politeness": 0.85
+      },
+      "confidence": 0.95,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "はい、いいですね。何時に行きますか。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-20",
+      "is_correct": false,
+      "score": 0.45,
+      "error_tags": [
+        "grammar_pattern",
+        "naturalness"
+      ],
+      "target_grammar": "礼貌拒绝",
+      "user_answer": "すみません、わたしはしことします",
+      "correct_answer": "すみません。きょうはしごとがあるから、いけません。",
+      "explanation": "道歉和有工作的方向对，但未明确表达不能参加，也缺少用原因连接的礼貌拒绝。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.35,
+        "meaning": 0.55,
+        "politeness": 0.65
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "すみません、今日は仕事がありますから、行けません。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-21",
+      "is_correct": false,
+      "score": 0.75,
+      "error_tags": [
+        "grammar_pattern"
+      ],
+      "target_grammar": "确认工作内容",
+      "user_answer": "わたしはあしたのかいぎのしりょうをみます",
+      "correct_answer": "いま、あしたのかいぎのしりょうをみています。",
+      "explanation": "资料和对象正确，但题目问现在正在做什么，要用进行状态「見ています」。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.55,
+        "meaning": 1,
+        "naturalness": 0.8
+      },
+      "confidence": 0.97,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "今、明日の会議の資料を見ています。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-22",
+      "is_correct": false,
+      "score": 0.7,
+      "error_tags": [
+        "grammar_pattern",
+        "naturalness"
+      ],
+      "target_grammar": "确认理解",
+      "user_answer": "ありかと、わたしはわかりました",
+      "correct_answer": "はい、もうわかりました。ありがとうございます。",
+      "explanation": "表达了感谢和理解，但「ありがとう」书写不完整，且题目要明确“已经”理解，补上「もう」更自然。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.7,
+        "meaning": 0.85,
+        "naturalness": 0.6
+      },
+      "confidence": 0.94,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "はい、もう分かりました。ありがとうございます。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-23",
+      "is_correct": false,
+      "score": 0.55,
+      "error_tags": [
+        "grammar_pattern",
+        "particle",
+        "meaning_drift"
+      ],
+      "target_grammar": "安排会面",
+      "user_answer": "きょうさんじにかいぎしつであいます",
+      "correct_answer": "きょうのごごさんじにかいぎしつではなしましょう。",
+      "explanation": "时间和地点基本对，但题目要求提议在会议室谈项目，应使用提议形和「話します」，不是单纯陈述见面。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.35,
+        "meaning": 0.6,
+        "naturalness": 0.6
+      },
+      "confidence": 0.97,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "今日の午後3時に会議室で話しましょう。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-24",
+      "is_correct": false,
+      "score": 0.35,
+      "error_tags": [
+        "grammar_pattern",
+        "meaning_drift"
+      ],
+      "target_grammar": "说明未完成",
+      "user_answer": "いいえ、きょうわたしはします",
+      "correct_answer": "いいえ、まだです。きょうします。",
+      "explanation": "只说今天做，未说明报告尚未完成；需先用「まだです」表达未完成状态。",
+      "retry_recommended": true,
+      "rubric": {
+        "grammar": 0.35,
+        "meaning": 0.4,
+        "naturalness": 0.45
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "いいえ、まだです。今日します。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-25",
+      "is_correct": false,
+      "score": 0.75,
+      "error_tags": [
+        "reading_comprehension"
+      ],
+      "target_grammar": "读取工作安排",
+      "user_answer": "がいぎしつでかいぎをします",
+      "correct_answer": "きょうのごご、かいぎしつでかいぎをします。",
+      "explanation": "地点和动作读对了，但漏掉通知中的“今天下午”这一关键信息。",
+      "retry_recommended": true,
+      "rubric": {
+        "reading": 0.7,
+        "meaning": 0.75,
+        "naturalness": 1
+      },
+      "confidence": 0.97,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "今日の午後、会議室で会議をします。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-26",
+      "is_correct": true,
+      "score": 0.95,
+      "error_tags": [],
+      "target_grammar": "读取完成进度",
+      "user_answer": "メールはおくりました、レポートはかいていません",
+      "correct_answer": "メールはもうおくりましたが、レポートはまだかいていません。",
+      "explanation": "两项完成进度均读对；连接方式和「もう／まだ」可优化，但不影响理解。",
+      "retry_recommended": false,
+      "rubric": {
+        "reading": 1,
+        "meaning": 1,
+        "naturalness": 0.9
+      },
+      "confidence": 0.97,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "メールはもう送りましたが、レポートはまだ書いていません。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-27",
+      "is_correct": false,
+      "score": 0.7,
+      "error_tags": [
+        "particle"
+      ],
+      "target_grammar": "读取人员位置",
+      "user_answer": "たなかさんはかいぎしつにてんわをしています",
+      "correct_answer": "たなかさんはかいぎしつででんわをしています。",
+      "explanation": "人物和动作读对，但动作发生地点要用で，不用に。",
+      "retry_recommended": true,
+      "rubric": {
+        "reading": 0.9,
+        "grammar": 0.55,
+        "meaning": 1
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "田中さんは会議室で電話をしています。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-28",
+      "is_correct": false,
+      "score": 0.3,
+      "error_tags": [
+        "listening_mishear",
+        "vocabulary",
+        "grammar_pattern"
+      ],
+      "target_grammar": "听取午休安排",
+      "user_answer": "ひるやすみにコンビニへいて、はんをかいます",
+      "correct_answer": "コンビニへいって、パンをかいます。",
+      "explanation": "听到便利店和购买动作，但「いて」应为「行って」，且买的是パン而不是饭。",
+      "retry_recommended": true,
+      "rubric": {
+        "listening": 0.4,
+        "meaning": 0.35,
+        "grammar": 0.25
+      },
+      "confidence": 0.98,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "昼休みにコンビニへ行って、パンを買います。"
+      ],
+      "vocabulary_feedback": [
+        {
+          "dictionary_form": "行く（いく）",
+          "meaning": "去"
+        },
+        {
+          "dictionary_form": "パン",
+          "meaning": "面包"
+        }
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-29",
+      "is_correct": false,
+      "score": 0.45,
+      "error_tags": [
+        "listening_mishear",
+        "vocabulary",
+        "meaning_drift"
+      ],
+      "target_grammar": "听取来访安排",
+      "user_answer": "さとさんはあしたかいしゃへいきます",
+      "correct_answer": "さとうさんはあしたかいしゃにきます。",
+      "explanation": "人名的轻微差异不扣分，但听力关键信息是佐藤来公司，不能写成去公司。",
+      "retry_recommended": true,
+      "rubric": {
+        "listening": 0.45,
+        "meaning": 0.35,
+        "grammar": 0.7
+      },
+      "confidence": 0.99,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "佐藤さんは明日会社に来ます。"
+      ],
+      "vocabulary_feedback": [
+        {
+          "dictionary_form": "来る（くる）",
+          "meaning": "来"
+        }
+      ],
+      "manual_override": null
+    },
+    {
+      "exercise_id": "daily-2026-07-23-ex-30",
+      "is_correct": false,
+      "score": 0.7,
+      "error_tags": [
+        "grammar_pattern"
+      ],
+      "target_grammar": "听取工作进度",
+      "user_answer": "メールはもうみました、でもかんじはまだみさせん",
+      "correct_answer": "メールはもうみました。でも、かんじはまだみていません。",
+      "explanation": "邮件已看这一项正确；后一项需要表达尚未查看的进行状态「まだ見ていません」。",
+      "retry_recommended": true,
+      "rubric": {
+        "listening": 0.8,
+        "meaning": 0.8,
+        "grammar": 0.45
+      },
+      "confidence": 0.96,
+      "needs_user_input": false,
+      "acceptable_variants": [
+        "メールはもう見ました。でも、漢字はまだ見ていません。"
+      ],
+      "vocabulary_feedback": [],
+      "manual_override": null
+    }
+  ],
+  "mastery_updates": [
+    {
+      "scope": "grammar_point",
+      "key": "lesson-6/object-place-action",
+      "from_status": "learning",
+      "to_status": "learning",
+      "evidence": [
+        "daily-2026-07-23-ex-1",
+        "daily-2026-07-23-ex-2",
+        "daily-2026-07-23-ex-4",
+        "daily-2026-07-23-ex-5",
+        "daily-2026-07-23-ex-6",
+        "daily-2026-07-23-ex-7",
+        "daily-2026-07-23-ex-27"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-6/invitation-and-proposal",
+      "from_status": "learning",
+      "to_status": "learning",
+      "evidence": [
+        "daily-2026-07-23-ex-3",
+        "daily-2026-07-23-ex-19",
+        "daily-2026-07-23-ex-20",
+        "daily-2026-07-23-ex-23"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-6/existence-and-progress",
+      "from_status": "learning",
+      "to_status": "learning",
+      "evidence": [
+        "daily-2026-07-23-ex-11",
+        "daily-2026-07-23-ex-12",
+        "daily-2026-07-23-ex-13",
+        "daily-2026-07-23-ex-14",
+        "daily-2026-07-23-ex-21",
+        "daily-2026-07-23-ex-24"
+      ]
+    },
+    {
+      "scope": "grammar_point",
+      "key": "lesson-6/movement-and-reporting",
+      "from_status": "learning",
+      "to_status": "learning",
+      "evidence": [
+        "daily-2026-07-23-ex-8",
+        "daily-2026-07-23-ex-15",
+        "daily-2026-07-23-ex-17",
+        "daily-2026-07-23-ex-28",
+        "daily-2026-07-23-ex-29",
+        "daily-2026-07-23-ex-30"
+      ]
+    }
+  ],
+  "review_queue_updates": [
+    {
+      "review_queue_id": "rq-2026-07-10-lesson-1-relationship-name",
+      "action": "rescheduled",
+      "interval_days": 1,
+      "last_result": "hard"
+    }
+  ],
+  "promotion_decision": {
+    "can_advance": false,
+    "reason": "不推进。虽然基础动作句、邀请和部分完成进度已正确，但本轮平均得分0.63低于门槛0.75，且第6课的动作地点、存在句、移动方向和听读关键动词仍有重复错误。下一轮优先用完整短句练习「何をしますか」「placeでV」「まだ〜ていません」「Aへ買いに行きます」及「来る／行く」。"
+  }
+}

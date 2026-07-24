@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": 5,
-  "updated_at": "2026-07-10T13:30:00+08:00",
+  "revision": 7,
+  "updated_at": "2026-07-24T12:00:00+08:00",
   "current_gate": "lesson-6-foundation",
   "lesson_states": {
     "lesson-1": {
@@ -61,17 +61,53 @@
     },
     "lesson-6": {
       "lesson": 6,
-      "status": "new",
+      "status": "weak",
       "skill_scores": {
-        "grammar": 0,
-        "listening": 0,
-        "speaking": 0,
-        "reading": 0
+        "grammar": 0.2392,
+        "listening": 0.1873,
+        "speaking": 0.2536,
+        "reading": 0.3087
       },
-      "last_reviewed_at": "2026-07-10T13:30:00+08:00"
+      "last_reviewed_at": "2026-07-24T12:00:00+08:00"
     }
   },
   "grammar_points": {
+    "lesson-6/object-place-action": {
+      "lesson": 6,
+      "pattern": "NをV／placeでV与何をしますか",
+      "status": "learning",
+      "recognition": 0.5375,
+      "controlled_output": 0.5227,
+      "free_output": 0.4833,
+      "last_practiced_at": "2026-07-24T12:00:00+08:00"
+    },
+    "lesson-6/invitation-and-proposal": {
+      "lesson": 6,
+      "pattern": "〜ましょうか／〜ましょう",
+      "status": "learning",
+      "recognition": 0.5918,
+      "controlled_output": 0.5401,
+      "free_output": 0.5803,
+      "last_practiced_at": "2026-07-24T12:00:00+08:00"
+    },
+    "lesson-6/existence-and-progress": {
+      "lesson": 6,
+      "pattern": "あります・います与まだ〜ていません",
+      "status": "learning",
+      "recognition": 0.5644,
+      "controlled_output": 0.5041,
+      "free_output": 0.5213,
+      "last_practiced_at": "2026-07-24T12:00:00+08:00"
+    },
+    "lesson-6/movement-and-reporting": {
+      "lesson": 6,
+      "pattern": "〜に行きます・来ます・〜と言います",
+      "status": "learning",
+      "recognition": 0.4344,
+      "controlled_output": 0.3921,
+      "free_output": 0.4152,
+      "last_practiced_at": "2026-07-24T12:00:00+08:00"
+    },
     "lesson-1/noun-affirmative": {
       "lesson": 1,
       "pattern": "N1 は N2 です",
