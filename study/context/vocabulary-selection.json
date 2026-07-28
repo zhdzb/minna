@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-24T07:18:22.531Z",
-  "date": "2026-07-24",
+  "generated_at": "2026-07-28T12:00:00+08:00",
+  "date": "2026-07-28",
   "lesson": 6,
   "count": 18,
   "summary": {
@@ -10,11 +10,50 @@
     "learning": 3,
     "review": 6,
     "mastered": 9,
-    "due": 0,
+    "due": 3,
     "n5": 182,
     "n4": 118
   },
   "items": [
+    {
+      "id": "vocab-004",
+      "priority_rank": 4,
+      "word": "なる",
+      "kana": "なる",
+      "meaning": "变成；成为",
+      "part_of_speech": "verb",
+      "estimated_level": "N4",
+      "category": "变化",
+      "usage": "变化高频词；N4 预估范围",
+      "status": "learning",
+      "selection_reason": "due"
+    },
+    {
+      "id": "vocab-006",
+      "priority_rank": 6,
+      "word": "思う",
+      "kana": "おもう",
+      "meaning": "想；认为",
+      "part_of_speech": "verb",
+      "estimated_level": "N4",
+      "category": "思考",
+      "usage": "思考高频词；N4 预估范围",
+      "status": "learning",
+      "selection_reason": "due"
+    },
+    {
+      "id": "vocab-016",
+      "priority_rank": 16,
+      "word": "そう",
+      "kana": "そう",
+      "meaning": "那样；是的",
+      "part_of_speech": "adverb",
+      "estimated_level": "N5",
+      "category": "指示",
+      "usage": "指示高频词；N5 预估范围",
+      "status": "learning",
+      "selection_reason": "due"
+    },
     {
       "id": "vocab-019",
       "priority_rank": 19,
@@ -207,45 +246,6 @@
       "estimated_level": "N5",
       "category": "购物",
       "usage": "购物高频词；N5 预估范围",
-      "status": "new",
-      "selection_reason": "rotation"
-    },
-    {
-      "id": "vocab-034",
-      "priority_rank": 34,
-      "word": "会う",
-      "kana": "あう",
-      "meaning": "见面",
-      "part_of_speech": "verb",
-      "estimated_level": "N5",
-      "category": "人物",
-      "usage": "人物高频词；N5 预估范围",
-      "status": "new",
-      "selection_reason": "rotation"
-    },
-    {
-      "id": "vocab-035",
-      "priority_rank": 35,
-      "word": "帰る",
-      "kana": "かえる",
-      "meaning": "回去；回家",
-      "part_of_speech": "verb",
-      "estimated_level": "N5",
-      "category": "移动",
-      "usage": "移动高频词；N5 预估范围",
-      "status": "new",
-      "selection_reason": "rotation"
-    },
-    {
-      "id": "vocab-036",
-      "priority_rank": 36,
-      "word": "待つ",
-      "kana": "まつ",
-      "meaning": "等待",
-      "part_of_speech": "verb",
-      "estimated_level": "N5",
-      "category": "动作",
-      "usage": "动作高频词；N5 预估范围",
       "status": "new",
       "selection_reason": "rotation"
     }
