@@ -1,13 +1,14 @@
 {
   "schema_version": 1,
-  "revision": 3,
-  "updated_at": "2026-07-24T12:00:00+08:00",
+  "revision": 4,
+  "updated_at": "2026-07-28T18:00:00+08:00",
   "processed_review_ids": [
     "review-2026-07-01",
     "review-2026-07-02",
     "review-2026-07-10",
     "review-2026-07-21",
-    "review-2026-07-23"
+    "review-2026-07-23",
+    "review-2026-07-28"
   ],
   "items": {
     "vocab-007": {
@@ -126,17 +127,17 @@
       }
     },
     "vocab-016": {
-      "status": "learning",
-      "seen_count": 1,
-      "correct_count": 1,
-      "correct_streak": 1,
+      "status": "review",
+      "seen_count": 3,
+      "correct_count": 3,
+      "correct_streak": 3,
       "last_result": "correct",
-      "last_seen_at": "2026-07-24T12:00:00+08:00",
-      "due_date": "2026-07-27",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-04",
       "modes": {
         "production": {
-          "seen_count": 1,
-          "correct_count": 1
+          "seen_count": 3,
+          "correct_count": 3
         },
         "reading": {
           "seen_count": 0,
@@ -380,16 +381,16 @@
     },
     "vocab-004": {
       "status": "learning",
-      "seen_count": 1,
-      "correct_count": 0,
-      "correct_streak": 0,
-      "last_result": "wrong",
-      "last_seen_at": "2026-07-24T12:00:00+08:00",
-      "due_date": "2026-07-25",
+      "seen_count": 2,
+      "correct_count": 1,
+      "correct_streak": 1,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-07-31",
       "modes": {
         "production": {
-          "seen_count": 1,
-          "correct_count": 0
+          "seen_count": 2,
+          "correct_count": 1
         },
         "reading": {
           "seen_count": 0,
@@ -402,13 +403,358 @@
       }
     },
     "vocab-006": {
+      "status": "review",
+      "seen_count": 3,
+      "correct_count": 3,
+      "correct_streak": 3,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-04",
+      "modes": {
+        "production": {
+          "seen_count": 3,
+          "correct_count": 3
+        },
+        "reading": {
+          "seen_count": 0,
+          "correct_count": 0
+        },
+        "listening": {
+          "seen_count": 0,
+          "correct_count": 0
+        }
+      }
+    },
+    "vocab-019": {
+      "status": "learning",
+      "seen_count": 2,
+      "correct_count": 1,
+      "correct_streak": 1,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-07-31",
+      "modes": {
+        "production": {
+          "seen_count": 2,
+          "correct_count": 1
+        },
+        "reading": {
+          "seen_count": 0,
+          "correct_count": 0
+        },
+        "listening": {
+          "seen_count": 0,
+          "correct_count": 0
+        }
+      }
+    },
+    "vocab-029": {
+      "status": "mastered",
+      "seen_count": 3,
+      "correct_count": 3,
+      "correct_streak": 3,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-18",
+      "modes": {
+        "production": {
+          "seen_count": 1,
+          "correct_count": 1
+        },
+        "reading": {
+          "seen_count": 1,
+          "correct_count": 1
+        },
+        "listening": {
+          "seen_count": 1,
+          "correct_count": 1
+        }
+      }
+    },
+    "vocab-028": {
+      "status": "mastered",
+      "seen_count": 3,
+      "correct_count": 3,
+      "correct_streak": 3,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-18",
+      "modes": {
+        "production": {
+          "seen_count": 2,
+          "correct_count": 2
+        },
+        "reading": {
+          "seen_count": 0,
+          "correct_count": 0
+        },
+        "listening": {
+          "seen_count": 1,
+          "correct_count": 1
+        }
+      }
+    },
+    "vocab-030": {
+      "status": "mastered",
+      "seen_count": 5,
+      "correct_count": 5,
+      "correct_streak": 5,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-18",
+      "modes": {
+        "production": {
+          "seen_count": 4,
+          "correct_count": 4
+        },
+        "reading": {
+          "seen_count": 0,
+          "correct_count": 0
+        },
+        "listening": {
+          "seen_count": 1,
+          "correct_count": 1
+        }
+      }
+    },
+    "vocab-031": {
+      "status": "mastered",
+      "seen_count": 3,
+      "correct_count": 3,
+      "correct_streak": 3,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-18",
+      "modes": {
+        "production": {
+          "seen_count": 2,
+          "correct_count": 2
+        },
+        "reading": {
+          "seen_count": 1,
+          "correct_count": 1
+        },
+        "listening": {
+          "seen_count": 0,
+          "correct_count": 0
+        }
+      }
+    },
+    "vocab-032": {
+      "status": "review",
+      "seen_count": 2,
+      "correct_count": 2,
+      "correct_streak": 2,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-11",
+      "modes": {
+        "production": {
+          "seen_count": 1,
+          "correct_count": 1
+        },
+        "reading": {
+          "seen_count": 0,
+          "correct_count": 0
+        },
+        "listening": {
+          "seen_count": 1,
+          "correct_count": 1
+        }
+      }
+    },
+    "vocab-024": {
+      "status": "review",
+      "seen_count": 2,
+      "correct_count": 2,
+      "correct_streak": 2,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-04",
+      "modes": {
+        "production": {
+          "seen_count": 2,
+          "correct_count": 2
+        },
+        "reading": {
+          "seen_count": 0,
+          "correct_count": 0
+        },
+        "listening": {
+          "seen_count": 0,
+          "correct_count": 0
+        }
+      }
+    },
+    "vocab-025": {
+      "status": "mastered",
+      "seen_count": 4,
+      "correct_count": 4,
+      "correct_streak": 4,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-18",
+      "modes": {
+        "production": {
+          "seen_count": 3,
+          "correct_count": 3
+        },
+        "reading": {
+          "seen_count": 1,
+          "correct_count": 1
+        },
+        "listening": {
+          "seen_count": 0,
+          "correct_count": 0
+        }
+      }
+    },
+    "vocab-027": {
+      "status": "review",
+      "seen_count": 2,
+      "correct_count": 2,
+      "correct_streak": 2,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-04",
+      "modes": {
+        "production": {
+          "seen_count": 2,
+          "correct_count": 2
+        },
+        "reading": {
+          "seen_count": 0,
+          "correct_count": 0
+        },
+        "listening": {
+          "seen_count": 0,
+          "correct_count": 0
+        }
+      }
+    },
+    "vocab-033": {
+      "status": "mastered",
+      "seen_count": 3,
+      "correct_count": 3,
+      "correct_streak": 3,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-18",
+      "modes": {
+        "production": {
+          "seen_count": 1,
+          "correct_count": 1
+        },
+        "reading": {
+          "seen_count": 1,
+          "correct_count": 1
+        },
+        "listening": {
+          "seen_count": 1,
+          "correct_count": 1
+        }
+      }
+    },
+    "vocab-023": {
+      "status": "mastered",
+      "seen_count": 4,
+      "correct_count": 4,
+      "correct_streak": 4,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-18",
+      "modes": {
+        "production": {
+          "seen_count": 3,
+          "correct_count": 3
+        },
+        "reading": {
+          "seen_count": 0,
+          "correct_count": 0
+        },
+        "listening": {
+          "seen_count": 1,
+          "correct_count": 1
+        }
+      }
+    },
+    "vocab-026": {
+      "status": "review",
+      "seen_count": 2,
+      "correct_count": 2,
+      "correct_streak": 2,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-11",
+      "modes": {
+        "production": {
+          "seen_count": 1,
+          "correct_count": 1
+        },
+        "reading": {
+          "seen_count": 1,
+          "correct_count": 1
+        },
+        "listening": {
+          "seen_count": 0,
+          "correct_count": 0
+        }
+      }
+    },
+    "vocab-020": {
+      "status": "review",
+      "seen_count": 3,
+      "correct_count": 2,
+      "correct_streak": 2,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-11",
+      "modes": {
+        "production": {
+          "seen_count": 2,
+          "correct_count": 1
+        },
+        "reading": {
+          "seen_count": 1,
+          "correct_count": 1
+        },
+        "listening": {
+          "seen_count": 0,
+          "correct_count": 0
+        }
+      }
+    },
+    "vocab-021": {
+      "status": "review",
+      "seen_count": 2,
+      "correct_count": 2,
+      "correct_streak": 2,
+      "last_result": "correct",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-08-04",
+      "modes": {
+        "production": {
+          "seen_count": 2,
+          "correct_count": 2
+        },
+        "reading": {
+          "seen_count": 0,
+          "correct_count": 0
+        },
+        "listening": {
+          "seen_count": 0,
+          "correct_count": 0
+        }
+      }
+    },
+    "vocab-022": {
       "status": "learning",
       "seen_count": 1,
       "correct_count": 1,
       "correct_streak": 1,
       "last_result": "correct",
-      "last_seen_at": "2026-07-24T12:00:00+08:00",
-      "due_date": "2026-07-27",
+      "last_seen_at": "2026-07-28T18:00:00+08:00",
+      "due_date": "2026-07-31",
       "modes": {
         "production": {
           "seen_count": 1,

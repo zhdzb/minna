@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "revision": 2,
-  "updated_at": "2026-07-28T09:16:03.214Z",
+  "revision": 4,
+  "updated_at": "2026-07-28T18:00:00+08:00",
   "id": "daily-2026-07-28",
   "date": "2026-07-28",
-  "status": "answering",
+  "status": "reviewed",
   "created_at": "2026-07-28T12:00:00+08:00",
   "mission": {
     "title": "第6课 薄弱点巩固学习包",
@@ -610,7 +610,7 @@
       "target_grammar": "报告未完成",
       "prompt": "第 21 题：报告未完成",
       "instruction": "上司问报告是否完成。请回答还没有，并说今天会写。",
-      "context_note": "请完整表达未完成状态和接下来的行动。",
+      "context_note": "请完整表达未完成状态��接下来的行动。",
       "answer_format": "写 1 至 2 句完整、自然的日语。",
       "choices": [],
       "supporting_lines": [],
@@ -879,16 +879,20 @@
     "daily-2026-07-28-ex-30": "ろくじにかいしゃをでます、それから、スーパーでのみものをかいます"
   },
   "self_assessment": {
-    "difficulty": null,
+    "difficulty": "steady",
     "uncertain_exercise_ids": [],
     "confusing_points": [],
     "pace": "",
     "note": ""
   },
   "correction": {
-    "status": "pending",
+    "status": "reviewed",
     "prompt_file": "study/prompts/generated/2026-07-28-review.md",
-    "review_file": ""
+    "review_file": "study/reviews/2026-07-28-review.json"
   },
-  "review_result": null
+  "review_result": {
+    "id": "review-2026-07-28",
+    "accuracy": 0.52,
+    "summary": "30题中7题达到正确标准，平均得分0.52。动作地点与对象、共同提议、部分邀请应答、人员位置听取和移动安排已有进步；动作内容提问、目的移动、未完成状态、阅读信息提取及关键动词词形仍不稳定。"
+  }
 }

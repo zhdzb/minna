@@ -245,9 +245,269 @@
     }
   },
   "mistakes_book": [],
-  "study_backups": [],
+  "study_backups": [
+    {
+      "id": "backup_1785231210297_b0vgbx",
+      "label": "manual",
+      "timestamp": "2026-07-28T09:33:30.297Z",
+      "snapshot": {
+        "progress": {
+          "current_lesson": 7,
+          "completed_types_by_lesson": {
+            "1": {
+              "q_fill": "基础巩固",
+              "q_translate": "基础巩固",
+              "q_conversation": "基础巩固"
+            },
+            "2": {
+              "q_fill": "基础巩固",
+              "q_translate": "基础巩固",
+              "q_conversation": "基础巩固"
+            },
+            "3": {
+              "q_fill": "基础巩固",
+              "q_translate": "基础巩固",
+              "q_conversation": "基础巩固"
+            },
+            "4": {
+              "q_fill": "基础巩固",
+              "q_translate": "基础巩固",
+              "q_conversation": "基础巩固"
+            },
+            "5": {
+              "q_fill": "基础巩固",
+              "q_translate": "基础巩固",
+              "q_conversation": "基础巩固"
+            },
+            "6": {
+              "q_fill": "基础巩固",
+              "q_translate": "基础巩固",
+              "q_conversation": "基础巩固"
+            },
+            "14": {
+              "q_fill": "基础巩固"
+            },
+            "17": {
+              "q_translate": "特批免试"
+            },
+            "18": {},
+            "19": {
+              "q_fill": "基础巩固",
+              "q_translate": "基础巩固",
+              "q_conversation": "基础巩固"
+            },
+            "20": {}
+          },
+          "pass_threshold": 0.5,
+          "lesson_stats": {
+            "1": {
+              "lesson_id": 1,
+              "last_session_at": "2026-03-10T14:57:48.396Z",
+              "last_question_count": 10,
+              "last_correct_count": 6,
+              "last_correct_rate": 0.6,
+              "last_difficulty": "基础巩固",
+              "last_question_type": "ALL"
+            },
+            "2": {
+              "lesson_id": 2,
+              "last_session_at": "2026-03-10T15:37:13.128Z",
+              "last_question_count": 8,
+              "last_correct_count": 4,
+              "last_correct_rate": 0.5,
+              "last_difficulty": "基础巩固",
+              "last_question_type": "ALL"
+            },
+            "3": {
+              "lesson_id": 3,
+              "last_session_at": "2026-03-10T17:16:22.849Z",
+              "last_question_count": 10,
+              "last_correct_count": 6,
+              "last_correct_rate": 0.6,
+              "last_difficulty": "基础巩固",
+              "last_question_type": "ALL"
+            },
+            "4": {
+              "lesson_id": 4,
+              "last_session_at": "2026-03-11T16:34:36.642Z",
+              "last_question_count": 15,
+              "last_correct_count": 9,
+              "last_correct_rate": 0.6,
+              "last_difficulty": "基础巩固",
+              "last_question_type": "ALL"
+            },
+            "5": {
+              "lesson_id": 5,
+              "last_session_at": "2026-03-15T15:06:32.590Z",
+              "last_question_count": 15,
+              "last_correct_count": 10,
+              "last_correct_rate": 0.6666666666666666,
+              "last_difficulty": "基础巩固",
+              "last_question_type": "ALL"
+            },
+            "6": {
+              "lesson_id": 6,
+              "last_session_at": "2026-03-17T16:03:26.863Z",
+              "last_question_count": 16,
+              "last_correct_count": 9,
+              "last_correct_rate": 0.5625,
+              "last_difficulty": "基础巩固",
+              "last_question_type": "ALL"
+            },
+            "7": {
+              "lesson_id": 7,
+              "last_session_at": "2026-04-22T16:52:01.727Z",
+              "last_question_count": 5,
+              "last_correct_count": 0,
+              "last_correct_rate": 0,
+              "last_difficulty": "基础巩固",
+              "last_question_type": "ALL"
+            },
+            "14": {
+              "lesson_id": 14,
+              "last_session_at": "2026-04-06T09:33:04.490Z",
+              "last_question_count": 5,
+              "last_correct_count": 0,
+              "last_correct_rate": 0,
+              "last_difficulty": "基础巩固",
+              "last_question_type": "q_translate"
+            },
+            "15": {
+              "lesson_id": 15,
+              "last_session_at": "2026-04-06T13:50:09.244Z",
+              "last_question_count": 20,
+              "last_correct_count": 7,
+              "last_correct_rate": 0.35,
+              "last_difficulty": "基础巩固",
+              "last_question_type": "ALL"
+            },
+            "17": {
+              "lesson_id": 17,
+              "last_session_at": "2026-04-12T13:23:45.330Z",
+              "last_question_count": 5,
+              "last_correct_count": 1,
+              "last_correct_rate": 0.2,
+              "last_difficulty": "基础巩固",
+              "last_question_type": "ALL"
+            },
+            "18": {
+              "lesson_id": 18,
+              "last_session_at": "2026-04-13T18:18:33.334Z",
+              "last_question_count": 20,
+              "last_correct_count": 8,
+              "last_correct_rate": 0.4,
+              "last_difficulty": "基础巩固",
+              "last_question_type": "ALL"
+            },
+            "19": {
+              "lesson_id": 19,
+              "last_session_at": "2026-04-27T12:08:15.396Z",
+              "last_question_count": 10,
+              "last_correct_count": 2,
+              "last_correct_rate": 0.2,
+              "last_difficulty": "基础巩固",
+              "last_question_type": "ALL"
+            },
+            "20": {
+              "lesson_id": 20,
+              "last_session_at": "2026-04-28T12:37:46.293Z",
+              "last_question_count": 18,
+              "last_correct_count": 4,
+              "last_correct_rate": 0.2222222222222222,
+              "last_difficulty": "基础巩固",
+              "last_question_type": "ALL"
+            }
+          }
+        },
+        "daily_plan": {
+          "date": "2026-05-28",
+          "available_minutes": 60,
+          "plan_type": "foundation_review",
+          "focus_lessons": [
+            7
+          ],
+          "tasks": [
+            {
+              "id": "plan_task_1779954588116_kf7a79",
+              "type": "grammar_review",
+              "title": "Review lesson 7 core grammar",
+              "minutes": 15,
+              "required": true,
+              "status": "completed"
+            },
+            {
+              "id": "plan_task_1779954588116_3nxdwa",
+              "type": "pattern_drill",
+              "title": "Practice lesson 7 pattern substitutions",
+              "minutes": 15,
+              "required": true,
+              "status": "in_progress"
+            },
+            {
+              "id": "plan_task_1779954588116_4m2tpe",
+              "type": "listening_drill",
+              "title": "Listen for key phrases from lesson 7",
+              "minutes": 12,
+              "required": true,
+              "status": "pending"
+            },
+            {
+              "id": "plan_task_1779954588116_yno25w",
+              "type": "shadowing",
+              "title": "Shadow lesson 7 sample lines",
+              "minutes": 12,
+              "required": true,
+              "status": "pending"
+            },
+            {
+              "id": "plan_task_1779954588116_uzxc6o",
+              "type": "mistake_review",
+              "title": "Review recent mistakes",
+              "minutes": 6,
+              "required": true,
+              "status": "pending"
+            },
+            {
+              "id": "plan_task_1779954588116_txkoq8",
+              "type": "scenario_speaking",
+              "title": "Try one speaking scenario using lesson 7",
+              "minutes": 10,
+              "required": false,
+              "status": "pending"
+            }
+          ],
+          "completion_criteria": [
+            "Complete all required tasks",
+            "Review the final plan summary"
+          ],
+          "ai_summary": "今日重点复习第7课语法基础，重点强化听力和口语输出，共6项任务约50分钟。",
+          "status": "in_progress",
+          "created_at": "2026-05-28T07:49:48.116Z",
+          "completed_at": null
+        },
+        "lesson_mastery": {},
+        "pattern_mastery": {
+          "N(工具/手段) で V (使用某种工具做某事)": {
+            "lesson": 7,
+            "pattern": "N(工具/手段) で V (使用某种工具做某事)",
+            "recognition": 0,
+            "controlled_output": 0.02,
+            "free_output": 0,
+            "last_practiced_at": "2026-05-28T11:19:44.738Z"
+          }
+        },
+        "mistakes_book": [],
+        "study_backups": [],
+        "meta": {
+          "updated_at": "2026-07-24T07:23:47.018Z",
+          "last_persistence_error": ""
+        },
+        "collections": []
+      }
+    }
+  ],
   "meta": {
-    "updated_at": "2026-07-24T04:00:27.380Z",
+    "updated_at": "2026-07-28T09:33:30.300Z",
     "last_persistence_error": ""
   },
   "collections": []

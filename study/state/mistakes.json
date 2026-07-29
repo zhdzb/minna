@@ -1,8 +1,1546 @@
 {
   "schema_version": 1,
-  "revision": 2,
-  "updated_at": "2026-07-24T12:00:00+08:00",
+  "revision": 3,
+  "updated_at": "2026-07-28T18:00:00+08:00",
   "items": [
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-1",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-1",
+      "lesson": 6,
+      "target_grammar": "动作对象与地点",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-1",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "动作对象与地点",
+        "prompt": "第 1 题：动作对象与地点",
+        "instruction": "请用自然日语表达：我经常在办公室读邮件。",
+        "context_note": "场景：向新同事介绍自己的上班习惯。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "オフィスで よく メールを よみます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-019",
+            "vocab-029"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-1",
+        "is_correct": false,
+        "score": 0.7,
+        "error_tags": [
+          "meaning_drift",
+          "vocabulary"
+        ],
+        "target_grammar": "动作对象与地点",
+        "user_answer": "わたしはオフィスでメールをよみます",
+        "correct_answer": "オフィスで よく メールを よみます。",
+        "explanation": "地点、对象和动作正确，但漏掉“经常”，没有完整表达题目的频率信息。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.7,
+          "meaning": 0.7,
+          "naturalness": 0.6
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "オフィスで よく メールを よみます。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "よく",
+            "meaning": "经常；很好地"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-2",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-2",
+      "lesson": 6,
+      "target_grammar": "动作内容提问",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-2",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "动作内容提问",
+        "prompt": "第 2 题：动作内容提问",
+        "instruction": "请用自然日语询问同事：今天下午做什么？",
+        "context_note": "场景：确认对方今天的工作安排。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "きょうの ごご、なにを しますか。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-028"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-2",
+        "is_correct": false,
+        "score": 0.45,
+        "error_tags": [
+          "particle",
+          "grammar_pattern"
+        ],
+        "target_grammar": "动作内容提问",
+        "user_answer": "きょうのごごがなにをします",
+        "correct_answer": "きょうの ごご、なにを しますか。",
+        "explanation": "「今日の午後」后不需要が；询问动作内容要以「何をしますか」完整收尾。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.45,
+          "meaning": 0.45,
+          "naturalness": 0.35
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "きょうの ごご、なにを しますか。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-6",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-6",
+      "lesson": 6,
+      "target_grammar": "礼貌邀请",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-6",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "礼貌邀请",
+        "prompt": "第 6 题：礼貌邀请",
+        "instruction": "请用自然日语邀请同事下班后一起喝咖啡。",
+        "context_note": "场景：工作结束后的简短交流。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "しごとの あとで、いっしょに コーヒーを のみませんか。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-032"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-6",
+        "is_correct": false,
+        "score": 0.6,
+        "error_tags": [
+          "meaning_drift"
+        ],
+        "target_grammar": "礼貌邀请",
+        "user_answer": "コーフーをのみましょうか",
+        "correct_answer": "しごとの あとで、いっしょに コーヒーを のみませんか。",
+        "explanation": "「飲みましょうか」能表达提议，但漏掉“下班后”和“一起”两个场景信息；咖啡的轻微拼写不单独扣分。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.6,
+          "meaning": 0.6,
+          "naturalness": 0.5
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "しごとの あとで、いっしょに コーヒーを のみませんか。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-7",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-7",
+      "lesson": 6,
+      "target_grammar": "存在句",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-7",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "存在句",
+        "prompt": "第 7 题：存在句",
+        "instruction": "请用自然日语表达：有两个人要进入会议室。",
+        "context_note": "场景：向同事说明接下来进入会议室的人数。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "かいぎしつに はいる ひとが ふたり います。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-024"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-7",
+        "is_correct": false,
+        "score": 0.25,
+        "error_tags": [
+          "grammar_pattern",
+          "vocabulary"
+        ],
+        "target_grammar": "存在句",
+        "user_answer": "ふたつひとがかいぎしつにきます   \\  ふたつひとがかいぎしつにはいます",
+        "correct_answer": "かいぎしつに はいる ひとが ふたり います。",
+        "explanation": "人数应使用「二人」，进入要用「入る」；当前两个尝试都没有形成自然的存在或进入表达。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.25,
+          "meaning": 0.25,
+          "naturalness": 0.2
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "かいぎしつに はいる ひとが ふたり います。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "入る（はいる）",
+            "meaning": "进入"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-8",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-8",
+      "lesson": 6,
+      "target_grammar": "物品存在",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-8",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "物品存在",
+        "prompt": "第 8 题：物品存在",
+        "instruction": "请用自然日语表达：桌上有电脑，我用它写邮件。",
+        "context_note": "场景：告诉同事设备的位置和用途。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "つくえの うえに パソコンが あります。その パソコンを つかって、メールを かきます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-025"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-8",
+        "is_correct": false,
+        "score": 0.55,
+        "error_tags": [
+          "vocabulary",
+          "meaning_drift"
+        ],
+        "target_grammar": "物品存在",
+        "user_answer": "つくえのうえにパソコンがあります、わたしはそれでメールをかいます",
+        "correct_answer": "つくえの うえに パソコンが あります。その パソコンを つかって、メールを かきます。",
+        "explanation": "电脑存在的位置正确，但后半句把“写邮件”写成了“买邮件”，关键动作发生改变。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.55,
+          "meaning": 0.55,
+          "naturalness": 0.45000000000000007
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "つくえの うえに パソコンが あります。その パソコンを つかって、メールを かきます。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "書く（かく）",
+            "meaning": "写"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-9",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-9",
+      "lesson": 6,
+      "target_grammar": "进行中的动作",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-9",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "进行中的动作",
+        "prompt": "第 9 题：进行中的动作",
+        "instruction": "请用自然日语表达：部长正在会议室听说明。",
+        "context_note": "场景：同事询问部长现在在做什么。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "ぶちょうは かいぎしつで せつめいを きいています。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-027"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-9",
+        "is_correct": false,
+        "score": 0.5,
+        "error_tags": [
+          "conjugation",
+          "vocabulary"
+        ],
+        "target_grammar": "进行中的动作",
+        "user_answer": "ぶちょうはかいぎしつでせつめいをきています",
+        "correct_answer": "ぶちょうは かいぎしつで せつめいを きいています。",
+        "explanation": "地点和说明对象正确；「聞く」的て形是「聞いて」，应写「聞いています」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.5,
+          "meaning": 0.5,
+          "naturalness": 0.4
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "ぶちょうは かいぎしつで せつめいを きいています。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "聞く（きく）",
+            "meaning": "听；询问"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-10",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-10",
+      "lesson": 6,
+      "target_grammar": "未完成状态",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-10",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "未完成状态",
+        "prompt": "第 10 题：未完成状态",
+        "instruction": "请用自然日语表达：我还没有写报告。",
+        "context_note": "场景：向上司如实汇报进度。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "レポートは まだ かいていません。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-030"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-10",
+        "is_correct": false,
+        "score": 0.25,
+        "error_tags": [
+          "grammar_pattern",
+          "vocabulary"
+        ],
+        "target_grammar": "未完成状态",
+        "user_answer": "わたしはまだレポトをかいません",
+        "correct_answer": "レポートは まだ かいていません。",
+        "explanation": "「まだ〜ていません」表示尚未完成；「かいません」既不是未完成结构，也把“写”变成了“买”。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.25,
+          "meaning": 0.25,
+          "naturalness": 0.2
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "レポートは まだ かいていません。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "書く（かく）",
+            "meaning": "写"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-11",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-11",
+      "lesson": 6,
+      "target_grammar": "目的移动",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-11",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "目的移动",
+        "prompt": "第 11 题：目的移动",
+        "instruction": "请用自然日语表达：午休时去便利店买水。",
+        "context_note": "场景：向同事说明短暂外出的目的。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "ひるやすみに コンビニへ みずを かいに いきます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-033"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-11",
+        "is_correct": false,
+        "score": 0.3,
+        "error_tags": [
+          "grammar_pattern",
+          "vocabulary",
+          "meaning_drift"
+        ],
+        "target_grammar": "目的移动",
+        "user_answer": "ひるやすみにべんりてんでみずをかいていきます",
+        "correct_answer": "ひるやすみに コンビニへ みずを かいに いきます。",
+        "explanation": "目的移动要用「便利店へ＋水を買いに＋行きます」；当前地点、买的词形和移动目的结构都不稳定。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.3,
+          "meaning": 0.3,
+          "naturalness": 0.2
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "ひるやすみに コンビニへ みずを かいに いきます。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "買う（かう）",
+            "meaning": "买"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-12",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-12",
+      "lesson": 6,
+      "target_grammar": "移动方向",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-12",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "移动方向",
+        "prompt": "第 12 题：移动方向",
+        "instruction": "请用自然日语表达：客户下午离开公司。",
+        "context_note": "场景：向同事转达今天的离开时间。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "おきゃくさんは ごご、かいしゃを でます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-023"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-12",
+        "is_correct": false,
+        "score": 0.2,
+        "error_tags": [
+          "vocabulary",
+          "meaning_drift"
+        ],
+        "target_grammar": "移动方向",
+        "user_answer": "おきゃくはごごにかいしゃで离开します",
+        "correct_answer": "おきゃくさんは ごご、かいしゃを でます。",
+        "explanation": "答案混入中文“离开”，且地点助词方向不对；离开公司应使用「会社を出ます」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.2,
+          "meaning": 0.2,
+          "naturalness": 0.2
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "おきゃくさんは ごご、かいしゃを でます。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "出る（でる）",
+            "meaning": "出去；离开"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-13",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-13",
+      "lesson": 6,
+      "target_grammar": "离开场所",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-13",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "离开场所",
+        "prompt": "第 13 题：离开场所",
+        "instruction": "请用自然日语表达：我六点离开公司。",
+        "context_note": "场景：说明今天的下班时间。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "6じに かいしゃを でます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-023"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-13",
+        "is_correct": false,
+        "score": 0.2,
+        "error_tags": [
+          "vocabulary",
+          "meaning_drift"
+        ],
+        "target_grammar": "离开场所",
+        "user_answer": "わたしはろくじにかいしゃで离开します",
+        "correct_answer": "6じに かいしゃを でます。",
+        "explanation": "时间正确，但核心动作仍用中文；离开场所应使用「会社を出ます」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.2,
+          "meaning": 0.2,
+          "naturalness": 0.2
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "6じに かいしゃを でます。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "出る（でる）",
+            "meaning": "出去；离开"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-14",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-14",
+      "lesson": 6,
+      "target_grammar": "进入场所",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-14",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "进入场所",
+        "prompt": "第 14 题：进入场所",
+        "instruction": "请用自然日语表达：九点进入会议室。",
+        "context_note": "场景：说明参加会议前的行动。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "9じに かいぎしつに はいります。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-024"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-14",
+        "is_correct": false,
+        "score": 0.55,
+        "error_tags": [
+          "conjugation",
+          "vocabulary"
+        ],
+        "target_grammar": "进入场所",
+        "user_answer": "きゅうじにかいぎしつにはいます",
+        "correct_answer": "9じに かいぎしつに はいります。",
+        "explanation": "时间和目的地助词正确，但「入る」的礼貌形是「入ります」，不是「はいいます」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.55,
+          "meaning": 0.55,
+          "naturalness": 0.45000000000000007
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "9じに かいぎしつに はいります。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "入る（はいる）",
+            "meaning": "进入"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-15",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-15",
+      "lesson": 6,
+      "target_grammar": "工具手段",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-15",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "工具手段",
+        "prompt": "第 15 题：工具手段",
+        "instruction": "请用自然日语表达：我用电脑制作资料。",
+        "context_note": "场景：介绍处理资料时使用的工具。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "パソコンで しりょうを つくります。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-025",
+            "vocab-026"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-15",
+        "is_correct": false,
+        "score": 0.6,
+        "error_tags": [
+          "vocabulary"
+        ],
+        "target_grammar": "工具手段",
+        "user_answer": "わたしはパソコンでしりょうをします",
+        "correct_answer": "パソコンで しりょうを つくります。",
+        "explanation": "工具助词で和对象助词を正确，但“制作资料”应使用「作る」，单用「する」没有命中本题目标词。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.6,
+          "meaning": 0.6,
+          "naturalness": 0.5
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "パソコンで しりょうを つくります。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "作る（つくる）",
+            "meaning": "制作；做"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-16",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-16",
+      "lesson": 6,
+      "target_grammar": "能力表达",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-16",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "能力表达",
+        "prompt": "第 16 题：能力表达",
+        "instruction": "请用自然日语表达：我会用日语写邮件。",
+        "context_note": "场景：在工作能力介绍中说明自己能做的事。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "にほんごで メールを かくことが できます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-020",
+            "vocab-030"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-16",
+        "is_correct": false,
+        "score": 0.6,
+        "error_tags": [
+          "grammar_pattern",
+          "vocabulary"
+        ],
+        "target_grammar": "能力表达",
+        "user_answer": "わたしはにほんごでメールをかきます",
+        "correct_answer": "にほんごで メールを かくことが できます。",
+        "explanation": "答案只表达“用日语写邮件”，没有表达“会、能够”；需要「書くことができます」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.6,
+          "meaning": 0.6,
+          "naturalness": 0.5
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "にほんごで メールを かくことが できます。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "できる",
+            "meaning": "会；能够；完成"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-17",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-17",
+      "lesson": 6,
+      "target_grammar": "认知状态",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-17",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "认知状态",
+        "prompt": "第 17 题：认知状态",
+        "instruction": "请用自然日语表达：我认识田中（たなか）先生。",
+        "context_note": "场景：人名读音已给出，不考查姓名拼写。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "わたしは たなかさんを しっています。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-021"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-17",
+        "is_correct": false,
+        "score": 0.4,
+        "error_tags": [
+          "particle",
+          "vocabulary",
+          "meaning_drift"
+        ],
+        "target_grammar": "认知状态",
+        "user_answer": "わたしはなたかさんがわかります",
+        "correct_answer": "わたしは たなかさんを しっています。",
+        "explanation": "人名差异不计分；问题在于「分かる」表示理解，认识某人应使用「知っている」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.4,
+          "meaning": 0.4,
+          "naturalness": 0.30000000000000004
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "わたしは たなかさんを しっています。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "知る（しる）",
+            "meaning": "知道；认识"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-18",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-18",
+      "lesson": 6,
+      "target_grammar": "变化与看法",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-18",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "变化与看法",
+        "prompt": "第 18 题：变化与看法",
+        "instruction": "请用自然日语表达：我认为这项工作今后会变得重要。",
+        "context_note": "场景：在会议中简短表达对未来的看法。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "この しごとは これから たいせつに なると おもいます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-004",
+            "vocab-006"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-18",
+        "is_correct": false,
+        "score": 0.35,
+        "error_tags": [
+          "particle",
+          "vocabulary",
+          "grammar_pattern"
+        ],
+        "target_grammar": "变化与看法",
+        "user_answer": "わたしはこのしこどはこんごからじゅよになるがおもいます",
+        "correct_answer": "この しごとは これから たいせつに なると おもいます。",
+        "explanation": "已经尝试「なる／思う」，但主题重复、引用前助词错误，“重要”的词形也影响理解；应使用「大切になると思います」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.35,
+          "meaning": 0.35,
+          "naturalness": 0.24999999999999997
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "この しごとは これから たいせつに なると おもいます。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "大切（たいせつ）",
+            "meaning": "重要；要紧"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-19",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-19",
+      "lesson": 6,
+      "target_grammar": "确认携带物品",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-19",
+        "type": "q_conversation",
+        "lesson": 6,
+        "target_grammar": "确认携带物品",
+        "prompt": "第 19 题：确认携带物品",
+        "instruction": "同事问你是否带了会议资料。请回答已经带了。",
+        "context_note": "请写一句完整、自然的职场日语。",
+        "answer_format": "写 1 至 2 句完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "はい、もう かいぎの しりょうを もっています。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "conversation",
+          "target_vocabulary_ids": [
+            "vocab-022"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-19",
+        "is_correct": false,
+        "score": 0.1,
+        "error_tags": [
+          "vocabulary",
+          "meaning_drift"
+        ],
+        "target_grammar": "确认携带物品",
+        "user_answer": "はい、きだいしました",
+        "correct_answer": "はい、もう かいぎの しりょうを もっています。",
+        "explanation": "肯定回应存在，但后半句无法表达“已经带了会议资料”；应使用「持っています」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.1,
+          "meaning": 0.1,
+          "naturalness": 0.2
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "はい、もう かいぎの しりょうを もっています。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "持つ（もつ）",
+            "meaning": "拿；拥有"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-21",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-21",
+      "lesson": 6,
+      "target_grammar": "报告未完成",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-21",
+        "type": "q_conversation",
+        "lesson": 6,
+        "target_grammar": "报告未完成",
+        "prompt": "第 21 题：报告未完成",
+        "instruction": "上司问报告是否完成。请回答还没有，并说今天会写。",
+        "context_note": "请完整表达未完成状态��接下来的行动。",
+        "answer_format": "写 1 至 2 句完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "いいえ、まだ できていません。きょう かきます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "conversation",
+          "target_vocabulary_ids": [
+            "vocab-020",
+            "vocab-030"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-21",
+        "is_correct": false,
+        "score": 0.35,
+        "error_tags": [
+          "grammar_pattern",
+          "meaning_drift"
+        ],
+        "target_grammar": "报告未完成",
+        "user_answer": "いいえ、いけません、きょうはかきます",
+        "correct_answer": "いいえ、まだ できていません。きょう かきます。",
+        "explanation": "「いけません」表示不可以，不表示尚未完成；应先说「まだできていません」，再说明今天会写。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.35,
+          "meaning": 0.35,
+          "naturalness": 0.24999999999999997
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "いいえ、まだ できていません。きょう かきます。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-23",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-23",
+      "lesson": 6,
+      "target_grammar": "确认听懂",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-23",
+        "type": "q_conversation",
+        "lesson": 6,
+        "target_grammar": "确认听懂",
+        "prompt": "第 23 题：确认听懂",
+        "instruction": "同事问你是否听懂刚才的说明。请回答大体听懂了，但还有一个问题。",
+        "context_note": "请写适合职场沟通的一到两句日语。",
+        "answer_format": "写 1 至 2 句完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "はい、せつめいを よく ききました。でも、ひとつ しつもんが あります。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "conversation",
+          "target_vocabulary_ids": [
+            "vocab-019",
+            "vocab-027"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-23",
+        "is_correct": false,
+        "score": 0.55,
+        "error_tags": [
+          "vocabulary",
+          "meaning_drift"
+        ],
+        "target_grammar": "确认听懂",
+        "user_answer": "はい、ほとんどわかりました、でも、ついたちめんだいがあります",
+        "correct_answer": "はい、せつめいを よく ききました。でも、ひとつ しつもんが あります。",
+        "explanation": "“大体明白”表达正确，但后半句没有形成“还有一个问题”；应使用「一つ質問があります」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.55,
+          "meaning": 0.55,
+          "naturalness": 0.45000000000000007
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "はい、せつめいを よく ききました。でも、ひとつ しつもんが あります。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "質問（しつもん）",
+            "meaning": "问题；提问"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-24",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-24",
+      "lesson": 6,
+      "target_grammar": "表达意见",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-24",
+        "type": "q_conversation",
+        "lesson": 6,
+        "target_grammar": "表达意见",
+        "prompt": "第 24 题：表达意见",
+        "instruction": "同事问你是否认为新方法好用。请肯定回答并表达自己的看法。",
+        "context_note": "请写一句或两句自然日语。",
+        "answer_format": "写 1 至 2 句完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "はい、そう おもいます。とても べんりです。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "conversation",
+          "target_vocabulary_ids": [
+            "vocab-006",
+            "vocab-016"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-24",
+        "is_correct": false,
+        "score": 0.6,
+        "error_tags": [
+          "grammar_pattern",
+          "meaning_drift"
+        ],
+        "target_grammar": "表达意见",
+        "user_answer": "はい、あたらしいイデアはすばらしです",
+        "correct_answer": "はい、そう おもいます。とても べんりです。",
+        "explanation": "表达了正面评价，但没有回应“是否好用”，也没有使用「そう思います」明确表达自己的看法。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.6,
+          "meaning": 0.6,
+          "naturalness": 0.5
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "はい、そう おもいます。とても べんりです。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-25",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-25",
+      "lesson": 6,
+      "target_grammar": "读取工作日程",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-25",
+        "type": "q_reading",
+        "lesson": 6,
+        "target_grammar": "读取工作日程",
+        "prompt": "第 25 题：读取工作日程",
+        "instruction": "阅读下面的工作安排，用完整日语回答：佐藤（さとう）先生上午在哪里做什么？",
+        "context_note": "人名读音已给出，不考查姓名拼写。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [
+          "さとうさんは ごぜん、かいぎしつで しりょうを よみます。",
+          "ごごは オフィスで メールを かきます。"
+        ],
+        "vocab_hints": [],
+        "answer_reference": "さとうさんは ごぜん、かいぎしつで しりょうを よみます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "reading",
+          "target_vocabulary_ids": [
+            "vocab-029"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-25",
+        "is_correct": false,
+        "score": 0.2,
+        "error_tags": [
+          "meaning_drift",
+          "grammar_pattern"
+        ],
+        "target_grammar": "读取工作日程",
+        "user_answer": "さとうさんはけさにどこでしますか",
+        "correct_answer": "さとうさんは ごぜん、かいぎしつで しりょうを よみます。",
+        "explanation": "题目要求从通知中提取上午的地点和动作，答案却改成了疑问句，没有回答已给信息。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.2,
+          "meaning": 0.2,
+          "naturalness": 0.2
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "さとうさんは ごぜん、かいぎしつで しりょうを よみます。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-26",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-26",
+      "lesson": 6,
+      "target_grammar": "读取设备说明",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-26",
+        "type": "q_reading",
+        "lesson": 6,
+        "target_grammar": "读取设备说明",
+        "prompt": "第 26 题：读取设备说明",
+        "instruction": "阅读下面的说明，用完整日语回答：会议室里有什么，可以用它做什么？",
+        "context_note": "请同时回答物品及其用途。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [
+          "かいぎしつに パソコンが あります。",
+          "その パソコンで しりょうを つくることが できます。"
+        ],
+        "vocab_hints": [],
+        "answer_reference": "かいぎしつに パソコンが あります。その パソコンで しりょうを つくることが できます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "reading",
+          "target_vocabulary_ids": [
+            "vocab-020",
+            "vocab-025",
+            "vocab-026"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-26",
+        "is_correct": false,
+        "score": 0.15,
+        "error_tags": [
+          "meaning_drift",
+          "grammar_pattern"
+        ],
+        "target_grammar": "读取设备说明",
+        "user_answer": "かいぎしつになにがあります、なにがします",
+        "correct_answer": "かいぎしつに パソコンが あります。その パソコンで しりょうを つくることが できます。",
+        "explanation": "短文已经给出电脑及用途，答案仍是两个疑问句，未提取“有电脑、可以制作资料”的信息。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.15,
+          "meaning": 0.15,
+          "naturalness": 0.2
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "かいぎしつに パソコンが あります。その パソコンで しりょうを つくることが できます。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-27",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-27",
+      "lesson": 6,
+      "target_grammar": "读取午休计划",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-27",
+        "type": "q_reading",
+        "lesson": 6,
+        "target_grammar": "读取午休计划",
+        "prompt": "第 27 题：读取午休计划",
+        "instruction": "阅读下面的消息，用完整日语回答：说话人午休时去哪里、做什么？",
+        "context_note": "请保留移动目的这一信息。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [
+          "ひるやすみに コンビニへ いきます。",
+          "パンを かいに いきます。"
+        ],
+        "vocab_hints": [],
+        "answer_reference": "ひるやすみに コンビニへ パンを かいに いきます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "reading",
+          "target_vocabulary_ids": [
+            "vocab-031",
+            "vocab-033"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-27",
+        "is_correct": false,
+        "score": 0.35,
+        "error_tags": [
+          "grammar_pattern",
+          "vocabulary"
+        ],
+        "target_grammar": "读取午休计划",
+        "user_answer": "コンビニでパンをかいてがいきます",
+        "correct_answer": "ひるやすみに コンビニへ パンを かいに いきます。",
+        "explanation": "听懂了便利店和面包，但目的移动应为「パンを買いに行きます」；当前词形和连接结构错误。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.35,
+          "meaning": 0.35,
+          "naturalness": 0.24999999999999997
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "ひるやすみに コンビニへ パンを かいに いきます。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "買う（かう）",
+            "meaning": "买"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-29",
+      "status": "active",
+      "created_at": "2026-07-28T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-28.json",
+      "source_review": "study/reviews/2026-07-28-review.json",
+      "daily_id": "daily-2026-07-28",
+      "review_id": "review-2026-07-28",
+      "exercise_id": "daily-2026-07-28-ex-29",
+      "lesson": 6,
+      "target_grammar": "听取工作进度",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-28-ex-29",
+        "type": "q_listening",
+        "lesson": 6,
+        "target_grammar": "听取工作进度",
+        "prompt": "第 29 题：听取工作进度",
+        "instruction": "播放音频后，用完整日语回答：什么已经完成，什么还没有完成？",
+        "context_note": "请回答两项进度；页面不显示听力原文。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "メールは もう よみましたが、へんじは まだ かいていません。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "listening",
+          "target_vocabulary_ids": [
+            "vocab-029",
+            "vocab-030"
+          ],
+          "audio_text": "メールは もう よみました。でも、へんじは まだ かいていません。"
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-28-ex-29",
+        "is_correct": false,
+        "score": 0.5,
+        "error_tags": [
+          "listening_mishear",
+          "vocabulary",
+          "tense_aspect"
+        ],
+        "target_grammar": "听取工作进度",
+        "user_answer": "メールをもうよみました、でも、かんじはまだかきません",
+        "correct_answer": "メールは もう よみましたが、へんじは まだ かいていません。",
+        "explanation": "已听出邮件读完，但把「返事」听成「漢字」，且“尚未写”需要「まだ書いていません」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.5,
+          "meaning": 0.5,
+          "naturalness": 0.4
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "メールは もう よみましたが、へんじは まだ かいていません。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "返事（へんじ）",
+            "meaning": "回复"
+          },
+          {
+            "dictionary_form": "書く（かく）",
+            "meaning": "写"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
     {
       "id": "mistake:review-2026-07-23:daily-2026-07-23-ex-4",
       "status": "active",
