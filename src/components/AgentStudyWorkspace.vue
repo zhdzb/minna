@@ -111,11 +111,14 @@
         <p v-if="promptError" class="prompt-feedback error-copy">{{ promptError }}</p>
       </section>
 
-      <section id="exercise-section" class="agent-study-band">
-        <div class="section-heading">
-          <h2>任务清单</h2>
-          <span>{{ taskCountLabel }}</span>
-        </div>
+      <el-collapse v-model="expandedStudySections" class="agent-study-collapse">
+        <el-collapse-item id="exercise-section" name="tasks">
+          <template #title>
+            <div class="section-heading">
+              <h2>任务清单</h2>
+              <span>{{ taskCountLabel }}</span>
+            </div>
+          </template>
         <div v-if="dailyPacket.tasks?.length" class="item-grid">
           <article v-for="task in dailyPacket.tasks" :key="task.id" class="item-card">
             <div class="item-card-top">
@@ -127,13 +130,15 @@
           </article>
         </div>
         <el-empty v-else description="今天还没有安排任务。" />
-      </section>
+        </el-collapse-item>
 
-      <section class="agent-study-band">
-        <div class="section-heading">
-          <h2>学习资料</h2>
-          <span>{{ materialCountLabel }}</span>
-        </div>
+        <el-collapse-item name="materials">
+          <template #title>
+            <div class="section-heading">
+              <h2>学习资料</h2>
+              <span>{{ materialCountLabel }}</span>
+            </div>
+          </template>
         <div v-if="dailyPacket.study_materials?.length" class="item-grid">
           <article v-for="material in dailyPacket.study_materials" :key="material.id" class="item-card">
             <div class="item-card-top">
@@ -151,13 +156,15 @@
           </article>
         </div>
         <el-empty v-else description="当前还没有可用学习资料。" />
-      </section>
+        </el-collapse-item>
 
-      <section class="agent-study-band">
-        <div class="section-heading">
-          <h2>练习题</h2>
-          <span>{{ exerciseCountLabel }}</span>
-        </div>
+        <el-collapse-item name="exercises">
+          <template #title>
+            <div class="section-heading">
+              <h2>练习题</h2>
+              <span>{{ exerciseCountLabel }}</span>
+            </div>
+          </template>
         <div v-if="dailyPacket.exercises?.length" class="exercise-list">
           <article v-for="exercise in dailyPacket.exercises" :key="exercise.id" class="exercise-card">
             <div class="item-card-top">
@@ -225,13 +232,15 @@
           </article>
         </div>
         <el-empty v-else description="当前还没有可用练习题。" />
-      </section>
+        </el-collapse-item>
 
-      <section class="agent-study-band">
-        <div class="section-heading">
-          <h2>自我评估</h2>
-          <span>提交前必填</span>
-        </div>
+        <el-collapse-item name="assessment">
+          <template #title>
+            <div class="section-heading">
+              <h2>自我评估</h2>
+              <span>提交前必填</span>
+            </div>
+          </template>
         <div class="assessment-grid">
           <label class="answer-field">
             <span>难度感受</span>
@@ -289,13 +298,15 @@
             <span>{{ exercise.prompt || exercise.id }}</span>
           </label>
         </div>
-      </section>
+        </el-collapse-item>
 
-      <section class="agent-study-band">
-        <div class="section-heading">
-          <h2>批改提示</h2>
-          <span>{{ reviewItemCountLabel }}</span>
-        </div>
+        <el-collapse-item name="review-status">
+          <template #title>
+            <div class="section-heading">
+              <h2>批改提示</h2>
+              <span>{{ reviewItemCountLabel }}</span>
+            </div>
+          </template>
         <div v-if="dailyPacket.review_items?.length || reviewResult || dailyPacket.correction?.review_file" class="review-summary">
           <div class="meta-item">
             <span>待批改项目</span>
@@ -311,13 +322,15 @@
           </div>
         </div>
         <el-empty v-else description="当前还没有批改提示。" />
-      </section>
+        </el-collapse-item>
 
-      <section v-if="reviewResult" class="agent-study-band">
-        <div class="section-heading">
-          <h2>最近批改结果</h2>
-          <span>共检查 {{ reviewItems.length }} 题</span>
-        </div>
+        <el-collapse-item v-if="reviewResult" name="review-result">
+          <template #title>
+            <div class="section-heading">
+              <h2>最近批改结果</h2>
+              <span>共检查 {{ reviewItems.length }} 题</span>
+            </div>
+          </template>
 
         <div class="review-summary review-overall-grid">
           <div class="meta-item">
@@ -481,7 +494,8 @@
             </div>
           </article>
         </div>
-      </section>
+        </el-collapse-item>
+      </el-collapse>
 
       <section v-if="showSubmissionNextStep" class="agent-study-band next-step-band">
         <div class="section-heading">
@@ -561,6 +575,7 @@ const indexDocument = ref(null)
 const dailyPacket = ref(null)
 const reviewResult = ref(null)
 const serverPhase = ref('')
+const expandedStudySections = ref(['tasks', 'materials', 'exercises', 'assessment', 'review-status', 'review-result'])
 const answerDrafts = ref({})
 const selfAssessmentDraft = ref({
   difficulty: '',
@@ -1153,6 +1168,50 @@ onMounted(() => {
   border-radius: 8px;
   box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
   backdrop-filter: blur(12px);
+}
+
+.agent-study-collapse {
+  display: grid;
+  gap: 16px;
+  border: 0;
+}
+
+.agent-study-collapse :deep(.el-collapse-item) {
+  overflow: hidden;
+  background: var(--app-panel-bg);
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.agent-study-collapse :deep(.el-collapse-item__header) {
+  min-height: 64px;
+  padding: 0 20px;
+  background: transparent;
+  border: 0;
+  color: var(--app-text-strong);
+  font-weight: inherit;
+}
+
+.agent-study-collapse :deep(.el-collapse-item__header.is-active) {
+  border-bottom: 1px solid var(--app-border);
+}
+
+.agent-study-collapse :deep(.el-collapse-item__wrap) {
+  border: 0;
+  background: transparent;
+}
+
+.agent-study-collapse :deep(.el-collapse-item__content) {
+  padding: 20px;
+  color: inherit;
+}
+
+.agent-study-collapse .section-heading {
+  width: 100%;
+  margin: 0;
+  padding-right: 8px;
 }
 
 .agent-study-overview {

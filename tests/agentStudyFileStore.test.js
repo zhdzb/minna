@@ -217,10 +217,10 @@ describe('agentStudyFileStore', () => {
   it('reads the seeded index and latest daily packet', () => {
     const store = createAgentStudyFileStore()
 
-    expect(store.loadIndex().latest_daily).toBe('study/daily/2026-07-21.json')
-    expect(store.loadIndex().latest_review).toBe('study/reviews/2026-07-21-review.json')
-    expect(store.loadLatestDaily().id).toBe('daily-2026-07-21')
-    expect(store.loadLatestReview().id).toBe('review-2026-07-21')
+    expect(store.loadIndex().latest_daily).toBe('study/daily/2026-07-28.json')
+    expect(store.loadIndex().latest_review).toBe('study/reviews/2026-07-28-review.json')
+    expect(store.loadLatestDaily().id).toBe('daily-2026-07-28')
+    expect(store.loadLatestReview().id).toBe('review-2026-07-28')
     expect(store.loadLatestReviewDrill()).toBeNull()
   })
 

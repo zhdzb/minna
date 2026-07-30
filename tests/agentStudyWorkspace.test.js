@@ -241,6 +241,23 @@ const mountWorkspace = (client, options = {}) =>
               @input="$emit('update:modelValue', $event.target.value)"
             />
           `
+        },
+        'el-collapse': {
+          props: ['modelValue'],
+          emits: ['update:modelValue'],
+          template: '<div class="stub-collapse"><slot /></div>'
+        },
+        'el-collapse-item': {
+          props: ['name'],
+          data() {
+            return { isOpen: true }
+          },
+          template: `
+            <section class="stub-collapse-item" :data-open="isOpen">
+              <button type="button" :data-collapse-toggle="name" @click="isOpen = !isOpen"><slot name="title" /></button>
+              <div v-show="isOpen" class="stub-collapse-content"><slot /></div>
+            </section>
+          `
         }
       }
     }
@@ -262,6 +279,27 @@ describe('AgentStudyWorkspace', () => {
     expect(wrapper.text()).toContain('当前包批改')
     expect(wrapper.text()).toContain('尚未批改')
     expect(wrapper.text()).not.toContain('study/reviews/2026-06-26-review.json')
+  })
+
+  it('keeps study sections expanded by default and collapses them without losing drafts', async () => {
+    const wrapper = mountWorkspace(createClient())
+    await flushPromises()
+
+    const exerciseItem = wrapper
+      .findAll('.stub-collapse-item')
+      .find((item) => item.find('[data-collapse-toggle="exercises"]').exists())
+    const fillInput = wrapper.find('.stub-input')
+    await fillInput.setValue('に')
+    expect(exerciseItem.attributes('data-open')).toBe('true')
+
+    await wrapper.find('[data-collapse-toggle="exercises"]').trigger('click')
+    await wrapper.vm.$nextTick()
+    expect(exerciseItem.attributes('data-open')).toBe('false')
+
+    await wrapper.find('[data-collapse-toggle="exercises"]').trigger('click')
+    await wrapper.vm.$nextTick()
+    expect(exerciseItem.attributes('data-open')).toBe('true')
+    expect(wrapper.find('.stub-input').element.value).toBe('に')
   })
 
   it('renders the latest review summary and per-item feedback when review data exists', async () => {
