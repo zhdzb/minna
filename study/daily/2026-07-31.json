@@ -1,0 +1,884 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "updated_at": "2026-07-31T12:00:00+08:00",
+  "id": "daily-2026-07-31",
+  "date": "2026-07-31",
+  "status": "planned",
+  "created_at": "2026-07-31T12:00:00+08:00",
+  "mission": {
+    "title": "第6课 疑问句、地点与工作作息巩固",
+    "plan_type": "lesson-foundation",
+    "available_minutes": 90,
+    "focus_lessons": [
+      6
+    ],
+    "goals": [
+      "稳定何をしますか及完整疑问句收尾",
+      "区分动作地点で与存在地点に",
+      "复习まだ〜ていません和目的移动",
+      "在工作作息、见面和请假场景中使用本轮目标词"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "task-lesson-preview",
+      "type": "grammar_review",
+      "title": "浏览本课知识点与例句",
+      "minutes": 12,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-shadowing",
+      "type": "listening_shadowing",
+      "title": "跟读句型骨架与听力脚本",
+      "minutes": 12,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-controlled-output",
+      "type": "controlled_output",
+      "title": "完成受控输出练习",
+      "minutes": 16,
+      "required": true,
+      "status": "pending"
+    },
+    {
+      "id": "task-free-output",
+      "type": "free_output",
+      "title": "完成情境输出并做自我复盘",
+      "minutes": 12,
+      "required": true,
+      "status": "pending"
+    }
+  ],
+  "study_materials": [
+    {
+      "id": "lesson-6-grammar-note",
+      "type": "grammar_note",
+      "lesson": 6,
+      "title": "第6课 核心文法",
+      "content": "本轮优先掌握：N を V、N を します、なにを しますか",
+      "examples": [
+        {
+          "ja": "きっさてんで コーヒーを のみます。",
+          "zh": "句型骨架 1",
+          "note": "优先模仿语序和礼貌层级"
+        },
+        {
+          "ja": "いっしょに ひるごはんを たべませんか。",
+          "zh": "句型骨架 2",
+          "note": "优先模仿语序和礼貌层级"
+        }
+      ]
+    },
+    {
+      "id": "lesson-6-listening-script",
+      "type": "listening_script",
+      "lesson": 6,
+      "title": "第6课 听力脚本",
+      "content": "きっさてんで コーヒーを のみます。\nいっしょに ひるごはんを たべませんか。\nじゃ、3じに いきましょう。",
+      "examples": [
+        {
+          "ja": "きっさてんで コーヒーを のみます。",
+          "zh": "先听整体语气",
+          "note": "第一遍只抓关键词"
+        },
+        {
+          "ja": "いっしょに ひるごはんを たべませんか。",
+          "zh": "第二遍跟读并模仿停顿",
+          "note": "第二遍重点跟读"
+        }
+      ]
+    },
+    {
+      "id": "lesson-6-hidden-knowledge",
+      "type": "contrast_note",
+      "lesson": 6,
+      "title": "第6课 易错提醒",
+      "content": "「で」是动作发生地，和第3课的存在地点要区分。；邀请句里「〜ませんか」更柔和，给对方留余地。；课文常通过下班后、周末安排来训练邀请和应答。",
+      "examples": [
+        {
+          "ja": "きっさてんで コーヒーを のみます。",
+          "zh": "「で」是动作发生地，和第3课的存在地点要区分。",
+          "note": "避免只背单句不理解场景"
+        },
+        {
+          "ja": "いっしょに ひるごはんを たべませんか。",
+          "zh": "邀请句里「〜ませんか」更柔和，给对方留余地。",
+          "note": "从句型骨架扩展到自己的表达"
+        }
+      ]
+    },
+    {
+      "id": "lesson-6-core-vocabulary",
+      "type": "vocabulary_note",
+      "lesson": 6,
+      "title": "第6课 高频词汇",
+      "content": "ある，读音：ある，含义：有；存在（无生命），场景：存在高频词；N5 预估范围\nなる，读音：なる，含义：变成；成为，场景：变化高频词；N4 预估范围\n言う，读音：いう，含义：说，场景：沟通高频词；N5 预估范围\n分かる，读音：わかる，含义：明白；懂，场景：理解高频词；N5 预估范围\nこと，读音：こと，含义：事情；抽象事项，场景：抽象概念高频词；N4 预估范围",
+      "examples": [
+        {
+          "ja": "ある",
+          "zh": "有；存在（无生命）",
+          "note": "存在高频词；N5 预估范围"
+        },
+        {
+          "ja": "なる",
+          "zh": "变成；成为",
+          "note": "变化高频词；N4 预估范围"
+        }
+      ]
+    }
+  ],
+  "vocabulary_plan": {
+    "selection_file": "study/context/vocabulary-selection.json",
+    "selected_ids": [
+      "vocab-002",
+      "vocab-004",
+      "vocab-005",
+      "vocab-010",
+      "vocab-012",
+      "vocab-019",
+      "vocab-034",
+      "vocab-035",
+      "vocab-036",
+      "vocab-037",
+      "vocab-038",
+      "vocab-039",
+      "vocab-040",
+      "vocab-041",
+      "vocab-042",
+      "vocab-043",
+      "vocab-022",
+      "vocab-044"
+    ]
+  },
+  "review_items": [],
+  "exercises": [
+    {
+      "id": "daily-2026-07-31-ex-1",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "动作内容提问",
+      "prompt": "第 1 题：动作内容提问",
+      "instruction": "请用自然日语询问同事：会议之后有时间吗？做什么？",
+      "context_note": "场景：先确认对方是否有时间，再确认接下来的安排。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "かいぎの あとで、じかんが ありますか。なにを しますか。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-044"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-2",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "动作地点",
+      "prompt": "第 2 题：动作地点",
+      "instruction": "请用自然日语表达：我在东京的公司工作。",
+      "context_note": "场景：向新同事介绍自己的工作地点。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "とうきょうの かいしゃで はたらきます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-038"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-3",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "频率与动作",
+      "prompt": "第 3 题：频率与动作",
+      "instruction": "请用自然日语表达：我经常在办公室看日语资料。",
+      "context_note": "场景：介绍自己的学习习惯。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "オフィスで よく にほんごの しりょうを みます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-019"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-4",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "物品存在",
+      "prompt": "第 4 题：物品存在",
+      "instruction": "请用自然日语表达：会议室里有一台打印机。",
+      "context_note": "场景：告诉同事办公设备的位置。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "かいぎしつに プリンターが あります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-002"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-5",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "等待地点",
+      "prompt": "第 5 题：等待地点",
+      "instruction": "请用自然日语表达：我在一楼大厅等部长。",
+      "context_note": "场景：向同事说明自己在哪里等人。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "1かいの ロビーで ぶちょうを まちます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-036"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-6",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "见面地点",
+      "prompt": "第 6 题：见面地点",
+      "instruction": "请用自然日语表达：明天在车站和同事见面。",
+      "context_note": "场景：说明明天的集合安排。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "あした、えきで どうりょうに あいます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-034"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-7",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "返回时间",
+      "prompt": "第 7 题：返回时间",
+      "instruction": "请用自然日语表达：今天七点回家。",
+      "context_note": "场景：回答同事关于下班时间的问题。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "きょうは 7じに うちへ かえります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-035"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-8",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "居住地点",
+      "prompt": "第 8 题：居住地点",
+      "instruction": "请用自然日语表达：我现在住在横滨。",
+      "context_note": "场景：在生活手续窗口说明住址所在城市。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "いま、よこはまに すんでいます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-037"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-9",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "请假说明",
+      "prompt": "第 9 题：请假说明",
+      "instruction": "请用自然日语表达：我明天请假。",
+      "context_note": "场景：提前向同事说明明天不来上班。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "あした、かいしゃを やすみます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-039"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-10",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "起床时间",
+      "prompt": "第 10 题：起床时间",
+      "instruction": "请用自然日语表达：我每天早上六点起床。",
+      "context_note": "场景：介绍工作日作息。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "まいあさ 6じに おきます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-040"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-11",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "睡觉时间",
+      "prompt": "第 11 题：睡觉时间",
+      "instruction": "请用自然日语表达：晚上十一点睡觉。",
+      "context_note": "场景：说明自己的日常作息。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "よる 11じに ねます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-041"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-12",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "开始时间",
+      "prompt": "第 12 题：开始时间",
+      "instruction": "请用自然日语表达：九点开始工作。",
+      "context_note": "场景：说明每天的上班开始时间。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "9じに しごとを はじめます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "foundation",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-042"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-13",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "结束时间",
+      "prompt": "第 13 题：结束时间",
+      "instruction": "请用自然日语表达：今天的会议五点结束。",
+      "context_note": "场景：告诉同事会议结束时间。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "きょうの かいぎは 5じに おわります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-043"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-14",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "携带物品",
+      "prompt": "第 14 题：携带物品",
+      "instruction": "请用自然日语表达：我拿着会议资料。",
+      "context_note": "场景：同事确认资料由谁携带。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "わたしは かいぎの しりょうを もっています。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-022"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-15",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "理解状态",
+      "prompt": "第 15 题：理解状态",
+      "instruction": "请用自然日语表达：我明白这件事。",
+      "context_note": "场景：同事确认你是否理解刚才说明的事项。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "わたしは この ことが わかります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-010",
+          "vocab-012"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-16",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "转述内容",
+      "prompt": "第 16 题：转述内容",
+      "instruction": "请用自然日语表达：部长说“会议三点开始”。",
+      "context_note": "场景：把部长的安排转告给同事。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "ぶちょうは「かいぎは 3じに はじまります」と いいました。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-005",
+          "vocab-042"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-17",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "变化表达",
+      "prompt": "第 17 题：变化表达",
+      "instruction": "请用自然日语表达：这项工作今后会变得重要。",
+      "context_note": "场景：说明未来的工作变化。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "この しごとは これから たいせつに なります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-004"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-18",
+      "type": "q_translate",
+      "lesson": 6,
+      "target_grammar": "目的移动",
+      "prompt": "第 18 题：目的移动",
+      "instruction": "请用自然日语表达：我去车站和客户见面。",
+      "context_note": "场景：向同事说明短暂外出的目的。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "えきへ おきゃくさんに あいに いきます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "output",
+        "target_vocabulary_ids": [
+          "vocab-034"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-19",
+      "type": "q_conversation",
+      "lesson": 6,
+      "target_grammar": "报告未结束",
+      "prompt": "第 19 题：报告未结束",
+      "instruction": "上司问会议是否已经结束。请回答还没有，并说五点结束。",
+      "context_note": "请写一到两句完整、自然的日语。",
+      "answer_format": "写 1 至 2 句完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "いいえ、まだ おわっていません。5じに おわります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "conversation",
+        "target_vocabulary_ids": [
+          "vocab-043"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-20",
+      "type": "q_conversation",
+      "lesson": 6,
+      "target_grammar": "确认问题存在",
+      "prompt": "第 20 题：确认问题存在",
+      "instruction": "同事说设备不能使用。请询问：有什么问题吗？",
+      "context_note": "请用适合职场沟通的一句日语。",
+      "answer_format": "写 1 至 2 句完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "なにか もんだいが ありますか。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "conversation",
+        "target_vocabulary_ids": [
+          "vocab-002"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-21",
+      "type": "q_conversation",
+      "lesson": 6,
+      "target_grammar": "提出见面安排",
+      "prompt": "第 21 题：提出见面安排",
+      "instruction": "同事问什么时候讨论工作。请提议明天下午三点见面。",
+      "context_note": "请写一句自然、礼貌的日语。",
+      "answer_format": "写 1 至 2 句完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "あしたの ごご3じに あいましょう。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "conversation",
+        "target_vocabulary_ids": [
+          "vocab-034"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-22",
+      "type": "q_conversation",
+      "lesson": 6,
+      "target_grammar": "请求等待",
+      "prompt": "第 22 题：请求等待",
+      "instruction": "你需要先确认资料。请礼貌请对方在大厅稍等。",
+      "context_note": "请写一句适合接待场景的自然日语。",
+      "answer_format": "写 1 至 2 句完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "ロビーで ちょっと まってください。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "conversation",
+        "target_vocabulary_ids": [
+          "vocab-036"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-23",
+      "type": "q_conversation",
+      "lesson": 6,
+      "target_grammar": "确认理解",
+      "prompt": "第 23 题：确认理解",
+      "instruction": "同事问你是否明白说明。请回答大体明白了，但还有一件事不明白。",
+      "context_note": "请写一到两句完整日语。",
+      "answer_format": "写 1 至 2 句完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "はい、だいたい わかりました。でも、ひとつ わからない ことが あります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "conversation",
+        "target_vocabulary_ids": [
+          "vocab-010",
+          "vocab-012"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-24",
+      "type": "q_conversation",
+      "lesson": 6,
+      "target_grammar": "询问开始时间",
+      "prompt": "第 24 题：询问开始时间",
+      "instruction": "你不知道培训几点开始。请礼貌询问同事开始时间。",
+      "context_note": "请写一句完整日语。",
+      "answer_format": "写 1 至 2 句完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "けんしゅうは なんじに はじまりますか。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "conversation",
+        "target_vocabulary_ids": [
+          "vocab-042"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-25",
+      "type": "q_reading",
+      "lesson": 6,
+      "target_grammar": "读取会议日程",
+      "prompt": "第 25 题：读取会议日程",
+      "instruction": "阅读下面的日程，用完整日语回答：会议几点开始、几点结束？",
+      "context_note": "请回答两个时间点。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [
+        "かいぎは ごご2じに はじまります。",
+        "ごご4じに おわります。"
+      ],
+      "vocab_hints": [],
+      "answer_reference": "かいぎは 2じに はじまって、4じに おわります。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "reading",
+        "target_vocabulary_ids": [
+          "vocab-042",
+          "vocab-043"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-26",
+      "type": "q_reading",
+      "lesson": 6,
+      "target_grammar": "读取居住与工作信息",
+      "prompt": "第 26 题：读取居住与工作信息",
+      "instruction": "阅读下面的自我介绍，用完整日语回答：说话人住在哪里、在哪里工作？",
+      "context_note": "请提取两个地点信息。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [
+        "わたしは よこはまに すんでいます。",
+        "とうきょうの かいしゃで はたらいています。"
+      ],
+      "vocab_hints": [],
+      "answer_reference": "よこはまに すんでいて、とうきょうの かいしゃで はたらいています。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "reading",
+        "target_vocabulary_ids": [
+          "vocab-037",
+          "vocab-038"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-27",
+      "type": "q_reading",
+      "lesson": 6,
+      "target_grammar": "读取日常作息",
+      "prompt": "第 27 题：读取日常作息",
+      "instruction": "阅读下面的说明，用完整日语回答：说话人几点起床、几点睡觉？",
+      "context_note": "请回答两个时间点。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [
+        "まいあさ 6じに おきます。",
+        "よる 11じに ねます。"
+      ],
+      "vocab_hints": [],
+      "answer_reference": "6じに おきて、11じに ねます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "reading",
+        "target_vocabulary_ids": [
+          "vocab-040",
+          "vocab-041"
+        ]
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-28",
+      "type": "q_listening",
+      "lesson": 6,
+      "target_grammar": "听取等待地点",
+      "prompt": "第 28 题：听取等待地点",
+      "instruction": "播放音频后，用完整日语回答：佐藤（さとう）先生在哪里等谁？",
+      "context_note": "人名读音不计分；页面不显示听力原文。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "さとうさんは 1かいの ロビーで ぶちょうを まっています。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "listening",
+        "target_vocabulary_ids": [
+          "vocab-036"
+        ],
+        "audio_text": "さとうさんは 1かいの ロビーで ぶちょうを まっています。"
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-29",
+      "type": "q_listening",
+      "lesson": 6,
+      "target_grammar": "听取请假安排",
+      "prompt": "第 29 题：听取请假安排",
+      "instruction": "播放音频后，用完整日语回答：说话人哪一天请假？",
+      "context_note": "请听清日期信息；页面不显示听力原文。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "あした、かいしゃを やすみます。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "listening",
+        "target_vocabulary_ids": [
+          "vocab-039"
+        ],
+        "audio_text": "きょうは はたらきますが、あしたは かいしゃを やすみます。"
+      }
+    },
+    {
+      "id": "daily-2026-07-31-ex-30",
+      "type": "q_listening",
+      "lesson": 6,
+      "target_grammar": "听取携带物品",
+      "prompt": "第 30 题：听取携带物品",
+      "instruction": "播放音频后，用完整日语回答：山田（やまだ）先生拿着什么？",
+      "context_note": "人名读音不计分；页面不显示听力原文。",
+      "answer_format": "写 1 句或一组完整、自然的日语。",
+      "choices": [],
+      "supporting_lines": [],
+      "vocab_hints": [],
+      "answer_reference": "やまださんは かいぎの しりょうを もっています。",
+      "metadata": {
+        "source": "codex-study-loop",
+        "difficulty": "application",
+        "skill": "listening",
+        "target_vocabulary_ids": [
+          "vocab-022"
+        ],
+        "audio_text": "やまださんは かいぎの しりょうを もっています。"
+      }
+    }
+  ],
+  "answers": {
+    "daily-2026-07-31-ex-1": "",
+    "daily-2026-07-31-ex-2": "",
+    "daily-2026-07-31-ex-3": "",
+    "daily-2026-07-31-ex-4": "",
+    "daily-2026-07-31-ex-5": "",
+    "daily-2026-07-31-ex-6": "",
+    "daily-2026-07-31-ex-7": "",
+    "daily-2026-07-31-ex-8": "",
+    "daily-2026-07-31-ex-9": "",
+    "daily-2026-07-31-ex-10": "",
+    "daily-2026-07-31-ex-11": "",
+    "daily-2026-07-31-ex-12": "",
+    "daily-2026-07-31-ex-13": "",
+    "daily-2026-07-31-ex-14": "",
+    "daily-2026-07-31-ex-15": "",
+    "daily-2026-07-31-ex-16": "",
+    "daily-2026-07-31-ex-17": "",
+    "daily-2026-07-31-ex-18": "",
+    "daily-2026-07-31-ex-19": "",
+    "daily-2026-07-31-ex-20": "",
+    "daily-2026-07-31-ex-21": "",
+    "daily-2026-07-31-ex-22": "",
+    "daily-2026-07-31-ex-23": "",
+    "daily-2026-07-31-ex-24": "",
+    "daily-2026-07-31-ex-25": "",
+    "daily-2026-07-31-ex-26": "",
+    "daily-2026-07-31-ex-27": "",
+    "daily-2026-07-31-ex-28": "",
+    "daily-2026-07-31-ex-29": "",
+    "daily-2026-07-31-ex-30": ""
+  },
+  "self_assessment": {
+    "difficulty": null,
+    "uncertain_exercise_ids": [],
+    "confusing_points": [],
+    "pace": "",
+    "note": ""
+  },
+  "correction": {
+    "status": "pending",
+    "prompt_file": "study/prompts/generated/2026-07-31-review.md",
+    "review_file": ""
+  },
+  "review_result": null
+}

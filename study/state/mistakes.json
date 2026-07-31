@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": 3,
-  "updated_at": "2026-07-28T18:00:00+08:00",
+  "revision": 4,
+  "updated_at": "2026-07-31T08:38:14.376Z",
   "items": [
     {
       "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-1",
@@ -5041,8 +5041,14 @@
         "vocabulary_feedback": [],
         "manual_override": null
       },
-      "attempts": [],
-      "last_practiced_at": null
+      "attempts": [
+        {
+          "id": "mistake:review-2026-07-01:daily-2026-07-01-ex-2:attempt:1",
+          "submitted_at": "2026-07-31T08:38:14.376Z",
+          "answer": "じゃありません"
+        }
+      ],
+      "last_practiced_at": "2026-07-31T08:38:14.376Z"
     },
     {
       "id": "mistake:review-2026-07-01:daily-2026-07-01-ex-3",
