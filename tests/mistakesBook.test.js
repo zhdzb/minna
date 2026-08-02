@@ -130,6 +130,33 @@ beforeEach(() => {
 })
 
 describe('MistakesBook', () => {
+  it('converts romaji to kana when rewriting an agent-study mistake', async () => {
+    const originalWanakana = window.wanakana
+    window.wanakana = {
+      toKana: vi.fn((value) => (value === 'shi' ? 'し' : value))
+    }
+
+    try {
+      const wrapper = mount(MistakesBook, {
+        props: { client: createClient() },
+        global: { stubs }
+      })
+      await flushPromises()
+
+      wrapper.vm.openReview(wrapper.vm.agentItems[0])
+      await wrapper.vm.$nextTick()
+      await wrapper.find('.answer-input').setValue('shi')
+
+      expect(wrapper.find('.answer-input').element.value).toBe('し')
+    } finally {
+      if (originalWanakana) {
+        window.wanakana = originalWanakana
+      } else {
+        delete window.wanakana
+      }
+    }
+  })
+
   it('reveals stored review feedback only after submitting and can repeat the same item', async () => {
     const client = createClient()
     const wrapper = mount(MistakesBook, {

@@ -169,9 +169,10 @@
 
         <div v-else style="margin-bottom: 16px;">
           <el-input
-            v-model="reviewAnswer"
+            :model-value="reviewAnswer"
             type="textarea"
             :rows="4"
+            @update:model-value="updateReviewAnswer"
             placeholder="在这里重新作答"
           />
         </div>
@@ -243,10 +244,11 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useMainStore } from '@/store/mainStore'
 import { createAgentStudyClient } from '@/utils/agentStudyClient'
+import { toKanaInputWithSelection } from '@/utils/wanakanaInput'
 
 const props = defineProps({
   client: {
@@ -331,6 +333,27 @@ const openReview = (item) => {
   reviewAnswer.value = ''
   reviewSubmitted.value = false
   reviewDialogVisible.value = true
+}
+
+const updateReviewAnswer = (value) => {
+  const activeInput = document.activeElement
+  const canRestoreSelection =
+    activeInput instanceof HTMLInputElement || activeInput instanceof HTMLTextAreaElement
+  const converted = toKanaInputWithSelection(
+    value,
+    canRestoreSelection ? activeInput.selectionStart : null,
+    canRestoreSelection ? activeInput.selectionEnd : null
+  )
+
+  reviewAnswer.value = converted.value
+
+  if (canRestoreSelection && converted.selectionStart !== null) {
+    nextTick(() => {
+      if (activeInput.isConnected && document.activeElement === activeInput) {
+        activeInput.setSelectionRange(converted.selectionStart, converted.selectionEnd)
+      }
+    })
+  }
 }
 
 const submitReview = async () => {
