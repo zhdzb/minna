@@ -21,6 +21,7 @@ import {
   handleGetMistakes,
   handleGetVocabulary,
   handleGetSyllabus,
+  handleDismissMistake,
   handleSaveDailyPacket,
   handleSaveSyllabus,
   handleSaveReviewDrill,
@@ -396,6 +397,24 @@ const agentStudyRoutePlugin = () => {
         try {
           const payload = await readJsonBody(req)
           const result = await handleSubmitMistakeAttempt(payload)
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/mistakes/dismiss', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handleDismissMistake(payload)
           writeJson(res, 200, { success: true, data: result })
         } catch (error) {
           writeJson(res, 400, {

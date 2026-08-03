@@ -510,6 +510,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { createListeningLabClient } from '@/utils/listeningLabClient'
 import { toKanaInputWithSelection } from '@/utils/wanakanaInput'
+import { useJapaneseSpeech } from '@/composables/useJapaneseSpeech'
 
 const props = defineProps({
   client: {
@@ -542,6 +543,7 @@ const actionMessage = ref('')
 const dashboard = ref(null)
 const playbackRate = ref(0.9)
 const activePlayback = ref('')
+const { speak: speakJapanese } = useJapaneseSpeech()
 const showKana = ref(true)
 const showMeaning = ref(true)
 const recordingSegmentId = ref('')
@@ -762,30 +764,22 @@ const incrementPlayback = (key) => {
 }
 
 const playText = (text, key) => {
-  const synthesis = window.speechSynthesis
-  const Utterance = window.SpeechSynthesisUtterance
-  if (!synthesis || typeof Utterance !== 'function') {
-    errorMessage.value = '当前浏览器不支持日语语音播放。'
-    return
-  }
-  synthesis.cancel()
-  const utterance = new Utterance(text)
-  utterance.lang = session.value?.audio.lang || 'ja-JP'
-  utterance.rate = playbackRate.value
-  const japaneseVoice = synthesis
-    .getVoices()
-    .find((voice) => String(voice.lang || '').toLowerCase().startsWith('ja'))
-  if (japaneseVoice) utterance.voice = japaneseVoice
-  activePlayback.value = key
-  utterance.onend = () => {
-    if (activePlayback.value === key) activePlayback.value = ''
-  }
-  utterance.onerror = () => {
-    activePlayback.value = ''
-    errorMessage.value = '语音播放失败，请检查浏览器的日语语音设置。'
-  }
-  incrementPlayback(key)
-  synthesis.speak(utterance)
+  const started = speakJapanese(text, {
+    lang: session.value?.audio.lang || 'ja-JP',
+    rate: playbackRate.value,
+    onStart: () => {
+      activePlayback.value = key
+      incrementPlayback(key)
+    },
+    onEnd: () => {
+      if (activePlayback.value === key) activePlayback.value = ''
+    },
+    onError: () => {
+      activePlayback.value = ''
+      errorMessage.value = '语音播放失败，请检查浏览器的日语语音设置。'
+    }
+  })
+  if (!started) errorMessage.value = '当前浏览器不支持日语语音播放。'
 }
 
 const playFullAudio = () => {
@@ -903,7 +897,6 @@ const historyTitle = (sessionId) =>
 onMounted(loadDashboard)
 
 onBeforeUnmount(() => {
-  window.speechSynthesis?.cancel()
   if (mediaRecorder?.state === 'recording') mediaRecorder.stop()
   recordingStream?.getTracks().forEach((track) => track.stop())
 })

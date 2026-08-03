@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": 4,
-  "updated_at": "2026-07-31T08:38:14.376Z",
+  "revision": 7,
+  "updated_at": "2026-08-02T12:10:47.154Z",
   "items": [
     {
       "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-1",
@@ -1261,8 +1261,14 @@
         "vocabulary_feedback": [],
         "manual_override": null
       },
-      "attempts": [],
-      "last_practiced_at": null
+      "attempts": [
+        {
+          "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-24:attempt:1",
+          "submitted_at": "2026-08-02T12:10:47.154Z",
+          "answer": "dd"
+        }
+      ],
+      "last_practiced_at": "2026-08-02T12:10:47.154Z"
     },
     {
       "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-25",
@@ -1464,8 +1470,14 @@
         ],
         "manual_override": null
       },
-      "attempts": [],
-      "last_practiced_at": null
+      "attempts": [
+        {
+          "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-27:attempt:1",
+          "submitted_at": "2026-08-02T12:04:22.007Z",
+          "answer": "ひるやすみにコンビニへパンをかいにいきます"
+        }
+      ],
+      "last_practiced_at": "2026-08-02T12:04:22.007Z"
     },
     {
       "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-29",
@@ -1538,8 +1550,14 @@
         ],
         "manual_override": null
       },
-      "attempts": [],
-      "last_practiced_at": null
+      "attempts": [
+        {
+          "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-29:attempt:1",
+          "submitted_at": "2026-08-02T11:56:25.959Z",
+          "answer": "メールをもうよみました、へんじはまだかいていません"
+        }
+      ],
+      "last_practiced_at": "2026-08-02T11:56:25.959Z"
     },
     {
       "id": "mistake:review-2026-07-23:daily-2026-07-23-ex-4",

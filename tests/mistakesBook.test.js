@@ -81,6 +81,14 @@ const createClient = () => {
         items: [submitted]
       },
       mistake: submitted
+    }),
+    dismissMistake: vi.fn().mockResolvedValue({
+      mistakeBook: {
+        schema_version: 1,
+        revision: 2,
+        updated_at: '2026-07-23T10:00:00+08:00',
+        items: [{ ...initial, status: 'dismissed' }]
+      }
     })
   }
 }
@@ -192,5 +200,20 @@ describe('MistakesBook', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.find('.answer-input').element.value).toBe('')
     expect(wrapper.text()).not.toContain('动作发生地点要使用助词')
+  })
+
+  it('dismisses an automatic mistake without deleting legacy records', async () => {
+    const client = createClient()
+    const wrapper = mount(MistakesBook, {
+      props: { client },
+      global: { stubs }
+    })
+    await flushPromises()
+
+    await wrapper.vm.dismissAgentMistake(wrapper.vm.agentItems[0].id)
+    expect(client.dismissMistake).toHaveBeenCalledWith({
+      mistakeId: 'mistake:review-2026-07-23:exercise-1'
+    })
+    expect(wrapper.vm.agentItems).toHaveLength(0)
   })
 })

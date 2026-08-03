@@ -107,6 +107,12 @@ const createAgentStudyClient = (options = {}) => {
       body: JSON.stringify({ mistakeId, answer })
     })
 
+  const dismissMistake = async ({ mistakeId } = {}) =>
+    request('mistakes/dismiss', {
+      method: 'POST',
+      body: JSON.stringify({ mistakeId })
+    })
+
   const loadPromptFile = async (promptPath) =>
     request('prompt?path=' + encodeURIComponent(String(promptPath || '').trim()), {
       method: 'GET'
@@ -175,6 +181,7 @@ const createAgentStudyClient = (options = {}) => {
     loadLatestReview,
     loadMistakes,
     loadVocabulary,
+    dismissMistake,
     loadSyllabus,
     saveDailyPacket,
     saveSyllabus,

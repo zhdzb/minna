@@ -232,9 +232,27 @@ const createAgentStudyMistakeStore = ({
     }
   }
 
+  const dismissMistake = ({ mistakeId }) => {
+    const current = loadMistakeBook()
+    const itemIndex = current.items.findIndex((item) => item.id === mistakeId)
+    if (itemIndex < 0) throw new Error('Mistake not found: ' + mistakeId)
+
+    const nextBook = clone(current)
+    nextBook.items[itemIndex].status = 'dismissed'
+    nextBook.revision = current.revision + 1
+    nextBook.updated_at = now()
+
+    const mistakeBook = writeMistakeBook(nextBook)
+    return {
+      mistakeBook,
+      mistake: mistakeBook.items[itemIndex]
+    }
+  }
+
   return {
     loadMistakeBook,
     rebuildFromHistory,
+    dismissMistake,
     recordAttempt,
     syncFromReview
   }

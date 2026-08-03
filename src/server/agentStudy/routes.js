@@ -121,6 +121,28 @@ const handleSubmitMistakeAttempt = async (
   return result
 }
 
+const handleDismissMistake = async (
+  payload,
+  {
+    mistakeStore = createAgentStudyMistakeStore(),
+    eventLog = createAgentStudyEventLog()
+  } = {}
+) => {
+  const normalized = assertJsonObject(payload, 'agent mistake dismiss route')
+  const mistakeId = String(normalized.mistakeId || '').trim()
+  if (!mistakeId) throw new Error('agent mistake dismiss route requires mistakeId')
+
+  const result = mistakeStore.dismissMistake({ mistakeId })
+  eventLog.appendEvent({
+    actor: 'frontend',
+    event: 'mistake_dismissed',
+    input_files: [MISTAKE_BOOK_PATH],
+    output_files: [MISTAKE_BOOK_PATH, 'study/logs/agent-events.jsonl'],
+    summary: 'Dismissed a mistake from the active review list.'
+  })
+  return result
+}
+
 const handleGetSyllabus = async ({ syllabusStore = createSyllabusStore() } = {}) =>
   syllabusStore.loadSyllabus()
 
@@ -279,6 +301,7 @@ const handleSubmitReviewDrill = async (
 
 export {
   handleGetAgentProgressReview,
+  handleDismissMistake,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
   handleGetLatestReviewDrill,

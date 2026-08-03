@@ -111,5 +111,10 @@ describe('agentStudyMistakeStore', () => {
       'バスで 行きます。'
     ])
     expect(result.mistake.last_practiced_at).toBe('2026-07-23T09:20:00+08:00')
+
+    timestamp = '2026-07-23T09:30:00+08:00'
+    const dismissed = store.dismissMistake({ mistakeId: synced.items[0].id })
+    expect(dismissed.mistake.status).toBe('dismissed')
+    expect(store.loadMistakeBook().items[0].status).toBe('dismissed')
   })
 })

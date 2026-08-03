@@ -358,6 +358,19 @@ describe('agentStudyClient', () => {
           }
         })
       )
+      .mockResolvedValueOnce(
+        createJsonResponse({
+          body: {
+            success: true,
+            data: {
+              mistake: {
+                id: 'mistake:review-1:exercise-1',
+                status: 'dismissed'
+              }
+            }
+          }
+        })
+      )
     const client = createAgentStudyClient({ fetchImpl: fetchMock })
 
     await client.loadMistakes()
@@ -365,12 +378,21 @@ describe('agentStudyClient', () => {
       mistakeId: 'mistake:review-1:exercise-1',
       answer: '回答'
     })
+    await client.dismissMistake({ mistakeId: 'mistake:review-1:exercise-1' })
 
     expect(fetchMock).toHaveBeenNthCalledWith(1, '/api/agent-study/mistakes', {
       method: 'GET',
       headers: {
         Accept: 'application/json'
       }
+    })
+    expect(fetchMock).toHaveBeenNthCalledWith(3, '/api/agent-study/mistakes/dismiss', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ mistakeId: 'mistake:review-1:exercise-1' })
     })
     expect(fetchMock).toHaveBeenNthCalledWith(2, '/api/agent-study/mistakes/attempt', {
       method: 'POST',

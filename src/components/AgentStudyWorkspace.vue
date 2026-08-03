@@ -190,6 +190,14 @@
               >
                 {{ activeListeningExerciseId === exercise.id ? '正在播放' : '播放听力' }}
               </el-button>
+              <label class="speech-rate-control">
+                语速
+                <select v-model.number="listeningPlaybackRate">
+                  <option :value="0.75">0.75x</option>
+                  <option :value="0.9">0.9x</option>
+                  <option :value="1">1.0x</option>
+                </select>
+              </label>
               <span>可重复播放，原文不会显示。</span>
             </div>
 
@@ -405,7 +413,15 @@
                 >
                   {{ activeListeningExerciseId === item.exercise.id ? '正在播放' : '重听原题' }}
                 </el-button>
-                <span>原文仍保持隐藏。</span>
+              <label class="speech-rate-control">
+                语速
+                <select v-model.number="listeningPlaybackRate">
+                  <option :value="0.75">0.75x</option>
+                  <option :value="0.9">0.9x</option>
+                  <option :value="1">1.0x</option>
+                </select>
+              </label>
+              <span>原文仍保持隐藏。</span>
               </div>
 
               <div v-if="item.exercise.supporting_lines?.length" class="supporting-lines">
@@ -546,6 +562,7 @@ import {
   buildReviewSubmittedPacketPrompt
 } from '@/utils/agentStudyPromptText'
 import { toKanaInputWithSelection } from '@/utils/wanakanaInput'
+import { useJapaneseSpeech } from '@/composables/useJapaneseSpeech'
 
 const props = defineProps({
   client: {
@@ -563,6 +580,8 @@ const isSaving = ref(false)
 const isSubmitting = ref(false)
 const isCopyingPrompt = ref(false)
 const activeListeningExerciseId = ref('')
+const listeningPlaybackRate = ref(0.9)
+const { speak: speakJapanese } = useJapaneseSpeech()
 const loadError = ref('')
 const saveError = ref('')
 const saveMessage = ref('')
@@ -785,29 +804,27 @@ const answerPlaceholder = (exerciseType) => {
 
 const playListeningExercise = (exercise) => {
   const audioText = String(exercise?.metadata?.audio_text || '').trim()
-  const speechSynthesis = window.speechSynthesis
-  const Utterance = window.SpeechSynthesisUtterance
-
-  if (!audioText || !speechSynthesis || typeof Utterance !== 'function') {
+  if (!audioText) {
     promptError.value = '当前浏览器不支持日语语音播放，请换用支持 Web Speech 的浏览器。'
     return
   }
 
-  speechSynthesis.cancel()
-  const utterance = new Utterance(audioText)
-  utterance.lang = 'ja-JP'
-  utterance.rate = 0.9
-  activeListeningExerciseId.value = exercise.id
-  utterance.onend = () => {
-    if (activeListeningExerciseId.value === exercise.id) {
+  const started = speakJapanese(audioText, {
+    rate: listeningPlaybackRate.value,
+    onStart: () => {
+      activeListeningExerciseId.value = exercise.id
+    },
+    onEnd: () => {
+      if (activeListeningExerciseId.value === exercise.id) activeListeningExerciseId.value = ''
+    },
+    onError: () => {
       activeListeningExerciseId.value = ''
+      promptError.value = '听力播放失败，请检查浏览器语音设置后重试。'
     }
+  })
+  if (!started) {
+    promptError.value = '当前浏览器不支持日语语音播放，请换用支持 Web Speech 的浏览器。'
   }
-  utterance.onerror = () => {
-    activeListeningExerciseId.value = ''
-    promptError.value = '听力播放失败，请检查浏览器语音设置后重试。'
-  }
-  speechSynthesis.speak(utterance)
 }
 
 const formatPercent = (value) => {
@@ -1351,6 +1368,22 @@ onMounted(() => {
   margin-top: 12px;
   color: var(--app-text-soft);
   font-size: 13px;
+}
+
+.speech-rate-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--app-text-soft);
+  font-size: 13px;
+}
+
+.speech-rate-control select {
+  padding: 4px 6px;
+  border: 1px solid var(--app-border-strong);
+  border-radius: 6px;
+  background: var(--app-card-bg);
+  color: var(--app-text-strong);
 }
 
 .choice-row {

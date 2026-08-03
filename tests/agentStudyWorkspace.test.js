@@ -493,6 +493,7 @@ describe('AgentStudyWorkspace', () => {
 
     expect(wrapper.text()).toContain('播放听力')
     expect(wrapper.text()).not.toContain(audioText)
+    await wrapper.find('.speech-rate-control select').setValue('0.75')
     const playButton = wrapper.findAll('button').find((button) => button.text().includes('播放听力'))
     await playButton.trigger('click')
 
@@ -501,7 +502,7 @@ describe('AgentStudyWorkspace', () => {
     expect(speak.mock.calls[0][0]).toMatchObject({
       text: audioText,
       lang: 'ja-JP',
-      rate: 0.9
+      rate: 0.75
     })
   })
 

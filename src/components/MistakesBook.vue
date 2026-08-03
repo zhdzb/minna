@@ -70,7 +70,16 @@
                 重新做
               </el-button>
               <el-button
-                v-if="row.source_type !== 'agent-study'"
+                v-if="row.source_type === 'agent-study'"
+                size="small"
+                type="danger"
+                plain
+                @click="dismissAgentMistake(row.id)"
+              >
+                删除
+              </el-button>
+              <el-button
+                v-else
                 size="small"
                 type="danger"
                 plain
@@ -127,6 +136,14 @@
           <el-button type="primary" plain @click="playAudio(reviewExercise.metadata.audio_text)">
             播放题目音频
           </el-button>
+          <label style="margin-left: 12px; font-size: 0.9rem; color: #606266;">
+            语速
+            <select v-model.number="speechRate" style="margin-left: 6px;">
+              <option :value="0.75">0.75x</option>
+              <option :value="0.85">0.85x</option>
+              <option :value="1">1.0x</option>
+            </select>
+          </label>
         </div>
 
         <div
@@ -249,6 +266,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { useMainStore } from '@/store/mainStore'
 import { createAgentStudyClient } from '@/utils/agentStudyClient'
 import { toKanaInputWithSelection } from '@/utils/wanakanaInput'
+import { useJapaneseSpeech } from '@/composables/useJapaneseSpeech'
 
 const props = defineProps({
   client: {
@@ -266,10 +284,12 @@ const reviewAnswer = ref('')
 const reviewSubmitted = ref(false)
 const isSubmittingAttempt = ref(false)
 const agentMistakeBook = ref({ items: [] })
+const speechRate = ref(0.85)
+const { speak: speakJapanese } = useJapaneseSpeech()
 
 const legacyItems = computed(() => store.mistakes_book || [])
 const agentItems = computed(() =>
-  (agentMistakeBook.value?.items || []).map((item) => ({
+  (agentMistakeBook.value?.items || []).filter((item) => item.status !== 'dismissed').map((item) => ({
     id: item.id,
     timestamp: item.created_at,
     mark_type: 'mistake',
@@ -386,6 +406,17 @@ const removeMistake = (id) => {
   ElMessage.success('已删除这条记录。')
 }
 
+const dismissAgentMistake = async (id) => {
+  try {
+    const result = await client.value.dismissMistake({ mistakeId: id })
+    agentMistakeBook.value = result.mistakeBook
+    if (activeReviewItem.value?.id === id) reviewDialogVisible.value = false
+    ElMessage.success('已从错题训练中删除。')
+  } catch (error) {
+    ElMessage.error(error instanceof Error ? error.message : String(error))
+  }
+}
+
 const clearAll = () => {
   ElMessageBox.confirm(
     '这会清空全部错题和收藏记录，且不可恢复。是否继续？',
@@ -417,15 +448,15 @@ const loadAgentMistakes = async () => {
 }
 
 const playAudio = (text) => {
-  if (!('speechSynthesis' in window)) {
-    ElMessage.error('当前浏览器不支持语音播放。')
-    return
-  }
-
-  const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang = 'ja-JP'
-  utterance.rate = 0.85
-  window.speechSynthesis.speak(utterance)
+  let showedError = false
+  const started = speakJapanese(text, {
+    rate: speechRate.value,
+    onError: () => {
+      showedError = true
+      ElMessage.error('当前浏览器不支持日语语音播放。')
+    }
+  })
+  if (!started && !showedError) ElMessage.error('当前浏览器不支持语音播放。')
 }
 
 onMounted(loadAgentMistakes)

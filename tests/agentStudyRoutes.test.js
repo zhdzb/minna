@@ -13,6 +13,7 @@ import {
   handleGetMistakes,
   handleGetVocabulary,
   handleGetSyllabus,
+  handleDismissMistake,
   handleSaveDailyPacket,
   handleSaveSyllabus,
   handleSaveReviewDrill,
@@ -588,6 +589,26 @@ describe('agentStudyRoutes', () => {
     expect(eventLog.appendEvent).toHaveBeenCalledWith(
       expect.objectContaining({ event: 'mistake_practiced' })
     )
+
+    mistakeStore.dismissMistake = vi.fn().mockReturnValue({
+      mistakeBook: updatedBook,
+      mistake: updatedBook.items[0]
+    })
+    await expect(
+      handleDismissMistake(
+        { mistakeId: 'mistake:review-1:exercise-1' },
+        { mistakeStore, eventLog }
+      )
+    ).resolves.toEqual({
+      mistakeBook: updatedBook,
+      mistake: updatedBook.items[0]
+    })
+    expect(mistakeStore.dismissMistake).toHaveBeenCalledWith({
+      mistakeId: 'mistake:review-1:exercise-1'
+    })
+    expect(eventLog.appendEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ event: 'mistake_dismissed' })
+    )
   })
 
   it('loads the materialized vocabulary book from the vocabulary store', async () => {
@@ -611,5 +632,6 @@ describe('agentStudyRoutes', () => {
     await expect(handleSubmitMistakeAttempt({ mistakeId: '', answer: '' })).rejects.toThrow(
       /requires mistakeId/
     )
+    await expect(handleDismissMistake({ mistakeId: '' })).rejects.toThrow(/requires mistakeId/)
   })
 })
