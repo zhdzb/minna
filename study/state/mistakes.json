@@ -1,8 +1,1121 @@
 {
   "schema_version": 1,
-  "revision": 4,
-  "updated_at": "2026-07-31T08:38:14.376Z",
+  "revision": 5,
+  "updated_at": "2026-08-03T18:00:00+08:00",
   "items": [
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-4",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-4",
+      "lesson": 6,
+      "target_grammar": "物品存在",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-4",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "物品存在",
+        "prompt": "第 4 题：物品存在",
+        "instruction": "请用自然日语表达：会议室里有一台打印机。",
+        "context_note": "场景：告诉同事办公设备的位置。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "かいぎしつに プリンターが あります。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-002"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-4",
+        "is_correct": false,
+        "score": 0.55,
+        "error_tags": [
+          "vocabulary",
+          "meaning_drift"
+        ],
+        "target_grammar": "物品存在",
+        "user_answer": "かいがしつにひとつコーピーぎがあります",
+        "correct_answer": "かいぎしつに プリンターが あります。",
+        "explanation": "存在句结构正确，但「コピー機」是复印机，不是题目要求的打印机，设备信息发生改变。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.55,
+          "meaning": 0.55,
+          "naturalness": 0.45000000000000007
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "かいぎしつに プリンターが あります。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "プリンター",
+            "meaning": "打印机"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-5",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-5",
+      "lesson": 6,
+      "target_grammar": "等待地点",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-5",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "等待地点",
+        "prompt": "第 5 题：等待地点",
+        "instruction": "请用自然日语表达：我在一楼大厅等部长。",
+        "context_note": "场景：向同事说明自己在哪里等人。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "1かいの ロビーで ぶちょうを まちます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-036"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-5",
+        "is_correct": false,
+        "score": 0.7,
+        "error_tags": [
+          "particle"
+        ],
+        "target_grammar": "等待地点",
+        "user_answer": "わたしはいちかいのロビにぶちょうをまちます",
+        "correct_answer": "1かいの ロビーで ぶちょうを まちます。",
+        "explanation": "等待这一动作发生在大厅，地点应使用で；「部長を待ちます」正确。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.7,
+          "meaning": 0.7,
+          "naturalness": 0.6
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "1かいの ロビーで ぶちょうを まちます。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-6",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-6",
+      "lesson": 6,
+      "target_grammar": "见面地点",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-6",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "见面地点",
+        "prompt": "第 6 题：见面地点",
+        "instruction": "请用自然日语表达：明天在车站和同事见面。",
+        "context_note": "场景：说明明天的集合安排。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "あした、えきで どうりょうに あいます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-034"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-6",
+        "is_correct": false,
+        "score": 0.7,
+        "error_tags": [
+          "particle"
+        ],
+        "target_grammar": "见面地点",
+        "user_answer": "あしたえきにどりょうとあいます",
+        "correct_answer": "あした、えきで どうりょうに あいます。",
+        "explanation": "见面地点应使用で；同行者用と自然，「会います」也正确。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.7,
+          "meaning": 0.7,
+          "naturalness": 0.6
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "あした、えきで どうりょうに あいます。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-7",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-7",
+      "lesson": 6,
+      "target_grammar": "返回时间",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-7",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "返回时间",
+        "prompt": "第 7 题：返回时间",
+        "instruction": "请用自然日语表达：今天七点回家。",
+        "context_note": "场景：回答同事关于下班时间的问题。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "きょうは 7じに うちへ かえります。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-035"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-7",
+        "is_correct": false,
+        "score": 0.7,
+        "error_tags": [
+          "particle"
+        ],
+        "target_grammar": "返回时间",
+        "user_answer": "きょうはななじにうちをかえります",
+        "correct_answer": "きょうは 7じに うちへ かえります。",
+        "explanation": "回家的目的地应使用へ或に，不能使用表示离开场所的を。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.7,
+          "meaning": 0.7,
+          "naturalness": 0.6
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "きょうは 7じに うちへ かえります。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-9",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-9",
+      "lesson": 6,
+      "target_grammar": "请假说明",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-9",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "请假说明",
+        "prompt": "第 9 题：请假说明",
+        "instruction": "请用自然日语表达：我明天请假。",
+        "context_note": "场景：提前向同事说明明天不来上班。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "あした、かいしゃを やすみます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-039"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-9",
+        "is_correct": false,
+        "score": 0.2,
+        "error_tags": [
+          "vocabulary",
+          "meaning_drift"
+        ],
+        "target_grammar": "请假说明",
+        "user_answer": "あしたわたしは请假します",
+        "correct_answer": "あした、かいしゃを やすみます。",
+        "explanation": "答案混入中文“请假”，没有形成日语表达；请假可用「会社を休みます」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.2,
+          "meaning": 0.2,
+          "naturalness": 0.2
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "あした、かいしゃを やすみます。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "休む（やすむ）",
+            "meaning": "休息；请假"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-10",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-10",
+      "lesson": 6,
+      "target_grammar": "起床时间",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-10",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "起床时间",
+        "prompt": "第 10 题：起床时间",
+        "instruction": "请用自然日语表达：我每天早上六点起床。",
+        "context_note": "场景：介绍工作日作息。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "まいあさ 6じに おきます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-040"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-10",
+        "is_correct": false,
+        "score": 0.45,
+        "error_tags": [
+          "kana_kanji",
+          "vocabulary"
+        ],
+        "target_grammar": "起床时间",
+        "user_answer": "わたしはまいあさろくじんにおおきます",
+        "correct_answer": "まいあさ 6じに おきます。",
+        "explanation": "每天早上和六点的信息方向可辨，但「ろくじん」及「おおきます」改变读音；应为「6時に起きます」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.45,
+          "meaning": 0.45,
+          "naturalness": 0.35
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "まいあさ 6じに おきます。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "起きる（おきる）",
+            "meaning": "起床；发生"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-11",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-11",
+      "lesson": 6,
+      "target_grammar": "睡觉时间",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-11",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "睡觉时间",
+        "prompt": "第 11 题：睡觉时间",
+        "instruction": "请用自然日语表达：晚上十一点睡觉。",
+        "context_note": "场景：说明自己的日常作息。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "よる 11じに ねます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-041"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-11",
+        "is_correct": false,
+        "score": 0.4,
+        "error_tags": [
+          "vocabulary"
+        ],
+        "target_grammar": "睡觉时间",
+        "user_answer": "ばんのじゅういちじにねぶります",
+        "correct_answer": "よる 11じに ねます。",
+        "explanation": "十一点信息正确，但睡觉应使用「寝る／寝ます」，「ねぶります」不是目标动词。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.4,
+          "meaning": 0.4,
+          "naturalness": 0.30000000000000004
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "よる 11じに ねます。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "寝る（ねる）",
+            "meaning": "睡觉"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-12",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-12",
+      "lesson": 6,
+      "target_grammar": "开始时间",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-12",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "开始时间",
+        "prompt": "第 12 题：开始时间",
+        "instruction": "请用自然日语表达：九点开始工作。",
+        "context_note": "场景：说明每天的上班开始时间。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "9じに しごとを はじめます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-042"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-12",
+        "is_correct": false,
+        "score": 0.7,
+        "error_tags": [
+          "kana_kanji",
+          "meaning_drift"
+        ],
+        "target_grammar": "开始时间",
+        "user_answer": "ぎゅうじにしごとをはじめます \\ ぎゅうじにしごとをします",
+        "correct_answer": "9じに しごとを はじめます。",
+        "explanation": "第一种写法正确使用「仕事を始めます」，但九点写成了「ぎゅうじ」；第二种又只表示九点工作，未明确“开始”。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.7,
+          "meaning": 0.7,
+          "naturalness": 0.6
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "9じに しごとを はじめます。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-13",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-13",
+      "lesson": 6,
+      "target_grammar": "结束时间",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-13",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "结束时间",
+        "prompt": "第 13 题：结束时间",
+        "instruction": "请用自然日语表达：今天的会议五点结束。",
+        "context_note": "场景：告诉同事会议结束时间。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "きょうの かいぎは 5じに おわります。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-043"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-13",
+        "is_correct": false,
+        "score": 0.45,
+        "error_tags": [
+          "vocabulary"
+        ],
+        "target_grammar": "结束时间",
+        "user_answer": "きょうのかいぎはごじにしまいます",
+        "correct_answer": "きょうの かいぎは 5じに おわります。",
+        "explanation": "时间和主题正确，但会议结束要用自动词「終わる」，「しまいます」在此不自然。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.45,
+          "meaning": 0.45,
+          "naturalness": 0.35
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "きょうの かいぎは 5じに おわります。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "終わる（おわる）",
+            "meaning": "结束"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-14",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-14",
+      "lesson": 6,
+      "target_grammar": "携带物品",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-14",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "携带物品",
+        "prompt": "第 14 题：携带物品",
+        "instruction": "请用自然日语表达：我拿着会议资料。",
+        "context_note": "场景：同事确认资料由谁携带。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "わたしは かいぎの しりょうを もっています。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-022"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-14",
+        "is_correct": false,
+        "score": 0.1,
+        "error_tags": [
+          "vocabulary",
+          "meaning_drift"
+        ],
+        "target_grammar": "携带物品",
+        "user_answer": "わたしはかいぎのしりょうをけだいします",
+        "correct_answer": "わたしは かいぎの しりょうを もっています。",
+        "explanation": "资料对象可辨，但「けだいします」无法表达拿着或持有；应使用「持っています」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.1,
+          "meaning": 0.1,
+          "naturalness": 0.2
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "わたしは かいぎの しりょうを もっています。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "持つ（もつ）",
+            "meaning": "拿；拥有"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-16",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-16",
+      "lesson": 6,
+      "target_grammar": "转述内容",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-16",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "转述内容",
+        "prompt": "第 16 题：转述内容",
+        "instruction": "请用自然日语表达：部长说“会议三点开始”。",
+        "context_note": "场景：把部长的安排转告给同事。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "ぶちょうは「かいぎは 3じに はじまります」と いいました。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-005",
+            "vocab-042"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-16",
+        "is_correct": false,
+        "score": 0.35,
+        "error_tags": [
+          "particle",
+          "grammar_pattern",
+          "vocabulary"
+        ],
+        "target_grammar": "转述内容",
+        "user_answer": "ぶちょうはさんじにかいぎをするがいいました",
+        "correct_answer": "ぶちょうは「かいぎは 3じに はじまります」と いいました。",
+        "explanation": "转述内容需要用と连接；“会议三点开始”应使用「始まります」，当前「するが言いました」不能构成引用。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.35,
+          "meaning": 0.35,
+          "naturalness": 0.24999999999999997
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "ぶちょうは「かいぎは 3じに はじまります」と いいました。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "始まる（はじまる）",
+            "meaning": "开始（自动词）"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-18",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-18",
+      "lesson": 6,
+      "target_grammar": "目的移动",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-18",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "目的移动",
+        "prompt": "第 18 题：目的移动",
+        "instruction": "请用自然日语表达：我去车站和客户见面。",
+        "context_note": "场景：向同事说明短暂外出的目的。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "えきへ おきゃくさんに あいに いきます。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-034"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-18",
+        "is_correct": false,
+        "score": 0.65,
+        "error_tags": [
+          "particle",
+          "politeness"
+        ],
+        "target_grammar": "目的移动",
+        "user_answer": "わたしはえきへおきゃくをあいにいきます",
+        "correct_answer": "えきへ おきゃくさんに あいに いきます。",
+        "explanation": "目的移动结构「会いに行きます」正确，但见面的对象应使用に，客户称呼也宜保留さん。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.65,
+          "meaning": 0.65,
+          "naturalness": 0.55
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "えきへ おきゃくさんに あいに いきます。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-19",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-19",
+      "lesson": 6,
+      "target_grammar": "报告未结束",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-19",
+        "type": "q_conversation",
+        "lesson": 6,
+        "target_grammar": "报告未结束",
+        "prompt": "第 19 题：报告未结束",
+        "instruction": "上司问会议是否已经结束。请回答还没有，并说五点结束。",
+        "context_note": "请写一到两句完整、自然的日语。",
+        "answer_format": "写 1 至 2 句完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "いいえ、まだ おわっていません。5じに おわります。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "conversation",
+          "target_vocabulary_ids": [
+            "vocab-043"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-19",
+        "is_correct": false,
+        "score": 0.25,
+        "error_tags": [
+          "grammar_pattern",
+          "vocabulary"
+        ],
+        "target_grammar": "报告未结束",
+        "user_answer": "いいえ、まだしまいません、ごじにしまいます",
+        "correct_answer": "いいえ、まだ おわっていません。5じに おわります。",
+        "explanation": "“尚未结束”需要「まだ終わっていません」，并以「5時に終わります」说明结束时间。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.25,
+          "meaning": 0.25,
+          "naturalness": 0.2
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "いいえ、まだ おわっていません。5じに おわります。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "終わる（おわる）",
+            "meaning": "结束"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-22",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-22",
+      "lesson": 6,
+      "target_grammar": "请求等待",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-22",
+        "type": "q_conversation",
+        "lesson": 6,
+        "target_grammar": "请求等待",
+        "prompt": "第 22 题：请求等待",
+        "instruction": "你需要先确认资料。请礼貌请对方在大厅稍等。",
+        "context_note": "请写一句适合接待场景的自然日语。",
+        "answer_format": "写 1 至 2 句完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "ロビーで ちょっと まってください。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "conversation",
+          "target_vocabulary_ids": [
+            "vocab-036"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-22",
+        "is_correct": false,
+        "score": 0.55,
+        "error_tags": [
+          "particle",
+          "politeness",
+          "grammar_pattern"
+        ],
+        "target_grammar": "请求等待",
+        "user_answer": "すみません、わたしはしりょうをかくにんします。あたなはロービにまちます",
+        "correct_answer": "ロビーで ちょっと まってください。",
+        "explanation": "说明先确认资料的意图可辨，但等待地点应使用で，并需用「待ってください」构成请求。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.55,
+          "meaning": 0.55,
+          "naturalness": 0.45000000000000007
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "ロビーで ちょっと まってください。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-24",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-24",
+      "lesson": 6,
+      "target_grammar": "询问开始时间",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-24",
+        "type": "q_conversation",
+        "lesson": 6,
+        "target_grammar": "询问开始时间",
+        "prompt": "第 24 题：询问开始时间",
+        "instruction": "你不知道培训几点开始。请礼貌询问同事开始时间。",
+        "context_note": "请写一句完整日语。",
+        "answer_format": "写 1 至 2 句完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "けんしゅうは なんじに はじまりますか。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "conversation",
+          "target_vocabulary_ids": [
+            "vocab-042"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-24",
+        "is_correct": false,
+        "score": 0.5,
+        "error_tags": [
+          "grammar_pattern",
+          "vocabulary"
+        ],
+        "target_grammar": "询问开始时间",
+        "user_answer": "すみません、らんしょうがなんじにはじめますか",
+        "correct_answer": "けんしゅうは なんじに はじまりますか。",
+        "explanation": "问句形式和时间助词方向正确，但“培训”的词形无法识别，且活动自身开始应用「始まります」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.5,
+          "meaning": 0.5,
+          "naturalness": 0.4
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "けんしゅうは なんじに はじまりますか。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "研修（けんしゅう）",
+            "meaning": "培训"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-25",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-25",
+      "lesson": 6,
+      "target_grammar": "读取会议日程",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-25",
+        "type": "q_reading",
+        "lesson": 6,
+        "target_grammar": "读取会议日程",
+        "prompt": "第 25 题：读取会议日程",
+        "instruction": "阅读下面的日程，用完整日语回答：会议几点开始、几点结束？",
+        "context_note": "请回答两个时间点。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [
+          "かいぎは ごご2じに はじまります。",
+          "ごご4じに おわります。"
+        ],
+        "vocab_hints": [],
+        "answer_reference": "かいぎは 2じに はじまって、4じに おわります。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "reading",
+          "target_vocabulary_ids": [
+            "vocab-042",
+            "vocab-043"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-25",
+        "is_correct": false,
+        "score": 0.25,
+        "error_tags": [
+          "meaning_drift",
+          "grammar_pattern",
+          "vocabulary"
+        ],
+        "target_grammar": "读取会议日程",
+        "user_answer": "かいぎはなんじにはじめてから、なんじにしまいますか",
+        "correct_answer": "かいぎは 2じに はじまって、4じに おわります。",
+        "explanation": "阅读题要求回答日程，答案却重新提出问题；还应区分「始まる」与「終わる」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.25,
+          "meaning": 0.25,
+          "naturalness": 0.2
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "かいぎは 2じに はじまって、4じに おわります。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "終わる（おわる）",
+            "meaning": "结束"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-30",
+      "status": "active",
+      "created_at": "2026-08-03T18:00:00+08:00",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-30",
+      "lesson": 6,
+      "target_grammar": "听取携带物品",
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-30",
+        "type": "q_listening",
+        "lesson": 6,
+        "target_grammar": "听取携带物品",
+        "prompt": "第 30 题：听取携带物品",
+        "instruction": "播放音频后，用完整日语回答：山田（やまだ）先生拿着什么？",
+        "context_note": "人名读音不计分；页面不显示听力原文。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "やまださんは かいぎの しりょうを もっています。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "listening",
+          "target_vocabulary_ids": [
+            "vocab-022"
+          ],
+          "audio_text": "やまださんは かいぎの しりょうを もっています。"
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-30",
+        "is_correct": false,
+        "score": 0.7,
+        "error_tags": [
+          "conjugation",
+          "vocabulary"
+        ],
+        "target_grammar": "听取携带物品",
+        "user_answer": "やまださんはかいぎのしりょうをもでいます",
+        "correct_answer": "やまださんは かいぎの しりょうを もっています。",
+        "explanation": "人物和会议资料均听取正确，但「持つ」的状态表达应为「持っています」，不是「もでいます」。",
+        "retry_recommended": true,
+        "rubric": {
+          "grammar": 0.7,
+          "meaning": 0.7,
+          "naturalness": 0.6
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "やまださんは かいぎの しりょうを もっています。"
+        ],
+        "vocabulary_feedback": [
+          {
+            "dictionary_form": "持つ（もつ）",
+            "meaning": "拿；拥有"
+          }
+        ],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
     {
       "id": "mistake:review-2026-07-28:daily-2026-07-28-ex-1",
       "status": "active",
