@@ -1,66 +1,64 @@
 {
   "schema_version": 1,
-  "revision": 10,
-  "updated_at": "2026-07-28T18:00:00+08:00",
+  "revision": 11,
+  "updated_at": "2026-08-03T18:00:00+08:00",
   "current_lesson": 6,
   "learning_mode": "lesson_foundation",
   "active_goals": [
-    "何をしますか与疑问句收尾",
-    "placeでV／placeにあります・います",
+    "动作地点で／目的地に・へ／离开场所を",
     "まだ〜ていません",
-    "Nを買いに行きます"
+    "始まる／終わる",
+    "休む／持つ的礼貌形与状态表达"
   ],
   "weakness_summary": [
     {
       "scope": "exercise",
-      "key": "daily-2026-07-28-ex-1",
-      "problem": "地点、对象和动作正确，但漏掉“经常”，没有完整表达题目的频率信息。",
+      "key": "daily-2026-07-31-ex-4",
+      "problem": "存在句结构正确，但「コピー機」是复印机，不是题目要求的打印机，设备信息发生改变。",
       "evidence": [
-        "exercise:daily-2026-07-28-ex-1",
-        "动作对象与地点",
-        "meaning_drift",
-        "vocabulary"
-      ]
-    },
-    {
-      "scope": "exercise",
-      "key": "daily-2026-07-28-ex-2",
-      "problem": "「今日の午後」后不需要が；询问动作内容要以「何をしますか」完整收尾。",
-      "evidence": [
-        "exercise:daily-2026-07-28-ex-2",
-        "动作内容提问",
-        "particle",
-        "grammar_pattern"
-      ]
-    },
-    {
-      "scope": "exercise",
-      "key": "daily-2026-07-28-ex-6",
-      "problem": "「飲みましょうか」能表达提议，但漏掉“下班后”和“一起”两个场景信息；咖啡的轻微拼写不单独扣分。",
-      "evidence": [
-        "exercise:daily-2026-07-28-ex-6",
-        "礼貌邀请",
+        "exercise:daily-2026-07-31-ex-4",
+        "物品存在",
+        "vocabulary",
         "meaning_drift"
       ]
     },
     {
       "scope": "exercise",
-      "key": "daily-2026-07-28-ex-7",
-      "problem": "人数应使用「二人」，进入要用「入る」；当前两个尝试都没有形成自然的存在或进入表达。",
+      "key": "daily-2026-07-31-ex-5",
+      "problem": "等待这一动作发生在大厅，地点应使用で；「部長を待ちます」正确。",
       "evidence": [
-        "exercise:daily-2026-07-28-ex-7",
-        "存在句",
-        "grammar_pattern",
-        "vocabulary"
+        "exercise:daily-2026-07-31-ex-5",
+        "等待地点",
+        "particle"
+      ]
+    },
+    {
+      "scope": "exercise",
+      "key": "daily-2026-07-31-ex-6",
+      "problem": "见面地点应使用で；同行者用と自然，「会います」也正确。",
+      "evidence": [
+        "exercise:daily-2026-07-31-ex-6",
+        "见面地点",
+        "particle"
+      ]
+    },
+    {
+      "scope": "exercise",
+      "key": "daily-2026-07-31-ex-7",
+      "problem": "回家的目的地应使用へ或に，不能使用表示离开场所的を。",
+      "evidence": [
+        "exercise:daily-2026-07-31-ex-7",
+        "返回时间",
+        "particle"
       ]
     }
   ],
   "recent_focus": {
     "grammar": [
-      "何をしますか与疑问句收尾",
-      "placeでV／placeにあります・います",
+      "动作地点で／目的地に・へ／离开场所を",
       "まだ〜ていません",
-      "Nを買いに行きます"
+      "始まる／終わる",
+      "休む／持つ的礼貌形与状态表达"
     ],
     "listening": [
       "第 6 课动作与地点表达",
@@ -75,7 +73,7 @@
     ]
   },
   "next_recommendation": {
-    "date": "2026-07-28",
+    "date": "2026-08-03",
     "plan_type": "review_then_output",
     "minutes": 90
   }
