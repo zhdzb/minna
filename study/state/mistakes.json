@@ -1,8 +1,70 @@
 {
   "schema_version": 1,
-  "revision": 5,
-  "updated_at": "2026-08-03T18:00:00+08:00",
+  "revision": 6,
+  "updated_at": "2026-08-26T09:30:01.690Z",
   "items": [
+    {
+      "id": "mistake:daily-2026-07-31:daily-2026-07-31-ex-1",
+      "status": "active",
+      "created_at": "2026-08-26T09:30:01.690Z",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-1",
+      "lesson": 6,
+      "target_grammar": "动作内容提问",
+      "source_types": [
+        "manual"
+      ],
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-1",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "动作内容提问",
+        "prompt": "第 1 题：动作内容提问",
+        "instruction": "请用自然日语询问同事：会议之后有时间吗？做什么？",
+        "context_note": "场景：先确认对方是否有时间，再确认接下来的安排。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "かいぎの あとで、じかんが ありますか。なにを しますか。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "foundation",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-044"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-1",
+        "is_correct": true,
+        "score": 1,
+        "error_tags": [],
+        "target_grammar": "动作内容提问",
+        "user_answer": "あなたはかいぎのあとにじかんがありますか？なにをしますか？",
+        "correct_answer": "かいぎの あとで、じかんが ありますか。なにを しますか。",
+        "explanation": "「会議のあとに時間がありますか」「何をしますか」均自然，完整询问了时间和后续动作。",
+        "retry_recommended": false,
+        "rubric": {
+          "grammar": 1,
+          "meaning": 1,
+          "naturalness": 1
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "かいぎの あとで、じかんが ありますか。なにを しますか。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
     {
       "id": "mistake:review-2026-07-31:daily-2026-07-31-ex-4",
       "status": "active",
@@ -14,6 +76,9 @@
       "exercise_id": "daily-2026-07-31-ex-4",
       "lesson": 6,
       "target_grammar": "物品存在",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-4",
         "type": "q_translate",
@@ -81,6 +146,9 @@
       "exercise_id": "daily-2026-07-31-ex-5",
       "lesson": 6,
       "target_grammar": "等待地点",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-5",
         "type": "q_translate",
@@ -142,6 +210,9 @@
       "exercise_id": "daily-2026-07-31-ex-6",
       "lesson": 6,
       "target_grammar": "见面地点",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-6",
         "type": "q_translate",
@@ -203,6 +274,9 @@
       "exercise_id": "daily-2026-07-31-ex-7",
       "lesson": 6,
       "target_grammar": "返回时间",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-7",
         "type": "q_translate",
@@ -264,6 +338,9 @@
       "exercise_id": "daily-2026-07-31-ex-9",
       "lesson": 6,
       "target_grammar": "请假说明",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-9",
         "type": "q_translate",
@@ -331,6 +408,9 @@
       "exercise_id": "daily-2026-07-31-ex-10",
       "lesson": 6,
       "target_grammar": "起床时间",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-10",
         "type": "q_translate",
@@ -398,6 +478,9 @@
       "exercise_id": "daily-2026-07-31-ex-11",
       "lesson": 6,
       "target_grammar": "睡觉时间",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-11",
         "type": "q_translate",
@@ -464,6 +547,9 @@
       "exercise_id": "daily-2026-07-31-ex-12",
       "lesson": 6,
       "target_grammar": "开始时间",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-12",
         "type": "q_translate",
@@ -526,6 +612,9 @@
       "exercise_id": "daily-2026-07-31-ex-13",
       "lesson": 6,
       "target_grammar": "结束时间",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-13",
         "type": "q_translate",
@@ -592,6 +681,9 @@
       "exercise_id": "daily-2026-07-31-ex-14",
       "lesson": 6,
       "target_grammar": "携带物品",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-14",
         "type": "q_translate",
@@ -659,6 +751,9 @@
       "exercise_id": "daily-2026-07-31-ex-16",
       "lesson": 6,
       "target_grammar": "转述内容",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-16",
         "type": "q_translate",
@@ -728,6 +823,9 @@
       "exercise_id": "daily-2026-07-31-ex-18",
       "lesson": 6,
       "target_grammar": "目的移动",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-18",
         "type": "q_translate",
@@ -790,6 +888,9 @@
       "exercise_id": "daily-2026-07-31-ex-19",
       "lesson": 6,
       "target_grammar": "报告未结束",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-19",
         "type": "q_conversation",
@@ -857,6 +958,9 @@
       "exercise_id": "daily-2026-07-31-ex-22",
       "lesson": 6,
       "target_grammar": "请求等待",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-22",
         "type": "q_conversation",
@@ -920,6 +1024,9 @@
       "exercise_id": "daily-2026-07-31-ex-24",
       "lesson": 6,
       "target_grammar": "询问开始时间",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-24",
         "type": "q_conversation",
@@ -987,6 +1094,9 @@
       "exercise_id": "daily-2026-07-31-ex-25",
       "lesson": 6,
       "target_grammar": "读取会议日程",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-25",
         "type": "q_reading",
@@ -1059,6 +1169,9 @@
       "exercise_id": "daily-2026-07-31-ex-30",
       "lesson": 6,
       "target_grammar": "听取携带物品",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-31-ex-30",
         "type": "q_listening",
@@ -1127,6 +1240,9 @@
       "exercise_id": "daily-2026-07-28-ex-1",
       "lesson": 6,
       "target_grammar": "动作对象与地点",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-1",
         "type": "q_translate",
@@ -1195,6 +1311,9 @@
       "exercise_id": "daily-2026-07-28-ex-2",
       "lesson": 6,
       "target_grammar": "动作内容提问",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-2",
         "type": "q_translate",
@@ -1257,6 +1376,9 @@
       "exercise_id": "daily-2026-07-28-ex-6",
       "lesson": 6,
       "target_grammar": "礼貌邀请",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-6",
         "type": "q_translate",
@@ -1318,6 +1440,9 @@
       "exercise_id": "daily-2026-07-28-ex-7",
       "lesson": 6,
       "target_grammar": "存在句",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-7",
         "type": "q_translate",
@@ -1385,6 +1510,9 @@
       "exercise_id": "daily-2026-07-28-ex-8",
       "lesson": 6,
       "target_grammar": "物品存在",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-8",
         "type": "q_translate",
@@ -1452,6 +1580,9 @@
       "exercise_id": "daily-2026-07-28-ex-9",
       "lesson": 6,
       "target_grammar": "进行中的动作",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-9",
         "type": "q_translate",
@@ -1519,6 +1650,9 @@
       "exercise_id": "daily-2026-07-28-ex-10",
       "lesson": 6,
       "target_grammar": "未完成状态",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-10",
         "type": "q_translate",
@@ -1586,6 +1720,9 @@
       "exercise_id": "daily-2026-07-28-ex-11",
       "lesson": 6,
       "target_grammar": "目的移动",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-11",
         "type": "q_translate",
@@ -1654,6 +1791,9 @@
       "exercise_id": "daily-2026-07-28-ex-12",
       "lesson": 6,
       "target_grammar": "移动方向",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-12",
         "type": "q_translate",
@@ -1721,6 +1861,9 @@
       "exercise_id": "daily-2026-07-28-ex-13",
       "lesson": 6,
       "target_grammar": "离开场所",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-13",
         "type": "q_translate",
@@ -1788,6 +1931,9 @@
       "exercise_id": "daily-2026-07-28-ex-14",
       "lesson": 6,
       "target_grammar": "进入场所",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-14",
         "type": "q_translate",
@@ -1855,6 +2001,9 @@
       "exercise_id": "daily-2026-07-28-ex-15",
       "lesson": 6,
       "target_grammar": "工具手段",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-15",
         "type": "q_translate",
@@ -1922,6 +2071,9 @@
       "exercise_id": "daily-2026-07-28-ex-16",
       "lesson": 6,
       "target_grammar": "能力表达",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-16",
         "type": "q_translate",
@@ -1990,6 +2142,9 @@
       "exercise_id": "daily-2026-07-28-ex-17",
       "lesson": 6,
       "target_grammar": "认知状态",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-17",
         "type": "q_translate",
@@ -2058,6 +2213,9 @@
       "exercise_id": "daily-2026-07-28-ex-18",
       "lesson": 6,
       "target_grammar": "变化与看法",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-18",
         "type": "q_translate",
@@ -2127,6 +2285,9 @@
       "exercise_id": "daily-2026-07-28-ex-19",
       "lesson": 6,
       "target_grammar": "确认携带物品",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-19",
         "type": "q_conversation",
@@ -2194,6 +2355,9 @@
       "exercise_id": "daily-2026-07-28-ex-21",
       "lesson": 6,
       "target_grammar": "报告未完成",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-21",
         "type": "q_conversation",
@@ -2257,6 +2421,9 @@
       "exercise_id": "daily-2026-07-28-ex-23",
       "lesson": 6,
       "target_grammar": "确认听懂",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-23",
         "type": "q_conversation",
@@ -2325,6 +2492,9 @@
       "exercise_id": "daily-2026-07-28-ex-24",
       "lesson": 6,
       "target_grammar": "表达意见",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-24",
         "type": "q_conversation",
@@ -2394,6 +2564,9 @@
       "exercise_id": "daily-2026-07-28-ex-25",
       "lesson": 6,
       "target_grammar": "读取工作日程",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-25",
         "type": "q_reading",
@@ -2459,6 +2632,9 @@
       "exercise_id": "daily-2026-07-28-ex-26",
       "lesson": 6,
       "target_grammar": "读取设备说明",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-26",
         "type": "q_reading",
@@ -2526,6 +2702,9 @@
       "exercise_id": "daily-2026-07-28-ex-27",
       "lesson": 6,
       "target_grammar": "读取午休计划",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-27",
         "type": "q_reading",
@@ -2603,6 +2782,9 @@
       "exercise_id": "daily-2026-07-28-ex-29",
       "lesson": 6,
       "target_grammar": "听取工作进度",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-28-ex-29",
         "type": "q_listening",
@@ -2683,6 +2865,9 @@
       "exercise_id": "daily-2026-07-23-ex-4",
       "lesson": 6,
       "target_grammar": "共同提议",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-4",
         "type": "q_translate",
@@ -2748,6 +2933,9 @@
       "exercise_id": "daily-2026-07-23-ex-5",
       "lesson": 6,
       "target_grammar": "动作内容提问",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-5",
         "type": "q_translate",
@@ -2822,6 +3010,9 @@
       "exercise_id": "daily-2026-07-23-ex-7",
       "lesson": 6,
       "target_grammar": "动作地点",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-7",
         "type": "q_translate",
@@ -2889,6 +3080,9 @@
       "exercise_id": "daily-2026-07-23-ex-8",
       "lesson": 6,
       "target_grammar": "移动与目的",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-8",
         "type": "q_translate",
@@ -2952,6 +3146,9 @@
       "exercise_id": "daily-2026-07-23-ex-12",
       "lesson": 6,
       "target_grammar": "未完成状态",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-12",
         "type": "q_translate",
@@ -3013,6 +3210,9 @@
       "exercise_id": "daily-2026-07-23-ex-14",
       "lesson": 6,
       "target_grammar": "物品存在",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-14",
         "type": "q_translate",
@@ -3081,6 +3281,9 @@
       "exercise_id": "daily-2026-07-23-ex-15",
       "lesson": 6,
       "target_grammar": "来访说明",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-15",
         "type": "q_translate",
@@ -3151,6 +3354,9 @@
       "exercise_id": "daily-2026-07-23-ex-16",
       "lesson": 6,
       "target_grammar": "理解确认",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-16",
         "type": "q_translate",
@@ -3225,6 +3431,9 @@
       "exercise_id": "daily-2026-07-23-ex-17",
       "lesson": 6,
       "target_grammar": "引述内容",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-17",
         "type": "q_translate",
@@ -3307,6 +3516,9 @@
       "exercise_id": "daily-2026-07-23-ex-18",
       "lesson": 6,
       "target_grammar": "表达想法",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-18",
         "type": "q_translate",
@@ -3380,6 +3592,9 @@
       "exercise_id": "daily-2026-07-23-ex-20",
       "lesson": 6,
       "target_grammar": "礼貌拒绝",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-20",
         "type": "q_conversation",
@@ -3444,6 +3659,9 @@
       "exercise_id": "daily-2026-07-23-ex-21",
       "lesson": 6,
       "target_grammar": "确认工作内容",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-21",
         "type": "q_conversation",
@@ -3507,6 +3725,9 @@
       "exercise_id": "daily-2026-07-23-ex-22",
       "lesson": 6,
       "target_grammar": "确认理解",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-22",
         "type": "q_conversation",
@@ -3570,6 +3791,9 @@
       "exercise_id": "daily-2026-07-23-ex-23",
       "lesson": 6,
       "target_grammar": "安排会面",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-23",
         "type": "q_conversation",
@@ -3635,6 +3859,9 @@
       "exercise_id": "daily-2026-07-23-ex-24",
       "lesson": 6,
       "target_grammar": "说明未完成",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-24",
         "type": "q_conversation",
@@ -3699,6 +3926,9 @@
       "exercise_id": "daily-2026-07-23-ex-25",
       "lesson": 6,
       "target_grammar": "读取工作安排",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-25",
         "type": "q_reading",
@@ -3765,6 +3995,9 @@
       "exercise_id": "daily-2026-07-23-ex-27",
       "lesson": 6,
       "target_grammar": "读取人员位置",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-27",
         "type": "q_reading",
@@ -3831,6 +4064,9 @@
       "exercise_id": "daily-2026-07-23-ex-28",
       "lesson": 6,
       "target_grammar": "听取午休安排",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-28",
         "type": "q_listening",
@@ -3906,6 +4142,9 @@
       "exercise_id": "daily-2026-07-23-ex-29",
       "lesson": 6,
       "target_grammar": "听取来访安排",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-29",
         "type": "q_listening",
@@ -3977,6 +4216,9 @@
       "exercise_id": "daily-2026-07-23-ex-30",
       "lesson": 6,
       "target_grammar": "听取工作进度",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-23-ex-30",
         "type": "q_listening",
@@ -4042,6 +4284,9 @@
       "exercise_id": "daily-2026-07-21-ex-2",
       "lesson": 6,
       "target_grammar": "动作对象与发生地点",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-2",
         "type": "q_translate",
@@ -4105,6 +4350,9 @@
       "exercise_id": "daily-2026-07-21-ex-3",
       "lesson": 6,
       "target_grammar": "礼貌邀请",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-3",
         "type": "q_translate",
@@ -4169,6 +4417,9 @@
       "exercise_id": "daily-2026-07-21-ex-4",
       "lesson": 6,
       "target_grammar": "行动内容提问",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-4",
         "type": "q_translate",
@@ -4232,6 +4483,9 @@
       "exercise_id": "daily-2026-07-21-ex-5",
       "lesson": 6,
       "target_grammar": "共同提议",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-5",
         "type": "q_translate",
@@ -4295,6 +4549,9 @@
       "exercise_id": "daily-2026-07-21-ex-6",
       "lesson": 6,
       "target_grammar": "邀请回应与时间确认",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-6",
         "type": "q_conversation",
@@ -4362,6 +4619,9 @@
       "exercise_id": "daily-2026-07-21-ex-8",
       "lesson": 7,
       "target_grammar": "通信手段与动作",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-8",
         "type": "q_translate",
@@ -4425,6 +4685,9 @@
       "exercise_id": "daily-2026-07-21-ex-9",
       "lesson": 7,
       "target_grammar": "接受来源",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-9",
         "type": "q_translate",
@@ -4486,6 +4749,9 @@
       "exercise_id": "daily-2026-07-21-ex-10",
       "lesson": 7,
       "target_grammar": "借出对象",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-10",
         "type": "q_translate",
@@ -4549,6 +4815,9 @@
       "exercise_id": "daily-2026-07-21-ex-11",
       "lesson": 7,
       "target_grammar": "工作完成状态",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-11",
         "type": "q_translate",
@@ -4611,6 +4880,9 @@
       "exercise_id": "daily-2026-07-21-ex-12",
       "lesson": 7,
       "target_grammar": "完成确认应答",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-12",
         "type": "q_conversation",
@@ -4677,6 +4949,9 @@
       "exercise_id": "daily-2026-07-21-ex-13",
       "lesson": 7,
       "target_grammar": "工作邮件中的完成信息",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-13",
         "type": "q_reading",
@@ -4744,6 +5019,9 @@
       "exercise_id": "daily-2026-07-21-ex-15",
       "lesson": 8,
       "target_grammar": "工作难度否定评价",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-15",
         "type": "q_translate",
@@ -4806,6 +5084,9 @@
       "exercise_id": "daily-2026-07-21-ex-16",
       "lesson": 8,
       "target_grammar": "形容词修饰办公场所",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-16",
         "type": "q_translate",
@@ -4868,6 +5149,9 @@
       "exercise_id": "daily-2026-07-21-ex-17",
       "lesson": 8,
       "target_grammar": "环境评价应答",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-17",
         "type": "q_conversation",
@@ -4933,6 +5217,9 @@
       "exercise_id": "daily-2026-07-21-ex-19",
       "lesson": 9,
       "target_grammar": "语言理解程度",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-19",
         "type": "q_translate",
@@ -4996,6 +5283,9 @@
       "exercise_id": "daily-2026-07-21-ex-20",
       "lesson": 9,
       "target_grammar": "工作安排与理由",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-20",
         "type": "q_translate",
@@ -5058,6 +5348,9 @@
       "exercise_id": "daily-2026-07-21-ex-21",
       "lesson": 9,
       "target_grammar": "场所偏好",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-21",
         "type": "q_translate",
@@ -5120,6 +5413,9 @@
       "exercise_id": "daily-2026-07-21-ex-22",
       "lesson": 9,
       "target_grammar": "带理由的婉拒",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-22",
         "type": "q_conversation",
@@ -5186,6 +5482,9 @@
       "exercise_id": "daily-2026-07-21-ex-23",
       "lesson": 9,
       "target_grammar": "工作能力应答",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-23",
         "type": "q_conversation",
@@ -5251,6 +5550,9 @@
       "exercise_id": "daily-2026-07-21-ex-24",
       "lesson": 9,
       "target_grammar": "语言能力听辨",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-24",
         "type": "q_listening",
@@ -5315,6 +5617,9 @@
       "exercise_id": "daily-2026-07-21-ex-25",
       "lesson": 10,
       "target_grammar": "办公物品位置",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-25",
         "type": "q_translate",
@@ -5377,6 +5682,9 @@
       "exercise_id": "daily-2026-07-21-ex-26",
       "lesson": 10,
       "target_grammar": "办公室设施方位",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-26",
         "type": "q_translate",
@@ -5440,6 +5748,9 @@
       "exercise_id": "daily-2026-07-21-ex-28",
       "lesson": 10,
       "target_grammar": "设备位置应答",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-21-ex-28",
         "type": "q_conversation",
@@ -5506,6 +5817,9 @@
       "exercise_id": "daily-2026-07-10-ex-1",
       "lesson": 1,
       "target_grammar": "N1 の N2 / N1 は N2 です",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-10-ex-1",
         "type": "q_translate",
@@ -5574,6 +5888,9 @@
       "exercise_id": "daily-2026-07-10-ex-3",
       "lesson": 1,
       "target_grammar": "N1 は N2 じゃありません",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-10-ex-3",
         "type": "q_fill",
@@ -5643,6 +5960,9 @@
       "exercise_id": "daily-2026-07-10-ex-5",
       "lesson": 2,
       "target_grammar": "これ / それ / あれ",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-10-ex-5",
         "type": "q_fill",
@@ -5709,6 +6029,9 @@
       "exercise_id": "daily-2026-07-10-ex-14",
       "lesson": 4,
       "target_grammar": "N は time から time までです",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-10-ex-14",
         "type": "q_translate",
@@ -5775,6 +6098,9 @@
       "exercise_id": "daily-2026-07-10-ex-15",
       "lesson": 4,
       "target_grammar": "なんじに Vますか / time に Vます",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-10-ex-15",
         "type": "q_conversation",
@@ -5845,6 +6171,9 @@
       "exercise_id": "daily-2026-07-10-ex-18",
       "lesson": 5,
       "target_grammar": "vehicle で place へ 行きます",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-10-ex-18",
         "type": "q_translate",
@@ -5912,6 +6241,9 @@
       "exercise_id": "daily-2026-07-10-ex-20",
       "lesson": 5,
       "target_grammar": "どこへも 行きません",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-10-ex-20",
         "type": "q_translate",
@@ -5978,6 +6310,9 @@
       "exercise_id": "daily-2026-07-02-ex-4",
       "lesson": 1,
       "target_grammar": "N1 の N2",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-02-ex-4",
         "type": "q_translate",
@@ -6046,6 +6381,9 @@
       "exercise_id": "daily-2026-07-02-ex-5",
       "lesson": 1,
       "target_grammar": "N1 は N2 ですか",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-02-ex-5",
         "type": "q_conversation",
@@ -6116,6 +6454,9 @@
       "exercise_id": "daily-2026-07-01-ex-2",
       "lesson": 1,
       "target_grammar": "N1 は N2 じゃありません",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-01-ex-2",
         "type": "q_fill",
@@ -6192,6 +6533,9 @@
       "exercise_id": "daily-2026-07-01-ex-3",
       "lesson": 1,
       "target_grammar": "N1 は N2 です",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-01-ex-3",
         "type": "q_translate",
@@ -6257,6 +6601,9 @@
       "exercise_id": "daily-2026-07-01-ex-4",
       "lesson": 1,
       "target_grammar": "N1 は N2 じゃありません",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-01-ex-4",
         "type": "q_translate",
@@ -6324,6 +6671,9 @@
       "exercise_id": "daily-2026-07-01-ex-5",
       "lesson": 1,
       "target_grammar": "N1 の N2",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-01-ex-5",
         "type": "q_translate",
@@ -6390,6 +6740,9 @@
       "exercise_id": "daily-2026-07-01-ex-6",
       "lesson": 1,
       "target_grammar": "N1 は N2 ですか",
+      "source_types": [
+        "automatic"
+      ],
       "exercise_snapshot": {
         "id": "daily-2026-07-01-ex-6",
         "type": "q_conversation",

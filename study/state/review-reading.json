@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "revision": 15,
+  "updated_at": "2026-08-26T09:51:05.250Z",
+  "reviews": {
+    "review-2026-07-31": {
+      "review_file": "study/reviews/2026-07-31-review.json",
+      "last_exercise_id": "daily-2026-07-31-ex-14",
+      "items": {
+        "daily-2026-07-31-ex-1": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:30:03.261Z"
+        },
+        "daily-2026-07-31-ex-2": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:35:36.001Z"
+        },
+        "daily-2026-07-31-ex-3": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:37:08.940Z"
+        },
+        "daily-2026-07-31-ex-4": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:37:16.414Z"
+        },
+        "daily-2026-07-31-ex-5": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:37:18.811Z"
+        },
+        "daily-2026-07-31-ex-6": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:37:20.273Z"
+        },
+        "daily-2026-07-31-ex-7": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:37:21.559Z"
+        },
+        "daily-2026-07-31-ex-8": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:37:22.151Z"
+        },
+        "daily-2026-07-31-ex-9": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:37:23.489Z"
+        },
+        "daily-2026-07-31-ex-10": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:42:12.538Z"
+        },
+        "daily-2026-07-31-ex-11": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:42:50.529Z"
+        },
+        "daily-2026-07-31-ex-12": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:43:40.647Z"
+        },
+        "daily-2026-07-31-ex-13": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:46:46.240Z"
+        },
+        "daily-2026-07-31-ex-14": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:51:05.250Z"
+        }
+      },
+      "updated_at": "2026-08-26T09:51:05.250Z"
+    }
+  }
+}
