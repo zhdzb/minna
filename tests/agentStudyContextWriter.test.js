@@ -30,14 +30,17 @@ afterEach(() => {
 describe('agentStudyContextWriter', () => {
   it('generates next-agent-context from the seeded study state', () => {
     const writer = createAgentStudyContextWriter()
+    const index = JSON.parse(
+      fs.readFileSync(path.resolve(process.cwd(), 'study', 'index.json'), 'utf8')
+    )
     const result = writer.writeNextAgentContext()
 
     expect(result.path).toBe('study/context/next-agent-context.md')
-    expect(result.content).toContain('最新 daily：study/daily/2026-07-28.json')
-    expect(result.content).toContain('最新 review：study/reviews/2026-07-28-review.json')
-    expect(result.content).toContain('最新 prompt：study/prompts/generated/2026-07-28-review.md')
-    expect(result.content).toContain('study/prompts/generated/2026-07-28-review.md')
-    expect(result.content).toContain('study/reviews/2026-07-28-review.json')
+    expect(result.content).toContain(`最新 daily：${index.latest_daily}`)
+    expect(result.content).toContain(`最新 review：${index.latest_review}`)
+    expect(result.content).toContain(`最新 prompt：${index.latest_prompt}`)
+    expect(result.content).toContain(index.latest_prompt)
+    expect(result.content).toContain(index.latest_review)
     expect(result.content).toContain('study/state/mastery.json')
     expect(result.content).toContain('study/state/review-queue.json')
     expect(result.content).toContain('## 接下来先读')

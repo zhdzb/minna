@@ -480,25 +480,29 @@ const validateMistakeBook = (value) => {
   doc.items = assertArray(doc.items, 'mistakeBook.items').map((item, index) => {
     const label = 'mistakeBook.items[' + index + ']'
     const mistake = assertPlainObject(item, label)
-    const reviewSnapshot = validateReviewItem(
-      mistake.review_snapshot,
-      label + '.review_snapshot'
-    )
-    if (reviewSnapshot.is_correct) {
-      throw new Error(label + '.review_snapshot.is_correct must be false')
+    const status = assertNonEmptyString(mistake.status, label + '.status')
+    if (!['active', 'mastered', 'dismissed'].includes(status)) {
+      throw new Error(label + '.status must be active, mastered, or dismissed')
     }
+    const reviewSnapshot = mistake.review_snapshot == null
+      ? null
+      : validateReviewItem(mistake.review_snapshot, label + '.review_snapshot')
+    const sourceTypes = mistake.source_types == null
+      ? ['automatic']
+      : normalizeStringArray(mistake.source_types, label + '.source_types')
 
     return {
       id: assertNonEmptyString(mistake.id, label + '.id'),
-      status: assertNonEmptyString(mistake.status, label + '.status'),
+      status,
       created_at: assertNonEmptyString(mistake.created_at, label + '.created_at'),
       source_daily: assertNonEmptyString(mistake.source_daily, label + '.source_daily'),
-      source_review: assertNonEmptyString(mistake.source_review, label + '.source_review'),
+      source_review: assertOptionalString(mistake.source_review, label + '.source_review'),
       daily_id: assertNonEmptyString(mistake.daily_id, label + '.daily_id'),
-      review_id: assertNonEmptyString(mistake.review_id, label + '.review_id'),
+      review_id: assertOptionalString(mistake.review_id, label + '.review_id'),
       exercise_id: assertNonEmptyString(mistake.exercise_id, label + '.exercise_id'),
       lesson: assertInteger(mistake.lesson, label + '.lesson'),
       target_grammar: assertNonEmptyString(mistake.target_grammar, label + '.target_grammar'),
+      source_types: [...new Set(sourceTypes)],
       exercise_snapshot: validateExercise(mistake.exercise_snapshot, index),
       review_snapshot: reviewSnapshot,
       attempts: assertArray(mistake.attempts, label + '.attempts').map((attempt, attemptIndex) => {
@@ -519,6 +523,61 @@ const validateMistakeBook = (value) => {
           : assertNonEmptyString(mistake.last_practiced_at, label + '.last_practiced_at')
     }
   })
+  return doc
+}
+
+const validateReviewReadingState = (value) => {
+  const doc = validateBaseDocument(value, 'reviewReadingState')
+  const reviews = assertPlainObject(doc.reviews, 'reviewReadingState.reviews')
+
+  doc.reviews = Object.fromEntries(Object.entries(reviews).map(([reviewId, rawReview]) => {
+    const label = 'reviewReadingState.reviews.' + reviewId
+    const review = assertPlainObject(rawReview, label)
+    const items = assertPlainObject(review.items, label + '.items')
+    const normalizedItems = Object.fromEntries(Object.entries(items).map(([exerciseId, rawItem]) => {
+      const itemLabel = label + '.items.' + exerciseId
+      const item = assertPlainObject(rawItem, itemLabel)
+      const status = assertNonEmptyString(item.status, itemLabel + '.status')
+      if (!['unread', 'read', 'later'].includes(status)) {
+        throw new Error(itemLabel + '.status must be unread, read, or later')
+      }
+      return [exerciseId, {
+        status,
+        updated_at: assertNonEmptyString(item.updated_at, itemLabel + '.updated_at')
+      }]
+    }))
+
+    return [reviewId, {
+      review_file: assertOptionalString(review.review_file, label + '.review_file'),
+      last_exercise_id: assertOptionalString(review.last_exercise_id, label + '.last_exercise_id'),
+      items: normalizedItems,
+      updated_at: assertNonEmptyString(review.updated_at, label + '.updated_at')
+    }]
+  }))
+  return doc
+}
+
+const validateMistakeDrillSession = (value) => {
+  const doc = validateBaseDocument(value, 'mistakeDrillSession')
+  const status = assertNonEmptyString(doc.status, 'mistakeDrillSession.status')
+  if (!['idle', 'active', 'completed'].includes(status)) {
+    throw new Error('mistakeDrillSession.status must be idle, active, or completed')
+  }
+  const size = assertInteger(doc.size, 'mistakeDrillSession.size')
+  if (![3, 5, 10].includes(size)) {
+    throw new Error('mistakeDrillSession.size must be 3, 5, or 10')
+  }
+
+  doc.status = status
+  doc.size = size
+  doc.mistake_ids = normalizeStringArray(doc.mistake_ids, 'mistakeDrillSession.mistake_ids')
+  doc.current_index = assertInteger(doc.current_index, 'mistakeDrillSession.current_index')
+  if (doc.current_index < 0 || doc.current_index > doc.mistake_ids.length) {
+    throw new Error('mistakeDrillSession.current_index is outside the session range')
+  }
+  doc.submitted_ids = normalizeStringArray(doc.submitted_ids, 'mistakeDrillSession.submitted_ids')
+  doc.started_at = assertOptionalString(doc.started_at, 'mistakeDrillSession.started_at')
+  doc.completed_at = assertOptionalString(doc.completed_at, 'mistakeDrillSession.completed_at')
   return doc
 }
 
@@ -582,7 +641,9 @@ const validators = {
   dailyPacket: validateDailyPacket,
   reviewResult: validateReviewResult,
   reviewDrill: validateReviewDrill,
-  mistakeBook: validateMistakeBook
+  mistakeBook: validateMistakeBook,
+  reviewReadingState: validateReviewReadingState,
+  mistakeDrillSession: validateMistakeDrillSession
 }
 
 const validateAgentStudyDocument = (type, value) => {
@@ -601,10 +662,12 @@ export {
   validateIndex,
   validateMastery,
   validateMistakeBook,
+  validateMistakeDrillSession,
   validateProfile,
   validatePromotionRules,
   validateReviewQueue,
   validateReviewDrill,
+  validateReviewReadingState,
   validateReviewResult,
   validateVocabularyProgress
 }

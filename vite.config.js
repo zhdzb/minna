@@ -13,21 +13,29 @@ import {
   handleSaveStudyState
 } from './src/server/routes/studyStateRoute.js'
 import {
+  handleAddManualMistake,
+  handleAdvanceMistakeDrillSession,
   handleGetAgentProgressReview,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
   handleGetLatestReviewDrill,
   handleGetLatestReview,
   handleGetMistakes,
+  handleGetMistakeDrillSession,
+  handleGetReviewReading,
   handleGetVocabulary,
   handleGetSyllabus,
   handleDismissMistake,
+  handleEndMistakeDrillSession,
   handleSaveDailyPacket,
   handleSaveSyllabus,
   handleSaveReviewDrill,
   handleSubmitReviewDrill,
   handleSubmitMistakeAttempt,
-  handleSubmitDailyPacket
+  handleSubmitDailyPacket,
+  handleSetMistakeStatus,
+  handleStartMistakeDrillSession,
+  handleUpdateReviewReading
 } from './src/server/agentStudy/routes.js'
 import {
   handleGenerateListeningSession,
@@ -406,6 +414,42 @@ const agentStudyRoutePlugin = () => {
         }
       })
 
+      server.middlewares.use('/api/agent-study/mistakes/add', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handleAddManualMistake(payload)
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/mistakes/status', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const payload = await readJsonBody(req)
+          const result = await handleSetMistakeStatus(payload)
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
       server.middlewares.use('/api/agent-study/mistakes/dismiss', async (req, res) => {
         if (req.method !== 'POST') {
           writeJson(res, 405, { success: false, error: 'Method not allowed' })
@@ -438,6 +482,77 @@ const agentStudyRoutePlugin = () => {
             success: false,
             error: error instanceof Error ? error.message : String(error)
           })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/review-reading', async (req, res) => {
+        if (!['GET', 'POST'].includes(req.method)) {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+
+        try {
+          const result = req.method === 'GET'
+            ? await handleGetReviewReading()
+            : await handleUpdateReviewReading(await readJsonBody(req))
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, {
+            success: false,
+            error: error instanceof Error ? error.message : String(error)
+          })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/mistake-drill-session/start', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+        try {
+          const result = await handleStartMistakeDrillSession(await readJsonBody(req))
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, { success: false, error: error instanceof Error ? error.message : String(error) })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/mistake-drill-session/advance', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+        try {
+          const result = await handleAdvanceMistakeDrillSession(await readJsonBody(req))
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, { success: false, error: error instanceof Error ? error.message : String(error) })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/mistake-drill-session/end', async (req, res) => {
+        if (req.method !== 'POST') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+        try {
+          const result = await handleEndMistakeDrillSession(await readJsonBody(req))
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, { success: false, error: error instanceof Error ? error.message : String(error) })
+        }
+      })
+
+      server.middlewares.use('/api/agent-study/mistake-drill-session', async (req, res) => {
+        if (req.method !== 'GET') {
+          writeJson(res, 405, { success: false, error: 'Method not allowed' })
+          return
+        }
+        try {
+          const result = await handleGetMistakeDrillSession()
+          writeJson(res, 200, { success: true, data: result })
+        } catch (error) {
+          writeJson(res, 400, { success: false, error: error instanceof Error ? error.message : String(error) })
         }
       })
 

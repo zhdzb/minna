@@ -50,6 +50,11 @@ const createEmptyMistakeBook = (timestamp) => ({
 })
 
 const createMistakeId = (reviewId, exerciseId) => `mistake:${reviewId}:${exerciseId}`
+const createManualMistakeId = (dailyId, exerciseId) => `mistake:${dailyId}:${exerciseId}`
+const createExerciseKey = (dailyId, exerciseId) => `${dailyId}:${exerciseId}`
+const mergeSourceTypes = (existing, sourceType) => [
+  ...new Set([...(existing ? existing.source_types || ['automatic'] : []), sourceType])
+]
 
 const createMistakeRecord = ({
   dailyPacket,
@@ -70,7 +75,7 @@ const createMistakeRecord = ({
   }
 
   return {
-    id: createMistakeId(reviewResult.id, reviewItem.exercise_id),
+    id: existing?.id || createMistakeId(reviewResult.id, reviewItem.exercise_id),
     status: existing?.status || 'active',
     created_at: existing?.created_at || reviewResult.created_at,
     source_daily: dailyPath,
@@ -80,6 +85,7 @@ const createMistakeRecord = ({
     exercise_id: reviewItem.exercise_id,
     lesson: exercise.lesson,
     target_grammar: reviewItem.target_grammar,
+    source_types: mergeSourceTypes(existing, 'automatic'),
     exercise_snapshot: clone(exercise),
     review_snapshot: clone(reviewItem),
     attempts: Array.isArray(existing?.attempts) ? clone(existing.attempts) : [],
@@ -95,11 +101,14 @@ const mergeReviewMistakes = ({
   reviewPath
 }) => {
   const nextBook = clone(mistakeBook)
-  const itemIndex = new Map(nextBook.items.map((item, index) => [item.id, index]))
+  const itemIndex = new Map(nextBook.items.map((item, index) => [
+    createExerciseKey(item.daily_id, item.exercise_id),
+    index
+  ]))
 
   for (const reviewItem of reviewResult.items.filter((item) => !item.is_correct)) {
-    const mistakeId = createMistakeId(reviewResult.id, reviewItem.exercise_id)
-    const existingIndex = itemIndex.get(mistakeId)
+    const exerciseKey = createExerciseKey(dailyPacket.id, reviewItem.exercise_id)
+    const existingIndex = itemIndex.get(exerciseKey)
     const existing = existingIndex == null ? null : nextBook.items[existingIndex]
     const record = createMistakeRecord({
       dailyPacket,
@@ -111,7 +120,7 @@ const mergeReviewMistakes = ({
     })
 
     if (existingIndex == null) {
-      itemIndex.set(mistakeId, nextBook.items.length)
+      itemIndex.set(exerciseKey, nextBook.items.length)
       nextBook.items.push(record)
     } else {
       nextBook.items[existingIndex] = record
@@ -232,28 +241,106 @@ const createAgentStudyMistakeStore = ({
     }
   }
 
-  const dismissMistake = ({ mistakeId }) => {
+  const setMistakeStatuses = ({ mistakeIds, status }) => {
+    if (!['active', 'mastered', 'dismissed'].includes(status)) {
+      throw new Error('Mistake status must be active, mastered, or dismissed')
+    }
+    const normalizedIds = [...new Set((mistakeIds || []).map((id) => String(id || '').trim()).filter(Boolean))]
+    if (!normalizedIds.length) throw new Error('Mistake status update requires at least one mistake id')
+
     const current = loadMistakeBook()
-    const itemIndex = current.items.findIndex((item) => item.id === mistakeId)
-    if (itemIndex < 0) throw new Error('Mistake not found: ' + mistakeId)
+    const knownIds = new Set(current.items.map((item) => item.id))
+    const missingId = normalizedIds.find((id) => !knownIds.has(id))
+    if (missingId) throw new Error('Mistake not found: ' + missingId)
 
     const nextBook = clone(current)
-    nextBook.items[itemIndex].status = 'dismissed'
+    for (const item of nextBook.items) {
+      if (normalizedIds.includes(item.id)) item.status = status
+    }
     nextBook.revision = current.revision + 1
     nextBook.updated_at = now()
 
     const mistakeBook = writeMistakeBook(nextBook)
     return {
       mistakeBook,
-      mistake: mistakeBook.items[itemIndex]
+      mistakes: mistakeBook.items.filter((item) => normalizedIds.includes(item.id))
+    }
+  }
+
+  const setMistakeStatus = ({ mistakeId, status }) => {
+    const result = setMistakeStatuses({ mistakeIds: [mistakeId], status })
+    return {
+      mistakeBook: result.mistakeBook,
+      mistake: result.mistakes[0]
+    }
+  }
+
+  const dismissMistake = ({ mistakeId }) => setMistakeStatus({
+    mistakeId,
+    status: 'dismissed'
+  })
+
+  const addManualMistake = ({
+    dailyPacket,
+    dailyPath,
+    exerciseId,
+    reviewResult = null,
+    reviewPath = null
+  }) => {
+    const validatedDaily = validateDailyPacket(clone(dailyPacket))
+    const exercise = validatedDaily.exercises.find((item) => item.id === exerciseId)
+    if (!exercise) throw new Error('Mistake store could not find exercise ' + exerciseId)
+
+    const validatedReview = reviewResult ? validateReviewResult(clone(reviewResult)) : null
+    const reviewItem = validatedReview?.items.find((item) => item.exercise_id === exerciseId) || null
+    const current = loadMistakeBook()
+    const itemIndex = current.items.findIndex((item) =>
+      item.daily_id === validatedDaily.id && item.exercise_id === exerciseId
+    )
+    const existing = itemIndex < 0 ? null : current.items[itemIndex]
+    const timestamp = now()
+    const nextBook = clone(current)
+    const record = {
+      id: existing?.id || createManualMistakeId(validatedDaily.id, exerciseId),
+      status: 'active',
+      created_at: existing?.created_at || timestamp,
+      source_daily: dailyPath,
+      source_review: reviewPath || existing?.source_review || null,
+      daily_id: validatedDaily.id,
+      review_id: validatedReview?.id || existing?.review_id || null,
+      exercise_id: exerciseId,
+      lesson: exercise.lesson,
+      target_grammar: reviewItem?.target_grammar || exercise.target_grammar,
+      source_types: mergeSourceTypes(existing, 'manual'),
+      exercise_snapshot: clone(exercise),
+      review_snapshot: reviewItem ? clone(reviewItem) : existing?.review_snapshot || null,
+      attempts: Array.isArray(existing?.attempts) ? clone(existing.attempts) : [],
+      last_practiced_at: existing?.last_practiced_at || null
+    }
+
+    if (itemIndex < 0) {
+      nextBook.items.unshift(record)
+    } else {
+      nextBook.items[itemIndex] = record
+    }
+    nextBook.revision = current.revision + 1
+    nextBook.updated_at = timestamp
+
+    const mistakeBook = writeMistakeBook(nextBook)
+    return {
+      mistakeBook,
+      mistake: mistakeBook.items.find((item) => item.id === record.id)
     }
   }
 
   return {
+    addManualMistake,
     loadMistakeBook,
     rebuildFromHistory,
     dismissMistake,
     recordAttempt,
+    setMistakeStatus,
+    setMistakeStatuses,
     syncFromReview
   }
 }

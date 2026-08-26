@@ -104,6 +104,18 @@ afterEach(() => {
 describe('agentStudyIndexRebuilder', () => {
   it('rebuilds the seeded study index from on-disk facts', () => {
     const studyRoot = path.resolve(process.cwd(), 'study')
+    const latestDailyName = fs.readdirSync(path.join(studyRoot, 'daily'))
+      .filter((name) => name.endsWith('.json'))
+      .sort()
+      .at(-1)
+    const latestReviewName = fs.readdirSync(path.join(studyRoot, 'reviews'))
+      .filter((name) => name.endsWith('.json'))
+      .sort()
+      .at(-1)
+    const latestPromptName = fs.readdirSync(path.join(studyRoot, 'prompts', 'generated'))
+      .filter((name) => name.endsWith('.md'))
+      .sort()
+      .at(-1)
 
     const rebuilt = buildRebuiltIndex({
       studyRoot,
@@ -111,9 +123,9 @@ describe('agentStudyIndexRebuilder', () => {
     })
 
     expect(validateIndex(rebuilt)).toEqual(rebuilt)
-    expect(rebuilt.latest_daily).toBe('study/daily/2026-07-28.json')
-    expect(rebuilt.latest_review).toBe('study/reviews/2026-07-28-review.json')
-    expect(rebuilt.latest_prompt).toBe('study/prompts/generated/2026-07-28-review.md')
+    expect(rebuilt.latest_daily).toBe(`study/daily/${latestDailyName}`)
+    expect(rebuilt.latest_review).toBe(`study/reviews/${latestReviewName}`)
+    expect(rebuilt.latest_prompt).toBe(`study/prompts/generated/${latestPromptName}`)
   })
 
   it('falls back to rebuilding and writing index when index.json is missing or corrupted', () => {

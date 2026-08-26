@@ -18,6 +18,10 @@ Primary routes:
 
 The repository root still keeps `data.json` import/export compatibility during migration, but `study/` is the source of truth for the new workflow.
 
+Accepted product behavior and cross-context decisions are archived under
+[`specs/`](./specs/README.md). Implementation work should preserve accepted
+spec boundaries or update the relevant decision log explicitly.
+
 ## Repository Layout
 
 ```text
@@ -30,6 +34,10 @@ study/
   prompts/
   context/
   logs/
+
+specs/
+  README.md
+  SPEC-NNN-short-title.md
 
 src/
   components/

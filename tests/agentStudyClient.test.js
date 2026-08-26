@@ -407,6 +407,42 @@ describe('agentStudyClient', () => {
     })
   })
 
+  it('uses dedicated endpoints for review reading and mistake management sessions', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(createJsonResponse({
+      body: { success: true, data: {} }
+    }))
+    const client = createAgentStudyClient({ fetchImpl: fetchMock })
+
+    await client.updateReviewReading({
+      reviewId: 'review-1',
+      reviewFile: 'study/reviews/review-1.json',
+      exerciseId: 'ex-01',
+      status: 'read'
+    })
+    await client.addManualMistake({
+      exerciseId: 'ex-01',
+      dailyPath: 'study/daily/2026-08-26.json',
+      reviewPath: 'study/reviews/2026-08-26-review.json'
+    })
+    await client.setMistakeStatus({ mistakeIds: ['mistake-1'], status: 'dismissed' })
+    await client.startMistakeDrillSession({ size: 3, mistakeIds: ['mistake-1'] })
+    await client.advanceMistakeDrillSession({ mistakeId: 'mistake-1' })
+
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+      '/api/agent-study/review-reading',
+      '/api/agent-study/mistakes/add',
+      '/api/agent-study/mistakes/status',
+      '/api/agent-study/mistake-drill-session/start',
+      '/api/agent-study/mistake-drill-session/advance'
+    ])
+    expect(fetchMock.mock.calls[0][1].body).toBe(JSON.stringify({
+      reviewId: 'review-1',
+      reviewFile: 'study/reviews/review-1.json',
+      exerciseId: 'ex-01',
+      status: 'read'
+    }))
+  })
+
   it('throws a clear error when fetch support is unavailable', async () => {
     const client = createAgentStudyClient({ fetchImpl: null })
 

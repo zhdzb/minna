@@ -96,6 +96,17 @@ const createAgentStudyClient = (options = {}) => {
       method: 'GET'
     })
 
+  const loadReviewReading = async () =>
+    request('review-reading', {
+      method: 'GET'
+    })
+
+  const updateReviewReading = async ({ reviewId, reviewFile, exerciseId, status } = {}) =>
+    request('review-reading', {
+      method: 'POST',
+      body: JSON.stringify({ reviewId, reviewFile, exerciseId, status })
+    })
+
   const loadVocabulary = async () =>
     request('vocabulary', {
       method: 'GET'
@@ -111,6 +122,41 @@ const createAgentStudyClient = (options = {}) => {
     request('mistakes/dismiss', {
       method: 'POST',
       body: JSON.stringify({ mistakeId })
+    })
+
+  const addManualMistake = async ({ exerciseId, dailyPath, reviewPath } = {}) =>
+    request('mistakes/add', {
+      method: 'POST',
+      body: JSON.stringify({ exerciseId, dailyPath, reviewPath })
+    })
+
+  const setMistakeStatus = async ({ mistakeId, mistakeIds, status } = {}) =>
+    request('mistakes/status', {
+      method: 'POST',
+      body: JSON.stringify({ mistakeId, mistakeIds, status })
+    })
+
+  const loadMistakeDrillSession = async () =>
+    request('mistake-drill-session', {
+      method: 'GET'
+    })
+
+  const startMistakeDrillSession = async ({ size, mistakeIds } = {}) =>
+    request('mistake-drill-session/start', {
+      method: 'POST',
+      body: JSON.stringify({ size, mistakeIds })
+    })
+
+  const advanceMistakeDrillSession = async ({ mistakeId } = {}) =>
+    request('mistake-drill-session/advance', {
+      method: 'POST',
+      body: JSON.stringify({ mistakeId })
+    })
+
+  const endMistakeDrillSession = async () =>
+    request('mistake-drill-session/end', {
+      method: 'POST',
+      body: JSON.stringify({})
     })
 
   const loadPromptFile = async (promptPath) =>
@@ -174,21 +220,29 @@ const createAgentStudyClient = (options = {}) => {
     })
 
   return {
+    addManualMistake,
+    advanceMistakeDrillSession,
     loadLatestAgentStudy,
     loadProgressReview,
     loadPromptFile,
     loadLatestReviewDrill,
     loadLatestReview,
+    loadMistakeDrillSession,
     loadMistakes,
+    loadReviewReading,
     loadVocabulary,
     dismissMistake,
+    endMistakeDrillSession,
     loadSyllabus,
     saveDailyPacket,
     saveSyllabus,
     saveReviewDrill,
     submitReviewDrill,
     submitMistakeAttempt,
-    submitDailyPacket
+    submitDailyPacket,
+    setMistakeStatus,
+    startMistakeDrillSession,
+    updateReviewReading
   }
 }
 

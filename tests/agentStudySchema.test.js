@@ -7,10 +7,12 @@ import {
   validateCurrent,
   validateIndex,
   validateMastery,
+  validateMistakeDrillSession,
   validateProfile,
   validatePromotionRules,
   validateDailyPacket,
   validateReviewDrill,
+  validateReviewReadingState,
   validateReviewQueue,
   validateReviewResult,
   validateVocabularyProgress
@@ -29,12 +31,15 @@ const readStudyJson = (relativePath) => {
 describe('agentStudySchema', () => {
   it('validates seeded study JSON files', () => {
     const indexDocument = validateIndex(readStudyJson('study/index.json'))
+    const dailyDocument = validateDailyPacket(readStudyJson(indexDocument.latest_daily))
+    const reviewDocument = validateReviewResult(readStudyJson(indexDocument.latest_review))
 
-    expect(indexDocument.latest_daily).toBe('study/daily/2026-07-28.json')
-    expect(indexDocument.latest_prompt).toBe('study/prompts/generated/2026-07-28-review.md')
-    expect(indexDocument.latest_review).toBe('study/reviews/2026-07-28-review.json')
-    expect(validateDailyPacket(readStudyJson(indexDocument.latest_daily)).id).toBe('daily-2026-07-28')
-    expect(validateReviewResult(readStudyJson(indexDocument.latest_review)).id).toBe('review-2026-07-28')
+    expect(indexDocument.latest_daily).toMatch(/^study\/daily\/\d{4}-\d{2}-\d{2}\.json$/)
+    expect(indexDocument.latest_prompt).toMatch(/^study\/prompts\/generated\/\d{4}-\d{2}-\d{2}-review\.md$/)
+    expect(indexDocument.latest_review).toMatch(/^study\/reviews\/\d{4}-\d{2}-\d{2}-review\.json$/)
+    expect(dailyDocument.id).toBe('daily-' + dailyDocument.date)
+    expect(reviewDocument.daily_id).toBe(dailyDocument.id)
+    expect(fs.existsSync(path.resolve(process.cwd(), indexDocument.latest_prompt))).toBe(true)
     expect(validateProfile(readStudyJson('study/state/profile.json')).material_scope.current_focus_lessons).toEqual([6, 7, 8, 9, 10])
     expect(validateCurrent(readStudyJson('study/state/current.json')).current_lesson).toBe(6)
     expect(validateMastery(readStudyJson('study/state/mastery.json')).current_gate).toBe('lesson-6-foundation')
@@ -50,6 +55,37 @@ describe('agentStudySchema', () => {
     expect(createSampleDailyPacket().mission.focus_lessons).toEqual([7])
     expect(validateReviewResult(createSampleReviewResult()).daily_id).toBe('daily-2026-06-26')
     expect(validateReviewDrill(createSampleReviewDrill()).items).toHaveLength(1)
+  })
+
+  it('validates review reading and mistake drill state documents', () => {
+    expect(validateReviewReadingState({
+      schema_version: 1,
+      revision: 1,
+      updated_at: '2026-08-26T10:00:00+08:00',
+      reviews: {
+        'review-1': {
+          review_file: 'study/reviews/review-1.json',
+          last_exercise_id: 'ex-01',
+          items: {
+            'ex-01': { status: 'read', updated_at: '2026-08-26T10:00:00+08:00' }
+          },
+          updated_at: '2026-08-26T10:00:00+08:00'
+        }
+      }
+    }).reviews['review-1'].items['ex-01'].status).toBe('read')
+
+    expect(validateMistakeDrillSession({
+      schema_version: 1,
+      revision: 1,
+      updated_at: '2026-08-26T10:00:00+08:00',
+      status: 'active',
+      size: 3,
+      mistake_ids: ['mistake-1'],
+      current_index: 0,
+      submitted_ids: [],
+      started_at: '2026-08-26T10:00:00+08:00',
+      completed_at: null
+    }).size).toBe(3)
   })
 
   it('preserves dictionary-form feedback for vocabulary errors', () => {

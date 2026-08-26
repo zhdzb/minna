@@ -5,12 +5,15 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createAgentStudyEventLog } from '../src/server/agentStudy/eventLog.js'
 import { createAgentStudyFileStore } from '../src/server/agentStudy/fileStore.js'
 import {
+  handleAdvanceMistakeDrillSession,
   handleGetAgentProgressReview,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
   handleGetLatestReviewDrill,
   handleGetLatestReview,
   handleGetMistakes,
+  handleGetMistakeDrillSession,
+  handleGetReviewReading,
   handleGetVocabulary,
   handleGetSyllabus,
   handleDismissMistake,
@@ -19,7 +22,10 @@ import {
   handleSaveReviewDrill,
   handleSubmitReviewDrill,
   handleSubmitMistakeAttempt,
-  handleSubmitDailyPacket
+  handleSubmitDailyPacket,
+  handleSetMistakeStatus,
+  handleStartMistakeDrillSession,
+  handleUpdateReviewReading
 } from '../src/server/agentStudy/routes.js'
 
 const tempDirs = []
@@ -608,6 +614,72 @@ describe('agentStudyRoutes', () => {
     })
     expect(eventLog.appendEvent).toHaveBeenCalledWith(
       expect.objectContaining({ event: 'mistake_dismissed' })
+    )
+  })
+
+  it('updates review-reading, mistake status, and short drill sessions through handlers', async () => {
+    const readingState = { reviews: {} }
+    const reviewReadingStore = {
+      load: vi.fn().mockReturnValue(readingState),
+      updateItem: vi.fn().mockReturnValue({ reviews: { 'review-1': {} } })
+    }
+    await expect(handleGetReviewReading({ reviewReadingStore })).resolves.toBe(readingState)
+    await handleUpdateReviewReading({
+      reviewId: 'review-1',
+      reviewFile: 'study/reviews/review-1.json',
+      exerciseId: 'ex-01',
+      status: 'read'
+    }, { reviewReadingStore })
+    expect(reviewReadingStore.updateItem).toHaveBeenCalledWith({
+      reviewId: 'review-1',
+      reviewFile: 'study/reviews/review-1.json',
+      exerciseId: 'ex-01',
+      status: 'read'
+    })
+
+    const mistakeBook = { items: [{ id: 'mistake-1' }] }
+    const mistakeStore = {
+      loadMistakeBook: vi.fn().mockReturnValue(mistakeBook),
+      setMistakeStatuses: vi.fn().mockReturnValue({
+        mistakeBook,
+        mistakes: mistakeBook.items
+      })
+    }
+    const eventLog = { appendEvent: vi.fn() }
+    await handleSetMistakeStatus({
+      mistakeIds: ['mistake-1'],
+      status: 'mastered'
+    }, { mistakeStore, eventLog })
+    expect(mistakeStore.setMistakeStatuses).toHaveBeenCalledWith({
+      mistakeIds: ['mistake-1'],
+      status: 'mastered'
+    })
+
+    const activeSession = {
+      status: 'active',
+      size: 3,
+      mistake_ids: ['mistake-1'],
+      current_index: 0
+    }
+    const completedSession = { ...activeSession, status: 'completed', current_index: 1 }
+    const sessionStore = {
+      load: vi.fn().mockReturnValue(activeSession),
+      start: vi.fn().mockReturnValue(activeSession),
+      advance: vi.fn().mockReturnValue(completedSession)
+    }
+    await expect(handleGetMistakeDrillSession({ sessionStore })).resolves.toBe(activeSession)
+    await handleStartMistakeDrillSession({ size: 3 }, { mistakeStore, sessionStore, eventLog })
+    expect(sessionStore.start).toHaveBeenCalledWith({
+      mistakeBook,
+      size: 3,
+      mistakeIds: undefined
+    })
+    await expect(handleAdvanceMistakeDrillSession(
+      { mistakeId: 'mistake-1' },
+      { sessionStore, eventLog }
+    )).resolves.toBe(completedSession)
+    expect(eventLog.appendEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ event: 'mistake_drill_completed' })
     )
   })
 

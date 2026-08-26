@@ -117,4 +117,54 @@ describe('agentStudyMistakeStore', () => {
     expect(dismissed.mistake.status).toBe('dismissed')
     expect(store.loadMistakeBook().items[0].status).toBe('dismissed')
   })
+
+  it('merges manual and automatic sources and supports reversible status changes', () => {
+    const studyRoot = createTempStudyRoot()
+    const dailyPacket = createSampleDailyPacket({ status: 'reviewed' })
+    const reviewResult = createSampleReviewResult()
+    writeJson(path.join(studyRoot, 'daily', '2026-06-26.json'), dailyPacket)
+    writeJson(path.join(studyRoot, 'reviews', '2026-06-26-review.json'), reviewResult)
+
+    const store = createAgentStudyMistakeStore({
+      studyRoot,
+      now: () => '2026-08-26T12:00:00+08:00'
+    })
+    const automatic = store.loadMistakeBook().items[0]
+    const merged = store.addManualMistake({
+      dailyPacket,
+      dailyPath: 'study/daily/2026-06-26.json',
+      exerciseId: automatic.exercise_id,
+      reviewResult,
+      reviewPath: 'study/reviews/2026-06-26-review.json'
+    })
+
+    expect(merged.mistakeBook.items).toHaveLength(1)
+    expect(merged.mistake.source_types).toEqual(['automatic', 'manual'])
+
+    const correctManual = store.addManualMistake({
+      dailyPacket,
+      dailyPath: 'study/daily/2026-06-26.json',
+      exerciseId: 'ex-002',
+      reviewResult,
+      reviewPath: 'study/reviews/2026-06-26-review.json'
+    })
+    expect(correctManual.mistake.review_snapshot.is_correct).toBe(true)
+    expect(correctManual.mistake.source_types).toEqual(['manual'])
+
+    const mastered = store.setMistakeStatus({
+      mistakeId: correctManual.mistake.id,
+      status: 'mastered'
+    })
+    expect(mastered.mistake.status).toBe('mastered')
+    const dismissed = store.setMistakeStatuses({
+      mistakeIds: mastered.mistakeBook.items.map((item) => item.id),
+      status: 'dismissed'
+    })
+    expect(dismissed.mistakes.every((item) => item.status === 'dismissed')).toBe(true)
+    const restored = store.setMistakeStatus({
+      mistakeId: correctManual.mistake.id,
+      status: 'active'
+    })
+    expect(restored.mistake.status).toBe('active')
+  })
 })

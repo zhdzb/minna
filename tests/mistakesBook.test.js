@@ -89,6 +89,43 @@ const createClient = () => {
         updated_at: '2026-07-23T10:00:00+08:00',
         items: [{ ...initial, status: 'dismissed' }]
       }
+    }),
+    setMistakeStatus: vi.fn().mockImplementation(({ status }) => Promise.resolve({
+      mistakeBook: {
+        schema_version: 1,
+        revision: 3,
+        updated_at: '2026-07-23T10:05:00+08:00',
+        items: [{ ...submitted, status }]
+      },
+      mistake: { ...submitted, status }
+    })),
+    loadMistakeDrillSession: vi.fn().mockResolvedValue({
+      status: 'idle',
+      size: 3,
+      mistake_ids: [],
+      current_index: 0,
+      submitted_ids: []
+    }),
+    startMistakeDrillSession: vi.fn().mockResolvedValue({
+      status: 'active',
+      size: 3,
+      mistake_ids: [initial.id],
+      current_index: 0,
+      submitted_ids: []
+    }),
+    advanceMistakeDrillSession: vi.fn().mockResolvedValue({
+      status: 'completed',
+      size: 3,
+      mistake_ids: [initial.id],
+      current_index: 1,
+      submitted_ids: [initial.id]
+    }),
+    endMistakeDrillSession: vi.fn().mockResolvedValue({
+      status: 'completed',
+      size: 3,
+      mistake_ids: [initial.id],
+      current_index: 0,
+      submitted_ids: []
     })
   }
 }
@@ -215,5 +252,44 @@ describe('MistakesBook', () => {
       mistakeId: 'mistake:review-2026-07-23:exercise-1'
     })
     expect(wrapper.vm.agentItems).toHaveLength(0)
+
+    wrapper.vm.bookView = 'dismissed'
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.agentItems).toHaveLength(1)
+    await wrapper.vm.restoreAgentMistake(wrapper.vm.agentItems[0].id)
+    expect(client.setMistakeStatus).toHaveBeenCalledWith({
+      mistakeId: 'mistake:review-2026-07-23:exercise-1',
+      status: 'active'
+    })
+  })
+
+  it('runs a persisted small session and advances after self-assessment', async () => {
+    const client = createClient()
+    const wrapper = mount(MistakesBook, {
+      props: { client },
+      global: { stubs }
+    })
+    await flushPromises()
+
+    await wrapper.vm.startTraining()
+    await flushPromises()
+    expect(client.startMistakeDrillSession).toHaveBeenCalledWith({ size: 3, mistakeIds: [] })
+    expect(wrapper.vm.isSessionReview).toBe(true)
+    expect(wrapper.vm.sessionProgressLabel).toBe('1/1')
+
+    wrapper.vm.reviewAnswer = 'しょくどうで ひるごはんを たべます。'
+    await wrapper.vm.submitReview()
+    await flushPromises()
+    await wrapper.vm.finishReviewItem('mastered')
+    await flushPromises()
+
+    expect(client.setMistakeStatus).toHaveBeenCalledWith({
+      mistakeId: 'mistake:review-2026-07-23:exercise-1',
+      status: 'mastered'
+    })
+    expect(client.advanceMistakeDrillSession).toHaveBeenCalledWith({
+      mistakeId: 'mistake:review-2026-07-23:exercise-1'
+    })
+    expect(wrapper.vm.mistakeSession.status).toBe('completed')
   })
 })

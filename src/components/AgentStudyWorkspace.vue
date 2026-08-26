@@ -172,7 +172,18 @@
                 <h3>{{ exercise.prompt || exercise.id }}</h3>
                 <p class="item-type">{{ exercise.target_grammar || '未标注语法点' }}</p>
               </div>
-              <el-tag size="small" type="success" effect="plain">{{ exercise.type || '练习' }}</el-tag>
+              <div class="item-card-actions">
+                <el-tag size="small" type="success" effect="plain">{{ exercise.type || '练习' }}</el-tag>
+                <el-button
+                  size="small"
+                  plain
+                  :type="isExerciseInMistakeBook(exercise.id) ? 'danger' : 'warning'"
+                  :loading="mistakeActionExerciseId === exercise.id"
+                  @click="toggleExerciseMistake(exercise.id)"
+                >
+                  {{ isExerciseInMistakeBook(exercise.id) ? '移出错题本' : '加入错题' }}
+                </el-button>
+              </div>
             </div>
             <p class="item-note">第 {{ exercise.lesson ?? '--' }} 课 · {{ exercise.metadata?.skill || '未标注技能' }}</p>
             <div class="exercise-detail-list">
@@ -336,7 +347,7 @@
           <template #title>
             <div class="section-heading">
               <h2>最近批改结果</h2>
-              <span>共检查 {{ reviewItems.length }} 题</span>
+              <span>已读 {{ reviewReadCount }}/{{ reviewItems.length }} · 未读 {{ reviewUnreadCount }}</span>
             </div>
           </template>
 
@@ -377,16 +388,67 @@
           </div>
         </div>
 
+        <div class="review-reader-toolbar">
+          <label>
+            查看
+            <select v-model="reviewFilter" class="review-reader-select">
+              <option value="unread">未读</option>
+              <option value="later">稍后再看</option>
+              <option value="retry">需要重做</option>
+              <option value="all">全部</option>
+            </select>
+          </label>
+          <label>
+            每次
+            <select v-model="reviewBatchSize" class="review-reader-select">
+              <option :value="3">3 题</option>
+              <option :value="5">5 题</option>
+              <option value="all">全部</option>
+            </select>
+          </label>
+          <label>
+            从这里继续
+            <select
+              class="review-reader-select"
+              :value="reviewCursorExerciseId"
+              @change="moveReviewCursor($event.target.value)"
+            >
+              <option value="">第一个待看项</option>
+              <option v-for="(item, index) in reviewItems" :key="`cursor-${item.exercise_id}`" :value="item.exercise_id">
+                第 {{ index + 1 }} 题
+              </option>
+            </select>
+          </label>
+          <div class="review-reader-counts">
+            <span>未读 {{ reviewUnreadCount }}</span>
+            <span>稍后 {{ reviewLaterCount }}</span>
+            <span>已读 {{ reviewReadCount }}</span>
+          </div>
+        </div>
+
+        <el-alert
+          v-if="reviewActionError"
+          :title="reviewActionError"
+          type="error"
+          :closable="false"
+          show-icon
+        />
+
         <div class="review-item-list">
-          <article v-for="item in reviewItems" :key="item.exercise_id" class="exercise-card review-item-card">
+          <article v-for="item in visibleReviewItems" :key="item.exercise_id" class="exercise-card review-item-card">
             <div class="item-card-top">
               <div>
                 <h3>{{ reviewExercisePrompt(item) }}</h3>
                 <p class="item-type">{{ item.target_grammar || reviewExerciseType(item.exercise_id) }}</p>
               </div>
-              <el-tag size="small" :type="item.is_correct ? 'success' : 'danger'" effect="plain">
-                {{ item.is_correct ? '正确' : '需重做' }}
-              </el-tag>
+              <div class="item-card-actions">
+                <el-tag size="small" :type="item.is_correct ? 'success' : 'danger'" effect="plain">
+                  {{ item.is_correct ? '正确' : '需重做' }}
+                </el-tag>
+                <el-tag size="small" type="info" effect="plain">
+                  {{ reviewReadingStatusLabel(item.exercise_id) }}
+                </el-tag>
+              </div>
             </div>
 
             <div v-if="item.exercise" class="review-question-block">
@@ -487,28 +549,61 @@
               </ul>
             </div>
 
-            <div v-if="item.acceptable_variants?.length" class="review-answer-block">
-              <p class="review-block-label">可接受变体</p>
-              <ul class="review-focus-list">
-                <li v-for="variant in item.acceptable_variants" :key="variant">{{ variant }}</li>
-              </ul>
-            </div>
+            <details
+              v-if="item.acceptable_variants?.length || (item.rubric && Object.keys(item.rubric).length) || item.manual_override"
+              class="review-details"
+            >
+              <summary>查看详细证据</summary>
+              <div v-if="item.acceptable_variants?.length" class="review-answer-block">
+                <p class="review-block-label">可接受变体</p>
+                <ul class="review-focus-list">
+                  <li v-for="variant in item.acceptable_variants" :key="variant">{{ variant }}</li>
+                </ul>
+              </div>
 
-            <div v-if="item.rubric && Object.keys(item.rubric).length" class="review-answer-block">
-              <p class="review-block-label">评分维度</p>
-              <div class="rubric-grid">
-                <div v-for="(value, key) in item.rubric" :key="`${item.exercise_id}-${key}`" class="rubric-item">
-                  <span>{{ key }}</span>
-                  <strong>{{ formatPercent(value) }}</strong>
+              <div v-if="item.rubric && Object.keys(item.rubric).length" class="review-answer-block">
+                <p class="review-block-label">评分维度</p>
+                <div class="rubric-grid">
+                  <div v-for="(value, key) in item.rubric" :key="`${item.exercise_id}-${key}`" class="rubric-item">
+                    <span>{{ key }}</span>
+                    <strong>{{ formatPercent(value) }}</strong>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="review-answer-block">
-              <p class="review-block-label">人工覆盖</p>
-              <p class="item-note">{{ formatManualOverride(item.manual_override) }}</p>
+              <div v-if="item.manual_override" class="review-answer-block">
+                <p class="review-block-label">人工覆盖</p>
+                <p class="item-note">{{ formatManualOverride(item.manual_override) }}</p>
+              </div>
+            </details>
+
+            <div class="review-reader-actions">
+              <el-button
+                type="success"
+                plain
+                :loading="reviewActionExerciseId === item.exercise_id"
+                @click="markReviewItem(item.exercise_id, 'read')"
+              >
+                已看懂
+              </el-button>
+              <el-button
+                plain
+                :loading="reviewActionExerciseId === item.exercise_id"
+                @click="markReviewItem(item.exercise_id, 'later')"
+              >
+                稍后再看
+              </el-button>
+              <el-button
+                plain
+                :type="isExerciseInMistakeBook(item.exercise_id) ? 'danger' : 'warning'"
+                :loading="mistakeActionExerciseId === item.exercise_id"
+                @click="toggleExerciseMistake(item.exercise_id)"
+              >
+                {{ isExerciseInMistakeBook(item.exercise_id) ? '移出错题本' : '加入错题' }}
+              </el-button>
             </div>
           </article>
+          <el-empty v-if="visibleReviewItems.length === 0" description="这个筛选下没有待处理的批改项。" />
         </div>
         </el-collapse-item>
       </el-collapse>
@@ -593,7 +688,14 @@ const promptPreview = ref('')
 const indexDocument = ref(null)
 const dailyPacket = ref(null)
 const reviewResult = ref(null)
+const reviewReadingState = ref({ reviews: {} })
+const mistakeBook = ref({ items: [] })
 const serverPhase = ref('')
+const reviewFilter = ref('unread')
+const reviewBatchSize = ref(3)
+const reviewActionExerciseId = ref('')
+const mistakeActionExerciseId = ref('')
+const reviewActionError = ref('')
 const expandedStudySections = ref(['tasks', 'materials', 'exercises', 'assessment', 'review-status', 'review-result'])
 const answerDrafts = ref({})
 const selfAssessmentDraft = ref({
@@ -676,6 +778,43 @@ const reviewItems = computed(() => {
     exercise: exercisesById.get(item.exercise_id) || null
   }))
 })
+const reviewReadingRecord = computed(() =>
+  reviewReadingState.value?.reviews?.[reviewResult.value?.id] || null
+)
+const reviewCursorExerciseId = computed(() => reviewReadingRecord.value?.last_exercise_id || '')
+const reviewReadingStatus = (exerciseId) =>
+  reviewReadingRecord.value?.items?.[exerciseId]?.status || 'unread'
+const reviewReadCount = computed(() =>
+  reviewItems.value.filter((item) => reviewReadingStatus(item.exercise_id) === 'read').length
+)
+const reviewLaterCount = computed(() =>
+  reviewItems.value.filter((item) => reviewReadingStatus(item.exercise_id) === 'later').length
+)
+const reviewUnreadCount = computed(() => reviewItems.value.length - reviewReadCount.value - reviewLaterCount.value)
+const filteredReviewItems = computed(() => {
+  if (reviewFilter.value === 'later') {
+    return reviewItems.value.filter((item) => reviewReadingStatus(item.exercise_id) === 'later')
+  }
+  if (reviewFilter.value === 'retry') {
+    return reviewItems.value.filter((item) => item.retry_recommended || !item.is_correct)
+  }
+  if (reviewFilter.value === 'all') return reviewItems.value
+  return reviewItems.value.filter((item) => reviewReadingStatus(item.exercise_id) === 'unread')
+})
+const visibleReviewItems = computed(() => {
+  const cursorIndex = reviewItems.value.findIndex(
+    (item) => item.exercise_id === reviewCursorExerciseId.value
+  )
+  const afterCursor = cursorIndex < 0
+    ? filteredReviewItems.value
+    : filteredReviewItems.value.filter((item) =>
+        reviewItems.value.findIndex((candidate) => candidate.exercise_id === item.exercise_id) >= cursorIndex
+      )
+  const candidates = afterCursor.length ? afterCursor : filteredReviewItems.value
+  return reviewBatchSize.value === 'all'
+    ? candidates
+    : candidates.slice(0, Number(reviewBatchSize.value) || 3)
+})
 const reviewNextFocus = computed(() =>
   Array.isArray(reviewResult.value?.overall?.next_focus) ? reviewResult.value.overall.next_focus : []
 )
@@ -686,6 +825,13 @@ const reviewPromotionLabel = computed(() =>
 const reviewFilePath = computed(
   () => dailyPacket.value?.correction?.review_file || '暂无'
 )
+const activeMistakeForExercise = (exerciseId) =>
+  (mistakeBook.value?.items || []).find((item) =>
+    item.daily_id === dailyPacket.value?.id &&
+    item.exercise_id === exerciseId &&
+    item.status !== 'dismissed'
+  ) || null
+const isExerciseInMistakeBook = (exerciseId) => Boolean(activeMistakeForExercise(exerciseId))
 const phase = computed(() =>
   serverPhase.value || deriveAgentStudyPhase({ dailyPacket: dailyPacket.value, reviewResult: reviewResult.value })
 )
@@ -854,6 +1000,60 @@ const formatManualOverride = (manualOverride) => {
   return String(manualOverride)
 }
 
+const reviewReadingStatusLabel = (exerciseId) => ({
+  unread: '未读',
+  read: '已读',
+  later: '稍后再看'
+})[reviewReadingStatus(exerciseId)] || '未读'
+
+const updateReviewReadingState = async (exerciseId, status = null) => {
+  if (!reviewResult.value || typeof client.value.updateReviewReading !== 'function') return
+  reviewActionExerciseId.value = exerciseId
+  reviewActionError.value = ''
+  try {
+    reviewReadingState.value = await client.value.updateReviewReading({
+      reviewId: reviewResult.value.id,
+      reviewFile: dailyPacket.value?.correction?.review_file || indexDocument.value?.latest_review || null,
+      exerciseId,
+      status
+    })
+  } catch (error) {
+    reviewActionError.value = error instanceof Error ? error.message : String(error)
+  } finally {
+    reviewActionExerciseId.value = ''
+  }
+}
+
+const markReviewItem = async (exerciseId, status) => {
+  await updateReviewReadingState(exerciseId, status)
+}
+
+const moveReviewCursor = async (exerciseId) => {
+  if (!exerciseId) return
+  await updateReviewReadingState(exerciseId)
+}
+
+const toggleExerciseMistake = async (exerciseId) => {
+  if (mistakeActionExerciseId.value || !dailyPacket.value) return
+  mistakeActionExerciseId.value = exerciseId
+  reviewActionError.value = ''
+  try {
+    const existing = activeMistakeForExercise(exerciseId)
+    const result = existing
+      ? await client.value.setMistakeStatus({ mistakeId: existing.id, status: 'dismissed' })
+      : await client.value.addManualMistake({
+          exerciseId,
+          dailyPath: indexDocument.value?.latest_daily,
+          reviewPath: dailyPacket.value?.correction?.review_file || indexDocument.value?.latest_review
+        })
+    mistakeBook.value = result.mistakeBook
+  } catch (error) {
+    reviewActionError.value = error instanceof Error ? error.message : String(error)
+  } finally {
+    mistakeActionExerciseId.value = ''
+  }
+}
+
 const resetTransientMessages = () => {
   promptCopyMessage.value = ''
   promptError.value = ''
@@ -932,8 +1132,18 @@ const loadWorkspace = async () => {
   loadError.value = ''
 
   try {
-    const payload = await client.value.loadLatestAgentStudy()
+    const [payload, readingState, loadedMistakes] = await Promise.all([
+      client.value.loadLatestAgentStudy(),
+      typeof client.value.loadReviewReading === 'function'
+        ? client.value.loadReviewReading()
+        : Promise.resolve({ reviews: {} }),
+      typeof client.value.loadMistakes === 'function'
+        ? client.value.loadMistakes()
+        : Promise.resolve({ items: [] })
+    ])
     applyWorkspacePayload(payload)
+    reviewReadingState.value = readingState || { reviews: {} }
+    mistakeBook.value = loadedMistakes || { items: [] }
   } catch (error) {
     loadError.value = error instanceof Error ? error.message : String(error)
   } finally {
@@ -1465,6 +1675,65 @@ onMounted(() => {
 .review-item-card {
   display: grid;
   gap: 12px;
+}
+
+.item-card-actions,
+.review-reader-actions,
+.review-reader-counts {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.review-reader-toolbar {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 14px;
+  background: var(--app-soft-bg);
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+}
+
+.review-reader-toolbar label {
+  display: grid;
+  gap: 6px;
+  color: var(--app-text-soft);
+  font-size: 12px;
+}
+
+.review-reader-select {
+  min-width: 112px;
+  min-height: 36px;
+  padding: 0 10px;
+  color: var(--app-text);
+  background: var(--app-card-bg);
+  border: 1px solid var(--app-border);
+  border-radius: 6px;
+}
+
+.review-reader-counts {
+  margin-left: auto;
+  color: var(--app-text-muted);
+  font-size: 13px;
+}
+
+.review-details {
+  padding-top: 10px;
+  border-top: 1px solid var(--app-border);
+}
+
+.review-details summary {
+  color: var(--app-accent);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.review-details[open] summary {
+  margin-bottom: 12px;
 }
 
 .review-question-block {

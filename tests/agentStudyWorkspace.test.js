@@ -338,6 +338,90 @@ describe('AgentStudyWorkspace', () => {
     expect(reviewCards[1].text()).toContain('A：その ほんは だれに もらいましたか。')
   })
 
+  it('shows review feedback in three-item batches and persists reading actions', async () => {
+    const baseDaily = createDailyPacket()
+    const baseReview = createReviewResult()
+    const exercises = Array.from({ length: 5 }, (_, index) => ({
+      ...baseDaily.exercises[0],
+      id: `exercise-${index + 1}`,
+      prompt: `第 ${index + 1} 题`
+    }))
+    const items = exercises.map((exercise, index) => ({
+      ...baseReview.items[0],
+      exercise_id: exercise.id,
+      target_grammar: `语法 ${index + 1}`
+    }))
+    const client = createClient({
+      dailyPacket: {
+        status: 'reviewed',
+        exercises,
+        answers: Object.fromEntries(exercises.map((exercise) => [exercise.id, '答案'])),
+        correction: {
+          status: 'reviewed',
+          review_file: 'study/reviews/2026-06-26-review.json'
+        }
+      },
+      reviewResult: { items }
+    })
+    client.loadReviewReading = vi.fn().mockResolvedValue({ reviews: {} })
+    client.loadMistakes = vi.fn().mockResolvedValue({ items: [] })
+    client.updateReviewReading = vi.fn().mockResolvedValue({
+      reviews: {
+        'review-2026-06-26': {
+          last_exercise_id: 'exercise-1',
+          items: {
+            'exercise-1': { status: 'read', updated_at: '2026-08-26T10:00:00+08:00' }
+          }
+        }
+      }
+    })
+
+    const wrapper = mountWorkspace(client)
+    await flushPromises()
+
+    expect(wrapper.findAll('.review-item-card')).toHaveLength(3)
+    const understood = wrapper.findAll('button').find((button) => button.text().includes('已看懂'))
+    await understood.trigger('click')
+    await flushPromises()
+
+    expect(client.updateReviewReading).toHaveBeenCalledWith({
+      reviewId: 'review-2026-06-26',
+      reviewFile: 'study/reviews/2026-06-26-review.json',
+      exerciseId: 'exercise-1',
+      status: 'read'
+    })
+    expect(wrapper.text()).toContain('已读 1/5')
+  })
+
+  it('manually adds a daily exercise to the mistake book', async () => {
+    const client = createClient()
+    client.loadMistakes = vi.fn().mockResolvedValue({ items: [] })
+    client.addManualMistake = vi.fn().mockResolvedValue({
+      mistakeBook: {
+        items: [{
+          id: 'mistake:daily-2026-06-26:exercise-fill',
+          daily_id: 'daily-2026-06-26',
+          exercise_id: 'exercise-fill',
+          status: 'active'
+        }]
+      }
+    })
+    client.setMistakeStatus = vi.fn()
+
+    const wrapper = mountWorkspace(client)
+    await flushPromises()
+    const addButton = wrapper.findAll('button').find((button) => button.text().includes('加入错题'))
+    await addButton.trigger('click')
+    await flushPromises()
+
+    expect(client.addManualMistake).toHaveBeenCalledWith({
+      exerciseId: 'exercise-fill',
+      dailyPath: undefined,
+      reviewPath: 'study/reviews/2026-06-26-review.json'
+    })
+    expect(wrapper.text()).toContain('移出错题本')
+  })
+
   it('copies the create-daily prompt instead of generating a packet in the browser', async () => {
     const client = createClient({
       phase: 'ready_for_next',

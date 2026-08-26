@@ -12,6 +12,9 @@ The active product flow is now the Agent Study workflow:
 
 ## Working Rules
 
+- Treat `Accepted` and `Implemented` documents under `specs/` as product
+  behavior contracts. Read the relevant spec before changing a covered flow,
+  and update its decision log when an approved behavior changes.
 - Keep local mode working while the migration is in progress.
 - Treat deployed mode as a separate runtime path with stricter rules.
 - Do not remove `data.json` import/export support until the cloud persistence flow is implemented and verified.

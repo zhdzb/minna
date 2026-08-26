@@ -1,12 +1,19 @@
 import {
   validateCurrent,
+  validateDailyPacket,
   validateMastery,
   validateProfile,
-  validateReviewQueue
+  validateReviewQueue,
+  validateReviewResult
 } from '../../utils/agentStudySchema.js'
 import { createAgentStudyEventLog } from './eventLog.js'
 import { createAgentStudyFileStore } from './fileStore.js'
 import { createAgentStudyMistakeStore, MISTAKE_BOOK_PATH } from './mistakeStore.js'
+import {
+  createMistakeDrillSessionStore,
+  MISTAKE_DRILL_SESSION_PATH
+} from './mistakeDrillSessionStore.js'
+import { createReviewReadingStore } from './reviewReadingStore.js'
 import { createSyllabusStore } from './syllabusStore.js'
 import { createAgentStudyVocabularyStore } from './vocabularyStore.js'
 import { deriveAgentStudyPhase, matchesDaily } from '../../utils/agentStudyPhase.js'
@@ -93,6 +100,23 @@ const handleGetMistakes = async ({
   mistakeStore = createAgentStudyMistakeStore()
 } = {}) => mistakeStore.loadMistakeBook()
 
+const handleGetReviewReading = async ({
+  reviewReadingStore = createReviewReadingStore()
+} = {}) => reviewReadingStore.load()
+
+const handleUpdateReviewReading = async (
+  payload,
+  { reviewReadingStore = createReviewReadingStore() } = {}
+) => {
+  const normalized = assertJsonObject(payload, 'review reading update route')
+  return reviewReadingStore.updateItem({
+    reviewId: normalized.reviewId,
+    reviewFile: normalized.reviewFile,
+    exerciseId: normalized.exerciseId,
+    status: normalized.status == null ? null : normalized.status
+  })
+}
+
 const handleGetVocabulary = async ({
   vocabularyStore = createAgentStudyVocabularyStore()
 } = {}) => vocabularyStore.loadVocabularyBook()
@@ -142,6 +166,129 @@ const handleDismissMistake = async (
   })
   return result
 }
+
+const handleAddManualMistake = async (
+  payload,
+  {
+    fileStore = createAgentStudyFileStore(),
+    mistakeStore = createAgentStudyMistakeStore(),
+    eventLog = createAgentStudyEventLog()
+  } = {}
+) => {
+  const normalized = assertJsonObject(payload, 'manual mistake route')
+  const exerciseId = String(normalized.exerciseId || '').trim()
+  if (!exerciseId) throw new Error('manual mistake route requires exerciseId')
+
+  const index = fileStore.loadIndex()
+  const dailyPath = String(normalized.dailyPath || index.latest_daily || '').trim()
+  if (!dailyPath) throw new Error('manual mistake route requires a daily packet path')
+  const dailyPacket = fileStore.readStudyJson(dailyPath, validateDailyPacket)
+  const candidateReviewPath = String(normalized.reviewPath || index.latest_review || '').trim()
+  let reviewResult = null
+  let reviewPath = null
+  if (candidateReviewPath) {
+    const candidateReview = fileStore.readStudyJson(candidateReviewPath, validateReviewResult)
+    if (candidateReview.daily_id === dailyPacket.id) {
+      reviewResult = candidateReview
+      reviewPath = candidateReviewPath
+    }
+  }
+
+  const result = mistakeStore.addManualMistake({
+    dailyPacket,
+    dailyPath,
+    exerciseId,
+    reviewResult,
+    reviewPath
+  })
+  eventLog.appendEvent({
+    actor: 'frontend',
+    event: 'mistake_added_manually',
+    input_files: [dailyPath, ...(reviewPath ? [reviewPath] : [])],
+    output_files: [MISTAKE_BOOK_PATH, 'study/logs/agent-events.jsonl'],
+    summary: 'Added an exercise to the mistake book manually.'
+  })
+  return result
+}
+
+const handleSetMistakeStatus = async (
+  payload,
+  {
+    mistakeStore = createAgentStudyMistakeStore(),
+    eventLog = createAgentStudyEventLog()
+  } = {}
+) => {
+  const normalized = assertJsonObject(payload, 'mistake status route')
+  const mistakeIds = Array.isArray(normalized.mistakeIds)
+    ? normalized.mistakeIds
+    : [normalized.mistakeId]
+  const status = String(normalized.status || '').trim()
+  const result = mistakeStore.setMistakeStatuses({ mistakeIds, status })
+  eventLog.appendEvent({
+    actor: 'frontend',
+    event: 'mistake_status_changed',
+    input_files: [MISTAKE_BOOK_PATH],
+    output_files: [MISTAKE_BOOK_PATH, 'study/logs/agent-events.jsonl'],
+    summary: `Changed ${result.mistakes.length} mistake item(s) to ${status}.`
+  })
+  return result
+}
+
+const handleGetMistakeDrillSession = async ({
+  sessionStore = createMistakeDrillSessionStore()
+} = {}) => sessionStore.load()
+
+const handleStartMistakeDrillSession = async (
+  payload,
+  {
+    mistakeStore = createAgentStudyMistakeStore(),
+    sessionStore = createMistakeDrillSessionStore(),
+    eventLog = createAgentStudyEventLog()
+  } = {}
+) => {
+  const normalized = assertJsonObject(payload, 'mistake drill start route')
+  const session = sessionStore.start({
+    mistakeBook: mistakeStore.loadMistakeBook(),
+    size: normalized.size,
+    mistakeIds: normalized.mistakeIds
+  })
+  eventLog.appendEvent({
+    actor: 'frontend',
+    event: 'mistake_drill_started',
+    input_files: [MISTAKE_BOOK_PATH],
+    output_files: [MISTAKE_DRILL_SESSION_PATH, 'study/logs/agent-events.jsonl'],
+    summary: `Started a ${session.mistake_ids.length}-item mistake drill session.`
+  })
+  return session
+}
+
+const handleAdvanceMistakeDrillSession = async (
+  payload,
+  {
+    sessionStore = createMistakeDrillSessionStore(),
+    eventLog = createAgentStudyEventLog()
+  } = {}
+) => {
+  const normalized = assertJsonObject(payload, 'mistake drill progress route')
+  const mistakeId = String(normalized.mistakeId || '').trim()
+  if (!mistakeId) throw new Error('mistake drill progress route requires mistakeId')
+  const session = sessionStore.advance({ mistakeId })
+  if (session.status === 'completed') {
+    eventLog.appendEvent({
+      actor: 'frontend',
+      event: 'mistake_drill_completed',
+      input_files: [MISTAKE_DRILL_SESSION_PATH],
+      output_files: [MISTAKE_DRILL_SESSION_PATH, 'study/logs/agent-events.jsonl'],
+      summary: `Completed a ${session.mistake_ids.length}-item mistake drill session.`
+    })
+  }
+  return session
+}
+
+const handleEndMistakeDrillSession = async (
+  _payload,
+  { sessionStore = createMistakeDrillSessionStore() } = {}
+) => sessionStore.end()
 
 const handleGetSyllabus = async ({ syllabusStore = createSyllabusStore() } = {}) =>
   syllabusStore.loadSyllabus()
@@ -300,13 +447,18 @@ const handleSubmitReviewDrill = async (
 }
 
 export {
+  handleAddManualMistake,
+  handleAdvanceMistakeDrillSession,
   handleGetAgentProgressReview,
   handleDismissMistake,
+  handleEndMistakeDrillSession,
   handleGetLatestAgentStudy,
   handleGetPromptFile,
   handleGetLatestReviewDrill,
   handleGetLatestReview,
   handleGetMistakes,
+  handleGetMistakeDrillSession,
+  handleGetReviewReading,
   handleGetVocabulary,
   handleGetSyllabus,
   handleSaveDailyPacket,
@@ -314,5 +466,8 @@ export {
   handleSaveReviewDrill,
   handleSubmitReviewDrill,
   handleSubmitMistakeAttempt,
-  handleSubmitDailyPacket
+  handleSubmitDailyPacket,
+  handleSetMistakeStatus,
+  handleStartMistakeDrillSession,
+  handleUpdateReviewReading
 }
