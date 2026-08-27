@@ -1,8 +1,133 @@
 {
   "schema_version": 1,
-  "revision": 8,
-  "updated_at": "2026-08-27T09:47:27.137Z",
+  "revision": 10,
+  "updated_at": "2026-08-27T16:57:14.164Z",
   "items": [
+    {
+      "id": "mistake:daily-2026-07-31:daily-2026-07-31-ex-23",
+      "status": "active",
+      "created_at": "2026-08-27T16:57:14.164Z",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-23",
+      "lesson": 6,
+      "target_grammar": "确认理解",
+      "source_types": [
+        "manual"
+      ],
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-23",
+        "type": "q_conversation",
+        "lesson": 6,
+        "target_grammar": "确认理解",
+        "prompt": "第 23 题：确认理解",
+        "instruction": "同事问你是否明白说明。请回答大体明白了，但还有一件事不明白。",
+        "context_note": "请写一到两句完整日语。",
+        "answer_format": "写 1 至 2 句完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "はい、だいたい わかりました。でも、ひとつ わからない ことが あります。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "conversation",
+          "target_vocabulary_ids": [
+            "vocab-010",
+            "vocab-012"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-23",
+        "is_correct": true,
+        "score": 0.9,
+        "error_tags": [],
+        "target_grammar": "确认理解",
+        "user_answer": "ほうとどがわかりました、でも、ひとつこどがまだわかりません",
+        "correct_answer": "はい、だいたい わかりました。でも、ひとつ わからない ことが あります。",
+        "explanation": "已表达大体明白以及仍有一件事不明白；若干轻微假名偏差不影响整体交流。",
+        "retry_recommended": false,
+        "rubric": {
+          "grammar": 0.9,
+          "meaning": 0.9,
+          "naturalness": 0.9
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "はい、だいたい わかりました。でも、ひとつ わからない ことが あります。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
+    {
+      "id": "mistake:daily-2026-07-31:daily-2026-07-31-ex-20",
+      "status": "active",
+      "created_at": "2026-08-27T16:53:34.442Z",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-20",
+      "lesson": 6,
+      "target_grammar": "确认问题存在",
+      "source_types": [
+        "manual"
+      ],
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-20",
+        "type": "q_conversation",
+        "lesson": 6,
+        "target_grammar": "确认问题存在",
+        "prompt": "第 20 题：确认问题存在",
+        "instruction": "同事说设备不能使用。请询问：有什么问题吗？",
+        "context_note": "请用适合职场沟通的一句日语。",
+        "answer_format": "写 1 至 2 句完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "なにか もんだいが ありますか。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "conversation",
+          "target_vocabulary_ids": [
+            "vocab-002"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-20",
+        "is_correct": true,
+        "score": 0.95,
+        "error_tags": [],
+        "target_grammar": "确认问题存在",
+        "user_answer": "もんだいがありますか",
+        "correct_answer": "なにか もんだいが ありますか。",
+        "explanation": "「問題がありますか」自然地询问是否存在问题；省略「何か」不影响意图。",
+        "retry_recommended": false,
+        "rubric": {
+          "grammar": 0.95,
+          "meaning": 0.95,
+          "naturalness": 0.95
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "なにか もんだいが ありますか。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
     {
       "id": "mistake:daily-2026-07-31:daily-2026-07-31-ex-17",
       "status": "active",

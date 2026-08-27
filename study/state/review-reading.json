@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "revision": 19,
-  "updated_at": "2026-08-27T09:58:55.754Z",
+  "revision": 31,
+  "updated_at": "2026-08-27T17:08:50.571Z",
   "reviews": {
     "review-2026-07-31": {
       "review_file": "study/reviews/2026-07-31-review.json",
-      "last_exercise_id": "daily-2026-07-31-ex-18",
+      "last_exercise_id": "daily-2026-07-31-ex-30",
       "items": {
         "daily-2026-07-31-ex-1": {
           "status": "read",
@@ -78,9 +78,57 @@
         "daily-2026-07-31-ex-18": {
           "status": "read",
           "updated_at": "2026-08-27T09:58:55.754Z"
+        },
+        "daily-2026-07-31-ex-19": {
+          "status": "read",
+          "updated_at": "2026-08-27T16:52:44.596Z"
+        },
+        "daily-2026-07-31-ex-20": {
+          "status": "read",
+          "updated_at": "2026-08-27T16:53:35.826Z"
+        },
+        "daily-2026-07-31-ex-21": {
+          "status": "read",
+          "updated_at": "2026-08-27T16:55:16.224Z"
+        },
+        "daily-2026-07-31-ex-22": {
+          "status": "read",
+          "updated_at": "2026-08-27T16:56:14.231Z"
+        },
+        "daily-2026-07-31-ex-23": {
+          "status": "read",
+          "updated_at": "2026-08-27T16:57:37.042Z"
+        },
+        "daily-2026-07-31-ex-24": {
+          "status": "read",
+          "updated_at": "2026-08-27T16:59:52.814Z"
+        },
+        "daily-2026-07-31-ex-25": {
+          "status": "read",
+          "updated_at": "2026-08-27T17:01:00.439Z"
+        },
+        "daily-2026-07-31-ex-26": {
+          "status": "read",
+          "updated_at": "2026-08-27T17:06:41.129Z"
+        },
+        "daily-2026-07-31-ex-27": {
+          "status": "read",
+          "updated_at": "2026-08-27T17:07:04.037Z"
+        },
+        "daily-2026-07-31-ex-28": {
+          "status": "read",
+          "updated_at": "2026-08-27T17:08:08.202Z"
+        },
+        "daily-2026-07-31-ex-29": {
+          "status": "read",
+          "updated_at": "2026-08-27T17:08:23.581Z"
+        },
+        "daily-2026-07-31-ex-30": {
+          "status": "read",
+          "updated_at": "2026-08-27T17:08:50.571Z"
         }
       },
-      "updated_at": "2026-08-27T09:58:55.754Z"
+      "updated_at": "2026-08-27T17:08:50.571Z"
     }
   }
 }
