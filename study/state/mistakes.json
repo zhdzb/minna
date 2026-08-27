@@ -1,8 +1,70 @@
 {
   "schema_version": 1,
-  "revision": 6,
-  "updated_at": "2026-08-26T09:30:01.690Z",
+  "revision": 8,
+  "updated_at": "2026-08-27T09:47:27.137Z",
   "items": [
+    {
+      "id": "mistake:daily-2026-07-31:daily-2026-07-31-ex-17",
+      "status": "active",
+      "created_at": "2026-08-26T09:56:52.220Z",
+      "source_daily": "study/daily/2026-07-31.json",
+      "source_review": "study/reviews/2026-07-31-review.json",
+      "daily_id": "daily-2026-07-31",
+      "review_id": "review-2026-07-31",
+      "exercise_id": "daily-2026-07-31-ex-17",
+      "lesson": 6,
+      "target_grammar": "变化表达",
+      "source_types": [
+        "manual"
+      ],
+      "exercise_snapshot": {
+        "id": "daily-2026-07-31-ex-17",
+        "type": "q_translate",
+        "lesson": 6,
+        "target_grammar": "变化表达",
+        "prompt": "第 17 题：变化表达",
+        "instruction": "请用自然日语表达：这项工作今后会变得重要。",
+        "context_note": "场景：说明未来的工作变化。",
+        "answer_format": "写 1 句或一组完整、自然的日语。",
+        "choices": [],
+        "supporting_lines": [],
+        "vocab_hints": [],
+        "answer_reference": "この しごとは これから たいせつに なります。",
+        "metadata": {
+          "source": "codex-study-loop",
+          "difficulty": "application",
+          "skill": "output",
+          "target_vocabulary_ids": [
+            "vocab-004"
+          ]
+        }
+      },
+      "review_snapshot": {
+        "exercise_id": "daily-2026-07-31-ex-17",
+        "is_correct": true,
+        "score": 0.9,
+        "error_tags": [],
+        "target_grammar": "变化表达",
+        "user_answer": "これから、このしごとはだいせつになる",
+        "correct_answer": "この しごとは これから たいせつに なります。",
+        "explanation": "「大切になる」正确表达“变得重要”；清浊音的小偏差不影响目标结构和理解。",
+        "retry_recommended": false,
+        "rubric": {
+          "grammar": 0.9,
+          "meaning": 0.9,
+          "naturalness": 0.9
+        },
+        "confidence": 0.97,
+        "needs_user_input": false,
+        "acceptable_variants": [
+          "この しごとは これから たいせつに なります。"
+        ],
+        "vocabulary_feedback": [],
+        "manual_override": null
+      },
+      "attempts": [],
+      "last_practiced_at": null
+    },
     {
       "id": "mistake:daily-2026-07-31:daily-2026-07-31-ex-1",
       "status": "active",

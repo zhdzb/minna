@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "revision": 15,
-  "updated_at": "2026-08-26T09:51:05.250Z",
+  "revision": 19,
+  "updated_at": "2026-08-27T09:58:55.754Z",
   "reviews": {
     "review-2026-07-31": {
       "review_file": "study/reviews/2026-07-31-review.json",
-      "last_exercise_id": "daily-2026-07-31-ex-14",
+      "last_exercise_id": "daily-2026-07-31-ex-18",
       "items": {
         "daily-2026-07-31-ex-1": {
           "status": "read",
@@ -62,9 +62,25 @@
         "daily-2026-07-31-ex-14": {
           "status": "read",
           "updated_at": "2026-08-26T09:51:05.250Z"
+        },
+        "daily-2026-07-31-ex-15": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:54:19.609Z"
+        },
+        "daily-2026-07-31-ex-16": {
+          "status": "read",
+          "updated_at": "2026-08-26T09:55:26.390Z"
+        },
+        "daily-2026-07-31-ex-17": {
+          "status": "read",
+          "updated_at": "2026-08-27T09:47:27.960Z"
+        },
+        "daily-2026-07-31-ex-18": {
+          "status": "read",
+          "updated_at": "2026-08-27T09:58:55.754Z"
         }
       },
-      "updated_at": "2026-08-26T09:51:05.250Z"
+      "updated_at": "2026-08-27T09:58:55.754Z"
     }
   }
 }
